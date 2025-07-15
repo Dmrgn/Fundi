@@ -1,2 +1,3 @@
 # Fundi
-CSC207
+
+This is the final project for CSC207.

@@ -1,15 +1,10 @@
 package view;
 
-import java.awt.Component;
+import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
@@ -23,121 +18,76 @@ import interface_adapter.main.MainViewModel;
 /**
  * The View for when the user is logged into the program.
  */
-public class MainView extends JPanel implements PropertyChangeListener {
+public class MainView extends JPanel {
 
-    private final String viewName = "logged in";
+    private final String viewName = "main";
     private final MainViewModel mainViewModel;
     private final JLabel passwordErrorField = new JLabel();
-//    private ChangePasswordController changePasswordController;
-//    private LogoutController logoutController;
-
-    private final JLabel username;
-
-    private final JButton logOut;
-
-    private final JTextField passwordInputField = new JTextField(15);
-    private final JButton changePassword;
 
     public MainView(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
-        this.mainViewModel.addPropertyChangeListener(this);
+        setPreferredSize(new Dimension(900, 600));
+        setLayout(new BorderLayout(10, 10));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        final JLabel title = new JLabel("Logged In Screen");
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        // === 1. Top panel with plain text intro ===
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        final LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel("Password"), passwordInputField);
+        JLabel welcomeLabel = new JLabel("Welcome to Fundi!");
+        welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 24));
+        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        final JLabel usernameInfo = new JLabel("Currently logged in: ");
-        username = new JLabel();
+        JLabel usernameLabel = new JLabel("Logged in as: " + mainViewModel.getState().getUsername());
+        usernameLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));
+        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        final JPanel buttons = new JPanel();
-        logOut = new JButton("Log Out");
-        buttons.add(logOut);
+        topPanel.add(welcomeLabel);
+        topPanel.add(Box.createVerticalStrut(5));
+        topPanel.add(usernameLabel);
+        topPanel.add(Box.createVerticalStrut(10));
 
-        changePassword = new JButton("Change Password");
-        buttons.add(changePassword);
+        // === 2. Image ===
+        ImageIcon icon = new ImageIcon("resources/cover_photo.jpg");
+        Image img = icon.getImage().getScaledInstance(500, 300, Image.SCALE_SMOOTH);
+        JLabel imgLabel = new JLabel(new ImageIcon(img));
+        imgLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        topPanel.add(imgLabel);
+        topPanel.add(Box.createVerticalStrut(15));
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+        // === 3. Buttons ===
+        JPanel centerPanel = new JPanel();
+        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        setLayout(new BorderLayout(10, 10));
+        JLabel promptLabel = new JLabel("What would you like to look at?");
+        promptLabel.setFont(new Font("Sans Serif", Font.PLAIN, 18));
+        promptLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        passwordInputField.getDocument().addDocumentListener(new DocumentListener() {
+        JPanel buttonPanel = new JPanel(new GridLayout(2, 3, 10, 10));
+        buttonPanel.setMaximumSize(new Dimension(400, 100));
 
-            private void documentListenerHelper() {
-                final MainState currentState = mainViewModel.getState();
-                currentState.setPassword(passwordInputField.getText());
-                mainViewModel.setState(currentState);
-            }
+        String[] useCases = new String[] {"Portfolios", "Search", "News", "Watchlist", "Leaderboard", "Settings"};
+        // Will make map to controllers using parallel arrays
+        for (int i = 0; i < useCases.length; i++) {
+            JButton useCaseButton = new JButton(useCases[i]);
+            buttonPanel.add(useCaseButton);
 
-            @Override
-            public void insertUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void removeUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-
-            @Override
-            public void changedUpdate(DocumentEvent e) {
-                documentListenerHelper();
-            }
-        });
-
-        changePassword.addActionListener(
-                // This creates an anonymous subclass of ActionListener and instantiates it.
-                evt -> {
-                    if (evt.getSource().equals(changePassword)) {
-                        final MainState currentState = mainViewModel.getState();
-
-//                        this.changePasswordController.execute(
-//                                currentState.getUsername(),
-//                                currentState.getPassword()
-//                        );
-                    }
-                }
-        );
-
-        logOut.addActionListener(
-                // This creates an anonymous subclass of ActionListener and instantiates it.
-                evt -> {
-                    if (evt.getSource().equals(logOut)) {
-                        // 1. get the state out of the loggedInViewModel. It contains the username.
-                        // 2. Execute the logout Controller.
-                    }
-                }
-        );
-
-        this.add(title);
-        this.add(usernameInfo);
-        this.add(username);
-
-        this.add(passwordInfo);
-        this.add(passwordErrorField);
-        this.add(buttons);
-    }
-
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if (evt.getPropertyName().equals("state")) {
-            final MainState state = (MainState) evt.getNewValue();
-            username.setText(state.getUsername());
-        }
-        else if (evt.getPropertyName().equals("password")) {
-            final MainState state = (MainState) evt.getNewValue();
-            JOptionPane.showMessageDialog(null, "password updated for " + state.getUsername());
+            // TODO Add event Listeners and map to controllers
         }
 
+        topPanel.add(Box.createVerticalStrut(20));
+        centerPanel.add(promptLabel, BorderLayout.NORTH);
+        topPanel.add(Box.createVerticalStrut(10));
+        centerPanel.add(buttonPanel, BorderLayout.CENTER);
+        centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Add to main layout
+        this.add(topPanel, BorderLayout.NORTH);
+        this.add(centerPanel, BorderLayout.CENTER);
     }
 
     public String getViewName() {
         return viewName;
     }
-
-//    public void setChangePasswordController(ChangePasswordController changePasswordController) {
-//        this.changePasswordController = changePasswordController;
-//    }
-//
-//    public void setLogoutController(LogoutController logoutController) {
-//    }
 }

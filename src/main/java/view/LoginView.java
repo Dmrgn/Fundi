@@ -1,6 +1,6 @@
 package view;
 
-import java.awt.Component;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
@@ -38,7 +38,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
     private LoginController loginController;
 
     public LoginView(LoginViewModel loginViewModel) {
-
         this.loginViewModel = loginViewModel;
         this.loginViewModel.addPropertyChangeListener(this);
 

@@ -1,14 +1,29 @@
 package app;
 
 import java.awt.CardLayout;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import entity.CommonUserFactory;
+import entity.UserFactory;
+import data_access.FileUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.login.LoginController;
+import interface_adapter.login.LoginPresenter;
+import interface_adapter.login.LoginViewModel;
+import interface_adapter.main.MainController;
 import interface_adapter.main.MainViewModel;
+import use_case.login.LoginInputBoundary;
+import interface_adapter.login.LoginInteractor;
+import use_case.login.LoginOutputBoundary;
+import use_case.login.LoginUserDataAccessInterface;
+import use_case.main.MainInputBoundary;
+import use_case.main.MainOutputBoundary;
 import view.MainView;
+import view.LoginView;
 import view.ViewManager;
 
 /**
@@ -20,20 +35,37 @@ import view.ViewManager;
 public class AppBuilder {
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
-
+    private final UserFactory userFactory = new CommonUserFactory();
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
 
-    private MainView mainView;
-    private MainViewModel mainViewModel;
+    // thought question: is the hard dependency below a problem?
+    // private final DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject(userFactory);
+    private final LoginUserDataAccessInterface userDataAccessObject =
+            new FileUserDataAccessObject("data/users.csv", userFactory);
 
-    public AppBuilder() {
+    private LoginViewModel loginViewModel;
+    private MainViewModel mainViewModel;
+    private MainView mainView;
+    private LoginView loginView;
+
+    public AppBuilder() throws IOException {
         cardPanel.setLayout(cardLayout);
     }
 
     /**
-     * Adds the Signup View to the application.
-     * 
+     * Adds the Login View to the application.
+     * @return this builder
+     */
+    public AppBuilder addLoginView() {
+        loginViewModel = new LoginViewModel();
+        loginView = new LoginView(loginViewModel);
+        cardPanel.add(loginView, loginView.getViewName());
+        return this;
+    }
+
+    /**
+     * Adds the Main View to the application.
      * @return this builder
      */
     public AppBuilder addMainView() {
@@ -43,19 +75,50 @@ public class AppBuilder {
         return this;
     }
 
+
     /**
-     * Creates the JFrame for the application and initially sets the SignupView to
-     * be displayed.
-     * 
+     * Adds the Login Use Case to the application.
+     * @return this builder
+     */
+    public AppBuilder addLoginUseCase() {
+        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
+                mainViewModel, loginViewModel);
+        final LoginInputBoundary loginInteractor = new LoginInteractor(
+                userDataAccessObject, loginOutputBoundary);
+
+        final LoginController loginController = new LoginController(loginInteractor);
+        loginView.setLoginController(loginController);
+        return this;
+    }
+
+
+//    /**
+//     * Adds the Logout Use Case to the application.
+//     * @return this builder
+//     */
+//    public AppBuilder addLogoutUseCase() {
+//        final LogoutOutputBoundary logoutOutputBoundary = new LogoutPresenter(viewManagerModel,
+//                loggedInViewModel, loginViewModel);
+//
+//        final LogoutInputBoundary logoutInteractor =
+//                new LogoutInteractor(userDataAccessObject, logoutOutputBoundary);
+//
+//        final LogoutController logoutController = new LogoutController(logoutInteractor);
+//        loggedInView.setLogoutController(logoutController);
+//        return this;
+//    }
+
+    /**
+     * Creates the JFrame for the application and initially sets the SignupView to be displayed.
      * @return the application
      */
     public JFrame build() {
-        final JFrame application = new JFrame("Fundi Example");
+        final JFrame application = new JFrame("Login Example");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(mainView.getViewName());
+        viewManagerModel.setState(loginView.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;

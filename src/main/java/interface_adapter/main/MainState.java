@@ -1,10 +1,24 @@
 package interface_adapter.main;
 
 /**
- * The state for the Signup View Model.
+ * The State information representing the main page user.
  */
 public class MainState {
     private String username = "";
+
+    private String password = "";
+    private String passwordError;
+
+    public MainState(MainState copy) {
+        username = copy.username;
+        password = copy.password;
+        passwordError = copy.passwordError;
+    }
+
+    // Because of the previous copy constructor, the default constructor must be explicit.
+    public MainState() {
+
+    }
 
     public String getUsername() {
         return username;
@@ -14,10 +28,15 @@ public class MainState {
         this.username = username;
     }
 
-    @Override
-    public String toString() {
-        return "MainState{"
-                + "username='" + username + '\''
-                + '}';
+    public void setPassword(String password) {
+        this.password = password;
+    }
+
+    public void setPasswordError(String passwordError) {
+        this.passwordError = passwordError;
+    }
+
+    public String getPassword() {
+        return password;
     }
 }

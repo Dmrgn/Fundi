@@ -1,15 +1,16 @@
 package use_case.portfolio;
 
-import entity.User;
+import entity.Portfolio;
 
 /**
  * DAO for the Login Use Case.
  */
-public interface PortfolioUserDataAccessInterface {
+public interface PortfolioDataAccessInterface {
 
     /**
      * Get the portfolio data
      * @param portfolioId the id to search at
+     * @return A portfolio object
      */
-    void getPortfolio(String portfolioId);
+    Portfolio getPortfolio(String portfolioId);
 }

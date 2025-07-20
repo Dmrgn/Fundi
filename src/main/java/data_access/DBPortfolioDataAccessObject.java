@@ -8,10 +8,9 @@ import java.sql.*;
 
 
 public class DBPortfolioDataAccessObject implements PortfolioDataAccessInterface {
-    final Connection connection;
+    private final Connection connection = DriverManager.getConnection("JDBC:sqlite:data/fundi.sqlite");
 
-    DBPortfolioDataAccessObject(Connection connection){
-        this.connection = connection;
+    public DBPortfolioDataAccessObject() throws SQLException {
     }
 
     /**

@@ -1,9 +1,6 @@
 package interface_adapter.login;
 
-import entity.CommonUser;
-import entity.CommonUserFactory;
 import entity.User;
-import entity.UserFactory;
 import use_case.login.*;
 
 /**
@@ -23,23 +20,20 @@ public class LoginInteractor implements LoginInputBoundary {
     public void execute(LoginInputData loginInputData) {
         final String username = loginInputData.getUsername();
         final String password = loginInputData.getPassword();
-        // For now skip login
-//        if (!userDataAccessObject.existsByName(username)) {
-//            loginPresenter.prepareFailView(username + ": Account does not exist.");
-//        }
-//        else {
-        //final String pwd = userDataAccessObject.get(username).getPassword();
-//        if (!password.equals(pwd)) {
-//            loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
-//        }
-//        else {
+        if (!userDataAccessObject.existsByName(username)) {
+            loginPresenter.prepareFailView(username + ": Account does not exist.");
+        } else {
+            final String pwd = userDataAccessObject.get(username).getPassword();
+            if (!password.equals(pwd)) {
+                loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
+            } else {
 
-            // final User user = userDataAccessObject.get(loginInputData.getUsername());
-            final User user = new CommonUser(username, password);
+                final User user = userDataAccessObject.get(loginInputData.getUsername());
 
-            final LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
-            loginPresenter.prepareSuccessView(loginOutputData);
+                final LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
+                loginPresenter.prepareSuccessView(loginOutputData);
 
-        //}
+            }
+        }
     }
 }

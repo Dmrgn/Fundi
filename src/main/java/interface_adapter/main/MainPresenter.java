@@ -21,11 +21,11 @@ public class MainPresenter implements MainOutputBoundary {
 
     @Override
     public void prepareView(MainOutputData mainOutputData) {
-        System.out.println(mainOutputData.getUseCase());
         switch (mainOutputData.getUseCase()) {
             case "Portfolios":
                 final PortfoliosState portfoliosState = portfoliosViewModel.getState();
                 portfoliosState.setPortfolios(mainOutputData.getPortfolios());
+                portfoliosState.setUsername(mainOutputData.getUsername());
                 this.portfoliosViewModel.setState(portfoliosState);
                 this.portfoliosViewModel.firePropertyChanged();
 

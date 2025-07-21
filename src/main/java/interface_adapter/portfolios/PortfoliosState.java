@@ -7,9 +7,11 @@ import java.util.Map;
  */
 public class PortfoliosState {
     private Map<String, String> portfolios;
+    private String username;
 
     public PortfoliosState(PortfoliosState copy) {
         portfolios = copy.portfolios;
+        username = copy.username;
     }
 
     // Because of the previous copy constructor, the default constructor must be explicit.
@@ -23,5 +25,13 @@ public class PortfoliosState {
 
     public void setPortfolios(Map<String, String> portfolios) {
         this.portfolios = portfolios;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

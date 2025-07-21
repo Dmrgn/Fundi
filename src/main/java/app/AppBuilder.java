@@ -8,11 +8,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import data_access.DBMainDataAccessObject;
+import data_access.DBPortfoliosDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import data_access.DBUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.create.CreateViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -32,6 +33,8 @@ import use_case.login.LoginUserDataAccessInterface;
 import use_case.main.MainDataAccessInterface;
 import use_case.main.MainInputBoundary;
 import use_case.main.MainOutputBoundary;
+import use_case.portfolios.PortfoliosInputBoundary;
+import use_case.portfolios.PortfoliosOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupUserDataAccessInterface;
@@ -51,16 +54,18 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
     private final LoginUserDataAccessInterface userDataAccessObject =
             new DBUserDataAccessObject(userFactory);
-    private final MainDataAccessInterface mainDataAccessObject = new DBMainDataAccessObject();
+    private final MainDataAccessInterface mainDataAccessObject = new DBPortfoliosDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
     private LoginViewModel loginViewModel;
     private MainViewModel mainViewModel;
     private PortfoliosViewModel portfoliosViewModel;
+    private CreateViewModel createViewModel;
     private MainView mainView;
     private LoginView loginView;
     private PortfoliosView portfoliosView;
+    private CreateView createView;
 
     public AppBuilder() throws SQLException {
         cardPanel.setLayout(cardLayout);
@@ -110,6 +115,17 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the create view to the application
+     * @return this builder
+     */
+    public AppBuilder addCreateView() {
+        createViewModel = new CreateViewModel();
+        createView = new CreateView(createViewModel);
+        cardPanel.add(createView, createView.getViewName());
+        return this;
+    }
+
 
     /**
      * Adds the Login Use Case to the application.
@@ -152,6 +168,16 @@ public class AppBuilder {
         final MainController mainController = new MainController(mainInteractor);
         mainView.setMainController(mainController);
         return this;
+    }
+
+    public AppBuilder addPortfoliosUseCase() {
+        final PortfoliosOutputBoundary portfoliosOutputBoundary = new PortfoliosPresenter(viewManagerModel,
+                createViewModel);
+        final PortfoliosInputBoundary portfoliosInteractor = new PortfoliosInteractor(portfoliosOutputBoundary);
+        final PortfoliosController portfoliosController = new PortfoliosController(portfoliosInteractor);
+        portfoliosView.setController(portfoliosController);
+        return this;
+
     }
 
     /**

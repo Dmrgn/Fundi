@@ -12,6 +12,7 @@ import javax.swing.event.DocumentListener;
 
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
+import interface_adapter.portfolios.PortfoliosController;
 import interface_adapter.portfolios.PortfoliosState;
 import interface_adapter.portfolios.PortfoliosViewModel;
 
@@ -22,6 +23,7 @@ public class PortfoliosView extends JPanel {
 
     private final String viewName = "portfolios";
     private final PortfoliosViewModel portfoliosViewModel;
+    private PortfoliosController portfoliosController;
 
     public PortfoliosView(PortfoliosViewModel portfoliosViewModel) {
         this.portfoliosViewModel = portfoliosViewModel;
@@ -38,6 +40,13 @@ public class PortfoliosView extends JPanel {
         welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 24));
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JButton newPortfolio = new JButton("Create New Portfolio");
+        newPortfolio.addActionListener(evt -> {
+            final PortfoliosState currentState = portfoliosViewModel.getState();
+            portfoliosController.execute(
+                    currentState.getUsername(),
+                    "" // Empty means create portfolio
+            );
+        });
         newPortfolio.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         topPanel.add(welcomeLabel);
@@ -81,5 +90,9 @@ public class PortfoliosView extends JPanel {
 
     public String getViewName() {
         return viewName;
+    }
+
+    public void setController(PortfoliosController portfoliosController) {
+        this.portfoliosController = portfoliosController;
     }
 }

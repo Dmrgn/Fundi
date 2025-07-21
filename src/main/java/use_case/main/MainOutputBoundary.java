@@ -8,5 +8,5 @@ public interface MainOutputBoundary {
     /**
      * Prepares the success view for the main Use Case.
      */
-    void prepareView();
+    void prepareView(MainOutputData mainOutputData);
 }

@@ -1,6 +1,8 @@
 package view;
 
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -12,6 +14,8 @@ import javax.swing.event.DocumentListener;
 //import interface_adapter.change_password.LoggedInState;
 //import interface_adapter.change_password.LoggedInViewModel;
 //import interface_adapter.logout.LogoutController;
+import interface_adapter.login.LoginState;
+import interface_adapter.main.MainController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 
@@ -22,6 +26,7 @@ public class MainView extends JPanel {
 
     private final String viewName = "main";
     private final MainViewModel mainViewModel;
+    private MainController mainController;
 
     public MainView(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
@@ -70,12 +75,19 @@ public class MainView extends JPanel {
         buttonPanel.setMaximumSize(new Dimension(400, 100));
 
         String[] useCases = new String[] {"Portfolios", "Search", "News", "Watchlist", "Leaderboard", "Settings"};
-        // Will make map to controllers using parallel arrays
-        for (int i = 0; i < useCases.length; i++) {
-            JButton useCaseButton = new JButton(useCases[i]);
-            buttonPanel.add(useCaseButton);
+        for (String useCase : useCases) {
+            JButton useCaseButton = new JButton(useCase);
 
-            // TODO Add event Listeners and map to controllers
+            useCaseButton.addActionListener(evt -> {
+                final MainState currentState = mainViewModel.getState();
+                currentState.setUseCase(useCase);  // set the correct use case at click time
+                mainViewModel.setState(currentState);
+                mainController.execute(
+                        currentState.getUsername(),
+                        currentState.getUseCase()
+                );
+            });
+            buttonPanel.add(useCaseButton);
         }
 
         topPanel.add(Box.createVerticalStrut(20));
@@ -91,5 +103,9 @@ public class MainView extends JPanel {
 
     public String getViewName() {
         return viewName;
+    }
+
+    public void setMainController(MainController mainController) {
+        this.mainController = mainController;
     }
 }

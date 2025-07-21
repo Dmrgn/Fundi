@@ -5,13 +5,11 @@ package interface_adapter.main;
  */
 public class MainState {
     private String username = "";
-    private String password = "";
-    private String passwordError;
+    private String useCase = "";
 
     public MainState(MainState copy) {
         username = copy.username;
-        password = copy.password;
-        passwordError = copy.passwordError;
+        useCase = copy.useCase;
     }
 
     // Because of the previous copy constructor, the default constructor must be explicit.
@@ -27,15 +25,11 @@ public class MainState {
         this.username = username;
     }
 
-    public void setPassword(String password) {
-        this.password = password;
+    public void setUseCase(String useCase) {
+        this.useCase = useCase;
     }
 
-    public void setPasswordError(String passwordError) {
-        this.passwordError = passwordError;
-    }
-
-    public String getPassword() {
-        return password;
+    public String getUseCase() {
+        return useCase;
     }
 }

@@ -1,6 +1,8 @@
 package interface_adapter.main;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.portfolios.PortfoliosState;
+import interface_adapter.portfolios.PortfoliosViewModel;
 import use_case.main.MainOutputBoundary;
 import use_case.main.MainOutputData;
 
@@ -9,21 +11,27 @@ import use_case.main.MainOutputData;
  */
 public class MainPresenter implements MainOutputBoundary {
 
-    private final MainViewModel mainViewModel;
     private final ViewManagerModel viewManagerModel;
+    private final PortfoliosViewModel portfoliosViewModel;
 
-    public MainPresenter(ViewManagerModel viewManagerModel, MainViewModel mainViewModel) {
-        this.mainViewModel = mainViewModel;
+    public MainPresenter(ViewManagerModel viewManagerModel, PortfoliosViewModel portfoliosViewModel)  {
         this.viewManagerModel = viewManagerModel;
+        this.portfoliosViewModel = portfoliosViewModel;
     }
 
     @Override
-    public void prepareView() {
-         final MainState mainState = mainViewModel.getState();
-         this.mainViewModel.setState(mainState);
-         mainViewModel.firePropertyChanged();
+    public void prepareView(MainOutputData mainOutputData) {
+        System.out.println(mainOutputData.getUseCase());
+        switch (mainOutputData.getUseCase()) {
+            case "Portfolios":
+                final PortfoliosState portfoliosState = portfoliosViewModel.getState();
+                portfoliosState.setPortfolios(mainOutputData.getPortfolios());
+                this.portfoliosViewModel.setState(portfoliosState);
+                this.portfoliosViewModel.firePropertyChanged();
 
-         viewManagerModel.setState(mainViewModel.getViewName());
-         viewManagerModel.firePropertyChanged();
+                this.viewManagerModel.setState(portfoliosViewModel.getViewName());
+                this.viewManagerModel.firePropertyChanged();
+
+        }
     }
 }

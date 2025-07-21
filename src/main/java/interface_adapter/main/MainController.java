@@ -19,8 +19,8 @@ public class MainController {
      * 
      * @param username  the current user
      */
-    public void execute(String username) {
-        final MainInputData mainInputData = new MainInputData(username);
+    public void execute(String username, String useCase) {
+        final MainInputData mainInputData = new MainInputData(username, useCase);
         mainUseCaseInteractor.execute(mainInputData);
     }
 }

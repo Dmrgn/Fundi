@@ -1,24 +1,32 @@
 package use_case.main;
 
+import java.util.Map;
+
 /**
- * Output Data for the Signup Use Case.
+ * Output Data for the main Use Case.
  */
 public class MainOutputData {
 
     private final String username;
+    private final String useCase;
+    private final Map<String, String> portfolios;
 
-    private final boolean useCaseFailed;
 
-    public MainOutputData(String username, boolean useCaseFailed) {
+    public MainOutputData(String username, String useCase, Map<String, String> portfolios) {
         this.username = username;
-        this.useCaseFailed = useCaseFailed;
+        this.useCase = useCase;
+        this.portfolios = portfolios;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public boolean isUseCaseFailed() {
-        return useCaseFailed;
+    public String getUseCase() {
+        return useCase;
+    }
+    
+    public Map<String, String> getPortfolios() {
+        return portfolios;
     }
 }

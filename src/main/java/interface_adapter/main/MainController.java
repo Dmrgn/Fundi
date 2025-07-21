@@ -17,19 +17,10 @@ public class MainController {
     /**
      * Executes the Main Use Case.
      * 
-     * @param username  the username to sign up
-     * @param password1 the password
-     * @param password2 the password repeated
+     * @param username  the current user
      */
     public void execute(String username) {
         final MainInputData mainInputData = new MainInputData(username);
         mainUseCaseInteractor.execute(mainInputData);
-    }
-
-    /**
-     * Executes the "switch to LoginView" Use Case.
-     */
-    public void switchToLoginView() {
-//         mainUseCaseInteractor.switchToLoginView();
     }
 }

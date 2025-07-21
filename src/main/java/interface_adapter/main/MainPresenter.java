@@ -18,27 +18,12 @@ public class MainPresenter implements MainOutputBoundary {
     }
 
     @Override
-    public void prepareSuccessView(MainOutputData response) {
-        // On success, switch to the login view.
-        // final LoginState loginState = loginViewModel.getState();
-        // loginState.setUsername(response.getUsername());
-        // this.loginViewModel.setState(loginState);
-        // loginViewModel.firePropertyChanged();
+    public void prepareView() {
+         final MainState mainState = mainViewModel.getState();
+         this.mainViewModel.setState(mainState);
+         mainViewModel.firePropertyChanged();
 
-        // viewManagerModel.setState(loginViewModel.getViewName());
-        // viewManagerModel.firePropertyChanged();
-    }
-
-    @Override
-    public void prepareFailView(String error) {
-        // final SignupState signupState = signupViewModel.getState();
-        // signupState.setUsernameError(error);
-        // signupViewModel.firePropertyChanged();
-    }
-
-    @Override
-    public void switchToLoginView() {
-        // viewManagerModel.setState(loginViewModel.getViewName());
-        // viewManagerModel.firePropertyChanged();
+         viewManagerModel.setState(mainViewModel.getViewName());
+         viewManagerModel.firePropertyChanged();
     }
 }

@@ -5,7 +5,6 @@ package interface_adapter.main;
  */
 public class MainState {
     private String username = "";
-
     private String password = "";
     private String passwordError;
 

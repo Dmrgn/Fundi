@@ -22,7 +22,6 @@ public class MainView extends JPanel {
 
     private final String viewName = "main";
     private final MainViewModel mainViewModel;
-    private final JLabel passwordErrorField = new JLabel();
 
     public MainView(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
@@ -38,8 +37,11 @@ public class MainView extends JPanel {
         JLabel welcomeLabel = new JLabel("Welcome to Fundi!");
         welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 24));
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel usernameLabel = new JLabel("Logged in as: " + mainViewModel.getState().getUsername());
+        JLabel usernameLabel = new JLabel();
+        mainViewModel.addPropertyChangeListener(evt -> {
+            MainState state = mainViewModel.getState();
+            usernameLabel.setText("Logged in as: " + state.getUsername());
+        });
         usernameLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));
         usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 

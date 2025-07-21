@@ -13,6 +13,9 @@ import entity.CommonUserFactory;
 import entity.UserFactory;
 import data_access.DBUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.create.CreateController;
+import interface_adapter.create.CreateInteractor;
+import interface_adapter.create.CreatePresenter;
 import interface_adapter.create.CreateViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
@@ -26,6 +29,9 @@ import interface_adapter.main.MainPresenter;
 import interface_adapter.main.MainInteractor;
 import interface_adapter.main.MainController;
 import interface_adapter.portfolios.*;
+import use_case.create.CreateDataAccessInterface;
+import use_case.create.CreateInputBoundary;
+import use_case.create.CreateOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import interface_adapter.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -54,7 +60,7 @@ public class AppBuilder {
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
     private final LoginUserDataAccessInterface userDataAccessObject =
             new DBUserDataAccessObject(userFactory);
-    private final MainDataAccessInterface mainDataAccessObject = new DBPortfoliosDataAccessObject();
+    private final DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -164,7 +170,7 @@ public class AppBuilder {
      */
     public AppBuilder addMainUseCase() {
         final MainOutputBoundary mainOutputBoundary = new MainPresenter(viewManagerModel, portfoliosViewModel);
-        final MainInputBoundary mainInteractor = new MainInteractor(mainDataAccessObject, mainOutputBoundary);
+        final MainInputBoundary mainInteractor = new MainInteractor(portfoliosDataAccessObject, mainOutputBoundary);
         final MainController mainController = new MainController(mainInteractor);
         mainView.setMainController(mainController);
         return this;
@@ -176,6 +182,15 @@ public class AppBuilder {
         final PortfoliosInputBoundary portfoliosInteractor = new PortfoliosInteractor(portfoliosOutputBoundary);
         final PortfoliosController portfoliosController = new PortfoliosController(portfoliosInteractor);
         portfoliosView.setController(portfoliosController);
+        return this;
+
+    }
+
+    public AppBuilder addCreateUseCase() {
+        final CreateOutputBoundary createOutputBoundary = new CreatePresenter(viewManagerModel, portfoliosViewModel, createViewModel    );
+        final CreateInputBoundary createInteractor = new CreateInteractor(portfoliosDataAccessObject, createOutputBoundary);
+        final CreateController createController = new CreateController(createInteractor);
+        createView.setController(createController);
         return this;
 
     }

@@ -7,15 +7,21 @@ import java.util.Map;
  */
 public class MainOutputData {
 
+    private final String id;
     private final String username;
     private final String useCase;
     private final Map<String, String> portfolios;
 
 
-    public MainOutputData(String username, String useCase, Map<String, String> portfolios) {
+    public MainOutputData(String id, String username, String useCase, Map<String, String> portfolios) {
+        this.id = id;
         this.username = username;
         this.useCase = useCase;
         this.portfolios = portfolios;
+    }
+    
+    public String getId() {
+            return id;
     }
 
     public String getUsername() {

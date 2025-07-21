@@ -10,7 +10,8 @@ public interface CreateDataAccessInterface extends MainDataAccessInterface {
     /**
      * Checks if the given portfolio exists for the user.
      * @param portfolioName the portfolioName to look for
+     * @param username the users name
      * @return true if a portfolio with this name exists; false otherwise
      */
-    boolean existsByName(String portfolioName);
+    boolean existsByName(String portfolioName, String username);
 }

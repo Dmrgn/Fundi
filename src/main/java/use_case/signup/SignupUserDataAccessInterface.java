@@ -19,4 +19,11 @@ public interface SignupUserDataAccessInterface {
      * @param user the user to save
      */
     void save(User user);
+
+    /**
+     * Returns the id of the given username
+     * @param username The username
+     * @return The id of the username
+     */
+    String getId(String username);
 }

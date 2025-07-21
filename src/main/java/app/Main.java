@@ -23,6 +23,7 @@ public class Main {
                 .addSignupUseCase()
                 .addMainUseCase()
                 .addPortfoliosUseCase()
+                .addCreateUseCase()
                 .build();
         application.pack();
         application.setVisible(true);

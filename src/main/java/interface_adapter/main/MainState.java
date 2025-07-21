@@ -4,10 +4,12 @@ package interface_adapter.main;
  * The State information representing the main page user.
  */
 public class MainState {
+    private String id = "";
     private String username = "";
     private String useCase = "";
 
     public MainState(MainState copy) {
+        id = copy.id;
         username = copy.username;
         useCase = copy.useCase;
     }
@@ -17,6 +19,14 @@ public class MainState {
 
     }
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
+    
     public String getUsername() {
         return username;
     }

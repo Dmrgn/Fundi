@@ -1,18 +1,25 @@
 package use_case.create;
 
+import java.util.Map;
+
 /**
  * Output Data for the Create Use Case.
  */
 public class CreateOutputData {
 
-    private final boolean useCaseFailed;
+    private final String username;
+    private Map<String, String> portfolios;
 
-    public CreateOutputData(boolean useCaseFailed) {
-        this.useCaseFailed = useCaseFailed;
+    public CreateOutputData(String username, Map<String, String> portfolios) {
+        this.username = username;
+        this.portfolios = portfolios;
     }
 
-    public boolean isUseCaseFailed() {
-        return useCaseFailed;
+    public String getUsername() {
+        return username;
     }
 
+    public Map<String, String> getPortfolios() {
+        return portfolios;
+    }
 }

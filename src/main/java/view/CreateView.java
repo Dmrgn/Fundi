@@ -12,6 +12,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import interface_adapter.create.CreateController;
 import interface_adapter.create.CreateState;
 import interface_adapter.create.CreateViewModel;
 import interface_adapter.login.LoginState;
@@ -23,13 +24,16 @@ import interface_adapter.portfolios.PortfoliosViewModel;
 /**
  * The View for when the user is trying to create a portfolio.
  */
-public class CreateView extends JPanel {
+public class CreateView extends JPanel implements PropertyChangeListener {
 
     private final String viewName = "create";
     private final CreateViewModel createViewModel;
+    private CreateController createController;
+    private final JLabel createError = new JLabel();
 
     public CreateView(CreateViewModel createViewModel) {
         this.createViewModel = createViewModel;
+        this.createViewModel.addPropertyChangeListener(this);
         setPreferredSize(new Dimension(900, 600));
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -51,13 +55,15 @@ public class CreateView extends JPanel {
                 new JLabel("Name"), createNameField);
         usernameInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(usernameInfo);
+        createError.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(createError);
         final JButton create = new JButton("create");
         create.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(create)) {
                             final CreateState currentState = createViewModel.getState();
-
+                            createController.execute(currentState.getUsername(), createNameField.getText());
                         }
                     }
                 }
@@ -71,5 +77,15 @@ public class CreateView extends JPanel {
 
     public String getViewName() {
         return viewName;
+    }
+
+    @Override
+    public void propertyChange(PropertyChangeEvent evt) {
+        final CreateState state = (CreateState) evt.getNewValue();
+        createError.setText(state.getCreateError());
+    }
+
+    public void setController(CreateController createController) {
+        this.createController = createController;
     }
 }

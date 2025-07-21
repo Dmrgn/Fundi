@@ -20,9 +20,10 @@ public class MainInteractor implements MainInputBoundary {
     @Override
     public void execute(MainInputData mainInputData) {
         final String username = mainInputData.getUsername();
+        final String id = mainDataAccessObject.getId(username);
         final String useCase = mainInputData.getUseCase();
         final Map<String, String> portfolios = mainDataAccessObject.getPortfolios(username);
-        mainPresenter.prepareView(new MainOutputData(username, useCase, portfolios));
+        mainPresenter.prepareView(new MainOutputData(id, username, useCase, portfolios));
 
     }
 }

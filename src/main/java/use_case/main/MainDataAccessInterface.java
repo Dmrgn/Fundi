@@ -17,7 +17,14 @@ public interface MainDataAccessInterface {
     /**
      * Save portfolio data
      * @param portfolioName the Name
-     * @param portfolioId the id
+     * @param username the username
      */
     void save(String portfolioName, String username);
+
+    /**
+     * Returns the id of the given username
+     * @param username The username
+     * @return The id of the username
+     */
+    String getId(String username);
 }

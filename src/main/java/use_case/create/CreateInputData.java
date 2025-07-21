@@ -6,12 +6,18 @@ package use_case.create;
 public class CreateInputData {
 
     private final String username;
+    private final String portfolioName;
 
-    public CreateInputData(String username) {
+    public CreateInputData(String username, String portfolioName) {
         this.username = username;
+        this.portfolioName = portfolioName;
     }
 
     public String getUsername() {
         return username;
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
     }
 }

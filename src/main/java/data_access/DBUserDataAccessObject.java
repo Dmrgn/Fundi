@@ -27,7 +27,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                 String id = rs.getString("id");
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                accounts.put(username, userFactory.create(id, username, password));
+                accounts.put(id, userFactory.create(id, username, password));
                 nameToId.put(username, id);
             }
         } catch (SQLException e) {
@@ -64,7 +64,11 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
     }
 
     @Override
-    public User get(String id) {
+    public User get(String username) {
+        if (!nameToId.containsKey(username)) {
+            return null;
+        }
+        String id = nameToId.get(username);
         if (!accounts.containsKey(id)) {
             return null;
         }

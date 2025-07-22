@@ -8,17 +8,17 @@ import java.util.ArrayList;
  */
 public class Portfolio {
 
-    private final List<Stock> stocks;
+    private final List<Transaction> transactions;
 
     public Portfolio() {
-        stocks = new ArrayList<>();
+        transactions = new ArrayList<>();
     }
 
-    public List<Stock> getStocks() {
-        return stocks;
+    public List<Transaction> getTransactions() {
+        return transactions;
     }
 
-    public void addStock(Stock stock) {
-        stocks.add(stock);
+    public void addTransaction(Transaction transaction) {
+        transactions.add(transaction);
     }
 }

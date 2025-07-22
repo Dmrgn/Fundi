@@ -10,8 +10,10 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
+import interface_adapter.create.CreateController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
+import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolios.PortfoliosController;
 import interface_adapter.portfolios.PortfoliosState;
 import interface_adapter.portfolios.PortfoliosViewModel;
@@ -24,6 +26,7 @@ public class PortfoliosView extends JPanel {
     private final String viewName = "portfolios";
     private final PortfoliosViewModel portfoliosViewModel;
     private PortfoliosController portfoliosController;
+    private PortfolioController portfolioController;
 
     public PortfoliosView(PortfoliosViewModel portfoliosViewModel) {
         this.portfoliosViewModel = portfoliosViewModel;
@@ -42,9 +45,8 @@ public class PortfoliosView extends JPanel {
         JButton newPortfolio = new JButton("Create New Portfolio");
         newPortfolio.addActionListener(evt -> {
             final PortfoliosState currentState = portfoliosViewModel.getState();
-            portfoliosController.execute(
-                    currentState.getUsername(),
-                    "" // Empty means create portfolio
+            portfoliosController.routeToCreate(
+                    currentState.getUsername()
             );
         });
         newPortfolio.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -66,15 +68,19 @@ public class PortfoliosView extends JPanel {
         buttonPanel.setMaximumSize(new Dimension(400, 100));
 
         portfoliosViewModel.addPropertyChangeListener(evt -> {
+            buttonPanel.removeAll();
             PortfoliosState state = portfoliosViewModel.getState();
             Map<String, String> portfolios = state.getPortfolios();
 
-            for (String portfolio : portfolios.keySet()) {
-                JButton useCaseButton = new JButton(portfolio);
-                buttonPanel.add(useCaseButton);
+            portfolios.keySet().forEach(portfolio -> {
+                JButton portfolioButton = new JButton(portfolio);
+                portfolioButton.addActionListener(portEvt -> {
+                    PortfoliosState portfoliosState = portfoliosViewModel.getState();
+                    portfolioController.execute(portfoliosState.getUsername(), portfolios.get(portfolio), portfolio);
 
-                // TODO Add event Listeners and map to controllers
-            }
+                });
+                buttonPanel.add(portfolioButton);
+            });
         });
 
         topPanel.add(Box.createVerticalStrut(20));
@@ -92,7 +98,11 @@ public class PortfoliosView extends JPanel {
         return viewName;
     }
 
-    public void setController(PortfoliosController portfoliosController) {
+    public void setPortfoliosController(PortfoliosController portfoliosController) {
         this.portfoliosController = portfoliosController;
+    }
+
+    public void setPortfolioController(PortfolioController portfolioController) {
+        this.portfolioController = portfolioController;
     }
 }

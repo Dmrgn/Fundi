@@ -1,13 +1,13 @@
 package app;
 
 import java.awt.CardLayout;
-import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.DBPortfolioDataAccessObject;
 import data_access.DBPortfoliosDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
@@ -20,25 +20,24 @@ import interface_adapter.create.CreateViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.portfolio.PortfolioController;
+import interface_adapter.portfolio.PortfolioInteractor;
+import interface_adapter.portfolio.PortfolioPresenter;
+import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.signup.SignupInteractor;
 import interface_adapter.main.MainViewModel;
-import interface_adapter.main.MainPresenter;
-import interface_adapter.main.MainInteractor;
-import interface_adapter.main.MainController;
 import interface_adapter.portfolios.*;
-import use_case.create.CreateDataAccessInterface;
 import use_case.create.CreateInputBoundary;
 import use_case.create.CreateOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import interface_adapter.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginUserDataAccessInterface;
-import use_case.main.MainDataAccessInterface;
-import use_case.main.MainInputBoundary;
-import use_case.main.MainOutputBoundary;
+import use_case.portfolio.PortfolioInputBoundary;
+import use_case.portfolio.PortfolioOutputBoundary;
 import use_case.portfolios.PortfoliosInputBoundary;
 import use_case.portfolios.PortfoliosOutputBoundary;
 import use_case.signup.SignupInputBoundary;
@@ -61,6 +60,7 @@ public class AppBuilder {
     private final LoginUserDataAccessInterface userDataAccessObject =
             new DBUserDataAccessObject(userFactory);
     private final DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
+    private final DBPortfolioDataAccessObject portfolioDataAccessObject = new DBPortfolioDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -68,10 +68,12 @@ public class AppBuilder {
     private MainViewModel mainViewModel;
     private PortfoliosViewModel portfoliosViewModel;
     private CreateViewModel createViewModel;
+    private PortfolioViewModel portfolioViewModel;
     private MainView mainView;
     private LoginView loginView;
     private PortfoliosView portfoliosView;
     private CreateView createView;
+    private PortfolioView portfolioView;
 
     public AppBuilder() throws SQLException {
         cardPanel.setLayout(cardLayout);
@@ -132,6 +134,16 @@ public class AppBuilder {
         return this;
     }
 
+    /**
+     * Adds the portfolio view to the application
+     * @return this builder
+     */
+    public AppBuilder addPortfolioView() {
+        portfolioViewModel = new PortfolioViewModel();
+        portfolioView = new PortfolioView(portfolioViewModel);
+        cardPanel.add(portfolioView, portfolioView.getViewName());
+        return this;
+    }
 
     /**
      * Adds the Login Use Case to the application.
@@ -164,35 +176,33 @@ public class AppBuilder {
         return this;
     }
 
-    /**
-     * Adds the main use case
-     * @return this builder
-     */
-    public AppBuilder addMainUseCase() {
-        final MainOutputBoundary mainOutputBoundary = new MainPresenter(viewManagerModel, portfoliosViewModel);
-        final MainInputBoundary mainInteractor = new MainInteractor(portfoliosDataAccessObject, mainOutputBoundary);
-        final MainController mainController = new MainController(mainInteractor);
-        mainView.setMainController(mainController);
-        return this;
-    }
 
     public AppBuilder addPortfoliosUseCase() {
         final PortfoliosOutputBoundary portfoliosOutputBoundary = new PortfoliosPresenter(viewManagerModel,
-                createViewModel);
-        final PortfoliosInputBoundary portfoliosInteractor = new PortfoliosInteractor(portfoliosOutputBoundary);
+                portfoliosViewModel, createViewModel);
+        final PortfoliosInputBoundary portfoliosInteractor = new PortfoliosInteractor(portfoliosOutputBoundary,
+                portfoliosDataAccessObject);
         final PortfoliosController portfoliosController = new PortfoliosController(portfoliosInteractor);
-        portfoliosView.setController(portfoliosController);
+        mainView.setController(portfoliosController);
+        portfoliosView.setPortfoliosController(portfoliosController);
         return this;
 
     }
 
     public AppBuilder addCreateUseCase() {
-        final CreateOutputBoundary createOutputBoundary = new CreatePresenter(viewManagerModel, portfoliosViewModel, createViewModel    );
+        final CreateOutputBoundary createOutputBoundary = new CreatePresenter(viewManagerModel, portfoliosViewModel, createViewModel);
         final CreateInputBoundary createInteractor = new CreateInteractor(portfoliosDataAccessObject, createOutputBoundary);
         final CreateController createController = new CreateController(createInteractor);
         createView.setController(createController);
         return this;
+    }
 
+    public AppBuilder addPortfolioUseCase() {
+        final PortfolioOutputBoundary portfolioOutputBoundary = new PortfolioPresenter(viewManagerModel, portfolioViewModel);
+        final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(portfolioDataAccessObject, portfolioOutputBoundary);
+        final PortfolioController controller = new PortfolioController(portfolioInputBoundary);
+        portfoliosView.setPortfolioController(controller);
+        return this;
     }
 
     /**

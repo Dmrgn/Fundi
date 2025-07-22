@@ -1,24 +1,26 @@
 package use_case.portfolios;
 
+import java.util.Map;
+
 /**
  * Output Data for the Portfolios Use Case.
  */
 public class PortfoliosOutputData {
 
     private final String username;
-    private final String portfolioName;
+    private final Map<String, String> portfolios;
 
-    public PortfoliosOutputData(String username, String portfolioName) {
+    public PortfoliosOutputData(String username, Map<String, String> portfolios) {
         this.username = username;
-        this.portfolioName = portfolioName;
+        this.portfolios = portfolios;
     }
 
     public String getUsername() {
         return username;
     }
 
-    public String getPortfolioName() {
-        return portfolioName;
+    public Map<String, String> getPortfolios() {
+        return portfolios;
     }
 
 }

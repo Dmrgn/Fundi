@@ -18,10 +18,13 @@ public class PortfoliosController {
      * Executes the Main Use Case.
      *
      * @param username the current user
-     * @param portfolioName the selected portfolio, null if going to make a new one
      */
-    public void execute(String username, String portfolioName) {
-        final PortfoliosInputData portfoliosInputData = new PortfoliosInputData(username, portfolioName);
+    public void execute(String username) {
+        final PortfoliosInputData portfoliosInputData = new PortfoliosInputData(username);
         portfoliosUseCaseInteractor.execute(portfoliosInputData);
+    }
+
+    public void routeToCreate(String username) {
+        portfoliosUseCaseInteractor.routeToCreate(username);
     }
 }

@@ -5,14 +5,9 @@ package use_case.portfolio;
  */
 public interface PortfolioOutputBoundary {
     /**
-     * Prepares the success view for the Portfolio Use Case.
+     * Prepares the view for the Portfolio Use Case.
      * @param outputData the output data
      */
-    void prepareSuccessView(PortfolioOutputData outputData);
+    void prepareView(PortfolioOutputData outputData);
 
-    /**
-     * Prepares the failure view for the Portfolio Use Case.
-     * @param errorMessage the explanation of the failure
-     */
-    void prepareFailView(String errorMessage);
 }

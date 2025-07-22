@@ -10,4 +10,6 @@ public interface PortfoliosOutputBoundary {
      */
     void prepareView(PortfoliosOutputData outputData);
 
+    void routeToCreate(String username);
+
 }

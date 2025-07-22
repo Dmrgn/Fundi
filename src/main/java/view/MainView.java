@@ -1,23 +1,16 @@
 package view;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 //import interface_adapter.change_password.ChangePasswordController;
 //import interface_adapter.change_password.LoggedInState;
 //import interface_adapter.change_password.LoggedInViewModel;
 //import interface_adapter.logout.LogoutController;
-import interface_adapter.login.LoginState;
-import interface_adapter.main.MainController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
+import interface_adapter.portfolios.PortfoliosController;
 
 /**
  * The View for when the user is logged into the program.
@@ -26,7 +19,7 @@ public class MainView extends JPanel {
 
     private final String viewName = "main";
     private final MainViewModel mainViewModel;
-    private MainController mainController;
+    private PortfoliosController portfoliosController;
 
     public MainView(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
@@ -66,7 +59,6 @@ public class MainView extends JPanel {
         // === 3. Buttons ===
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        setLayout(new BorderLayout(10, 10));
         JLabel promptLabel = new JLabel("What would you like to look at?");
         promptLabel.setFont(new Font("Sans Serif", Font.PLAIN, 18));
         promptLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -82,10 +74,9 @@ public class MainView extends JPanel {
                 final MainState currentState = mainViewModel.getState();
                 currentState.setUseCase(useCase);  // set the correct use case at click time
                 mainViewModel.setState(currentState);
-                mainController.execute(
-                        currentState.getUsername(),
-                        currentState.getUseCase()
-                );
+                if (useCase.equals("Portfolios")) {
+                    portfoliosController.execute(currentState.getUsername());
+                }
             });
             buttonPanel.add(useCaseButton);
         }
@@ -105,7 +96,7 @@ public class MainView extends JPanel {
         return viewName;
     }
 
-    public void setMainController(MainController mainController) {
-        this.mainController = mainController;
+    public void setController(PortfoliosController portfoliosController) {
+        this.portfoliosController = portfoliosController;
     }
 }

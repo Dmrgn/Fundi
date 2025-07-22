@@ -19,11 +19,12 @@ public class Main {
                 .addMainView()
                 .addPortfoliosView()
                 .addCreateView()
+                .addPortfolioView()
                 .addLoginUseCase()
                 .addSignupUseCase()
-                .addMainUseCase()
                 .addPortfoliosUseCase()
                 .addCreateUseCase()
+                .addPortfolioUseCase()
                 .build();
         application.pack();
         application.setVisible(true);

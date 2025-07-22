@@ -6,19 +6,19 @@ package use_case.portfolio;
 public class PortfolioOutputData {
 
     private final String username;
+    private final String portfolioId;
+    private final String portfolioName;
     private final String[] stockNames;
     private final int[] stockAmounts;
     private final double[] stockPrices;
 
-    public PortfolioOutputData(String username, String[] stockNames, int[] stockAmounts, double[] stockPrices) {
+    public PortfolioOutputData(String username, String portfolioId, String portfolioName, String[] stockNames, int[] stockAmounts, double[] stockPrices) {
         this.username = username;
+        this.portfolioId = portfolioId;
+        this.portfolioName = portfolioName;
         this.stockNames = stockNames;
         this.stockAmounts = stockAmounts;
         this.stockPrices = stockPrices;
-    }
-
-    public String getUsername() {
-        return username;
     }
 
     public String[] getStockNames() {
@@ -31,5 +31,17 @@ public class PortfolioOutputData {
 
     public double[] getStockPrices() {
         return stockPrices;
+    }
+
+    public String getPortfolioId() {
+        return portfolioId;
+    }
+
+    public String getPortfolioName() {
+        return portfolioName;
+    }
+
+    public String getUsername() {
+        return username;
     }
 }

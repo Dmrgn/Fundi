@@ -5,12 +5,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import use_case.create.CreateDataAccessInterface;
-import use_case.main.MainDataAccessInterface;
+import use_case.portfolios.PortfoliosDataAccessInterface;
 
 /**
  * DAO for user data implemented using a Database to persist the data.
  */
-public class DBPortfoliosDataAccessObject implements MainDataAccessInterface, CreateDataAccessInterface {
+public class DBPortfoliosDataAccessObject implements PortfoliosDataAccessInterface, CreateDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, Map<String, String>> portfolios = new HashMap<>();
     private final Map<String, String> userToId = new HashMap<>();

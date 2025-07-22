@@ -6,19 +6,13 @@ package use_case.portfolios;
 public class PortfoliosInputData {
 
     private final String username;
-    private final String portfolioName;
 
-    public PortfoliosInputData(String username, String portfolioName) {
+    public PortfoliosInputData(String username) {
         this.username = username;
-        this.portfolioName = portfolioName;
     }
 
     public String getUsername() {
         return username;
-    }
-
-    public String getPortfolioName() {
-        return portfolioName;
     }
 
 }

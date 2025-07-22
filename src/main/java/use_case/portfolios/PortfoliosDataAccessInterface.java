@@ -1,11 +1,11 @@
-package use_case.main;
+package use_case.portfolios;
 
 import java.util.Map;
 
 /**
  * DAO for the main use ase.
  */
-public interface MainDataAccessInterface {
+public interface PortfoliosDataAccessInterface {
 
     /**
      * Get the portfolio data

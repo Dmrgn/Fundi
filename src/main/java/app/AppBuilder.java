@@ -1,14 +1,22 @@
 package app;
 
 import java.awt.CardLayout;
+import java.io.IOException;
 
 import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.FileUserDataAccessObject;
+import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.login.LoginViewModel;
 import interface_adapter.main.MainViewModel;
+import interface_adapter.signup.SignupViewModel;
+import use_case.UserDataAccessInterface;
+import view.LoginView;
 import view.MainView;
+import view.SignupView;
 import view.ViewManager;
 
 /**
@@ -26,9 +34,20 @@ public class AppBuilder {
 
     private MainView mainView;
     private MainViewModel mainViewModel;
+    private LoginView loginView;
+    private LoginViewModel loginViewModel;
+    private SignupView signupView;
+    private SignupViewModel signupViewModel;
+
+    private UserDataAccessInterface userDataAccessObject;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
+        try {
+            userDataAccessObject = new FileUserDataAccessObject("users.csv", new UserFactory());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
     }
 
     /**
@@ -40,6 +59,21 @@ public class AppBuilder {
         mainViewModel = new MainViewModel();
         mainView = new MainView(mainViewModel);
         cardPanel.add(mainView, mainView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addLoginView() {
+        loginViewModel = new LoginViewModel();
+        loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, mainViewModel, userDataAccessObject);
+        cardPanel.add(loginView, loginView.viewName);
+        return this;
+    }
+
+    public AppBuilder addSignupView() {
+        signupViewModel = new SignupViewModel();
+        signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel,
+                userDataAccessObject);
+        cardPanel.add(signupView, signupView.viewName);
         return this;
     }
 
@@ -55,7 +89,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(mainView.getViewName());
+        viewManagerModel.setState(signupViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;

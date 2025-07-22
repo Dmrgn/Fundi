@@ -77,7 +77,7 @@ public class LoginView extends FormPanel implements ActionListener, PropertyChan
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
                         if (evt.getSource().equals(signUp)) {
-                            loginController.switchToSignUpView();
+                            loginController.switchToSignupView();
                         }
                     }
                 });

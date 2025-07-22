@@ -1,15 +1,16 @@
 package app;
 
-import java.io.IOException;
-
 import javax.swing.JOptionPane;
 
+import java.io.IOException;
+
+import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.main.MainViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupViewModel;
-import interface_adapter.main.MainViewModel;
 import use_case.UserDataAccessInterface;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
@@ -24,9 +25,9 @@ public class LoginUseCaseFactory {
 
     public static LoginView create(
             ViewManagerModel viewManagerModel,
-            LoginViewModel loginViewModel,
-            LoginViewModel signUpViewModel,
             MainViewModel mainViewModel,
+            LoginViewModel loginViewModel,
+            SignupViewModel signUpViewModel,
             UserDataAccessInterface userDataAccessObject) {
 
         try {
@@ -45,7 +46,7 @@ public class LoginUseCaseFactory {
             ViewManagerModel viewManagerModel,
             MainViewModel mainViewModel,
             LoginViewModel loginViewModel,
-            SignUpViewModel signUpViewModel,
+            SignupViewModel signUpViewModel,
             UserDataAccessInterface userDataAccessObject) throws IOException {
 
         // Notice how we pass this method's parameters to the Presenter.

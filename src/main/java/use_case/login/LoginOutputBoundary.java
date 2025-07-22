@@ -5,5 +5,5 @@ public interface LoginOutputBoundary {
 
     void prepareFailView(String error);
 
-    void switchToSignUpView();
+    void switchToSignupView();
 }

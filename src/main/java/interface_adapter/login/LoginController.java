@@ -15,4 +15,8 @@ public class LoginController {
         LoginInputData loginInputData = new LoginInputData(username, password);
         loginUseCaseInteractor.execute(loginInputData);
     }
+
+    public void switchToSignUpView() {
+        loginUseCaseInteractor.switchToSignUpView();
+    }
 }

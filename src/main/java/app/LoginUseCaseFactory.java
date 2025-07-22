@@ -8,6 +8,7 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.signup.SignupViewModel;
 import interface_adapter.main.MainViewModel;
 import use_case.UserDataAccessInterface;
 import use_case.login.LoginInputBoundary;
@@ -24,11 +25,13 @@ public class LoginUseCaseFactory {
     public static LoginView create(
             ViewManagerModel viewManagerModel,
             LoginViewModel loginViewModel,
+            LoginViewModel signUpViewModel,
             MainViewModel mainViewModel,
             UserDataAccessInterface userDataAccessObject) {
 
         try {
             LoginController loginController = createLoginUseCase(viewManagerModel, mainViewModel, loginViewModel,
+                    signUpViewModel,
                     userDataAccessObject);
             return new LoginView(loginViewModel, loginController);
         } catch (IOException e) {
@@ -42,10 +45,12 @@ public class LoginUseCaseFactory {
             ViewManagerModel viewManagerModel,
             MainViewModel mainViewModel,
             LoginViewModel loginViewModel,
+            SignUpViewModel signUpViewModel,
             UserDataAccessInterface userDataAccessObject) throws IOException {
 
         // Notice how we pass this method's parameters to the Presenter.
-        LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, mainViewModel, loginViewModel);
+        LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, mainViewModel, loginViewModel,
+                signUpViewModel);
 
         LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);

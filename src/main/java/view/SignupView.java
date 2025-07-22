@@ -1,5 +1,7 @@
 package view;
 
+import java.awt.Font;
+import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
@@ -7,6 +9,7 @@ import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.Box;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JLabel;
@@ -19,17 +22,17 @@ import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupViewModel;
 
-public class SignupView extends JPanel implements ActionListener, PropertyChangeListener {
+public class SignupView extends FormPanel implements ActionListener, PropertyChangeListener {
     public final String viewName = "signup";
 
     private final SignupViewModel signupViewModel;
-    private final JTextField usernameInputField = new JTextField(15);
-    private final JPasswordField passwordInputField = new JPasswordField(15);
-    private final JPasswordField repeatPasswordInputField = new JPasswordField(15);
+    private final JTextField usernameInputField = createStyledInput();
+    private final JPasswordField passwordInputField = createStyledPasswordField();
+    private final JPasswordField repeatPasswordInputField = createStyledPasswordField();
     private final SignupController signupController;
 
     private final JButton signUp;
-    private final JButton login;
+    private final JButton logIn;
 
     public SignupView(SignupController controller, SignupViewModel signupViewModel) {
 
@@ -37,8 +40,10 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
         this.signupViewModel = signupViewModel;
         signupViewModel.addPropertyChangeListener(this);
 
-        JLabel title = new JLabel(SignupViewModel.TITLE_LABEL);
+        JLabel title = new JLabel("Signup Screen");
         title.setAlignmentX(CENTER_ALIGNMENT);
+        title.setFont(new Font("Arial", Font.BOLD, 24));
+        title.setForeground(new Color(0, 119, 71));
 
         LabelTextPanel usernameInfo = new LabelTextPanel(
                 new JLabel(SignupViewModel.USERNAME_LABEL), usernameInputField);
@@ -48,10 +53,10 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                 new JLabel(SignupViewModel.REPEAT_PASSWORD_LABEL), repeatPasswordInputField);
 
         JPanel buttons = new JPanel();
-        signUp = new JButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
+        signUp = createStyledButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
         buttons.add(signUp);
-        login = new JButton(SignupViewModel.LOGIN_BUTTON_LABEL);
-        buttons.add(login);
+        logIn = createStyledButton(SignupViewModel.LOGIN_BUTTON_LABEL);
+        buttons.add(logIn);
 
         signUp.addActionListener(
                 new ActionListener() {
@@ -67,7 +72,14 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                     }
                 });
 
-        login.addActionListener(this);
+        logIn.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(logIn)) {
+                            signupController.switchToLoginView();
+                        }
+                    }
+                });
 
         usernameInputField.addKeyListener(
                 new KeyListener() {
@@ -125,13 +137,20 @@ public class SignupView extends JPanel implements ActionListener, PropertyChange
                     }
                 });
 
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
-
-        this.add(title);
-        this.add(usernameInfo);
-        this.add(passwordInfo);
-        this.add(repeatPasswordInfo);
-        this.add(buttons);
+        // Layout managed by FormPanel (Y_AXIS)
+        add(Box.createVerticalGlue());
+        add(Box.createVerticalStrut(20));
+        add(title);
+        add(Box.createVerticalStrut(20));
+        add(usernameInfo);
+        add(Box.createVerticalStrut(10));
+        add(passwordInfo);
+        add(Box.createVerticalStrut(15));
+        add(repeatPasswordInfo);
+        add(Box.createVerticalStrut(15));
+        add(buttons);
+        add(Box.createVerticalStrut(20));
+        add(Box.createVerticalGlue());
     }
 
     /**

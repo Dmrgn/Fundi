@@ -64,7 +64,8 @@ public class AppBuilder {
 
     public AppBuilder addLoginView() {
         loginViewModel = new LoginViewModel();
-        loginView = LoginUseCaseFactory.create(viewManagerModel, loginViewModel, mainViewModel, userDataAccessObject);
+        loginView = LoginUseCaseFactory.create(viewManagerModel, mainViewModel, loginViewModel, signupViewModel,
+                userDataAccessObject);
         cardPanel.add(loginView, loginView.viewName);
         return this;
     }

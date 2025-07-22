@@ -26,6 +26,8 @@ public class Main {
                 .build();
 
         application.pack();
+        application.setSize(600, 400);
+        // application.setExtendedState(JFrame.MAXIMIZED_BOTH);
         application.setVisible(true);
     }
 }

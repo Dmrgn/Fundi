@@ -14,24 +14,28 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+import javax.swing.Box;
+import javax.swing.BorderFactory;
+import java.awt.Font;
+import java.awt.Color;
 
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.signup.SignupViewModel;
+import view.FormPanel;
 
-public class LoginView extends JPanel implements ActionListener, PropertyChangeListener {
+public class LoginView extends FormPanel implements ActionListener, PropertyChangeListener {
 
     public final String viewName = "log in";
     private final LoginViewModel loginViewModel;
 
-    final JTextField usernameInputField = new JTextField(15);
-    private final JLabel usernameErrorField = new JLabel();
+    final JTextField usernameInputField = createStyledInput();
 
-    final JPasswordField passwordInputField = new JPasswordField(15);
-    private final JLabel passwordErrorField = new JLabel();
+    final JPasswordField passwordInputField = createStyledPasswordField();
 
-    final JButton logIn;
-    final JButton signUp;
+    private final JButton logIn;
+    private final JButton signUp;
     private final LoginController loginController;
 
     public LoginView(LoginViewModel loginViewModel, LoginController controller) {
@@ -42,17 +46,19 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
 
         JLabel title = new JLabel("Login Screen");
         title.setAlignmentX(CENTER_ALIGNMENT);
+        title.setFont(new Font("Arial", Font.BOLD, 24));
+        title.setForeground(new Color(0, 119, 71));
 
         LabelTextPanel usernameInfo = new LabelTextPanel(
-                new JLabel("Username"), usernameInputField);
+                new JLabel(LoginViewModel.USERNAME_LABEL), usernameInputField);
         LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel("Password"), passwordInputField);
+                new JLabel(LoginViewModel.PASSWORD_LABEL), passwordInputField);
 
         JPanel buttons = new JPanel();
-        logIn = new JButton(loginViewModel.LOGIN_BUTTON_LABEL);
-        buttons.add(logIn);
-        signUp = new JButton(loginViewModel.SIGNUP_BUTTON_LABEL);
+        signUp = createStyledButton(LoginViewModel.SIGNUP_BUTTON_LABEL);
         buttons.add(signUp);
+        logIn = createStyledButton(LoginViewModel.LOGIN_BUTTON_LABEL);
+        buttons.add(logIn);
 
         logIn.addActionListener(
                 new ActionListener() {
@@ -67,7 +73,14 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                     }
                 });
 
-        signUp.addActionListener(this);
+        signUp.addActionListener(
+                new ActionListener() {
+                    public void actionPerformed(ActionEvent evt) {
+                        if (evt.getSource().equals(signUp)) {
+                            loginController.switchToSignUpView();
+                        }
+                    }
+                });
 
         usernameInputField.addKeyListener(new KeyListener() {
             @Override
@@ -85,7 +98,6 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
             public void keyReleased(KeyEvent e) {
             }
         });
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 
         passwordInputField.addKeyListener(
                 new KeyListener() {
@@ -105,12 +117,17 @@ public class LoginView extends JPanel implements ActionListener, PropertyChangeL
                     }
                 });
 
-        this.add(title);
-        this.add(usernameInfo);
-        this.add(usernameErrorField);
-        this.add(passwordInfo);
-        this.add(passwordErrorField);
-        this.add(buttons);
+        add(Box.createVerticalGlue());
+        add(Box.createVerticalStrut(20));
+        add(title);
+        add(Box.createVerticalStrut(20));
+        add(usernameInfo);
+        add(Box.createVerticalStrut(10));
+        add(passwordInfo);
+        add(Box.createVerticalStrut(15));
+        add(buttons);
+        add(Box.createVerticalStrut(20));
+        add(Box.createVerticalGlue());
     }
 
     /**

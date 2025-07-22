@@ -8,15 +8,18 @@ import use_case.login.LoginOutputData;
 public class LoginPresenter implements LoginOutputBoundary {
 
     private final LoginViewModel loginViewModel;
+    private final LoginViewModel signUpViewModel;
     private final MainViewModel mainViewModel;
     private ViewManagerModel viewManagerModel;
 
     public LoginPresenter(ViewManagerModel viewManagerModel,
             MainViewModel mainViewModel,
-            LoginViewModel loginViewModel) {
+            LoginViewModel loginViewModel,
+            LoginViewModel signUpViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.mainViewModel = mainViewModel;
         this.loginViewModel = loginViewModel;
+        this.signUpViewModel = signUpViewModel;
     }
 
     public void prepareSuccessView(LoginOutputData response) {
@@ -32,5 +35,10 @@ public class LoginPresenter implements LoginOutputBoundary {
         LoginState loginState = loginViewModel.getState();
         loginState.setUsernameError(error);
         loginViewModel.firePropertyChanged();
+    }
+
+    public void switchToSignUpView() {
+        viewManagerModel.setState(signUpViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 }

@@ -93,6 +93,8 @@ public class PortfolioView extends JPanel {
             useCaseButton.addActionListener(evt -> {
                     if (useCaseButton.getText().equals("Buy")) {
                         portfolioController.routeToBuy(state.getPortfolioId());
+                    } else if (useCaseButton.getText().equals("Sell")) {
+                        portfolioController.routeToSell(state.getPortfolioId());
                     }
             });
             buttonPanel.add(useCaseButton);

@@ -11,4 +11,6 @@ public interface PortfolioOutputBoundary {
     void prepareView(PortfolioOutputData outputData);
 
     void routeToBuy(String portfolioId);
+
+    void routeToSell(String portfolioId);
 }

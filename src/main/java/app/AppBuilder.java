@@ -29,6 +29,10 @@ import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioInteractor;
 import interface_adapter.portfolio.PortfolioPresenter;
 import interface_adapter.portfolio.PortfolioViewModel;
+import interface_adapter.sell.SellController;
+import interface_adapter.sell.SellInteractor;
+import interface_adapter.sell.SellPresenter;
+import interface_adapter.sell.SellViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
@@ -47,6 +51,8 @@ import use_case.portfolio.PortfolioInputBoundary;
 import use_case.portfolio.PortfolioOutputBoundary;
 import use_case.portfolios.PortfoliosInputBoundary;
 import use_case.portfolios.PortfoliosOutputBoundary;
+import use_case.sell.SellInputBoundary;
+import use_case.sell.SellOutputBoundary;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupUserDataAccessInterface;
@@ -80,12 +86,14 @@ public class AppBuilder {
     private CreateViewModel createViewModel;
     private PortfolioViewModel portfolioViewModel;
     private BuyViewModel buyViewModel;
+    private SellViewModel sellViewModel;
     private MainView mainView;
     private LoginView loginView;
     private PortfoliosView portfoliosView;
     private CreateView createView;
     private PortfolioView portfolioView;
     private BuyView buyView;
+    private SellView sellView;
 
     public AppBuilder() throws SQLException {
         cardPanel.setLayout(cardLayout);
@@ -168,6 +176,13 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addSellView() {
+        sellViewModel = new SellViewModel();
+        sellView = new SellView(sellViewModel);
+        cardPanel.add(sellView, sellView.getViewName());
+        return this;
+    }
+
     /**
      * Adds the Login Use Case to the application.
      * @return this builder
@@ -221,7 +236,7 @@ public class AppBuilder {
     }
 
     public AppBuilder addPortfolioUseCase() {
-        final PortfolioOutputBoundary portfolioOutputBoundary = new PortfolioPresenter(viewManagerModel, portfolioViewModel, buyViewModel);
+        final PortfolioOutputBoundary portfolioOutputBoundary = new PortfolioPresenter(viewManagerModel, portfolioViewModel, buyViewModel, sellViewModel);
         final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(transactionDataAccessObject, portfolioOutputBoundary);
 
         portfolioController = new PortfolioController(portfolioInputBoundary);
@@ -236,6 +251,14 @@ public class AppBuilder {
                 buyOutputBoundary);
         final BuyController buyController = new BuyController(buyInputBoundary);
         buyView.setBuyController(buyController);
+        return this;
+    }
+
+    public AppBuilder addSellUseCase() {
+        final SellOutputBoundary sellOutputBoundary = new SellPresenter(sellViewModel, portfolioController, portfolioViewModel.getState());
+        final SellInputBoundary sellInputBoundary = new SellInteractor(stockDataAccessObject, transactionDataAccessObject, sellOutputBoundary);
+        final SellController sellController = new SellController(sellInputBoundary);
+        sellView.setSellController(sellController);
         return this;
     }
 

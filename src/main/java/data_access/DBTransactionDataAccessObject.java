@@ -24,15 +24,9 @@ public class DBTransactionDataAccessObject implements AnalysisDataAccessInterfac
                 SELECT t.portfolio_id as portfolio_id,
                        t.stock_name as stock_name,
                        t.amount as amount,
-                       s.price as price,
+                       t.price as price,
                        t.date as date
                 FROM transactions t
-                JOIN stocks s ON t.stock_name = s.name
-                WHERE s.date = (
-                    SELECT MAX(s2.date)
-                    FROM stocks s2
-                    WHERE s2.name = s.name
-                )
                 """;
         try (Statement statement = connection.createStatement()) {
             ResultSet resultSet = statement.executeQuery(query);
@@ -66,6 +60,19 @@ public class DBTransactionDataAccessObject implements AnalysisDataAccessInterfac
     }
 
     @Override
+    public double valueOfTicker(String portfolioId, String ticker) {
+        double total = 0;
+        if (transactions.containsKey(portfolioId)) {
+            for (Transaction transaction : transactions.get(portfolioId)) {
+                if (Objects.equals(transaction.getStockTicker(), ticker)) {
+                    total += transaction.getPrice() * transaction.getQuantity();
+                }
+            }
+        }
+        return total;
+    }
+
+    @Override
     public void save(Transaction transaction) {
         saveToDB(transaction);
         if (!transactions.containsKey(transaction.getPortfolioId())) {
@@ -76,8 +83,8 @@ public class DBTransactionDataAccessObject implements AnalysisDataAccessInterfac
 
     private void saveToDB(Transaction transaction) {
         String query = """
-                INSERT INTO transactions(portfolio_id, stock_name, amount, date)
-                VALUES (?, ?, ?, ?)
+                INSERT INTO transactions(portfolio_id, stock_name, amount, date, price)
+                VALUES (?, ?, ?, ?, ?)
                 """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
@@ -85,6 +92,7 @@ public class DBTransactionDataAccessObject implements AnalysisDataAccessInterfac
             pstmt.setString(2, transaction.getStockTicker());
             pstmt.setInt(3, transaction.getQuantity());
             pstmt.setDate(4, java.sql.Date.valueOf(transaction.getTimestamp()));
+            pstmt.setDouble(5, transaction.getPrice());
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());

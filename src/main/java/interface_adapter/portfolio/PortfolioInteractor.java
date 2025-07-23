@@ -45,7 +45,15 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
             String ticker = transaction.getStockTicker();
             if (tickers.contains(ticker)) {
                 values.put(ticker, values.get(ticker) + transaction.getPrice() * transaction.getQuantity());
-                amounts.put(ticker, amounts.get(ticker) + transaction.getQuantity());
+                if (values.get(ticker) == 0.0) { // Remove empty tickers
+                    tickers.remove(ticker);
+                    values.remove(ticker);
+                    amounts.remove(ticker);
+                } else if (transaction.getPrice() < 0) {
+                    amounts.put(ticker, amounts.get(ticker) - transaction.getQuantity());
+                } else {
+                    amounts.put(ticker, amounts.get(ticker) + transaction.getQuantity());
+                }
             } else {
                 tickers.add(ticker);
                 values.put(ticker, transaction.getPrice() * transaction.getQuantity());
@@ -66,5 +74,10 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
     @Override
     public void routeToBuy(String portfolioId) {
         portfolioPresenter.routeToBuy(portfolioId);
+    }
+
+    @Override
+    public void routeToSell(String portfolioId) {
+        portfolioPresenter.routeToSell(portfolioId);
     }
 }

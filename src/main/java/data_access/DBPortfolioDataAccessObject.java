@@ -22,7 +22,7 @@ public class DBPortfolioDataAccessObject implements PortfolioDataAccessInterface
                    t.date AS stock_date,
                    t.portfolio_id AS portfolio_id
             FROM transactions t
-            JOIN stocks s ON t.stock_id = s.id
+            JOIN stocks s ON t.stock_name = s.name
         """;
         Portfolio portfolio = new Portfolio();
         try (Statement stmt = connection.createStatement()) {

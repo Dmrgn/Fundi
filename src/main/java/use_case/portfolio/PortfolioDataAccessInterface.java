@@ -3,7 +3,7 @@ package use_case.portfolio;
 import entity.Portfolio;
 
 /**
- * DAO for the Login Use Case.
+ * DAO for the Portfolio Use Case.
  */
 public interface PortfolioDataAccessInterface {
 

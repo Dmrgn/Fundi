@@ -9,6 +9,7 @@ import javax.swing.WindowConstants;
 
 import data_access.DBPortfolioDataAccessObject;
 import data_access.DBPortfoliosDataAccessObject;
+import data_access.DBStockDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import data_access.DBUserDataAccessObject;
@@ -61,6 +62,7 @@ public class AppBuilder {
             new DBUserDataAccessObject(userFactory);
     private final DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
     private final DBPortfolioDataAccessObject portfolioDataAccessObject = new DBPortfolioDataAccessObject();
+    private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;

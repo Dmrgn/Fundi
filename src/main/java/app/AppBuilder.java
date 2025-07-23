@@ -7,13 +7,17 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import data_access.DBPortfolioDataAccessObject;
 import data_access.DBPortfoliosDataAccessObject;
 import data_access.DBStockDataAccessObject;
+import data_access.DBTransactionDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import data_access.DBUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.buy.BuyController;
+import interface_adapter.buy.BuyInteractor;
+import interface_adapter.buy.BuyPresenter;
+import interface_adapter.buy.BuyViewModel;
 import interface_adapter.create.CreateController;
 import interface_adapter.create.CreateInteractor;
 import interface_adapter.create.CreatePresenter;
@@ -31,6 +35,8 @@ import interface_adapter.signup.SignupViewModel;
 import interface_adapter.signup.SignupInteractor;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolios.*;
+import use_case.buy.BuyInputBoundary;
+import use_case.buy.BuyOutputBoundary;
 import use_case.create.CreateInputBoundary;
 import use_case.create.CreateOutputBoundary;
 import use_case.login.LoginInputBoundary;
@@ -61,8 +67,10 @@ public class AppBuilder {
     private final LoginUserDataAccessInterface userDataAccessObject =
             new DBUserDataAccessObject(userFactory);
     private final DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
-    private final DBPortfolioDataAccessObject portfolioDataAccessObject = new DBPortfolioDataAccessObject();
+    private final DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
     private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
+
+    private PortfolioController portfolioController;
 
     private SignupView signupView;
     private SignupViewModel signupViewModel;
@@ -71,11 +79,13 @@ public class AppBuilder {
     private PortfoliosViewModel portfoliosViewModel;
     private CreateViewModel createViewModel;
     private PortfolioViewModel portfolioViewModel;
+    private BuyViewModel buyViewModel;
     private MainView mainView;
     private LoginView loginView;
     private PortfoliosView portfoliosView;
     private CreateView createView;
     private PortfolioView portfolioView;
+    private BuyView buyView;
 
     public AppBuilder() throws SQLException {
         cardPanel.setLayout(cardLayout);
@@ -148,6 +158,17 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the buy view to the application
+     * @return this builder
+     */
+    public AppBuilder addBuyView() {
+        buyViewModel = new BuyViewModel();
+        buyView = new BuyView(buyViewModel);
+        cardPanel.add(buyView, buyView.getViewName());
+        return this;
+    }
+
+    /**
      * Adds the Login Use Case to the application.
      * @return this builder
      */
@@ -200,10 +221,21 @@ public class AppBuilder {
     }
 
     public AppBuilder addPortfolioUseCase() {
-        final PortfolioOutputBoundary portfolioOutputBoundary = new PortfolioPresenter(viewManagerModel, portfolioViewModel);
-        final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(portfolioDataAccessObject, portfolioOutputBoundary);
-        final PortfolioController controller = new PortfolioController(portfolioInputBoundary);
-        portfoliosView.setPortfolioController(controller);
+        final PortfolioOutputBoundary portfolioOutputBoundary = new PortfolioPresenter(viewManagerModel, portfolioViewModel, buyViewModel);
+        final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(transactionDataAccessObject, portfolioOutputBoundary);
+
+        portfolioController = new PortfolioController(portfolioInputBoundary);
+        portfoliosView.setPortfolioController(portfolioController);
+        portfolioView.setPortfolioController(portfolioController);
+        return this;
+    }
+
+    public AppBuilder addBuyUseCase() {
+        final BuyOutputBoundary buyOutputBoundary = new BuyPresenter(buyViewModel, portfolioController, portfolioViewModel.getState());
+        final BuyInputBoundary buyInputBoundary = new BuyInteractor(stockDataAccessObject, transactionDataAccessObject,
+                buyOutputBoundary);
+        final BuyController buyController = new BuyController(buyInputBoundary);
+        buyView.setBuyController(buyController);
         return this;
     }
 

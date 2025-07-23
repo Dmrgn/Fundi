@@ -6,5 +6,5 @@ import java.util.List;
 import java.util.Map;
 
 public interface AnalysisDataAccessInterface {
-    Map<String, List<Transaction>> pastTransactions();
+    List<Transaction> pastTransactions(String portfolioId);
 }

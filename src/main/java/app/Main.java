@@ -20,11 +20,13 @@ public class Main {
                 .addPortfoliosView()
                 .addCreateView()
                 .addPortfolioView()
+                .addBuyView()
                 .addLoginUseCase()
                 .addSignupUseCase()
                 .addPortfoliosUseCase()
                 .addCreateUseCase()
                 .addPortfolioUseCase()
+                .addBuyUseCase()
                 .build();
         application.pack();
         application.setVisible(true);

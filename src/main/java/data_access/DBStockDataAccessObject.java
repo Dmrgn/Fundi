@@ -2,7 +2,6 @@ package data_access;
 
 import entity.StockData;
 import use_case.buy.BuyStockDataAccessInterface;
-import use_case.buy.BuyTransactionDataAccessInterface;
 import use_case.recommend.RecommendDataAccessInterface;
 import use_case.sell.SellStockDataAccessInterface;
 
@@ -25,7 +24,7 @@ public class DBStockDataAccessObject implements RecommendDataAccessInterface, Bu
 //            "MCD", "AMD", "TMO", "INTC", "LIN", "DHR", "ORCL", "TXN", "NEE", "AMGN",
 //            "PFE", "QCOM", "NKE", "UPS", "MS", "MDT", "PM", "BA", "HON", "UNP"
 //    };
-    private static final String[] TICKERS = {"AAPL", "MSFT", "AMZN", "NVDA"};
+    private static final Set<String> TICKERS = Set.of(new String[]{"AAPL", "MSFT", "AMZN", "NVDA"});
     private static final int NUM_DAYS = 10;
 
     public DBStockDataAccessObject() throws SQLException {
@@ -45,7 +44,7 @@ public class DBStockDataAccessObject implements RecommendDataAccessInterface, Bu
                 }
             }
             List<StockData> cleaned = stockData.stream().filter(sd -> days.contains(sd.getTimestamp()))
-                    .sorted(Comparator.comparing(StockData::getTimestamp))
+                    .sorted(Comparator.comparing(StockData::getTimestamp).reversed())
                     .toList();
             stocks.put(ticker, cleaned);
         }
@@ -55,12 +54,17 @@ public class DBStockDataAccessObject implements RecommendDataAccessInterface, Bu
 
     @Override
     public double getPrice(String ticker) {
-        return 0;
+        return stocks.get(ticker).get(0).getPrice();
     }
 
     @Override
-    public Map<String, List<Double>> pastStockData() {
-        return Map.of();
+    public boolean hasTicker(String ticker) {
+        return TICKERS.contains(ticker);
+    }
+
+    @Override
+    public List<StockData> pastStockData(String ticker) {
+        return stocks.get(ticker);
     }
 
     private List<LocalDate> mostRecentNTradingDays(LocalDate today) {
@@ -68,7 +72,7 @@ public class DBStockDataAccessObject implements RecommendDataAccessInterface, Bu
         LocalDate mostRecent = today;
         while (dates.size() < NUM_DAYS) {
             mostRecent = mostRecent.minusDays(1);
-            if (mostRecent.getDayOfWeek() == DayOfWeek.SATURDAY || mostRecent.getDayOfWeek() == DayOfWeek.SUNDAY ) {
+            if (mostRecent.getDayOfWeek() != DayOfWeek.SATURDAY && mostRecent.getDayOfWeek() != DayOfWeek.SUNDAY ) {
                 dates.add(mostRecent);
             }
         }
@@ -82,28 +86,28 @@ public class DBStockDataAccessObject implements RecommendDataAccessInterface, Bu
 
     private List<StockData> getStockData(String ticker) {
         String query = """
-        SELECT timestamp, price FROM stocks
+        SELECT date, price FROM stocks
                  WHERE name = ?
         """;
-        List<StockData> stocks = new ArrayList<>();
+        List<StockData> pastStocks = new ArrayList<>();
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {
             pstmt.setString(1, ticker);
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
-                LocalDate timestamp = rs.getDate("timestamp").toLocalDate();
+                LocalDate timestamp = rs.getDate("date").toLocalDate();
                 double price = rs.getDouble("price");
-                stocks.add(new StockData(ticker, timestamp, price));
+                pastStocks.add(new StockData(ticker, timestamp, price));
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
-        return stocks;
+        return pastStocks;
     }
 
     private void saveAll(List<StockData> stocks) {
         for (StockData stock : stocks) {
             String query = """
-                    INSERT OR IGNORE INTO stocks (name, timestamp, price)
+                    INSERT OR IGNORE INTO stocks (name, date, price)
                     VALUES(?, ?, ?)
                     """;
             try (PreparedStatement pstmt = connection.prepareStatement(query)) {

@@ -1,6 +1,8 @@
 package use_case.portfolio;
 
-import entity.Portfolio;
+import entity.Transaction;
+
+import java.util.List;
 
 /**
  * DAO for the Portfolio Use Case.
@@ -8,9 +10,9 @@ import entity.Portfolio;
 public interface PortfolioDataAccessInterface {
 
     /**
-     * Get the portfolio data
+     * Get the past transactions data
      * @param portfolioId the id to search at
-     * @return A portfolio object
+     * @return A list of transactions
      */
-    Portfolio getPortfolio(String portfolioId);
+    List<Transaction> pastTransactions(String portfolioId);
 }

@@ -5,5 +5,5 @@ import entity.Transaction;
 import java.util.List;
 
 public interface HistoryDataAccessInterface {
-    List<Transaction> getHistory();
+    List<Transaction> pastTransactions(String portfolioId);
 }

@@ -13,7 +13,8 @@ import java.util.List;
 
 public class AlphaVantageClient {
     private final OkHttpClient client = new OkHttpClient();
-    private final static String API_KEY = "LGT7I1WGL445BOPH";
+//    private final static String API_KEY = "LGT7I1WGL445BOPH";
+    private final static String API_KEY = "S4ENIWYTVHHKVG7V";
 
     public List<StockData> fetch(String ticker, int numDays) throws IOException {
         String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY"
@@ -29,6 +30,21 @@ public class AlphaVantageClient {
             String body = response.body().string();
             JSONObject jsonObject = new JSONObject(body);
 
+            // Handle errors
+            if (jsonObject.has("Error Message")) {
+                throw new IOException("Alpha Vantage Error: " + jsonObject.getString("Error Message"));
+            }
+            if (jsonObject.has("Note")) {
+                throw new IOException("Rate limit hit: " + jsonObject.getString("Note"));
+            }
+
+            if (jsonObject.has("Information")) {
+                throw new IOException("Premium endpoint warning: " + jsonObject.getString("Information"));
+            }
+
+            if (!jsonObject.has("Time Series (Daily)")) {
+                throw new IOException("Unexpected response: no 'Time Series (Daily)' found");
+            }
             JSONObject timeSeries = jsonObject.getJSONObject("Time Series (Daily)");
 
             List<StockData> stockDataList = new ArrayList<>();

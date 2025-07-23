@@ -6,16 +6,22 @@ import java.time.LocalDate;
  * The representation of a stock.
  */
 public class Transaction {
+    private final String portfolioId;
     private final String stockTicker;
     private final int quantity;
     private final LocalDate timestamp;
     private final double price;
 
-    public Transaction(String stockTicker, int quantity, LocalDate timestamp, double price) {
+    public Transaction(String portfolioId, String stockTicker, int quantity, LocalDate timestamp, double price) {
+        this.portfolioId = portfolioId;
         this.stockTicker = stockTicker;
         this.quantity = quantity;
         this.timestamp = timestamp;
         this.price = price;
+    }
+
+    public String getPortfolioId() {
+        return portfolioId;
     }
 
     public String getStockTicker() {

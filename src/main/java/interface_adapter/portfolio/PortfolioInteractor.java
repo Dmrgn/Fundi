@@ -1,13 +1,11 @@
 package interface_adapter.portfolio;
 
-import entity.Portfolio;
 import entity.Transaction;
 import use_case.portfolio.*;
-import use_case.portfolios.PortfoliosOutputBoundary;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
+import java.util.List;
 
 /**
  * The Portfolio Interactor.
@@ -26,7 +24,7 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
     public void execute(PortfolioInputData portfolioInputData) {
         final String portfolioId = portfolioInputData.getPortfolioId();
         final String portfolioName = portfolioInputData.getPortfolioName();
-        Portfolio portfolio = portfolioDataAccessObject.getPortfolio(portfolioId);
+        List<Transaction> portfolio = portfolioDataAccessObject.pastTransactions(portfolioId);
         if (portfolio == null) {
             PortfolioOutputData outputData = new PortfolioOutputData(
                     portfolioInputData.getUsername(),
@@ -43,7 +41,7 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
         LinkedHashSet<String> tickers = new LinkedHashSet<>();
         LinkedHashMap<String, Double> values = new LinkedHashMap<>();
         LinkedHashMap<String, Integer> amounts = new LinkedHashMap<>();
-        for (Transaction transaction : portfolio.getTransactions()) {
+        for (Transaction transaction : portfolio) {
             String ticker = transaction.getStockTicker();
             if (tickers.contains(ticker)) {
                 values.put(ticker, values.get(ticker) + transaction.getPrice() * transaction.getQuantity());
@@ -63,5 +61,10 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
                 values.values().stream().mapToDouble(Double::doubleValue).toArray()
         );
         portfolioPresenter.prepareView(outputData);
+    }
+
+    @Override
+    public void routeToBuy(String portfolioId) {
+        portfolioPresenter.routeToBuy(portfolioId);
     }
 }

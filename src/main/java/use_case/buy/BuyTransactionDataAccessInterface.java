@@ -7,5 +7,5 @@ import entity.Transaction;
  */
 public interface BuyTransactionDataAccessInterface {
 
-    void addTransaction(Transaction transaction);
+    void save(Transaction transaction);
 }

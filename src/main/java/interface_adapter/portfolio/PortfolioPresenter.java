@@ -1,20 +1,10 @@
 package interface_adapter.portfolio;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.create.CreateState;
-import interface_adapter.create.CreateViewModel;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.portfolio.PortfolioState;
-import interface_adapter.portfolio.PortfolioViewModel;
-import interface_adapter.portfolios.PortfoliosState;
-import interface_adapter.portfolios.PortfoliosViewModel;
-import use_case.main.MainOutputBoundary;
-import use_case.main.MainOutputData;
+import interface_adapter.buy.BuyState;
+import interface_adapter.buy.BuyViewModel;
 import use_case.portfolio.PortfolioOutputBoundary;
 import use_case.portfolio.PortfolioOutputData;
-import use_case.portfolios.PortfoliosOutputBoundary;
-import use_case.portfolios.PortfoliosOutputData;
-import view.PortfolioView;
 
 /**
  * The Presenter for the portfolio Use Case.
@@ -23,10 +13,12 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
 
     private final ViewManagerModel viewManagerModel;
     private final PortfolioViewModel portfolioViewModel;
+    private final BuyViewModel buyViewModel;
 
-    public PortfolioPresenter(ViewManagerModel viewManagerModel, PortfolioViewModel portfolioViewModel)  {
+    public PortfolioPresenter(ViewManagerModel viewManagerModel, PortfolioViewModel portfolioViewModel, BuyViewModel buyViewModel)  {
         this.viewManagerModel = viewManagerModel;
         this.portfolioViewModel = portfolioViewModel;
+        this.buyViewModel = buyViewModel;
     }
 
     @Override
@@ -44,5 +36,15 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
 
         this.viewManagerModel.setState(portfolioViewModel.getViewName());
         this.viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void routeToBuy(String portfolioId) {
+        BuyState state = buyViewModel.getState();
+        state.setPortfolioId(portfolioId);
+        buyViewModel.setState(state);
+        buyViewModel.firePropertyChanged();
+        viewManagerModel.setState("buy");
+        viewManagerModel.firePropertyChanged();
     }
 }

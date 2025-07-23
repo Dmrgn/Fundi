@@ -1,6 +1,7 @@
 package data_access;
 
 import entity.StockData;
+import use_case.analysis.AnalysisStockDataAccessInterface;
 import use_case.buy.BuyStockDataAccessInterface;
 import use_case.recommend.RecommendDataAccessInterface;
 import use_case.sell.SellStockDataAccessInterface;
@@ -13,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class DBStockDataAccessObject implements RecommendDataAccessInterface, BuyStockDataAccessInterface,
-        SellStockDataAccessInterface {
+        SellStockDataAccessInterface, AnalysisStockDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final AlphaVantageClient client = new AlphaVantageClient();
     private final Map<String, List<StockData>> stocks = new HashMap<>();
@@ -119,5 +120,10 @@ public class DBStockDataAccessObject implements RecommendDataAccessInterface, Bu
                 System.out.println(e.getMessage());
             }
         }
+    }
+
+    @Override
+    public List<StockData> getPastPrices(String ticker) {
+        return stocks.get(ticker);
     }
 }

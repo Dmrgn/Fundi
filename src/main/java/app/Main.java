@@ -22,6 +22,8 @@ public class Main {
                 .addPortfolioView()
                 .addBuyView()
                 .addSellView()
+                .addHistoryView()
+                .addAnalysisView()
                 .addLoginUseCase()
                 .addSignupUseCase()
                 .addPortfoliosUseCase()
@@ -29,6 +31,8 @@ public class Main {
                 .addPortfolioUseCase()
                 .addBuyUseCase()
                 .addSellUseCase()
+                .addHistoryUseCase()
+                .addAnalysisUseCase()
                 .build();
         application.pack();
         application.setVisible(true);

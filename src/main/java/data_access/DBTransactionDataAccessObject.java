@@ -1,7 +1,7 @@
 package data_access;
 
 import entity.Transaction;
-import use_case.analysis.AnalysisDataAccessInterface;
+import use_case.analysis.AnalysisTransactionDataAccessInterface;
 import use_case.buy.BuyTransactionDataAccessInterface;
 import use_case.history.HistoryDataAccessInterface;
 import use_case.portfolio.PortfolioDataAccessInterface;
@@ -14,7 +14,7 @@ import java.util.*;
 /**
  * DAO for user data implemented using a Database to persist the data.
  */
-public class DBTransactionDataAccessObject implements AnalysisDataAccessInterface, BuyTransactionDataAccessInterface,
+public class DBTransactionDataAccessObject implements AnalysisTransactionDataAccessInterface, BuyTransactionDataAccessInterface,
         SellTransactionDataAccessInterface, HistoryDataAccessInterface, PortfolioDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, List<Transaction>> transactions = new HashMap<>();

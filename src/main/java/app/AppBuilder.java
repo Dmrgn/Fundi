@@ -14,6 +14,10 @@ import entity.CommonUserFactory;
 import entity.UserFactory;
 import data_access.DBUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.analysis.AnalysisController;
+import interface_adapter.analysis.AnalysisInteractor;
+import interface_adapter.analysis.AnalysisPresenter;
+import interface_adapter.analysis.AnalysisViewModel;
 import interface_adapter.buy.BuyController;
 import interface_adapter.buy.BuyInteractor;
 import interface_adapter.buy.BuyPresenter;
@@ -22,6 +26,10 @@ import interface_adapter.create.CreateController;
 import interface_adapter.create.CreateInteractor;
 import interface_adapter.create.CreatePresenter;
 import interface_adapter.create.CreateViewModel;
+import interface_adapter.history.HistoryController;
+import interface_adapter.history.HistoryInteractor;
+import interface_adapter.history.HistoryPresenter;
+import interface_adapter.history.HistoryViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
@@ -39,10 +47,14 @@ import interface_adapter.signup.SignupViewModel;
 import interface_adapter.signup.SignupInteractor;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolios.*;
+import use_case.analysis.AnalysisInputBoundary;
+import use_case.analysis.AnalysisOutputBoundary;
 import use_case.buy.BuyInputBoundary;
 import use_case.buy.BuyOutputBoundary;
 import use_case.create.CreateInputBoundary;
 import use_case.create.CreateOutputBoundary;
+import use_case.history.HistoryInputBoundary;
+import use_case.history.HistoryOutputBoundary;
 import use_case.login.LoginInputBoundary;
 import interface_adapter.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
@@ -87,6 +99,8 @@ public class AppBuilder {
     private PortfolioViewModel portfolioViewModel;
     private BuyViewModel buyViewModel;
     private SellViewModel sellViewModel;
+    private HistoryViewModel historyViewModel;
+    private AnalysisViewModel analysisViewModel;
     private MainView mainView;
     private LoginView loginView;
     private PortfoliosView portfoliosView;
@@ -94,6 +108,8 @@ public class AppBuilder {
     private PortfolioView portfolioView;
     private BuyView buyView;
     private SellView sellView;
+    private HistoryView historyView;
+    private AnalysisView analysisView;
 
     public AppBuilder() throws SQLException {
         cardPanel.setLayout(cardLayout);
@@ -183,6 +199,20 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addHistoryView() {
+        historyViewModel = new HistoryViewModel();
+        historyView = new HistoryView(historyViewModel);
+        cardPanel.add(historyView, historyView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addAnalysisView() {
+        analysisViewModel = new AnalysisViewModel();
+        analysisView = new AnalysisView(analysisViewModel);
+        cardPanel.add(analysisView, analysisView.getViewName());
+        return this;
+    }
+
     /**
      * Adds the Login Use Case to the application.
      * @return this builder
@@ -259,6 +289,22 @@ public class AppBuilder {
         final SellInputBoundary sellInputBoundary = new SellInteractor(stockDataAccessObject, transactionDataAccessObject, sellOutputBoundary);
         final SellController sellController = new SellController(sellInputBoundary);
         sellView.setSellController(sellController);
+        return this;
+    }
+
+    public AppBuilder addHistoryUseCase() {
+        final HistoryOutputBoundary historyOutputBoundary = new HistoryPresenter(viewManagerModel, historyViewModel);
+        final HistoryInputBoundary historyInputBoundary = new HistoryInteractor(transactionDataAccessObject, historyOutputBoundary);
+        final HistoryController historyController = new HistoryController(historyInputBoundary);
+        portfolioView.setHistoryController(historyController);
+        return this;
+    }
+
+    public AppBuilder addAnalysisUseCase() {
+        final AnalysisOutputBoundary analysisOutputBoundary = new AnalysisPresenter(viewManagerModel, analysisViewModel);
+        final AnalysisInputBoundary analysisInputBoundary = new AnalysisInteractor(stockDataAccessObject, transactionDataAccessObject, analysisOutputBoundary);
+        final AnalysisController analysisController = new AnalysisController(analysisInputBoundary);
+        portfolioView.setAnalysisController(analysisController);
         return this;
     }
 

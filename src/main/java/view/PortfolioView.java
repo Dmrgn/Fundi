@@ -9,6 +9,8 @@ import javax.swing.table.DefaultTableModel;
 //import interface_adapter.change_password.LoggedInState;
 //import interface_adapter.change_password.LoggedInViewModel;
 //import interface_adapter.logout.LogoutController;
+import interface_adapter.analysis.AnalysisController;
+import interface_adapter.history.HistoryController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolio.PortfolioController;
@@ -24,6 +26,8 @@ public class PortfolioView extends JPanel {
     private final String viewName = "portfolio";
     private final PortfolioViewModel portfolioViewModel;
     private PortfolioController portfolioController;
+    private HistoryController historyController;
+    private AnalysisController analysisController;
 
     public PortfolioView(PortfolioViewModel portfolioViewModel) {
         this.portfolioViewModel = portfolioViewModel;
@@ -95,6 +99,10 @@ public class PortfolioView extends JPanel {
                         portfolioController.routeToBuy(state.getPortfolioId());
                     } else if (useCaseButton.getText().equals("Sell")) {
                         portfolioController.routeToSell(state.getPortfolioId());
+                    } else if (useCaseButton.getText().equals("History")) {
+                        historyController.execute(state.getPortfolioId());
+                    } else if (useCaseButton.getText().equals("Analysis")) {
+                        analysisController.execute(state.getPortfolioId());
                     }
             });
             buttonPanel.add(useCaseButton);
@@ -115,5 +123,13 @@ public class PortfolioView extends JPanel {
 
     public void setPortfolioController(PortfolioController portfolioController) {
         this.portfolioController = portfolioController;
+    }
+
+    public void setHistoryController(HistoryController historyController) {
+        this.historyController = historyController;
+    }
+
+    public void setAnalysisController(AnalysisController analysisController) {
+        this.analysisController = analysisController;
     }
 }

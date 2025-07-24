@@ -30,6 +30,7 @@ public class Main {
                 .addHistoryView()
                 .addAnalysisView()
                 .addRecommendView()
+                .addNewsView()
                 .addLoginUseCase()
                 .addSignupUseCase()
                 .addPortfoliosUseCase()
@@ -40,6 +41,7 @@ public class Main {
                 .addHistoryUseCase()
                 .addAnalysisUseCase()
                 .addRecommendUseCase()
+                .addNewsUseCase()
                 .build();
         application.pack();
         application.setSize(600, 400);

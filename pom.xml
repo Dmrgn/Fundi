@@ -66,13 +66,8 @@
     <dependency>
       <groupId>org.json</groupId>
       <artifactId>json</artifactId>
-<<<<<<< HEAD
-      <version>20230618</version>
-    </dependency> 
-=======
-      <version>20240303</version> <!-- latest as of 2024 -->
+      <version>20240303</version>
     </dependency>
->>>>>>> aaron
 
   </dependencies>
 

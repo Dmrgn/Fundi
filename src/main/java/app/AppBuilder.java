@@ -122,16 +122,13 @@ public class AppBuilder {
     private PortfoliosView portfoliosView;
     private CreateView createView;
     private PortfolioView portfolioView;
-<<<<<<< HEAD
     private NewsViewModel newsViewModel;
     private NewsView newsView;
-=======
     private BuyView buyView;
     private SellView sellView;
     private HistoryView historyView;
     private AnalysisView analysisView;
     private RecommendView recommendView;
->>>>>>> aaron
 
     public AppBuilder() throws SQLException {
         cardPanel.setLayout(cardLayout);
@@ -210,6 +207,7 @@ public class AppBuilder {
 
     /**
      * Adds the buy view to the application
+     * 
      * @return this builder
      */
     public AppBuilder addBuyView() {
@@ -300,16 +298,10 @@ public class AppBuilder {
     }
 
     public AppBuilder addPortfolioUseCase() {
-<<<<<<< HEAD
         final PortfolioOutputBoundary portfolioOutputBoundary = new PortfolioPresenter(viewManagerModel,
-                portfolioViewModel);
-        final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(portfolioDataAccessObject,
+                portfolioViewModel, buyViewModel, sellViewModel);
+        final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(transactionDataAccessObject,
                 portfolioOutputBoundary);
-        final PortfolioController controller = new PortfolioController(portfolioInputBoundary);
-        portfoliosView.setPortfolioController(controller);
-=======
-        final PortfolioOutputBoundary portfolioOutputBoundary = new PortfolioPresenter(viewManagerModel, portfolioViewModel, buyViewModel, sellViewModel);
-        final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(transactionDataAccessObject, portfolioOutputBoundary);
 
         portfolioController = new PortfolioController(portfolioInputBoundary);
         portfoliosView.setPortfolioController(portfolioController);
@@ -318,7 +310,8 @@ public class AppBuilder {
     }
 
     public AppBuilder addBuyUseCase() {
-        final BuyOutputBoundary buyOutputBoundary = new BuyPresenter(buyViewModel, portfolioController, portfolioViewModel.getState());
+        final BuyOutputBoundary buyOutputBoundary = new BuyPresenter(buyViewModel, portfolioController,
+                portfolioViewModel.getState());
         final BuyInputBoundary buyInputBoundary = new BuyInteractor(stockDataAccessObject, transactionDataAccessObject,
                 buyOutputBoundary);
         final BuyController buyController = new BuyController(buyInputBoundary);
@@ -327,8 +320,10 @@ public class AppBuilder {
     }
 
     public AppBuilder addSellUseCase() {
-        final SellOutputBoundary sellOutputBoundary = new SellPresenter(sellViewModel, portfolioController, portfolioViewModel.getState());
-        final SellInputBoundary sellInputBoundary = new SellInteractor(stockDataAccessObject, transactionDataAccessObject, sellOutputBoundary);
+        final SellOutputBoundary sellOutputBoundary = new SellPresenter(sellViewModel, portfolioController,
+                portfolioViewModel.getState());
+        final SellInputBoundary sellInputBoundary = new SellInteractor(stockDataAccessObject,
+                transactionDataAccessObject, sellOutputBoundary);
         final SellController sellController = new SellController(sellInputBoundary);
         sellView.setSellController(sellController);
         return this;
@@ -336,7 +331,8 @@ public class AppBuilder {
 
     public AppBuilder addHistoryUseCase() {
         final HistoryOutputBoundary historyOutputBoundary = new HistoryPresenter(viewManagerModel, historyViewModel);
-        final HistoryInputBoundary historyInputBoundary = new HistoryInteractor(transactionDataAccessObject, historyOutputBoundary);
+        final HistoryInputBoundary historyInputBoundary = new HistoryInteractor(transactionDataAccessObject,
+                historyOutputBoundary);
         final HistoryController historyController = new HistoryController(historyInputBoundary);
         portfolioView.setHistoryController(historyController);
         historyView.setHistoryController(historyController);
@@ -344,8 +340,10 @@ public class AppBuilder {
     }
 
     public AppBuilder addAnalysisUseCase() {
-        final AnalysisOutputBoundary analysisOutputBoundary = new AnalysisPresenter(viewManagerModel, analysisViewModel);
-        final AnalysisInputBoundary analysisInputBoundary = new AnalysisInteractor(stockDataAccessObject, transactionDataAccessObject, analysisOutputBoundary);
+        final AnalysisOutputBoundary analysisOutputBoundary = new AnalysisPresenter(viewManagerModel,
+                analysisViewModel);
+        final AnalysisInputBoundary analysisInputBoundary = new AnalysisInteractor(stockDataAccessObject,
+                transactionDataAccessObject, analysisOutputBoundary);
         final AnalysisController analysisController = new AnalysisController(analysisInputBoundary);
         portfolioView.setAnalysisController(analysisController);
         analysisView.setAnalysisController(analysisController);
@@ -353,18 +351,19 @@ public class AppBuilder {
     }
 
     public AppBuilder addRecommendUseCase() {
-        final RecommendOutputBoundary recommendOutputBoundary = new RecommendPresenter(recommendViewModel, viewManagerModel);
-        final RecommendInputBoundary recommendInputBoundary = new RecommendInteractor(stockDataAccessObject, recommendOutputBoundary);
+        final RecommendOutputBoundary recommendOutputBoundary = new RecommendPresenter(recommendViewModel,
+                viewManagerModel);
+        final RecommendInputBoundary recommendInputBoundary = new RecommendInteractor(stockDataAccessObject,
+                recommendOutputBoundary);
         final RecommendController recommendController = new RecommendController(recommendInputBoundary);
         portfolioView.setRecommendController(recommendController);
         recommendView.setRecommendController(recommendController);
->>>>>>> aaron
         return this;
     }
 
     public AppBuilder addNewsUseCase() {
         final NewsOutputBoundary newsOutputBoundary = new NewsPresenter(viewManagerModel, newsViewModel);
-        final NewsInputBoundary newsInteractor = new NewsInteractor(newsOutputBoundary, portfolioDataAccessObject);
+        final NewsInputBoundary newsInteractor = new NewsInteractor(newsOutputBoundary, transactionDataAccessObject);
         final NewsController newsController = new NewsController(newsInteractor);
         newsView.setNewsController(newsController);
         mainView.setNewsController(newsController);

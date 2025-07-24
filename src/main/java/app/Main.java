@@ -35,16 +35,11 @@ public class Main {
                 .addPortfoliosUseCase()
                 .addCreateUseCase()
                 .addPortfolioUseCase()
-<<<<<<< HEAD
-                .addNewsView()
-                .addNewsUseCase()
-=======
                 .addBuyUseCase()
                 .addSellUseCase()
                 .addHistoryUseCase()
                 .addAnalysisUseCase()
                 .addRecommendUseCase()
->>>>>>> aaron
                 .build();
         application.pack();
         application.setSize(600, 400);

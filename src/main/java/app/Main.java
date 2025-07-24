@@ -19,9 +19,9 @@ public class Main {
         FlatLightLaf.setup();
         final AppBuilder appBuilder = new AppBuilder();
         final JFrame application = appBuilder
+                .addMainView()
                 .addLoginView()
                 .addSignupView()
-                .addMainView()
                 .addPortfoliosView()
                 .addCreateView()
                 .addPortfolioView()

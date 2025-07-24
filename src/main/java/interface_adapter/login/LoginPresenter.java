@@ -26,7 +26,9 @@ public class LoginPresenter implements LoginOutputBoundary {
 
     public void prepareSuccessView(LoginOutputData response) {
         // On success, switch to the main view.
+        System.out.println(mainViewModel);
         mainViewModel.getState().setUsername(response.getUsername());
+        System.out.println("here2");
         mainViewModel.firePropertyChanged();
 
         viewManagerModel.setState(mainViewModel.getViewName());

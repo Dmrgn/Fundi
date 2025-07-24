@@ -10,4 +10,8 @@ public interface PortfolioInputBoundary {
      * @param portfolioInputData the input data.
      */
     void execute(PortfolioInputData portfolioInputData);
+
+    void routeToBuy(String portfolioId);
+
+    void routeToSell(String portfolioId);
 }

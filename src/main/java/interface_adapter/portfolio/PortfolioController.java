@@ -25,4 +25,12 @@ public class PortfolioController {
 
         portfolioUseCaseInteractor.execute(portfolioInputData);
     }
+
+    public void routeToBuy(String portfolioId) {
+        portfolioUseCaseInteractor.routeToBuy(portfolioId);
+    }
+
+    public void routeToSell(String portfolioId) {
+        portfolioUseCaseInteractor.routeToSell(portfolioId);
+    }
 }

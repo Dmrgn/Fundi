@@ -3,16 +3,21 @@ package view;
 import java.awt.*;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 //import interface_adapter.change_password.ChangePasswordController;
 //import interface_adapter.change_password.LoggedInState;
 //import interface_adapter.change_password.LoggedInViewModel;
 //import interface_adapter.logout.LogoutController;
+import interface_adapter.analysis.AnalysisController;
+import interface_adapter.history.HistoryController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
+import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.portfolios.PortfoliosController;
+import interface_adapter.recommend.RecommendController;
 
 /**
  * The View for when the user is looking at a portfolio in the program.
@@ -21,6 +26,10 @@ public class PortfolioView extends JPanel {
 
     private final String viewName = "portfolio";
     private final PortfolioViewModel portfolioViewModel;
+    private PortfolioController portfolioController;
+    private HistoryController historyController;
+    private AnalysisController analysisController;
+    private RecommendController recommendController;
 
     public PortfolioView(PortfolioViewModel portfolioViewModel) {
         this.portfolioViewModel = portfolioViewModel;
@@ -56,23 +65,23 @@ public class PortfolioView extends JPanel {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         setLayout(new BorderLayout(10, 10));
 
+        String[] columnNames = {"Ticker", "Quantity", "Price"};
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        JTable table = new JTable(tableModel);
+        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setPreferredSize(new Dimension(900, 600));
+        centerPanel.add(scrollPane, BorderLayout.CENTER);
         portfolioViewModel.addPropertyChangeListener(evt -> {
             PortfolioState state = portfolioViewModel.getState();
             String[] names = state.getStockNames();
             int[] amounts = state.getStockAmounts();
             double[] prices = state.getStockPrices();
-            Object[][] rowData = new Object[names.length][3];
+            tableModel.setRowCount(0);
+
             for (int i = 0; i < names.length; i++) {
-                rowData[i][0] = names[i];
-                rowData[i][1] = amounts[i];
-                rowData[i][2] = prices[i];
+                tableModel.addRow(new Object[]{names[i], amounts[i], prices[i]});
             }
-            String[] columnNames = {"Ticker", "Quantity", "Price"};
-            JTable table = new JTable(rowData, columnNames);
-            table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-            JScrollPane scrollPane = new JScrollPane(table);
-            scrollPane.setPreferredSize(new Dimension(900, 600));
-            centerPanel.add(scrollPane, BorderLayout.CENTER);
         });
 
 
@@ -85,9 +94,20 @@ public class PortfolioView extends JPanel {
 
         for (String useCase : useCases) {
             JButton useCaseButton = new JButton(useCase);
+            PortfolioState state = portfolioViewModel.getState();
 
             useCaseButton.addActionListener(evt -> {
-
+                    if (useCaseButton.getText().equals("Buy")) {
+                        portfolioController.routeToBuy(state.getPortfolioId());
+                    } else if (useCaseButton.getText().equals("Sell")) {
+                        portfolioController.routeToSell(state.getPortfolioId());
+                    } else if (useCaseButton.getText().equals("History")) {
+                        historyController.execute(state.getPortfolioId());
+                    } else if (useCaseButton.getText().equals("Analysis")) {
+                        analysisController.execute(state.getPortfolioId());
+                    } else if (useCaseButton.getText().equals("Recommendations")) {
+                        recommendController.execute();
+                    }
             });
             buttonPanel.add(useCaseButton);
         }
@@ -103,5 +123,21 @@ public class PortfolioView extends JPanel {
 
     public String getViewName() {
         return viewName;
+    }
+
+    public void setPortfolioController(PortfolioController portfolioController) {
+        this.portfolioController = portfolioController;
+    }
+
+    public void setHistoryController(HistoryController historyController) {
+        this.historyController = historyController;
+    }
+
+    public void setAnalysisController(AnalysisController analysisController) {
+        this.analysisController = analysisController;
+    }
+
+    public void setRecommendController(RecommendController recommendController) {
+        this.recommendController = recommendController;
     }
 }

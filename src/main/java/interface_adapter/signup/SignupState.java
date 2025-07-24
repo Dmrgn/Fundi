@@ -1,15 +1,24 @@
 package interface_adapter.signup;
 
-/**
- * The state for the Signup View Model.
- */
 public class SignupState {
     private String username = "";
-    private String usernameError;
+    private String usernameError = null;
     private String password = "";
-    private String passwordError;
+    private String passwordError = null;
     private String repeatPassword = "";
-    private String repeatPasswordError;
+    private String repeatPasswordError = null;
+
+    public SignupState(SignupState copy) {
+        username = copy.username;
+        usernameError = copy.usernameError;
+        password = copy.password;
+        passwordError = copy.passwordError;
+        repeatPassword = copy.repeatPassword;
+        repeatPasswordError = copy.repeatPasswordError;
+    }
+
+    public SignupState() {
+    }
 
     public String getUsername() {
         return username;
@@ -62,9 +71,9 @@ public class SignupState {
     @Override
     public String toString() {
         return "SignupState{"
-               + "username='" + username + '\''
-               + ", password='" + password + '\''
-               + ", repeatPassword='" + repeatPassword + '\''
-               + '}';
+                + "username='" + username + '\''
+                + ", password='" + password + '\''
+                + ", repeatPassword='" + repeatPassword + '\''
+                + '}';
     }
 }

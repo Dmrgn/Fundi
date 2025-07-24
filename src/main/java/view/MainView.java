@@ -66,13 +66,13 @@ public class MainView extends JPanel {
         JPanel buttonPanel = new JPanel(new GridLayout(2, 3, 10, 10));
         buttonPanel.setMaximumSize(new Dimension(400, 100));
 
-        String[] useCases = new String[] {"Portfolios", "Search", "News", "Watchlist", "Leaderboard", "Settings"};
+        String[] useCases = new String[] { "Portfolios", "Search", "News", "Watchlist", "Leaderboard", "Settings" };
         for (String useCase : useCases) {
             JButton useCaseButton = new JButton(useCase);
 
             useCaseButton.addActionListener(evt -> {
                 final MainState currentState = mainViewModel.getState();
-                currentState.setUseCase(useCase);  // set the correct use case at click time
+                currentState.setUseCase(useCase); // set the correct use case at click time
                 mainViewModel.setState(currentState);
                 if (useCase.equals("Portfolios")) {
                     portfoliosController.execute(currentState.getUsername());

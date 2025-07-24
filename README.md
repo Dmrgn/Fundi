@@ -3,8 +3,8 @@
 This is the final project for CSC207.
 
 ```
-# do this to compile to a jar
+# do this to build the app
 mvn package
-# then do this to run the jar
-java -cp target/fundi-1.0-SNAPSHOT.jar app.Main
+# do this to run the app
+mvn -q exec:java -Dexec.mainClass="app.Main"
 ```

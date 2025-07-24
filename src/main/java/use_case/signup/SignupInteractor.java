@@ -1,20 +1,17 @@
-package interface_adapter.signup;
+package use_case.signup;
 
 import entity.User;
 import entity.UserFactory;
-import use_case.signup.*;
+import use_case.signup.SignupUserDataAccessInterface;
 
-/**
- * The Signup Interactor.
- */
 public class SignupInteractor implements SignupInputBoundary {
-    private final SignupUserDataAccessInterface userDataAccessObject;
-    private final SignupOutputBoundary userPresenter;
-    private final UserFactory userFactory;
+    final SignupUserDataAccessInterface userDataAccessObject;
+    final SignupOutputBoundary userPresenter;
+    final UserFactory userFactory;
 
     public SignupInteractor(SignupUserDataAccessInterface signupDataAccessInterface,
-                            SignupOutputBoundary signupOutputBoundary,
-                            UserFactory userFactory) {
+            SignupOutputBoundary signupOutputBoundary,
+            UserFactory userFactory) {
         this.userDataAccessObject = signupDataAccessInterface;
         this.userPresenter = signupOutputBoundary;
         this.userFactory = userFactory;
@@ -24,11 +21,13 @@ public class SignupInteractor implements SignupInputBoundary {
     public void execute(SignupInputData signupInputData) {
         if (userDataAccessObject.existsByName(signupInputData.getUsername())) {
             userPresenter.prepareFailView("User already exists.");
-        }
-        else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
+        } else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
             userPresenter.prepareFailView("Passwords don't match.");
-        }
-        else {
+        } else if (signupInputData.getUsername().trim().length() == 0) {
+            userPresenter.prepareFailView("Enter a valid username.");
+        } else if (signupInputData.getPassword().trim().length() < 3) {
+            userPresenter.prepareFailView("Enter a valid password at least 3 characters long.");
+        } else {
             String id = userDataAccessObject.getId(signupInputData.getUsername());
             final User user = userFactory.create(id, signupInputData.getUsername(), signupInputData.getPassword());
             userDataAccessObject.save(user);
@@ -38,7 +37,6 @@ public class SignupInteractor implements SignupInputBoundary {
         }
     }
 
-    @Override
     public void switchToLoginView() {
         userPresenter.switchToLoginView();
     }

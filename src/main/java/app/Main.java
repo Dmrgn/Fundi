@@ -31,6 +31,7 @@ public class Main {
                 .addAnalysisView()
                 .addRecommendView()
                 .addNewsView()
+                .addSettingsView()
                 .addLoginUseCase()
                 .addSignupUseCase()
                 .addPortfoliosUseCase()

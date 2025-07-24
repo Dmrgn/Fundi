@@ -132,6 +132,8 @@ public class LoginView extends FormPanel implements ActionListener, PropertyChan
 
     /**
      * React to a button click that results in evt.
+     * 
+     * @param evt the ActionEvent to react to
      */
     public void actionPerformed(ActionEvent evt) {
         System.out.println("Click " + evt.getActionCommand());
@@ -143,5 +145,14 @@ public class LoginView extends FormPanel implements ActionListener, PropertyChan
         if (state.getUsernameError() != null) {
             JOptionPane.showMessageDialog(this, state.getUsernameError());
         }
+    }
+
+    private void setFields(LoginState state) {
+        usernameInputField.setText(state.getUsername());
+        passwordInputField.setText(state.getPassword());
+    }
+
+    public String getViewName() {
+        return viewName;
     }
 }

@@ -1,5 +1,8 @@
 package use_case.signup;
 
+/**
+ * The Input Data for the Signup Use Case.
+ */
 public class SignupInputData {
 
     private final String username;
@@ -12,15 +15,15 @@ public class SignupInputData {
         this.repeatPassword = repeatPassword;
     }
 
-    String getUsername() {
+    public String getUsername() {
         return username;
     }
 
-    String getPassword() {
+    public String getPassword() {
         return password;
     }
 
-    String getRepeatPassword() {
+    public String getRepeatPassword() {
         return repeatPassword;
     }
 }

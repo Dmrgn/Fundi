@@ -6,11 +6,14 @@ import interface_adapter.login.LoginViewModel;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupOutputData;
 
+/**
+ * The Presenter for the Signup Use Case.
+ */
 public class SignupPresenter implements SignupOutputBoundary {
 
     private final SignupViewModel signupViewModel;
     private final LoginViewModel loginViewModel;
-    private ViewManagerModel viewManagerModel;
+    private final ViewManagerModel viewManagerModel;
 
     public SignupPresenter(ViewManagerModel viewManagerModel,
             SignupViewModel signupViewModel,
@@ -33,11 +36,12 @@ public class SignupPresenter implements SignupOutputBoundary {
 
     @Override
     public void prepareFailView(String error) {
-        SignupState signupState = signupViewModel.getState();
+        final SignupState signupState = signupViewModel.getState();
         signupState.setUsernameError(error);
         signupViewModel.firePropertyChanged();
     }
 
+    @Override
     public void switchToLoginView() {
         viewManagerModel.setState(loginViewModel.getViewName());
         viewManagerModel.firePropertyChanged();

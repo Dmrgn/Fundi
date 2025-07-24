@@ -1,24 +1,29 @@
 package entity;
 
-public class User {
-
-    private final String name;
-    private final String password;
+/**
+ * The representation of a user in our program.
+ */
+public interface User {
 
     /**
-     * @param name
-     * @param password
+     * Returns the id of the user.
+     * 
+     * @return the id of the user.
      */
-    User(String name, String password) {
-        this.name = name;
-        this.password = password;
-    }
+    String getId();
 
-    public String getName() {
-        return name;
-    }
+    /**
+     * Returns the username of the user.
+     * 
+     * @return the username of the user.
+     */
+    String getName();
 
-    public String getPassword() {
-        return password;
-    }
+    /**
+     * Returns the password of the user.
+     * 
+     * @return the password of the user.
+     */
+    String getPassword();
+
 }

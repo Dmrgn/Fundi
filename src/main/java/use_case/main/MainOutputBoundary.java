@@ -6,21 +6,7 @@ package use_case.main;
 public interface MainOutputBoundary {
 
     /**
-     * Prepares the success view for the Signup Use Case.
-     * 
-     * @param outputData the output data
+     * Prepares the success view for the main Use Case.
      */
-    void prepareSuccessView(MainOutputData outputData);
-
-    /**
-     * Prepares the failure view for the Signup Use Case.
-     * 
-     * @param errorMessage the explanation of the failure
-     */
-    void prepareFailView(String errorMessage);
-
-    /**
-     * Switches to the Login View.
-     */
-    void switchToLoginView();
+    void prepareView(MainOutputData mainOutputData);
 }

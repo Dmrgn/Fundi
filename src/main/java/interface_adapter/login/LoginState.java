@@ -1,5 +1,8 @@
 package interface_adapter.login;
 
+/**
+ * The state for the Login View Model.
+ */
 public class LoginState {
     private String username = "";
     private String usernameError = null;
@@ -24,6 +27,10 @@ public class LoginState {
         return usernameError;
     }
 
+    public String getLoginError() {
+        return loginError;
+    }
+
     public String getPassword() {
         return password;
     }
@@ -38,6 +45,10 @@ public class LoginState {
 
     public void setUsernameError(String usernameError) {
         this.usernameError = usernameError;
+    }
+
+    public void setLoginError(String usernameError) {
+        this.loginError = usernameError;
     }
 
     public void setPassword(String password) {

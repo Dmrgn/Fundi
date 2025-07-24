@@ -1,12 +1,17 @@
 package entity;
 
-public class UserFactory {
+/**
+ * Factory for creating users.
+ */
+public interface UserFactory {
     /**
-     * @param name
-     * @param password
-     * @return
+     * Creates a new User.
+     * 
+     * @param id       the id of the user
+     * @param name     the name of the new user
+     * @param password the password of the new user
+     * @return the new user
      */
-    public User create(String name, String password) {
-        return new User(name, password);
-    }
+    User create(String id, String name, String password);
+
 }

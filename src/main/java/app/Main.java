@@ -1,6 +1,7 @@
-package app;
+package app; // START USING BRANCHES.........!!!!!!!!!!!!
 
 import javax.swing.JFrame;
+import java.sql.SQLException;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
@@ -13,18 +14,23 @@ public class Main {
      * 
      * @param args unused arguments
      */
-    public static void main(String[] args) {
 
-        // Set the look and feel for Java Swing components
+    public static void main(String[] args) throws SQLException {
         FlatLightLaf.setup();
-
         final AppBuilder appBuilder = new AppBuilder();
         final JFrame application = appBuilder
-                .addMainView()
                 .addLoginView()
                 .addSignupView()
+                .addMainView()
+                .addPortfoliosView()
+                .addCreateView()
+                .addPortfolioView()
+                .addLoginUseCase()
+                .addSignupUseCase()
+                .addPortfoliosUseCase()
+                .addCreateUseCase()
+                .addPortfolioUseCase()
                 .build();
-
         application.pack();
         application.setSize(600, 400);
         // application.setExtendedState(JFrame.MAXIMIZED_BOTH);

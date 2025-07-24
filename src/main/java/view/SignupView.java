@@ -162,9 +162,17 @@ public class SignupView extends FormPanel implements ActionListener, PropertyCha
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        SignupState state = (SignupState) evt.getNewValue();
+        final SignupState state = (SignupState) evt.getNewValue();
         if (state.getUsernameError() != null) {
             JOptionPane.showMessageDialog(this, state.getUsernameError());
         }
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
+
+    public void setSignupController(SignupController controller) {
+        this.signupController = controller;
     }
 }

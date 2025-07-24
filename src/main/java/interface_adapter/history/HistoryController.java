@@ -13,4 +13,8 @@ public class HistoryController {
         public void execute(String portfolioId) {
             historyInputBoundary.execute(new HistoryInputData(portfolioId));
         }
+
+        public void routeToPortfolio() {
+            historyInputBoundary.routeToPortfolio();
+        }
 }

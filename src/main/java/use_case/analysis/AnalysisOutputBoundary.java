@@ -4,4 +4,6 @@ import view.AnalysisView;
 
 public interface AnalysisOutputBoundary {
     void prepareView(AnalysisOutputData analysisOutputData);
+
+    void routeToPortfolio();
 }

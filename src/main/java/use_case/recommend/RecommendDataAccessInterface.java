@@ -7,4 +7,5 @@ import java.util.List;
 
 public interface RecommendDataAccessInterface {
     List<StockData> pastStockData(String ticker);
+    String[] getAvailableTickers();
 }

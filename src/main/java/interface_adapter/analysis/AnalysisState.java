@@ -1,5 +1,6 @@
 package interface_adapter.analysis;
 
+import java.util.HashMap;
 import java.util.Map;
 
 public class AnalysisState {
@@ -28,11 +29,11 @@ public class AnalysisState {
     }
 
     public Map<String, Double> getMajorityTickers() {
-        return majorityTickers;
+        return new HashMap<>(majorityTickers);
     }
 
     public void setMajorityTickers(Map<String, Double> majorityTickers) {
-        this.majorityTickers = majorityTickers;
+        this.majorityTickers = new HashMap<>(majorityTickers);
     }
 
     public int getNumTickers() {
@@ -52,19 +53,19 @@ public class AnalysisState {
     }
 
     public Map<String, Double> getMostVolTickers() {
-        return mostVolTickers;
+        return new HashMap<>(mostVolTickers);
     }
 
     public void setMostVolTickers(Map<String, Double> mostVolTickers) {
-        this.mostVolTickers = mostVolTickers;
+        this.mostVolTickers = new HashMap<>(mostVolTickers);
     }
 
     public Map<String, Double> getLeastVolTickers() {
-        return leastVolTickers;
+        return new HashMap<>(leastVolTickers);
     }
 
     public void setLeastVolTickers(Map<String, Double> leastVolTickers) {
-        this.leastVolTickers = leastVolTickers;
+        this.leastVolTickers = new HashMap<>(leastVolTickers);
     }
 
     public double getPastReturn() {
@@ -76,19 +77,19 @@ public class AnalysisState {
     }
 
     public Map<String, Double> getTopReturns() {
-        return topReturns;
+        return new HashMap<>(topReturns);
     }
 
     public void setTopReturns(Map<String, Double> topReturns) {
-        this.topReturns = topReturns;
+        this.topReturns = new HashMap<>(topReturns);
     }
 
     public Map<String, Double> getWorstReturns() {
-        return worstReturns;
+        return new HashMap<>(worstReturns);
     }
 
     public void setWorstReturns(Map<String, Double> worstReturns) {
-        this.worstReturns = worstReturns;
+        this.worstReturns = new HashMap<>(worstReturns);
     }
 }
 

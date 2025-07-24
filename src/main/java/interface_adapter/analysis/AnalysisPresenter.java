@@ -1,6 +1,7 @@
 package interface_adapter.analysis;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.sell.SellState;
 import use_case.analysis.AnalysisOutputBoundary;
 import use_case.analysis.AnalysisOutputData;
 
@@ -28,5 +29,11 @@ public class AnalysisPresenter implements AnalysisOutputBoundary {
         this.analysisViewModel.firePropertyChanged();
         this.viewManagerModel.setState(analysisViewModel.getViewName());
         this.viewManagerModel.firePropertyChanged();
+    }
+
+    @Override
+    public void routeToPortfolio() {
+        viewManagerModel.setState("portfolio");
+        viewManagerModel.firePropertyChanged();
     }
 }

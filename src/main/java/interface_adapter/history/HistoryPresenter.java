@@ -26,4 +26,10 @@ public class HistoryPresenter implements HistoryOutputBoundary {
         this.viewManagerModel.setState(historyViewModel.getViewName());
         this.viewManagerModel.firePropertyChanged();
     }
+
+    @Override
+    public void routeToPortfolio() {
+        viewManagerModel.setState("portfolio");
+        viewManagerModel.firePropertyChanged();
+    }
 }

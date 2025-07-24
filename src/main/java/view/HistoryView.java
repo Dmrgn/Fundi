@@ -10,6 +10,7 @@ import javax.swing.table.DefaultTableModel;
 //import interface_adapter.change_password.LoggedInState;
 //import interface_adapter.change_password.LoggedInViewModel;
 //import interface_adapter.logout.LogoutController;
+import interface_adapter.history.HistoryController;
 import interface_adapter.history.HistoryState;
 import interface_adapter.history.HistoryViewModel;
 import interface_adapter.main.MainState;
@@ -26,6 +27,7 @@ public class HistoryView extends JPanel {
 
     private final String viewName = "history";
     private final HistoryViewModel historyViewModel;
+    private HistoryController historyController;
 
     public HistoryView(HistoryViewModel historyViewModel) {
         this.historyViewModel = historyViewModel;
@@ -74,11 +76,8 @@ public class HistoryView extends JPanel {
         JPanel bottomPanel = new JPanel();
 
         JButton useCaseButton = new JButton("Back");
-        HistoryState state = historyViewModel.getState();
 
-        useCaseButton.addActionListener(evt -> {
-
-        });
+        useCaseButton.addActionListener(evt -> historyController.routeToPortfolio());
         bottomPanel.add(useCaseButton, BorderLayout.CENTER);
         bottomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -90,5 +89,9 @@ public class HistoryView extends JPanel {
 
     public String getViewName() {
         return viewName;
+    }
+
+    public void setHistoryController(HistoryController historyController) {
+        this.historyController = historyController;
     }
 }

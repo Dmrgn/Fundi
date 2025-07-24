@@ -141,4 +141,9 @@ public class AnalysisInteractor implements AnalysisInputBoundary {
                         LinkedHashMap::new
                 ));
     }
+
+    @Override
+    public void routeToPortfolio() {
+        analysisOutputBoundary.routeToPortfolio();
+    }
 }

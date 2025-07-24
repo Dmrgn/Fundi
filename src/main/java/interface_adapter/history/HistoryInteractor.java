@@ -39,4 +39,9 @@ public class HistoryInteractor implements HistoryInputBoundary {
                 dates
         ));
     }
+
+    @Override
+    public void routeToPortfolio() {
+        historyOutputBoundary.routeToPortfolio();
+    }
 }

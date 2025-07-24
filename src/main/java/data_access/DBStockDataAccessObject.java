@@ -68,6 +68,11 @@ public class DBStockDataAccessObject implements RecommendDataAccessInterface, Bu
         return stocks.get(ticker);
     }
 
+    @Override
+    public String[] getAvailableTickers() {
+        return TICKERS.toArray(new String[0]);
+    }
+
     private List<LocalDate> mostRecentNTradingDays(LocalDate today) {
         List<LocalDate> dates = new ArrayList<>();
         LocalDate mostRecent = today;

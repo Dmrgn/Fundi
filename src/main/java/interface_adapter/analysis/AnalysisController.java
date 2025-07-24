@@ -13,4 +13,8 @@ public class AnalysisController {
     public void execute(String portfolioId) {
         analysisInputBoundary.execute(new AnalysisInputData(portfolioId));
     }
+
+    public void routeToPortfolio() {
+        analysisInputBoundary.routeToPortfolio();
+    }
 }

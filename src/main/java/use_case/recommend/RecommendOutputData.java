@@ -1,15 +1,19 @@
 package use_case.recommend;
 
-import java.util.List;
-
 public class RecommendOutputData {
-    List<String> recommendations;
+    String[] recommendations;
+    double[] prices;
 
-    public RecommendOutputData(List<String> recommendations) {
+    public RecommendOutputData(String[] recommendations, double[] prices) {
         this.recommendations = recommendations;
+        this.prices = prices;
     }
 
-    public List<String> getRecommendations() {
+    public String[] getRecommendations() {
         return recommendations;
+    }
+
+    public double[] getPrices() {
+        return prices;
     }
 }

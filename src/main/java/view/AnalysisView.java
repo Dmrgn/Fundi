@@ -24,6 +24,7 @@ public class AnalysisView extends JPanel {
 
     private final String viewName = "analysis";
     private final AnalysisViewModel analysisViewModel;
+    private AnalysisController analysisController;
 
     public AnalysisView(AnalysisViewModel analysisViewModel) {
         this.analysisViewModel = analysisViewModel;
@@ -170,11 +171,8 @@ public class AnalysisView extends JPanel {
         JPanel bottomPanel = new JPanel();
 
         JButton useCaseButton = new JButton("Back");
-        AnalysisState state = analysisViewModel.getState();
 
-        useCaseButton.addActionListener(evt -> {
-
-        });
+        useCaseButton.addActionListener(evt -> analysisController.routeToPortfolio());
         bottomPanel.add(useCaseButton, BorderLayout.CENTER);
         bottomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -191,5 +189,9 @@ public class AnalysisView extends JPanel {
         } else {
             return String.format("%.2f%%", value);
         }
+    }
+
+    public void setAnalysisController(AnalysisController analysisController) {
+        this.analysisController = analysisController;
     }
 }

@@ -17,6 +17,7 @@ import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.portfolios.PortfoliosController;
+import interface_adapter.recommend.RecommendController;
 
 /**
  * The View for when the user is looking at a portfolio in the program.
@@ -28,6 +29,7 @@ public class PortfolioView extends JPanel {
     private PortfolioController portfolioController;
     private HistoryController historyController;
     private AnalysisController analysisController;
+    private RecommendController recommendController;
 
     public PortfolioView(PortfolioViewModel portfolioViewModel) {
         this.portfolioViewModel = portfolioViewModel;
@@ -103,6 +105,8 @@ public class PortfolioView extends JPanel {
                         historyController.execute(state.getPortfolioId());
                     } else if (useCaseButton.getText().equals("Analysis")) {
                         analysisController.execute(state.getPortfolioId());
+                    } else if (useCaseButton.getText().equals("Recommendations")) {
+                        recommendController.execute();
                     }
             });
             buttonPanel.add(useCaseButton);
@@ -131,5 +135,9 @@ public class PortfolioView extends JPanel {
 
     public void setAnalysisController(AnalysisController analysisController) {
         this.analysisController = analysisController;
+    }
+
+    public void setRecommendController(RecommendController recommendController) {
+        this.recommendController = recommendController;
     }
 }

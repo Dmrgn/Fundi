@@ -37,6 +37,10 @@ import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioInteractor;
 import interface_adapter.portfolio.PortfolioPresenter;
 import interface_adapter.portfolio.PortfolioViewModel;
+import interface_adapter.recommend.RecommendController;
+import interface_adapter.recommend.RecommendInteractor;
+import interface_adapter.recommend.RecommendPresenter;
+import interface_adapter.recommend.RecommendViewModel;
 import interface_adapter.sell.SellController;
 import interface_adapter.sell.SellInteractor;
 import interface_adapter.sell.SellPresenter;
@@ -63,6 +67,8 @@ import use_case.portfolio.PortfolioInputBoundary;
 import use_case.portfolio.PortfolioOutputBoundary;
 import use_case.portfolios.PortfoliosInputBoundary;
 import use_case.portfolios.PortfoliosOutputBoundary;
+import use_case.recommend.RecommendInputBoundary;
+import use_case.recommend.RecommendOutputBoundary;
 import use_case.sell.SellInputBoundary;
 import use_case.sell.SellOutputBoundary;
 import use_case.signup.SignupInputBoundary;
@@ -101,6 +107,7 @@ public class AppBuilder {
     private SellViewModel sellViewModel;
     private HistoryViewModel historyViewModel;
     private AnalysisViewModel analysisViewModel;
+    private RecommendViewModel recommendViewModel;
     private MainView mainView;
     private LoginView loginView;
     private PortfoliosView portfoliosView;
@@ -110,6 +117,7 @@ public class AppBuilder {
     private SellView sellView;
     private HistoryView historyView;
     private AnalysisView analysisView;
+    private RecommendView recommendView;
 
     public AppBuilder() throws SQLException {
         cardPanel.setLayout(cardLayout);
@@ -213,6 +221,13 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addRecommendView() {
+        recommendViewModel = new RecommendViewModel();
+        recommendView = new RecommendView(recommendViewModel);
+        cardPanel.add(recommendView, recommendView.getViewName());
+        return this;
+    }
+
     /**
      * Adds the Login Use Case to the application.
      * @return this builder
@@ -297,6 +312,7 @@ public class AppBuilder {
         final HistoryInputBoundary historyInputBoundary = new HistoryInteractor(transactionDataAccessObject, historyOutputBoundary);
         final HistoryController historyController = new HistoryController(historyInputBoundary);
         portfolioView.setHistoryController(historyController);
+        historyView.setHistoryController(historyController);
         return this;
     }
 
@@ -305,6 +321,16 @@ public class AppBuilder {
         final AnalysisInputBoundary analysisInputBoundary = new AnalysisInteractor(stockDataAccessObject, transactionDataAccessObject, analysisOutputBoundary);
         final AnalysisController analysisController = new AnalysisController(analysisInputBoundary);
         portfolioView.setAnalysisController(analysisController);
+        analysisView.setAnalysisController(analysisController);
+        return this;
+    }
+
+    public AppBuilder addRecommendUseCase() {
+        final RecommendOutputBoundary recommendOutputBoundary = new RecommendPresenter(recommendViewModel, viewManagerModel);
+        final RecommendInputBoundary recommendInputBoundary = new RecommendInteractor(stockDataAccessObject, recommendOutputBoundary);
+        final RecommendController recommendController = new RecommendController(recommendInputBoundary);
+        portfolioView.setRecommendController(recommendController);
+        recommendView.setRecommendController(recommendController);
         return this;
     }
 

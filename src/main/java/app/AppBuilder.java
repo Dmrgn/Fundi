@@ -387,12 +387,10 @@ public class AppBuilder {
 
         return application;
     }
-<<<<<<< HEAD
-}
-=======
 
     /**
      * Adds the Settings View to the application.
+     * 
      * @return this builder
      */
     public AppBuilder addSettingsView() {
@@ -402,4 +400,3 @@ public class AppBuilder {
     }
 
 }
->>>>>>> arham

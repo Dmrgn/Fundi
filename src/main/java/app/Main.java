@@ -30,6 +30,8 @@ public class Main {
                 .addPortfoliosUseCase()
                 .addCreateUseCase()
                 .addPortfolioUseCase()
+                .addNewsView()
+                .addNewsUseCase()
                 .build();
         application.pack();
         application.setSize(600, 400);

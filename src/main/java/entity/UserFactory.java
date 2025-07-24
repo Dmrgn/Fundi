@@ -6,8 +6,9 @@ package entity;
 public interface UserFactory {
     /**
      * Creates a new User.
-     * @param id the id of the user
-     * @param name the name of the new user
+     * 
+     * @param id       the id of the user
+     * @param name     the name of the new user
      * @param password the password of the new user
      * @return the new user
      */

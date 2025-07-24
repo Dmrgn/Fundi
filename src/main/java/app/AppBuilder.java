@@ -27,7 +27,10 @@ import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import interface_adapter.signup.SignupInteractor;
+import app.LoginUseCaseFactory;
+import app.SignupUseCaseFactory;
+import view.SignupView;
+import use_case.signup.SignupInteractor;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.news.NewsInteractor;
@@ -37,7 +40,7 @@ import interface_adapter.portfolios.*;
 import use_case.create.CreateInputBoundary;
 import use_case.create.CreateOutputBoundary;
 import use_case.login.LoginInputBoundary;
-import interface_adapter.login.LoginInteractor;
+import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.news.NewsInputBoundary;
@@ -63,15 +66,15 @@ public class AppBuilder {
     private final UserFactory userFactory = new CommonUserFactory();
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-    private final LoginUserDataAccessInterface userDataAccessObject =
-            new DBUserDataAccessObject(userFactory);
+    private final LoginUserDataAccessInterface userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
     private final DBPortfolioDataAccessObject portfolioDataAccessObject = new DBPortfolioDataAccessObject();
 
+    private MainViewModel mainViewModel;
+    private LoginViewModel loginViewModel;
     private SignupView signupView;
     private SignupViewModel signupViewModel;
-    private LoginViewModel loginViewModel;
-    private MainViewModel mainViewModel;
+
     private PortfoliosViewModel portfoliosViewModel;
     private CreateViewModel createViewModel;
     private PortfolioViewModel portfolioViewModel;
@@ -88,29 +91,8 @@ public class AppBuilder {
     }
 
     /**
-     * Adds the Login View to the application.
-     * @return this builder
-     */
-    public AppBuilder addLoginView() {
-        loginViewModel = new LoginViewModel();
-        loginView = new LoginView(loginViewModel);
-        cardPanel.add(loginView, loginView.getViewName());
-        return this;
-    }
-
-    /**
-     * Adds the Signup View to the application.
-     * @return this builder
-     */
-    public AppBuilder addSignupView() {
-        signupViewModel = new SignupViewModel();
-        signupView = new SignupView(signupViewModel);
-        cardPanel.add(signupView, signupView.getViewName());
-        return this;
-    }
-
-    /**
      * Adds the Main View to the application.
+     * 
      * @return this builder
      */
     public AppBuilder addMainView() {
@@ -120,8 +102,25 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addLoginView() {
+        loginViewModel = new LoginViewModel();
+        loginView = LoginUseCaseFactory.create(viewManagerModel, mainViewModel, loginViewModel, signupViewModel,
+                userDataAccessObject);
+        cardPanel.add(loginView, loginView.viewName);
+        return this;
+    }
+
+    public AppBuilder addSignupView() {
+        signupViewModel = new SignupViewModel();
+        signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel,
+                (SignupUserDataAccessInterface) userDataAccessObject);
+        cardPanel.add(signupView, signupView.viewName);
+        return this;
+    }
+
     /**
      * Adds the portfolios view to the application
+     * 
      * @return this builder
      */
     public AppBuilder addPortfoliosView() {
@@ -133,6 +132,7 @@ public class AppBuilder {
 
     /**
      * Adds the create view to the application
+     * 
      * @return this builder
      */
     public AppBuilder addCreateView() {
@@ -144,6 +144,7 @@ public class AppBuilder {
 
     /**
      * Adds the portfolio view to the application
+     * 
      * @return this builder
      */
     public AppBuilder addPortfolioView() {
@@ -162,22 +163,22 @@ public class AppBuilder {
 
     /**
      * Adds the Login Use Case to the application.
+     * 
      * @return this builder
      */
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                mainViewModel, loginViewModel);
+                mainViewModel, loginViewModel, signupViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
 
         final LoginController loginController = new LoginController(loginInteractor);
-        loginView.setLoginController(loginController);
         return this;
     }
 
-
     /**
      * Adds the Signup Use Case to the application.
+     * 
      * @return this builder
      */
     public AppBuilder addSignupUseCase() {
@@ -187,10 +188,8 @@ public class AppBuilder {
                 (SignupUserDataAccessInterface) userDataAccessObject, signupOutputBoundary, userFactory);
 
         final SignupController controller = new SignupController(userSignupInteractor);
-        signupView.setSignupController(controller);
         return this;
     }
-
 
     public AppBuilder addPortfoliosUseCase() {
         final PortfoliosOutputBoundary portfoliosOutputBoundary = new PortfoliosPresenter(viewManagerModel,
@@ -205,16 +204,20 @@ public class AppBuilder {
     }
 
     public AppBuilder addCreateUseCase() {
-        final CreateOutputBoundary createOutputBoundary = new CreatePresenter(viewManagerModel, portfoliosViewModel, createViewModel);
-        final CreateInputBoundary createInteractor = new CreateInteractor(portfoliosDataAccessObject, createOutputBoundary);
+        final CreateOutputBoundary createOutputBoundary = new CreatePresenter(viewManagerModel, portfoliosViewModel,
+                createViewModel);
+        final CreateInputBoundary createInteractor = new CreateInteractor(portfoliosDataAccessObject,
+                createOutputBoundary);
         final CreateController createController = new CreateController(createInteractor);
         createView.setController(createController);
         return this;
     }
 
     public AppBuilder addPortfolioUseCase() {
-        final PortfolioOutputBoundary portfolioOutputBoundary = new PortfolioPresenter(viewManagerModel, portfolioViewModel);
-        final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(portfolioDataAccessObject, portfolioOutputBoundary);
+        final PortfolioOutputBoundary portfolioOutputBoundary = new PortfolioPresenter(viewManagerModel,
+                portfolioViewModel);
+        final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(portfolioDataAccessObject,
+                portfolioOutputBoundary);
         final PortfolioController controller = new PortfolioController(portfolioInputBoundary);
         portfoliosView.setPortfolioController(controller);
         return this;
@@ -230,7 +233,9 @@ public class AppBuilder {
     }
 
     /**
-     * Creates the JFrame for the application and initially sets the SignupView to be displayed.
+     * Creates the JFrame for the application and initially sets the SignupView to
+     * be displayed.
+     * 
      * @return the application
      */
     public JFrame build() {
@@ -239,7 +244,7 @@ public class AppBuilder {
 
         application.add(cardPanel);
 
-        viewManagerModel.setState(signupView.getViewName());
+        viewManagerModel.setState(signupViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
 
         return application;

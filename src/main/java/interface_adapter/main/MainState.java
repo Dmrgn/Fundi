@@ -14,7 +14,8 @@ public class MainState {
         useCase = copy.useCase;
     }
 
-    // Because of the previous copy constructor, the default constructor must be explicit.
+    // Because of the previous copy constructor, the default constructor must be
+    // explicit.
     public MainState() {
 
     }
@@ -26,12 +27,13 @@ public class MainState {
     public void setId(String id) {
         this.id = id;
     }
-    
+
     public String getUsername() {
         return username;
     }
 
     public void setUsername(String username) {
+        System.out.println("username: " + username);
         this.username = username;
     }
 

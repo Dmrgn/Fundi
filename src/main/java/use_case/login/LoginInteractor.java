@@ -1,39 +1,38 @@
-package interface_adapter.login;
+package use_case.login;
 
 import entity.User;
-import use_case.login.*;
+import use_case.UserDataAccessInterface;
 
-/**
- * The Login Interactor.
- */
 public class LoginInteractor implements LoginInputBoundary {
-    private final LoginUserDataAccessInterface userDataAccessObject;
-    private final LoginOutputBoundary loginPresenter;
 
-    public LoginInteractor(LoginUserDataAccessInterface userDataAccessInterface,
-                           LoginOutputBoundary loginOutputBoundary) {
+    final UserDataAccessInterface userDataAccessObject;
+    final LoginOutputBoundary loginPresenter;
+
+    public LoginInteractor(UserDataAccessInterface userDataAccessInterface,
+            LoginOutputBoundary loginOutputBoundary) {
         this.userDataAccessObject = userDataAccessInterface;
         this.loginPresenter = loginOutputBoundary;
     }
 
     @Override
     public void execute(LoginInputData loginInputData) {
-        final String username = loginInputData.getUsername();
-        final String password = loginInputData.getPassword();
+        String username = loginInputData.getUsername();
+        String password = loginInputData.getPassword();
         if (!userDataAccessObject.existsByName(username)) {
             loginPresenter.prepareFailView(username + ": Account does not exist.");
         } else {
-            final String pwd = userDataAccessObject.get(username).getPassword();
+            String pwd = userDataAccessObject.get(username).getPassword();
             if (!password.equals(pwd)) {
-                loginPresenter.prepareFailView("Incorrect password for \"" + username + "\".");
+                loginPresenter.prepareFailView("Incorrect password for " + username + ".");
             } else {
-
                 final User user = userDataAccessObject.get(loginInputData.getUsername());
-
                 final LoginOutputData loginOutputData = new LoginOutputData(user.getId(), user.getName(), false);
                 loginPresenter.prepareSuccessView(loginOutputData);
-
             }
         }
+    }
+
+    public void switchToSignupView() {
+        loginPresenter.switchToSignupView();
     }
 }

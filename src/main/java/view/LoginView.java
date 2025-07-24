@@ -63,7 +63,6 @@ public class LoginView extends FormPanel implements ActionListener, PropertyChan
         logIn.addActionListener(
                 new ActionListener() {
                     public void actionPerformed(ActionEvent evt) {
-                        System.out.println("here");
                         if (evt.getSource().equals(logIn)) {
                             LoginState currentState = loginViewModel.getState();
 

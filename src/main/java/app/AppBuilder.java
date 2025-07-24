@@ -57,8 +57,7 @@ public class AppBuilder {
     private final UserFactory userFactory = new CommonUserFactory();
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-    private final LoginUserDataAccessInterface userDataAccessObject =
-            new DBUserDataAccessObject(userFactory);
+    private final LoginUserDataAccessInterface userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
     private final DBPortfolioDataAccessObject portfolioDataAccessObject = new DBPortfolioDataAccessObject();
 
@@ -81,6 +80,7 @@ public class AppBuilder {
 
     /**
      * Adds the Login View to the application.
+     * 
      * @return this builder
      */
     public AppBuilder addLoginView() {
@@ -92,6 +92,7 @@ public class AppBuilder {
 
     /**
      * Adds the Signup View to the application.
+     * 
      * @return this builder
      */
     public AppBuilder addSignupView() {
@@ -103,6 +104,7 @@ public class AppBuilder {
 
     /**
      * Adds the Main View to the application.
+     * 
      * @return this builder
      */
     public AppBuilder addMainView() {
@@ -114,6 +116,7 @@ public class AppBuilder {
 
     /**
      * Adds the portfolios view to the application
+     * 
      * @return this builder
      */
     public AppBuilder addPortfoliosView() {
@@ -125,6 +128,7 @@ public class AppBuilder {
 
     /**
      * Adds the create view to the application
+     * 
      * @return this builder
      */
     public AppBuilder addCreateView() {
@@ -136,6 +140,7 @@ public class AppBuilder {
 
     /**
      * Adds the portfolio view to the application
+     * 
      * @return this builder
      */
     public AppBuilder addPortfolioView() {
@@ -147,6 +152,7 @@ public class AppBuilder {
 
     /**
      * Adds the Login Use Case to the application.
+     * 
      * @return this builder
      */
     public AppBuilder addLoginUseCase() {
@@ -160,9 +166,9 @@ public class AppBuilder {
         return this;
     }
 
-
     /**
      * Adds the Signup Use Case to the application.
+     * 
      * @return this builder
      */
     public AppBuilder addSignupUseCase() {
@@ -175,7 +181,6 @@ public class AppBuilder {
         signupView.setSignupController(controller);
         return this;
     }
-
 
     public AppBuilder addPortfoliosUseCase() {
         final PortfoliosOutputBoundary portfoliosOutputBoundary = new PortfoliosPresenter(viewManagerModel,
@@ -190,23 +195,29 @@ public class AppBuilder {
     }
 
     public AppBuilder addCreateUseCase() {
-        final CreateOutputBoundary createOutputBoundary = new CreatePresenter(viewManagerModel, portfoliosViewModel, createViewModel);
-        final CreateInputBoundary createInteractor = new CreateInteractor(portfoliosDataAccessObject, createOutputBoundary);
+        final CreateOutputBoundary createOutputBoundary = new CreatePresenter(viewManagerModel, portfoliosViewModel,
+                createViewModel);
+        final CreateInputBoundary createInteractor = new CreateInteractor(portfoliosDataAccessObject,
+                createOutputBoundary);
         final CreateController createController = new CreateController(createInteractor);
         createView.setController(createController);
         return this;
     }
 
     public AppBuilder addPortfolioUseCase() {
-        final PortfolioOutputBoundary portfolioOutputBoundary = new PortfolioPresenter(viewManagerModel, portfolioViewModel);
-        final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(portfolioDataAccessObject, portfolioOutputBoundary);
+        final PortfolioOutputBoundary portfolioOutputBoundary = new PortfolioPresenter(viewManagerModel,
+                portfolioViewModel);
+        final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(portfolioDataAccessObject,
+                portfolioOutputBoundary);
         final PortfolioController controller = new PortfolioController(portfolioInputBoundary);
         portfoliosView.setPortfolioController(controller);
         return this;
     }
 
     /**
-     * Creates the JFrame for the application and initially sets the SignupView to be displayed.
+     * Creates the JFrame for the application and initially sets the SignupView to
+     * be displayed.
+     * 
      * @return the application
      */
     public JFrame build() {

@@ -29,6 +29,10 @@ import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.signup.SignupInteractor;
 import interface_adapter.main.MainViewModel;
+import interface_adapter.news.NewsController;
+import interface_adapter.news.NewsInteractor;
+import interface_adapter.news.NewsPresenter;
+import interface_adapter.news.NewsViewModel;
 import interface_adapter.portfolios.*;
 import use_case.create.CreateInputBoundary;
 import use_case.create.CreateOutputBoundary;
@@ -36,6 +40,8 @@ import use_case.login.LoginInputBoundary;
 import interface_adapter.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginUserDataAccessInterface;
+import use_case.news.NewsInputBoundary;
+import use_case.news.NewsOutputBoundary;
 import use_case.portfolio.PortfolioInputBoundary;
 import use_case.portfolio.PortfolioOutputBoundary;
 import use_case.portfolios.PortfoliosInputBoundary;
@@ -74,6 +80,8 @@ public class AppBuilder {
     private PortfoliosView portfoliosView;
     private CreateView createView;
     private PortfolioView portfolioView;
+    private NewsViewModel newsViewModel;
+    private NewsView newsView;
 
     public AppBuilder() throws SQLException {
         cardPanel.setLayout(cardLayout);
@@ -145,6 +153,13 @@ public class AppBuilder {
         return this;
     }
 
+    public AppBuilder addNewsView() {
+        newsViewModel = new NewsViewModel();
+        newsView = new NewsView(newsViewModel);
+        cardPanel.add(newsView, newsView.getViewName());
+        return this;
+    }
+
     /**
      * Adds the Login Use Case to the application.
      * @return this builder
@@ -202,6 +217,15 @@ public class AppBuilder {
         final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(portfolioDataAccessObject, portfolioOutputBoundary);
         final PortfolioController controller = new PortfolioController(portfolioInputBoundary);
         portfoliosView.setPortfolioController(controller);
+        return this;
+    }
+
+    public AppBuilder addNewsUseCase() {
+        final NewsOutputBoundary newsOutputBoundary = new NewsPresenter(viewManagerModel, newsViewModel);
+        final NewsInputBoundary newsInteractor = new NewsInteractor(newsOutputBoundary, portfolioDataAccessObject);
+        final NewsController newsController = new NewsController(newsInteractor);
+        newsView.setNewsController(newsController);
+        mainView.setNewsController(newsController);
         return this;
     }
 

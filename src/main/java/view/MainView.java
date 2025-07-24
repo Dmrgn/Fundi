@@ -10,6 +10,7 @@ import javax.swing.*;
 //import interface_adapter.logout.LogoutController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
+import interface_adapter.news.NewsController;
 import interface_adapter.portfolios.PortfoliosController;
 
 /**
@@ -20,6 +21,7 @@ public class MainView extends JPanel {
     private final String viewName = "main";
     private final MainViewModel mainViewModel;
     private PortfoliosController portfoliosController;
+    private NewsController newsController;
 
     public MainView(MainViewModel mainViewModel) {
         this.mainViewModel = mainViewModel;
@@ -76,6 +78,8 @@ public class MainView extends JPanel {
                 mainViewModel.setState(currentState);
                 if (useCase.equals("Portfolios")) {
                     portfoliosController.execute(currentState.getUsername());
+                } else if (useCase.equals("News")) {
+                    newsController.execute(currentState.getUsername());
                 }
             });
             buttonPanel.add(useCaseButton);
@@ -98,5 +102,9 @@ public class MainView extends JPanel {
 
     public void setController(PortfoliosController portfoliosController) {
         this.portfoliosController = portfoliosController;
+    }
+
+    public void setNewsController(NewsController newsController) {
+        this.newsController = newsController;
     }
 }

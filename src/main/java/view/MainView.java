@@ -8,6 +8,7 @@ import javax.swing.*;
 //import interface_adapter.change_password.LoggedInState;
 //import interface_adapter.change_password.LoggedInViewModel;
 //import interface_adapter.logout.LogoutController;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolios.PortfoliosController;
@@ -19,10 +20,14 @@ public class MainView extends JPanel {
 
     private final String viewName = "main";
     private final MainViewModel mainViewModel;
+    private ViewManagerModel viewManagerModel;
+
+    private final ViewManager viewManager;
     private PortfoliosController portfoliosController;
 
-    public MainView(MainViewModel mainViewModel) {
+    public MainView(MainViewModel mainViewModel, ViewManager viewManager, ViewManagerModel viewManagerModel) {
         this.mainViewModel = mainViewModel;
+        this.viewManager = viewManager;
         setPreferredSize(new Dimension(900, 600));
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -76,6 +81,10 @@ public class MainView extends JPanel {
                 mainViewModel.setState(currentState);
                 if (useCase.equals("Portfolios")) {
                     portfoliosController.execute(currentState.getUsername());
+                }
+                else if (useCase.equals("Settings")) {
+                    viewManagerModel.setState("settings");
+                    viewManagerModel.firePropertyChanged();
                 }
             });
             buttonPanel.add(useCaseButton);

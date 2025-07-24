@@ -20,6 +20,7 @@ public class Main {
                 .addPortfoliosView()
                 .addCreateView()
                 .addPortfolioView()
+                .addSettingsView()
                 .addLoginUseCase()
                 .addSignupUseCase()
                 .addPortfoliosUseCase()

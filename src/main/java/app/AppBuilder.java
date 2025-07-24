@@ -107,7 +107,7 @@ public class AppBuilder {
      */
     public AppBuilder addMainView() {
         mainViewModel = new MainViewModel();
-        mainView = new MainView(mainViewModel);
+        mainView = new MainView(mainViewModel, viewManager, viewManagerModel);
         cardPanel.add(mainView, mainView.getViewName());
         return this;
     }
@@ -220,4 +220,15 @@ public class AppBuilder {
 
         return application;
     }
+
+    /**
+     * Adds the Settings View to the application.
+     * @return this builder
+     */
+    public AppBuilder addSettingsView() {
+        SettingsView settingsView = new SettingsView(viewManager);
+        cardPanel.add(settingsView, "settings");
+        return this;
+    }
+
 }

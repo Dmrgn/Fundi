@@ -2,6 +2,7 @@ package app;
 
 import javax.swing.JOptionPane;
 
+import entity.CommonUserFactory;
 import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginViewModel;
@@ -12,6 +13,7 @@ import use_case.UserDataAccessInterface;
 import use_case.signup.SignupInputBoundary;
 import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
+import use_case.signup.SignupUserDataAccessInterface;
 import view.SignupView;
 
 public class SignupUseCaseFactory {
@@ -24,7 +26,7 @@ public class SignupUseCaseFactory {
             ViewManagerModel viewManagerModel,
             LoginViewModel loginViewModel,
             SignupViewModel signupViewModel,
-            UserDataAccessInterface userDataAccessObject) {
+            SignupUserDataAccessInterface userDataAccessObject) {
 
         try {
             SignupController signupController = createUserSignupUseCase(viewManagerModel, signupViewModel,
@@ -39,13 +41,13 @@ public class SignupUseCaseFactory {
 
     private static SignupController createUserSignupUseCase(ViewManagerModel viewManagerModel,
             SignupViewModel signupViewModel, LoginViewModel loginViewModel,
-            UserDataAccessInterface userDataAccessObject) {
+            SignupUserDataAccessInterface userDataAccessObject) {
 
         // Notice how we pass this method's parameters to the Presenter.
         SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel, signupViewModel,
                 loginViewModel);
 
-        UserFactory userFactory = new UserFactory();
+        UserFactory userFactory = new CommonUserFactory();
 
         SignupInputBoundary userSignupInteractor = new SignupInteractor(
                 userDataAccessObject, signupOutputBoundary, userFactory);

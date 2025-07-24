@@ -27,10 +27,6 @@ public class LoginState {
         return usernameError;
     }
 
-    public String getLoginError() {
-        return loginError;
-    }
-
     public String getPassword() {
         return password;
     }
@@ -45,10 +41,6 @@ public class LoginState {
 
     public void setUsernameError(String usernameError) {
         this.usernameError = usernameError;
-    }
-
-    public void setLoginError(String usernameError) {
-        this.loginError = usernameError;
     }
 
     public void setPassword(String password) {

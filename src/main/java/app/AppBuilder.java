@@ -27,13 +27,16 @@ import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import interface_adapter.signup.SignupInteractor;
+import app.LoginUseCaseFactory;
+import app.SignupUseCaseFactory;
+import view.SignupView;
+import use_case.signup.SignupInteractor;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolios.*;
 import use_case.create.CreateInputBoundary;
 import use_case.create.CreateOutputBoundary;
 import use_case.login.LoginInputBoundary;
-import interface_adapter.login.LoginInteractor;
+import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.portfolio.PortfolioInputBoundary;
@@ -102,7 +105,7 @@ public class AppBuilder {
     public AppBuilder addSignupView() {
         signupViewModel = new SignupViewModel();
         signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel,
-                userDataAccessObject);
+                (SignupUserDataAccessInterface) userDataAccessObject);
         cardPanel.add(signupView, signupView.viewName);
         return this;
     }
@@ -150,12 +153,11 @@ public class AppBuilder {
      */
     public AppBuilder addLoginUseCase() {
         final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                mainViewModel, loginViewModel);
+                mainViewModel, loginViewModel, signupViewModel);
         final LoginInputBoundary loginInteractor = new LoginInteractor(
                 userDataAccessObject, loginOutputBoundary);
 
         final LoginController loginController = new LoginController(loginInteractor);
-        loginView.setLoginController(loginController);
         return this;
     }
 
@@ -171,7 +173,6 @@ public class AppBuilder {
                 (SignupUserDataAccessInterface) userDataAccessObject, signupOutputBoundary, userFactory);
 
         final SignupController controller = new SignupController(userSignupInteractor);
-        signupView.setSignupController(controller);
         return this;
     }
 

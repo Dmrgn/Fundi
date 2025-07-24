@@ -29,7 +29,7 @@ public class SignupView extends FormPanel implements ActionListener, PropertyCha
     private final JTextField usernameInputField = createStyledInput();
     private final JPasswordField passwordInputField = createStyledPasswordField();
     private final JPasswordField repeatPasswordInputField = createStyledPasswordField();
-    private final SignupController signupController;
+    private SignupController signupController;
 
     private final JButton signUp;
     private final JButton logIn;

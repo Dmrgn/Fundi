@@ -9,8 +9,10 @@ import javax.swing.*;
 //import interface_adapter.change_password.LoggedInViewModel;
 //import interface_adapter.logout.LogoutController;
 import interface_adapter.analysis.AnalysisController;
+import interface_adapter.analysis.AnalysisInteractor;
 import interface_adapter.analysis.AnalysisState;
 import interface_adapter.analysis.AnalysisViewModel;
+import interface_adapter.history.HistoryState;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolios.PortfoliosController;
@@ -35,7 +37,7 @@ public class AnalysisView extends JPanel {
         topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel welcomeLabel = new JLabel("Portfolio Analysis");
-        welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 24));
+        welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 28));
         welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         topPanel.add(welcomeLabel);
 
@@ -46,6 +48,7 @@ public class AnalysisView extends JPanel {
         analysisViewModel.addPropertyChangeListener(event -> {
             AnalysisState analysisState = analysisViewModel.getState();
             numTickersLabel.setText("Number of Tickers : " + analysisState.getNumTickers());
+            numTickersLabel.setFont(new Font("Sans Serif", Font.BOLD, 20));
         });
 
         JPanel topSpreadPanel = new JPanel();
@@ -55,10 +58,12 @@ public class AnalysisView extends JPanel {
             AnalysisState analysisState = analysisViewModel.getState();
             int i = 1;
             for (String ticker : analysisState.getMajorityTickers().keySet()) {
-                topSpreadPanel.add(new JLabel(i  + ". " + ticker + ": " + analysisState.getMajorityTickers().get(ticker) + "%"));
+                topSpreadPanel.add(new JLabel(i  + ". " + ticker + ": " + format(analysisState.getMajorityTickers().get(ticker))));
+                topSpreadPanel.setFont(new Font("Sans Serif", Font.PLAIN, 20));
                 i++;
             }
         });
+        topSpreadPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
         spreadPanel.add(numTickersLabel);
         spreadPanel.add(topSpreadPanel);
 
@@ -68,7 +73,8 @@ public class AnalysisView extends JPanel {
 
         analysisViewModel.addPropertyChangeListener(event -> {
             AnalysisState analysisState = analysisViewModel.getState();
-            volLabel.setText("Total Volatility: " + analysisState.getVolatility() + "%");
+            volLabel.setText("Total Volatility: " + format(analysisState.getVolatility()));
+            volLabel.setFont(new Font("Sans Serif", Font.BOLD, 20));
         });
 
         JPanel topVolPanel = new JPanel();
@@ -78,7 +84,8 @@ public class AnalysisView extends JPanel {
             AnalysisState analysisState = analysisViewModel.getState();
             int i = 1;
             for (String ticker : analysisState.getMostVolTickers().keySet()) {
-                topVolPanel.add(new JLabel(i  + ". " + ticker + ": " + analysisState.getMostVolTickers().get(ticker) + "%"));
+                topVolPanel.add(new JLabel(i  + ". " + ticker + ": " + format(analysisState.getMostVolTickers().get(ticker))));
+                topVolPanel.setFont(new Font("Sans Serif", Font.PLAIN, 20));
                 i++;
             }
         });
@@ -90,10 +97,14 @@ public class AnalysisView extends JPanel {
             AnalysisState analysisState = analysisViewModel.getState();
             int i = 1;
             for (String ticker : analysisState.getLeastVolTickers().keySet()) {
-                bottomVolPanel.add(new JLabel(i  + ". " + ticker + ": " + analysisState.getLeastVolTickers().get(ticker) + "%"));
+                bottomVolPanel.add(new JLabel(i  + ". " + ticker + ": " + format(analysisState.getLeastVolTickers().get(ticker))));
+                bottomVolPanel.setFont(new Font("Sans Serif", Font.PLAIN, 20));
                 i++;
             }
         });
+
+        topVolPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        bottomVolPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
 
         volPanel.add(volLabel);
         volPanel.add(topVolPanel);
@@ -105,7 +116,8 @@ public class AnalysisView extends JPanel {
 
         analysisViewModel.addPropertyChangeListener(event -> {
             AnalysisState analysisState = analysisViewModel.getState();
-            returnLabel.setText("Total Return: " + analysisState.getPastReturn() + "%");
+            returnLabel.setText("Total Return: " + format(analysisState.getPastReturn()));
+            returnLabel.setFont(new Font("Sans Serif", Font.BOLD, 20));
         });
 
         JPanel topReturn = new JPanel();
@@ -115,7 +127,8 @@ public class AnalysisView extends JPanel {
             AnalysisState analysisState = analysisViewModel.getState();
             int i = 1;
             for (String ticker : analysisState.getTopReturns().keySet()) {
-                topReturn.add(new JLabel(i  + ". " + ticker + ": " + analysisState.getTopReturns().get(ticker) + "%"));
+                topReturn.add(new JLabel(i  + ". " + ticker + ": " + format(analysisState.getTopReturns().get(ticker))));
+                topReturn.setFont(new Font("Sans Serif", Font.PLAIN, 20));
                 i++;
             }
         });
@@ -127,14 +140,21 @@ public class AnalysisView extends JPanel {
             AnalysisState analysisState = analysisViewModel.getState();
             int i = 1;
             for (String ticker : analysisState.getWorstReturns().keySet()) {
-                bottomReturn.add(new JLabel(i  + ". " + ticker + ": " + analysisState.getWorstReturns().get(ticker) + "%"));
+                bottomReturn.add(new JLabel(i  + ". " + ticker + ": " + format(analysisState.getWorstReturns().get(ticker))));
                 i++;
             }
         });
 
+        topReturn.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+        bottomReturn.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
         returnPanel.add(returnLabel);
         returnPanel.add(topReturn);
         returnPanel.add(bottomReturn);
+
+        spreadPanel.setBorder(BorderFactory.createTitledBorder("Spread"));
+        volPanel.setBorder(BorderFactory.createTitledBorder("Volatility"));
+        returnPanel.setBorder(BorderFactory.createTitledBorder("Returns"));
 
         this.add(topPanel, BorderLayout.NORTH);
         JPanel mainPanel = new JPanel();
@@ -146,9 +166,30 @@ public class AnalysisView extends JPanel {
         mainPanel.add(Box.createVerticalStrut(10));
         mainPanel.add(returnPanel);
         this.add(mainPanel, BorderLayout.CENTER);
+
+        JPanel bottomPanel = new JPanel();
+
+        JButton useCaseButton = new JButton("Back");
+        AnalysisState state = analysisViewModel.getState();
+
+        useCaseButton.addActionListener(evt -> {
+
+        });
+        bottomPanel.add(useCaseButton, BorderLayout.CENTER);
+        bottomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        this.add(bottomPanel, BorderLayout.SOUTH);
     }
 
     public String getViewName() {
         return viewName;
+    }
+
+    private String format(double value) {
+        if (value < 0.01) {
+            return String.format("%.1E%%", value);
+        } else {
+            return String.format("%.2f%%", value);
+        }
     }
 }

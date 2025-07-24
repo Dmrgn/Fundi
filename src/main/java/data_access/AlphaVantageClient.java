@@ -13,8 +13,7 @@ import java.util.List;
 
 public class AlphaVantageClient {
     private final OkHttpClient client = new OkHttpClient();
-//    private final static String API_KEY = "LGT7I1WGL445BOPH";
-    private final static String API_KEY = "S4ENIWYTVHHKVG7V";
+    private static final String API_KEY = "LGT7I1WGL445BOPH";
 
     public List<StockData> fetch(String ticker, int numDays) throws IOException {
         String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY"

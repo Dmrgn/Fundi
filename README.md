@@ -47,11 +47,8 @@ From the main directory,
 ```powershell
 mvn package; mvn dependency:copy-dependencies; java -cp "target/fundi-1.0-SNAPSHOT.jar;target/dependency/*" app.Main;
 ```
-<<<<<<< HEAD
 # do this to build the app
 mvn package
 # do this to run the app
 mvn -q exec:java -Dexec.mainClass="app.Main"
 ```
-=======
->>>>>>> Varak

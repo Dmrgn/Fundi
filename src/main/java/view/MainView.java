@@ -46,12 +46,10 @@ public class MainView extends JPanel {
         contentPanel.setLayout(new BorderLayout(10, 10));
         contentPanel.setOpaque(false);
 
-
         // === 1. Top panel with welcome, username, and search bar ===
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setOpaque(false);
-
 
         // Top row: Welcome label (centered) and gear icon (top right)
         JPanel welcomeRow = new JPanel();
@@ -138,7 +136,6 @@ public class MainView extends JPanel {
         };
         searchButton.addActionListener(e -> doSearch.run());
         searchField.addActionListener(e -> doSearch.run());
-        
 
         // === 3. Buttons ===
         JPanel centerPanel = new JPanel();
@@ -153,11 +150,7 @@ public class MainView extends JPanel {
         buttonPanel.setMaximumSize(new Dimension(400, 100));
         buttonPanel.setOpaque(false);
 
-<<<<<<< HEAD
-        String[] useCases = new String[] { "Portfolios", "Search", "News", "Watchlist", "Leaderboard", "Settings" };
-=======
-        String[] useCases = new String[] {"Portfolios", "News", "Watchlist", "Leaderboard"};
->>>>>>> Varak
+        String[] useCases = new String[] { "Portfolios", "News", "Watchlist", "Leaderboard" };
         for (String useCase : useCases) {
             JButton useCaseButton = new JButton(useCase);
             useCaseButton.setFont(new Font("Sans Serif", Font.BOLD, 16));
@@ -167,11 +160,7 @@ public class MainView extends JPanel {
             useCaseButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
             useCaseButton.addActionListener(evt -> {
                 final MainState currentState = mainViewModel.getState();
-<<<<<<< HEAD
-                currentState.setUseCase(useCase); // set the correct use case at click time
-=======
                 currentState.setUseCase(useCase);
->>>>>>> Varak
                 mainViewModel.setState(currentState);
                 if (useCase.equals("Portfolios")) {
                     portfoliosController.execute(currentState.getUsername());

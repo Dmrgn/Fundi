@@ -1,7 +1,7 @@
 # Fundi
 
 CSC207 final Project.
-By Aaron [], Daniel Morgan, Krish [], Arham [] [] [], and Varak Tanashian
+By Aaron Avram, Daniel Morgan, Krish Patel, Abdallah Arham Wajid Mohammed, and Varak Tanashian
 
 ## Setup
 

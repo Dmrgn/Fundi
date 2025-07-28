@@ -77,6 +77,14 @@ public class UIFactory {
         return panel;
     }
 
+    public static JLabel createLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font(font, Font.PLAIN, 18));
+        label.setForeground(Color.WHITE);
+        label.setAlignmentX(Component.CENTER_ALIGNMENT);
+        return label;
+    }
+
     public static JPanel createSingleFieldForm(JTextField textField, JButton button) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -103,7 +111,11 @@ public class UIFactory {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
-        for (JButton button : buttons) buttonPanel.add(button);
+        for (JButton button : buttons) {
+            buttonPanel.add(Box.createHorizontalGlue());
+            buttonPanel.add(button);
+            buttonPanel.add(Box.createHorizontalGlue());
+        }
         return buttonPanel;
     }
 

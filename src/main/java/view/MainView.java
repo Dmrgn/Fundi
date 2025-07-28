@@ -1,6 +1,5 @@
 package view;
 
-import interface_adapter.ViewManagerModel;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;

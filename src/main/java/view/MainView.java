@@ -5,6 +5,7 @@ import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.portfolios.PortfoliosController;
+import view.components.UIFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -34,14 +35,7 @@ public class MainView extends BaseView {
         topPanel.setOpaque(false);
 
         // Welcome
-        JPanel welcomePanel = new JPanel();
-        welcomePanel.setLayout(new BoxLayout(welcomePanel, BoxLayout.X_AXIS));
-        welcomePanel.setOpaque(false);
-
-        JLabel welcomeLabel = new JLabel("Welcome to Fundi!");
-        welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 48));
-        welcomeLabel.setForeground(Color.WHITE);
-
+        JPanel welcomePanel = UIFactory.createTitlePanel("Welcome to Fundi!");
         JButton settingsButton = new JButton();
         try {
             ImageIcon gearIcon = new ImageIcon("resources/gear.png");
@@ -56,31 +50,12 @@ public class MainView extends BaseView {
         settingsButton.setFocusPainted(false);
         settingsButton.setPreferredSize(new Dimension(40, 40));
 
-        welcomePanel.add(Box.createHorizontalGlue());
-        welcomePanel.add(welcomeLabel);
-        welcomePanel.add(Box.createHorizontalGlue());
         welcomePanel.add(settingsButton);
 
         // Search and Username
-        JPanel searchPanel = new JPanel();
-        searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.X_AXIS));
-        searchPanel.setOpaque(false);
-        searchPanel.setMaximumSize(new Dimension(300, 30));
-        searchPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JTextField searchField = new JTextField(16);
-        searchField.setPreferredSize(new Dimension(180, 30));
-        searchField.setMaximumSize(new Dimension(180, 30));
-        searchField.setMinimumSize(new Dimension(180, 30));
-
-        JButton searchButton = new JButton("Search");
-        searchButton.setPreferredSize(new Dimension(90, 30));
-        searchButton.setMaximumSize(new Dimension(90, 30));
-        searchButton.setMinimumSize(new Dimension(90, 30));
-
-        searchButton.add(Box.createHorizontalGlue());
-        searchPanel.add(searchField);
-        searchPanel.add(Box.createHorizontalStrut(5));
-        searchPanel.add(searchButton);
+        JButton searchButton = UIFactory.createStyledButton("Search");
+        JTextField searchField = UIFactory.createTextField();
+        JPanel searchPanel = UIFactory.createSingleFieldForm(searchField, searchButton);
 
         JLabel usernameLabel = new JLabel();
         usernameLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));

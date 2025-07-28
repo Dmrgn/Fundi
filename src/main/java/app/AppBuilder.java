@@ -117,7 +117,7 @@ public class AppBuilder {
     private HistoryViewModel historyViewModel;
     private AnalysisViewModel analysisViewModel;
     private RecommendViewModel recommendViewModel;
-    private MainView mainView;
+    private MainViewTemp mainView;
     private LoginView loginView;
     private PortfoliosView portfoliosView;
     private CreateView createView;
@@ -141,7 +141,7 @@ public class AppBuilder {
      */
     public AppBuilder addMainView() {
         mainViewModel = new MainViewModel();
-        mainView = new MainView(mainViewModel, viewManager, viewManagerModel);
+        mainView = new MainViewTemp(mainViewModel, viewManagerModel, viewManager);
         cardPanel.add(mainView, mainView.getViewName());
         return this;
     }
@@ -281,7 +281,7 @@ public class AppBuilder {
         final PortfoliosInputBoundary portfoliosInteractor = new PortfoliosInteractor(portfoliosOutputBoundary,
                 portfoliosDataAccessObject);
         final PortfoliosController portfoliosController = new PortfoliosController(portfoliosInteractor);
-        mainView.setController(portfoliosController);
+//        mainView.setController(portfoliosController);
         portfoliosView.setPortfoliosController(portfoliosController);
         return this;
 
@@ -366,7 +366,7 @@ public class AppBuilder {
         final NewsInputBoundary newsInteractor = new NewsInteractor(newsOutputBoundary, transactionDataAccessObject);
         final NewsController newsController = new NewsController(newsInteractor);
         newsView.setNewsController(newsController);
-        mainView.setNewsController(newsController);
+//        mainView.setNewsController(newsController);
         return this;
     }
 

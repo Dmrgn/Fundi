@@ -9,11 +9,13 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
 
 public class AlphaVantageClient {
     private final OkHttpClient client = new OkHttpClient();
-    private static final String API_KEY = "LGT7I1WGL445BOPH";
+    private static final String API_KEY = "RPMO4OR4VEE0XJ8V";
 
     public List<StockData> fetch(String ticker, int numDays) throws IOException {
         String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY"
@@ -47,8 +49,10 @@ public class AlphaVantageClient {
             JSONObject timeSeries = jsonObject.getJSONObject("Time Series (Daily)");
 
             List<StockData> stockDataList = new ArrayList<>();
+            List<String> sortedDates = new ArrayList<>(timeSeries.keySet());
+            sortedDates.sort(Comparator.reverseOrder());
             int i = 0;
-            for (String dateString : timeSeries.keySet()) {
+            for (String dateString : sortedDates) {
                 if (i == numDays) return stockDataList;
                 JSONObject entry = timeSeries.getJSONObject(dateString);
                 LocalDate localDate = LocalDate.parse(dateString);

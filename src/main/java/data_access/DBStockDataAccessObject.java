@@ -16,7 +16,6 @@ import java.util.stream.Collectors;
 public class DBStockDataAccessObject implements RecommendDataAccessInterface, BuyStockDataAccessInterface,
         SellStockDataAccessInterface, AnalysisStockDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
-    private final AlphaVantageClient client = new AlphaVantageClient();
     private final Map<String, List<StockData>> stocks = new HashMap<>();
 //    private static final String[] TICKERS = {
 //            "AAPL", "MSFT", "AMZN", "NVDA", "GOOGL", "META", "BRK-B", "TSLA", "LLY", "UNH",
@@ -36,6 +35,7 @@ public class DBStockDataAccessObject implements RecommendDataAccessInterface, Bu
             List<StockData> stockData = getStockData(ticker);
             if (!coversDates(stockData, days)) {
                 try {
+                    AlphaVantageClient client = new AlphaVantageClient();
                     List<StockData> fetched = client.fetch(ticker, NUM_DAYS);
                     saveAll(fetched);
                     stockData = getStockData(ticker);
@@ -49,8 +49,6 @@ public class DBStockDataAccessObject implements RecommendDataAccessInterface, Bu
                     .toList();
             stocks.put(ticker, cleaned);
         }
-
-
     }
 
     @Override

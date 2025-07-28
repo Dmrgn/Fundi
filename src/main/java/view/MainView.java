@@ -11,16 +11,12 @@ import java.awt.*;
 
 public class MainView extends BaseView {
     private final MainViewModel mainViewModel;
-    private final ViewManagerModel viewManagerModel;
-    private final ViewManager viewManager;
     private PortfoliosController portfoliosController;
     private NewsController newsController;
 
-    public MainView(MainViewModel mainViewModel, ViewManagerModel viewManagerModel, ViewManager viewManager) {
+    public MainView(MainViewModel mainViewModel) {
         super("main");
         this.mainViewModel = mainViewModel;
-        this.viewManagerModel = viewManagerModel;
-        this.viewManager = viewManager;
 
         JPanel contentPanel = createGradientContentPanel();
         this.add(contentPanel, BorderLayout.CENTER);

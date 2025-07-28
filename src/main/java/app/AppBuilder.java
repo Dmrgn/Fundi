@@ -139,7 +139,7 @@ public class AppBuilder {
      */
     public AppBuilder addMainView() {
         mainViewModel = new MainViewModel();
-        mainView = new MainView(mainViewModel, viewManagerModel, viewManager);
+        mainView = new MainView(mainViewModel);
         cardPanel.add(mainView, mainView.getViewName());
         return this;
     }
@@ -148,7 +148,7 @@ public class AppBuilder {
         loginViewModel = new LoginViewModel();
         loginView = LoginUseCaseFactory.create(viewManagerModel, mainViewModel, loginViewModel, signupViewModel,
                 userDataAccessObject);
-        cardPanel.add(loginView, loginView.viewName);
+        cardPanel.add(loginView, loginView.getViewName());
         return this;
     }
 

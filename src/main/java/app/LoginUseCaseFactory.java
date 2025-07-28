@@ -4,7 +4,6 @@ import javax.swing.JOptionPane;
 
 import java.io.IOException;
 
-import entity.UserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.login.LoginController;

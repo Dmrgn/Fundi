@@ -48,8 +48,6 @@ import interface_adapter.sell.SellViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import app.LoginUseCaseFactory;
-import app.SignupUseCaseFactory;
 import view.SignupView;
 import use_case.signup.SignupInteractor;
 import interface_adapter.main.MainViewModel;
@@ -117,7 +115,7 @@ public class AppBuilder {
     private HistoryViewModel historyViewModel;
     private AnalysisViewModel analysisViewModel;
     private RecommendViewModel recommendViewModel;
-    private MainViewTemp mainView;
+    private MainView mainView;
     private LoginView loginView;
     private PortfoliosView portfoliosView;
     private CreateView createView;
@@ -141,7 +139,7 @@ public class AppBuilder {
      */
     public AppBuilder addMainView() {
         mainViewModel = new MainViewModel();
-        mainView = new MainViewTemp(mainViewModel, viewManagerModel, viewManager);
+        mainView = new MainView(mainViewModel, viewManagerModel, viewManager);
         cardPanel.add(mainView, mainView.getViewName());
         return this;
     }
@@ -281,7 +279,7 @@ public class AppBuilder {
         final PortfoliosInputBoundary portfoliosInteractor = new PortfoliosInteractor(portfoliosOutputBoundary,
                 portfoliosDataAccessObject);
         final PortfoliosController portfoliosController = new PortfoliosController(portfoliosInteractor);
-//        mainView.setController(portfoliosController);
+        mainView.setPortfoliosController(portfoliosController);
         portfoliosView.setPortfoliosController(portfoliosController);
         return this;
 
@@ -366,7 +364,7 @@ public class AppBuilder {
         final NewsInputBoundary newsInteractor = new NewsInteractor(newsOutputBoundary, transactionDataAccessObject);
         final NewsController newsController = new NewsController(newsInteractor);
         newsView.setNewsController(newsController);
-//        mainView.setNewsController(newsController);
+        mainView.setNewsController(newsController);
         return this;
     }
 

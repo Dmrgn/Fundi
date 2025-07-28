@@ -7,6 +7,10 @@ import java.awt.*;
 public class UIFactory {
     private static final String font = "Sans Serif";
 
+    private UIFactory() {
+
+    }
+
     public static JPanel createTitlePanel(String text) {
         JLabel title = new JLabel(text);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);

@@ -12,14 +12,16 @@ import java.util.Map;
 
 public class PortfoliosView extends BaseView {
     private final PortfoliosViewModel portfoliosViewModel;
-    private PortfoliosController portfoliosController;
-    private PortfolioController portfolioController;
+    private final PortfoliosController portfoliosController;
+    private final PortfolioController portfolioController;
 
     private final JPanel buttonPanel = UIFactory.createButtonPanel();
 
-    public PortfoliosView(PortfoliosViewModel portfoliosViewModel) {
+    public PortfoliosView(PortfoliosViewModel portfoliosViewModel, PortfoliosController portfoliosController, PortfolioController portfolioController) {
         super("portfolios");
         this.portfoliosViewModel = portfoliosViewModel;
+        this.portfoliosController = portfoliosController;
+        this.portfolioController = portfolioController;
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
@@ -41,7 +43,7 @@ public class PortfoliosView extends BaseView {
         JButton createButton = UIFactory.createStyledButton("Create New Portfolio");
         createButton.setAlignmentX((Component.CENTER_ALIGNMENT));
         createButton.addActionListener(e -> {
-            PortfoliosState portfoliosState = new PortfoliosState();
+            PortfoliosState portfoliosState = portfoliosViewModel.getState();
             portfoliosController.routeToCreate(portfoliosState.getUsername());
         });
 
@@ -64,13 +66,5 @@ public class PortfoliosView extends BaseView {
             buttonPanel.revalidate();
             buttonPanel.repaint();
         });
-    }
-
-    public void setPortfoliosController(PortfoliosController portfoliosController) {
-        this.portfoliosController = portfoliosController;
-    }
-
-    public void setPortfolioController(PortfolioController portfolioController) {
-        this.portfolioController = portfolioController;
     }
 }

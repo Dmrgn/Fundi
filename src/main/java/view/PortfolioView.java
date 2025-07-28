@@ -26,13 +26,21 @@ public class PortfolioView extends JPanel {
 
     private final String viewName = "portfolio";
     private final PortfolioViewModel portfolioViewModel;
-    private PortfolioController portfolioController;
-    private HistoryController historyController;
-    private AnalysisController analysisController;
-    private RecommendController recommendController;
+    private final PortfolioController portfolioController;
+    private final HistoryController historyController;
+    private final AnalysisController analysisController;
+    private final RecommendController recommendController;
 
-    public PortfolioView(PortfolioViewModel portfolioViewModel) {
+    public PortfolioView(PortfolioViewModel portfolioViewModel,
+                         PortfolioController portfolioController,
+                         HistoryController historyController,
+                         AnalysisController analysisController,
+                         RecommendController recommendController) {
         this.portfolioViewModel = portfolioViewModel;
+        this.portfolioController = portfolioController;
+        this.historyController = historyController;
+        this.analysisController = analysisController;
+        this.recommendController = recommendController;
         setPreferredSize(new Dimension(900, 600));
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -123,21 +131,5 @@ public class PortfolioView extends JPanel {
 
     public String getViewName() {
         return viewName;
-    }
-
-    public void setPortfolioController(PortfolioController portfolioController) {
-        this.portfolioController = portfolioController;
-    }
-
-    public void setHistoryController(HistoryController historyController) {
-        this.historyController = historyController;
-    }
-
-    public void setAnalysisController(AnalysisController analysisController) {
-        this.analysisController = analysisController;
-    }
-
-    public void setRecommendController(RecommendController recommendController) {
-        this.recommendController = recommendController;
     }
 }

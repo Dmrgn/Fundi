@@ -29,8 +29,9 @@ public class HistoryView extends JPanel {
     private final HistoryViewModel historyViewModel;
     private HistoryController historyController;
 
-    public HistoryView(HistoryViewModel historyViewModel) {
+    public HistoryView(HistoryViewModel historyViewModel, HistoryController historyController) {
         this.historyViewModel = historyViewModel;
+        this.historyController = historyController;
         setPreferredSize(new Dimension(900, 600));
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -77,7 +78,7 @@ public class HistoryView extends JPanel {
 
         JButton useCaseButton = new JButton("Back");
 
-        useCaseButton.addActionListener(evt -> historyController.routeToPortfolio());
+        useCaseButton.addActionListener(evt -> this.historyController.routeToPortfolio());
         bottomPanel.add(useCaseButton, BorderLayout.CENTER);
         bottomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -89,9 +90,5 @@ public class HistoryView extends JPanel {
 
     public String getViewName() {
         return viewName;
-    }
-
-    public void setHistoryController(HistoryController historyController) {
-        this.historyController = historyController;
     }
 }

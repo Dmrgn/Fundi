@@ -1,9 +1,5 @@
 package app;
 
-import javax.swing.JOptionPane;
-
-import java.io.IOException;
-
 import interface_adapter.ViewManagerModel;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.login.LoginController;
@@ -14,7 +10,6 @@ import use_case.UserDataAccessInterface;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
-import view.LoginView;
 
 public class LoginUseCaseFactory {
 
@@ -22,39 +17,20 @@ public class LoginUseCaseFactory {
     private LoginUseCaseFactory() {
     }
 
-    public static LoginView create(
+    public static LoginController create(
             ViewManagerModel viewManagerModel,
-            MainViewModel mainViewModel,
+            MainViewModel  mainViewModel,
             LoginViewModel loginViewModel,
-            SignupViewModel signUpViewModel,
-            UserDataAccessInterface userDataAccessObject) {
-
-        try {
-            LoginController loginController = createLoginUseCase(viewManagerModel, mainViewModel, loginViewModel,
-                    signUpViewModel,
-                    userDataAccessObject);
-            return new LoginView(loginViewModel, loginController);
-        } catch (IOException e) {
-            JOptionPane.showMessageDialog(null, "Could not open user data file.");
-        }
-
-        return null;
-    }
-
-    private static LoginController createLoginUseCase(
-            ViewManagerModel viewManagerModel,
-            MainViewModel mainViewModel,
-            LoginViewModel loginViewModel,
-            SignupViewModel signUpViewModel,
-            UserDataAccessInterface userDataAccessObject) throws IOException {
-
-        // Notice how we pass this method's parameters to the Presenter.
-        LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel, mainViewModel, loginViewModel,
-                signUpViewModel);
-
-        LoginInputBoundary loginInteractor = new LoginInteractor(
-                userDataAccessObject, loginOutputBoundary);
-
+            SignupViewModel signupViewModel,
+            UserDataAccessInterface dataAccessObject
+    ) {
+        LoginOutputBoundary loginPresenter = new LoginPresenter(
+                viewManagerModel,
+                mainViewModel,
+                loginViewModel,
+                signupViewModel
+        );
+        LoginInputBoundary loginInteractor = new LoginInteractor(dataAccessObject, loginPresenter);
         return new LoginController(loginInteractor);
     }
 }

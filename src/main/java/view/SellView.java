@@ -36,10 +36,11 @@ public class SellView extends JPanel implements PropertyChangeListener {
     private final String viewName = "sell";
     private final SellViewModel sellViewModel;
     private final JLabel sellError = new JLabel();
-    private SellController sellController;
+    private final SellController sellController;
 
-    public SellView(SellViewModel sellViewModel) {
+    public SellView(SellViewModel sellViewModel, SellController sellController) {
         this.sellViewModel = sellViewModel;
+        this.sellController = sellController;
         this.sellViewModel.addPropertyChangeListener(this);
         setPreferredSize(new Dimension(900, 600));
         setLayout(new BorderLayout(10, 10));
@@ -83,7 +84,7 @@ public class SellView extends JPanel implements PropertyChangeListener {
                 evt -> {
                     if (evt.getSource().equals(buy)) {
                         final SellState currentState = sellViewModel.getState();
-                        sellController.execute(
+                        this.sellController.execute(
                                 currentState.getPortfolioId(),
                                 tickerField.getText(),
                                 Integer.parseInt(amountField.getText())
@@ -106,9 +107,5 @@ public class SellView extends JPanel implements PropertyChangeListener {
         final SellState state = (SellState) evt.getNewValue();
         sellError.setText("");
         sellError.setText(state.getSellError());
-    }
-
-    public void setSellController(SellController sellController) {
-        this.sellController = sellController;
     }
 }

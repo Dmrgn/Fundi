@@ -32,14 +32,6 @@ public class Main {
                 .addRecommendView()
                 .addNewsView()
                 .addSettingsView()
-                .addPortfoliosUseCase()
-                .addCreateUseCase()
-                .addPortfolioUseCase()
-                .addBuyUseCase()
-                .addSellUseCase()
-                .addHistoryUseCase()
-                .addAnalysisUseCase()
-                .addRecommendUseCase()
                 .addNewsUseCase()
                 .build();
         application.pack();

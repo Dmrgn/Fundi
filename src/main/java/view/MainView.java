@@ -11,12 +11,14 @@ import java.awt.*;
 
 public class MainView extends BaseView {
     private final MainViewModel mainViewModel;
-    private PortfoliosController portfoliosController;
-    private NewsController newsController;
+    private final PortfoliosController portfoliosController;
+    private final NewsController newsController;
 
-    public MainView(MainViewModel mainViewModel) {
+    public MainView(MainViewModel mainViewModel, PortfoliosController portfoliosController, NewsController newsController) {
         super("main");
         this.mainViewModel = mainViewModel;
+        this.portfoliosController = portfoliosController;
+        this.newsController = newsController;
 
         JPanel contentPanel = createGradientContentPanel();
         this.add(contentPanel, BorderLayout.CENTER);
@@ -139,13 +141,5 @@ public class MainView extends BaseView {
         centerPanel.add(buttonPanel);
 
         return centerPanel;
-    }
-
-    public void setPortfoliosController(PortfoliosController portfoliosController) {
-        this.portfoliosController = portfoliosController;
-    }
-
-    public void setNewsController(NewsController newsController) {
-        this.newsController = newsController;
     }
 }

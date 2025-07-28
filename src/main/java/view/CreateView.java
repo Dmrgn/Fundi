@@ -28,11 +28,12 @@ public class CreateView extends JPanel implements PropertyChangeListener {
 
     private final String viewName = "create";
     private final CreateViewModel createViewModel;
-    private CreateController createController;
+    private final CreateController createController;
     private final JLabel createError = new JLabel();
 
-    public CreateView(CreateViewModel createViewModel) {
+    public CreateView(CreateViewModel createViewModel, CreateController createController) {
         this.createViewModel = createViewModel;
+        this.createController = createController;
         this.createViewModel.addPropertyChangeListener(this);
         setPreferredSize(new Dimension(900, 600));
         setLayout(new BorderLayout(10, 10));
@@ -59,12 +60,10 @@ public class CreateView extends JPanel implements PropertyChangeListener {
         centerPanel.add(createError);
         final JButton create = new JButton("create");
         create.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(create)) {
-                            final CreateState currentState = createViewModel.getState();
-                            createController.execute(currentState.getUsername(), createNameField.getText());
-                        }
+                evt -> {
+                    if (evt.getSource().equals(create)) {
+                        final CreateState currentState = createViewModel.getState();
+                        this.createController.execute(currentState.getUsername(), createNameField.getText());
                     }
                 }
         );
@@ -83,9 +82,5 @@ public class CreateView extends JPanel implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         final CreateState state = (CreateState) evt.getNewValue();
         createError.setText(state.getCreateError());
-    }
-
-    public void setController(CreateController createController) {
-        this.createController = createController;
     }
 }

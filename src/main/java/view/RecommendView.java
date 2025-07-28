@@ -29,8 +29,9 @@ public class RecommendView extends JPanel {
     private final RecommendViewModel recommendViewModel;
     private RecommendController recommendController;
 
-    public RecommendView(RecommendViewModel recommendViewModel) {
+    public RecommendView(RecommendViewModel recommendViewModel, RecommendController recommendController) {
         this.recommendViewModel = recommendViewModel;
+        this.recommendController = recommendController;
         setPreferredSize(new Dimension(900, 600));
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -60,7 +61,7 @@ public class RecommendView extends JPanel {
 
         JPanel bottomPanel = new JPanel();
         JButton useCaseButton = new JButton("back");
-        useCaseButton.addActionListener(evt -> recommendController.routeToPortfolio());
+        useCaseButton.addActionListener(evt -> this.recommendController.routeToPortfolio());
         bottomPanel.add(useCaseButton, BorderLayout.CENTER);
         bottomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -71,10 +72,5 @@ public class RecommendView extends JPanel {
 
     public String getViewName() {
         return viewName;
-    }
-
-
-    public void setRecommendController(RecommendController recommendController) {
-        this.recommendController = recommendController;
     }
 }

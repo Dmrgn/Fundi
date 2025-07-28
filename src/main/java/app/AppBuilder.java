@@ -48,7 +48,6 @@ import interface_adapter.sell.SellViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import view.SignupView;
 import use_case.signup.SignupInteractor;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
@@ -156,7 +155,7 @@ public class AppBuilder {
         signupViewModel = new SignupViewModel();
         signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel,
                 (SignupUserDataAccessInterface) userDataAccessObject);
-        cardPanel.add(signupView, signupView.viewName);
+        cardPanel.add(signupView, signupView.getViewName());
         return this;
     }
 
@@ -240,36 +239,6 @@ public class AppBuilder {
         recommendViewModel = new RecommendViewModel();
         recommendView = new RecommendView(recommendViewModel);
         cardPanel.add(recommendView, recommendView.getViewName());
-        return this;
-    }
-
-    /**
-     * Adds the Login Use Case to the application.
-     * 
-     * @return this builder
-     */
-    public AppBuilder addLoginUseCase() {
-        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                mainViewModel, loginViewModel, signupViewModel);
-        final LoginInputBoundary loginInteractor = new LoginInteractor(
-                userDataAccessObject, loginOutputBoundary);
-
-        final LoginController loginController = new LoginController(loginInteractor);
-        return this;
-    }
-
-    /**
-     * Adds the Signup Use Case to the application.
-     * 
-     * @return this builder
-     */
-    public AppBuilder addSignupUseCase() {
-        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-                signupViewModel, loginViewModel);
-        final SignupInputBoundary userSignupInteractor = new SignupInteractor(
-                (SignupUserDataAccessInterface) userDataAccessObject, signupOutputBoundary, userFactory);
-
-        final SignupController controller = new SignupController(userSignupInteractor);
         return this;
     }
 

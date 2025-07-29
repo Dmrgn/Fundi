@@ -81,7 +81,7 @@ public class PortfolioView extends JPanel {
         scrollPane.setPreferredSize(new Dimension(900, 600));
         centerPanel.add(scrollPane, BorderLayout.CENTER);
         portfolioViewModel.addPropertyChangeListener(evt -> {
-            PortfolioState state = portfolioViewModel.getState();
+            PortfolioState state = this.portfolioViewModel.getState();
             String[] names = state.getStockNames();
             int[] amounts = state.getStockAmounts();
             double[] prices = state.getStockPrices();
@@ -102,19 +102,19 @@ public class PortfolioView extends JPanel {
 
         for (String useCase : useCases) {
             JButton useCaseButton = new JButton(useCase);
-            PortfolioState state = portfolioViewModel.getState();
+            PortfolioState state = this.portfolioViewModel.getState();
 
             useCaseButton.addActionListener(evt -> {
                     if (useCaseButton.getText().equals("Buy")) {
-                        portfolioController.routeToBuy(state.getPortfolioId());
+                        this.portfolioController.routeToBuy(state.getPortfolioId());
                     } else if (useCaseButton.getText().equals("Sell")) {
-                        portfolioController.routeToSell(state.getPortfolioId());
+                        this.portfolioController.routeToSell(state.getPortfolioId());
                     } else if (useCaseButton.getText().equals("History")) {
-                        historyController.execute(state.getPortfolioId());
+                        this.historyController.execute(state.getPortfolioId());
                     } else if (useCaseButton.getText().equals("Analysis")) {
-                        analysisController.execute(state.getPortfolioId());
+                        this.analysisController.execute(state.getPortfolioId());
                     } else if (useCaseButton.getText().equals("Recommendations")) {
-                        recommendController.execute();
+                        this.recommendController.execute();
                     }
             });
             buttonPanel.add(useCaseButton);

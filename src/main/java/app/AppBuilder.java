@@ -179,7 +179,7 @@ public class AppBuilder {
     private SignupView signupView;
     private PortfoliosView portfoliosView;
     private CreateView createView;
-    private PortfolioView portfolioView;
+    private PortfolioViewTemp portfolioView;
     private NewsViewModel newsViewModel;
     private NewsView newsView;
     private BuyView buyView;

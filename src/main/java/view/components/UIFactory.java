@@ -1,5 +1,7 @@
 package view.components;
 
+import org.jetbrains.annotations.NotNull;
+
 import javax.swing.*;
 import javax.swing.table.TableModel;
 import java.awt.*;
@@ -12,10 +14,7 @@ public class UIFactory {
     }
 
     public static JPanel createTitlePanel(String text) {
-        JLabel title = new JLabel(text);
-        title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setFont(new Font(font, Font.BOLD, 36));
-        title.setForeground(Color.WHITE);
+        JLabel title = createTitleLabel(text);
 
         JPanel panel = new JPanel();
         panel.setOpaque(false);
@@ -26,9 +25,17 @@ public class UIFactory {
         return panel;
     }
 
+    public static JLabel createTitleLabel(String text) {
+        JLabel title = new JLabel(text);
+        title.setAlignmentX(Component.CENTER_ALIGNMENT);
+        title.setFont(new Font(font, Font.BOLD, 36));
+        title.setForeground(Color.WHITE);
+        return title;
+    }
+
     public static JButton createStyledButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(new Font(font, Font.BOLD, 16));
+        button.setFont(new Font(font, Font.BOLD, 14));
         button.setBackground(new Color(30, 60, 120));
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
@@ -114,7 +121,7 @@ public class UIFactory {
     public static JPanel createButtonPanel(JButton... buttons) {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
-        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 20, 0));
+        buttonPanel.setLayout(new FlowLayout(FlowLayout.CENTER, 5, 0));
         for (JButton button : buttons) {
             buttonPanel.add(Box.createHorizontalGlue());
             buttonPanel.add(button);
@@ -123,12 +130,28 @@ public class UIFactory {
         return buttonPanel;
     }
 
-    public static JTable createStyledTable(TableModel model) {
+    public static JScrollPane createStyledTable(TableModel model) {
         JTable table = new JTable(model);
         table.setFillsViewportHeight(true);
         table.setRowHeight(28);
         table.setFont(new Font(font, Font.PLAIN, 14));
+        table.setGridColor(Color.GRAY);
+        table.setShowGrid(true);
+        table.setSelectionBackground(Color.WHITE);
+        table.setSelectionForeground(Color.BLACK);
+        table.setRowMargin(4);
+        table.setIntercellSpacing(new Dimension(8, 4));
+
         table.getTableHeader().setFont(new Font(font, Font.BOLD, 14));
-        return table;
+        table.getTableHeader().setBackground(Color.WHITE);
+        table.getTableHeader().setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY));
+
+        JScrollPane scrollPane = new JScrollPane(table);
+        scrollPane.setBorder(BorderFactory.createLineBorder(Color.GRAY));
+        scrollPane.getViewport().setOpaque(false);
+        scrollPane.setPreferredSize(new Dimension(600, 300));
+        scrollPane.setMaximumSize(new Dimension(600, 300));
+
+        return scrollPane;
     }
 }

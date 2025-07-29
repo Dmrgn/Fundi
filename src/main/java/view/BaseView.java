@@ -11,7 +11,7 @@ public abstract class BaseView extends JPanel {
 
     protected BaseView(String viewName) {
         this.viewName = viewName;
-        setPreferredSize(new Dimension(900, 600));
+        setPreferredSize(new Dimension(1500, 1000));
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         setOpaque(false);

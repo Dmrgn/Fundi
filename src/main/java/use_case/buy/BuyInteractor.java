@@ -1,7 +1,6 @@
-package interface_adapter.buy;
+package use_case.buy;
 
 import entity.Transaction;
-import use_case.buy.*;
 
 import java.time.LocalDate;
 

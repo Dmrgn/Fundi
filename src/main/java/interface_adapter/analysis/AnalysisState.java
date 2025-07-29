@@ -1,6 +1,7 @@
 package interface_adapter.analysis;
 
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 public class AnalysisState {
@@ -33,7 +34,7 @@ public class AnalysisState {
     }
 
     public void setMajorityTickers(Map<String, Double> majorityTickers) {
-        this.majorityTickers = new HashMap<>(majorityTickers);
+        this.majorityTickers = new LinkedHashMap<>(majorityTickers);
     }
 
     public int getNumTickers() {
@@ -53,19 +54,19 @@ public class AnalysisState {
     }
 
     public Map<String, Double> getMostVolTickers() {
-        return new HashMap<>(mostVolTickers);
+        return new LinkedHashMap<>(mostVolTickers);
     }
 
     public void setMostVolTickers(Map<String, Double> mostVolTickers) {
-        this.mostVolTickers = new HashMap<>(mostVolTickers);
+        this.mostVolTickers = new LinkedHashMap<>(mostVolTickers);
     }
 
     public Map<String, Double> getLeastVolTickers() {
-        return new HashMap<>(leastVolTickers);
+        return new LinkedHashMap<>(leastVolTickers);
     }
 
     public void setLeastVolTickers(Map<String, Double> leastVolTickers) {
-        this.leastVolTickers = new HashMap<>(leastVolTickers);
+        this.leastVolTickers = new LinkedHashMap<>(leastVolTickers);
     }
 
     public double getPastReturn() {
@@ -77,19 +78,19 @@ public class AnalysisState {
     }
 
     public Map<String, Double> getTopReturns() {
-        return new HashMap<>(topReturns);
+        return new LinkedHashMap<>(topReturns);
     }
 
     public void setTopReturns(Map<String, Double> topReturns) {
-        this.topReturns = new HashMap<>(topReturns);
+        this.topReturns = new LinkedHashMap<>(topReturns);
     }
 
     public Map<String, Double> getWorstReturns() {
-        return new HashMap<>(worstReturns);
+        return new LinkedHashMap<>(worstReturns);
     }
 
     public void setWorstReturns(Map<String, Double> worstReturns) {
-        this.worstReturns = new HashMap<>(worstReturns);
+        this.worstReturns = new LinkedHashMap<>(worstReturns);
     }
 }
 

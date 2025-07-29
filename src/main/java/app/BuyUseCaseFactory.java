@@ -2,13 +2,10 @@ package app;
 
 import interface_adapter.PortfolioViewModelUpdater;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewModel;
 import interface_adapter.buy.BuyController;
-import interface_adapter.buy.BuyInteractor;
+import use_case.buy.BuyInteractor;
 import interface_adapter.buy.BuyPresenter;
 import interface_adapter.buy.BuyViewModel;
-import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
 import use_case.buy.BuyInputBoundary;
 import use_case.buy.BuyOutputBoundary;

@@ -82,6 +82,7 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         final BuyState state = (BuyState) evt.getNewValue();
         if (state.getBuyError() != null) {
             JOptionPane.showMessageDialog(this, state.getBuyError());
+            state.setBuyError(null);
         }
     }
 }

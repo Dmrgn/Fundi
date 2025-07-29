@@ -119,7 +119,7 @@ public class PortfolioView extends BaseView {
             tableModel.setRowCount(0);
 
             for (int i = 0; i < names.length; i++) {
-                tableModel.addRow(new Object[]{names[i], amounts[i], prices[i]});
+                tableModel.addRow(new Object[]{names[i], amounts[i], String.format("$%.2f", prices[i])});
             }
         });
 

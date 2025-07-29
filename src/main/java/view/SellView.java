@@ -27,59 +27,48 @@ import interface_adapter.sell.SellController;
 import interface_adapter.sell.SellPresenter;
 import interface_adapter.sell.SellState;
 import interface_adapter.sell.SellViewModel;
+import view.components.UIFactory;
 
 /**
  * The View for when the user is trying to create a portfolio.
  */
-public class SellView extends JPanel implements PropertyChangeListener {
+public class SellView extends BaseView implements PropertyChangeListener {
 
-    private final String viewName = "sell";
     private final SellViewModel sellViewModel;
     private final JLabel sellError = new JLabel();
     private final SellController sellController;
 
     public SellView(SellViewModel sellViewModel, SellController sellController) {
+        super("sell");
         this.sellViewModel = sellViewModel;
         this.sellController = sellController;
         this.sellViewModel.addPropertyChangeListener(this);
-        setPreferredSize(new Dimension(900, 600));
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        JPanel contentPanel = createGradientContentPanel();
+
 
         // === 1. Top panel with plain text intro ===
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
 
-        JLabel welcomeLabel = new JLabel("Sell Stock");
-        welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 24));
-        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JPanel titlePanel = UIFactory.createTitlePanel("Sell Stock");
+        contentPanel.add(titlePanel, BorderLayout.NORTH);
 
-        centerPanel.add(welcomeLabel);
-        centerPanel.add(Box.createVerticalStrut(5));
+        JTextField tickerField = UIFactory.createTextField();
+        JPanel tickerPanel = UIFactory.createFormPanel("Ticker", tickerField);
 
-        JTextField tickerField = new JTextField(20);
-        final LabelTextPanel tickerInfo = new LabelTextPanel(
-                new JLabel("Ticker Name"), tickerField);
-        tickerInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JTextField amountField = UIFactory.createTextField();
+        JPanel amountPanel = UIFactory.createFormPanel("Amount", amountField);
+
+        JPanel formPanel = new JPanel();
+        formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        formPanel.setOpaque(false);
+        formPanel.add(tickerPanel);
+        formPanel.add(Box.createVerticalStrut(5));
+        formPanel.add(amountPanel);
+        contentPanel.add(formPanel, BorderLayout.CENTER);
 
 
-        JTextField amountField = new JTextField(20);
-        final LabelTextPanel amountInfo = new LabelTextPanel(
-                new JLabel("Amount"), amountField);
-        amountInfo.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        sellError.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        centerPanel.add(welcomeLabel);
-        centerPanel.add(Box.createVerticalStrut(10));
-        centerPanel.add(tickerInfo);
-        centerPanel.add(Box.createVerticalStrut(10));
-        centerPanel.add(amountInfo);
-        centerPanel.add(Box.createVerticalStrut(10));
-        centerPanel.add(sellError);
-        add(centerPanel, BorderLayout.CENTER);
-
-        final JButton buy = new JButton("Sell");
+        final JButton buy = UIFactory.createStyledButton("Sell");
         buy.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(buy)) {
@@ -92,20 +81,16 @@ public class SellView extends JPanel implements PropertyChangeListener {
                     }
                 }
         );
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setLayout(new FlowLayout(FlowLayout.CENTER));
-        bottomPanel.add(buy);
-        add(bottomPanel, BorderLayout.SOUTH);
-    }
-
-    public String getViewName() {
-        return viewName;
+        contentPanel.add(UIFactory.createButtonPanel(buy), BorderLayout.SOUTH);
+        this.add(contentPanel, BorderLayout.CENTER);
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
         final SellState state = (SellState) evt.getNewValue();
-        sellError.setText("");
-        sellError.setText(state.getSellError());
+        if (state.getSellError() != null) {
+            JOptionPane.showMessageDialog(this, state.getSellError());
+            state.setSellError(null);
+        }
     }
 }

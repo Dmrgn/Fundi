@@ -106,7 +106,8 @@ public class AppBuilder {
             portfolioViewModel,
             buyViewModel,
             sellViewModel,
-            transactionDataAccessObject
+            transactionDataAccessObject,
+            stockDataAccessObject
     );
 
     private BuyController buyController = BuyUseCaseFactory.create(

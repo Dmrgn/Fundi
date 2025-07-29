@@ -7,7 +7,8 @@ import interface_adapter.portfolio.PortfolioInteractor;
 import interface_adapter.portfolio.PortfolioPresenter;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.sell.SellViewModel;
-import use_case.portfolio.PortfolioDataAccessInterface;
+import use_case.portfolio.PortfolioStockDataAccessInterface;
+import use_case.portfolio.PortfolioTransactionDataAccessInterface;
 import use_case.portfolio.PortfolioInputBoundary;
 import use_case.portfolio.PortfolioOutputBoundary;
 
@@ -21,7 +22,8 @@ public class PortfolioUseCaseFactory {
             PortfolioViewModel portfolioViewModel,
             BuyViewModel buyViewModel,
             SellViewModel sellViewModel,
-            PortfolioDataAccessInterface dataAccessObject
+            PortfolioTransactionDataAccessInterface transactionDataAccessObject,
+            PortfolioStockDataAccessInterface stockDataAccessObject
             ) {
         PortfolioOutputBoundary portfolioPresenter = new PortfolioPresenter(
                 viewManagerModel,
@@ -30,7 +32,7 @@ public class PortfolioUseCaseFactory {
                 sellViewModel
         );
         PortfolioInputBoundary portfolioInteractor = new PortfolioInteractor(
-                dataAccessObject, portfolioPresenter
+                transactionDataAccessObject, stockDataAccessObject, portfolioPresenter
         );
         return new PortfolioController(portfolioInteractor);
     }

@@ -127,6 +127,7 @@ public class UIFactory {
             buttonPanel.add(button);
             buttonPanel.add(Box.createHorizontalGlue());
         }
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
         return buttonPanel;
     }
 
@@ -153,5 +154,13 @@ public class UIFactory {
         scrollPane.setMaximumSize(new Dimension(600, 300));
 
         return scrollPane;
+    }
+
+    public static String format(double value) {
+        if (value < 0.01) {
+            return String.format("%.1E%%", value);
+        } else {
+            return String.format("%.2f%%", value);
+        }
     }
 }

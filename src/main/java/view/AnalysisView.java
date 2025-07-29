@@ -16,6 +16,7 @@ import interface_adapter.history.HistoryState;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolios.PortfoliosController;
+import view.components.UIFactory;
 
 /**
  * The View for when the portfolio analysis in the program.
@@ -60,7 +61,7 @@ public class AnalysisView extends JPanel {
             AnalysisState analysisState = analysisViewModel.getState();
             int i = 1;
             for (String ticker : analysisState.getMajorityTickers().keySet()) {
-                topSpreadPanel.add(new JLabel(i  + ". " + ticker + ": " + format(analysisState.getMajorityTickers().get(ticker))));
+                topSpreadPanel.add(new JLabel(i  + ". " + ticker + ": " + UIFactory.format(analysisState.getMajorityTickers().get(ticker))));
                 topSpreadPanel.setFont(new Font("Sans Serif", Font.PLAIN, 20));
                 i++;
             }
@@ -75,7 +76,7 @@ public class AnalysisView extends JPanel {
 
         analysisViewModel.addPropertyChangeListener(event -> {
             AnalysisState analysisState = analysisViewModel.getState();
-            volLabel.setText("Total Volatility: " + format(analysisState.getVolatility()));
+            volLabel.setText("Total Volatility: " + UIFactory.format(analysisState.getVolatility()));
             volLabel.setFont(new Font("Sans Serif", Font.BOLD, 20));
         });
 
@@ -86,7 +87,7 @@ public class AnalysisView extends JPanel {
             AnalysisState analysisState = analysisViewModel.getState();
             int i = 1;
             for (String ticker : analysisState.getMostVolTickers().keySet()) {
-                topVolPanel.add(new JLabel(i  + ". " + ticker + ": " + format(analysisState.getMostVolTickers().get(ticker))));
+                topVolPanel.add(new JLabel(i  + ". " + ticker + ": " + UIFactory.format(analysisState.getMostVolTickers().get(ticker))));
                 topVolPanel.setFont(new Font("Sans Serif", Font.PLAIN, 20));
                 i++;
             }
@@ -99,7 +100,7 @@ public class AnalysisView extends JPanel {
             AnalysisState analysisState = analysisViewModel.getState();
             int i = 1;
             for (String ticker : analysisState.getLeastVolTickers().keySet()) {
-                bottomVolPanel.add(new JLabel(i  + ". " + ticker + ": " + format(analysisState.getLeastVolTickers().get(ticker))));
+                bottomVolPanel.add(new JLabel(i  + ". " + ticker + ": " + UIFactory.format(analysisState.getLeastVolTickers().get(ticker))));
                 bottomVolPanel.setFont(new Font("Sans Serif", Font.PLAIN, 20));
                 i++;
             }
@@ -118,7 +119,7 @@ public class AnalysisView extends JPanel {
 
         analysisViewModel.addPropertyChangeListener(event -> {
             AnalysisState analysisState = analysisViewModel.getState();
-            returnLabel.setText("Total Return: " + format(analysisState.getPastReturn()));
+            returnLabel.setText("Total Return: " + UIFactory.format(analysisState.getPastReturn()));
             returnLabel.setFont(new Font("Sans Serif", Font.BOLD, 20));
         });
 
@@ -129,7 +130,7 @@ public class AnalysisView extends JPanel {
             AnalysisState analysisState = analysisViewModel.getState();
             int i = 1;
             for (String ticker : analysisState.getTopReturns().keySet()) {
-                topReturn.add(new JLabel(i  + ". " + ticker + ": " + format(analysisState.getTopReturns().get(ticker))));
+                topReturn.add(new JLabel(i  + ". " + ticker + ": " + UIFactory.format(analysisState.getTopReturns().get(ticker))));
                 topReturn.setFont(new Font("Sans Serif", Font.PLAIN, 20));
                 i++;
             }
@@ -142,7 +143,7 @@ public class AnalysisView extends JPanel {
             AnalysisState analysisState = analysisViewModel.getState();
             int i = 1;
             for (String ticker : analysisState.getWorstReturns().keySet()) {
-                bottomReturn.add(new JLabel(i  + ". " + ticker + ": " + format(analysisState.getWorstReturns().get(ticker))));
+                bottomReturn.add(new JLabel(i + ". " + ticker + ": " + UIFactory.format(analysisState.getWorstReturns().get(ticker))));
                 i++;
             }
         });
@@ -182,13 +183,5 @@ public class AnalysisView extends JPanel {
 
     public String getViewName() {
         return viewName;
-    }
-
-    private String format(double value) {
-        if (value < 0.01) {
-            return String.format("%.1E%%", value);
-        } else {
-            return String.format("%.2f%%", value);
-        }
     }
 }

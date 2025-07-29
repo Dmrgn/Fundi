@@ -6,7 +6,7 @@ import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import use_case.news.*;
-import use_case.portfolio.PortfolioDataAccessInterface;
+import use_case.portfolio.PortfolioTransactionDataAccessInterface;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -16,13 +16,13 @@ import java.util.*;
 
 public class NewsInteractor implements NewsInputBoundary {
     private final NewsOutputBoundary newsPresenter;
-    private final PortfolioDataAccessInterface portfolioDataAccess;
+    private final PortfolioTransactionDataAccessInterface portfolioDataAccess;
 
     // temporary placeholder
     private final String[] DEFAULT_COMPANIES = {"Google", "Apple", "Microsoft", "Nvidia", "OpenAI"};
 
     public NewsInteractor(NewsOutputBoundary newsPresenter,
-                         PortfolioDataAccessInterface portfolioDataAccess) {
+                         PortfolioTransactionDataAccessInterface portfolioDataAccess) {
         this.newsPresenter = newsPresenter;
         this.portfolioDataAccess = portfolioDataAccess;
     }

@@ -127,7 +127,7 @@ public class UIFactory {
             buttonPanel.add(button);
             buttonPanel.add(Box.createHorizontalGlue());
         }
-        buttonPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 0, 10, 0));
         return buttonPanel;
     }
 

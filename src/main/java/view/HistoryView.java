@@ -19,76 +19,63 @@ import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.portfolios.PortfoliosController;
+import view.components.UIFactory;
 
 /**
  * The View for when the user is looking their history for a portfolio in the program.
  */
-public class HistoryView extends JPanel {
+public class HistoryView extends BaseView {
 
-    private final String viewName = "history";
     private final HistoryViewModel historyViewModel;
     private HistoryController historyController;
+    private static final String[] columnNames = {"Ticker", "Quantity", "Price", "Date"};
+    private final JButton backButton = UIFactory.createStyledButton("Back");
+    private final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
+    };
+
 
     public HistoryView(HistoryViewModel historyViewModel, HistoryController historyController) {
+        super("history");
         this.historyViewModel = historyViewModel;
         this.historyController = historyController;
-        setPreferredSize(new Dimension(900, 600));
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // === 1. Top panel with plain text intro ===
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JPanel contentPanel = createGradientContentPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.add(UIFactory.createTitlePanel("Portfolio History"), BorderLayout.NORTH);
+        contentPanel.add(createCenterPanel(), BorderLayout.CENTER);
+        contentPanel.add(UIFactory.createButtonPanel(backButton), BorderLayout.SOUTH);
+        this.add(contentPanel);
 
-        JLabel welcomeLabel = new JLabel("Portfolio History:");
-        welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 24));
-        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        wireListeners();
+    }
 
-        topPanel.add(welcomeLabel);
-        topPanel.add(Box.createVerticalStrut(10));
+    private JPanel createCenterPanel() {
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setOpaque(false);
+        JScrollPane table = UIFactory.createStyledTable(tableModel);
+        centerPanel.add(table, BorderLayout.CENTER);
+        return centerPanel;
+    }
 
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        setLayout(new BorderLayout(10, 10));
+    private void wireListeners() {
+        this.historyViewModel.addPropertyChangeListener(evt -> {
+            HistoryState state = this.historyViewModel.getState();
 
-        String[] columnNames = {"Ticker", "Quantity", "Price", "Date"};
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        JTable table = new JTable(tableModel);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(900, 600));
-        centerPanel.add(scrollPane, BorderLayout.CENTER);
-        historyViewModel.addPropertyChangeListener(evt -> {
-            HistoryState state = historyViewModel.getState();
-            String[] tickers = state.getTickers();
+            String[] names = state.getTickers();
             int[] amounts = state.getAmounts();
             double[] prices = state.getPrices();
             LocalDate[] dates = state.getDates();
             tableModel.setRowCount(0);
 
-            for (int i = 0; i < tickers.length; i++) {
-                tableModel.addRow(new Object[]{tickers[i], amounts[i], prices[i], dates[i]});
+            for (int i = 0; i < names.length; i++) {
+                tableModel.addRow(new Object[]{names[i], amounts[i], String.format("$%.2f", prices[i]), dates[i]});
             }
         });
 
-
-        // === 3. Buttons ===
-        JPanel bottomPanel = new JPanel();
-
-        JButton useCaseButton = new JButton("Back");
-
-        useCaseButton.addActionListener(evt -> this.historyController.routeToPortfolio());
-        bottomPanel.add(useCaseButton, BorderLayout.CENTER);
-        bottomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Add to main layout
-        this.add(topPanel, BorderLayout.NORTH);
-        this.add(centerPanel, BorderLayout.CENTER);
-        this.add(bottomPanel, BorderLayout.SOUTH);
-    }
-
-    public String getViewName() {
-        return viewName;
+        backButton.addActionListener(evt -> this.historyController.routeToPortfolio());
     }
 }

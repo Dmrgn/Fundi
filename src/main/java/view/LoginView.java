@@ -90,7 +90,7 @@ public class LoginView extends BaseView implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        LoginState state = ((LoginViewModel) evt.getSource()).getState();
+        LoginState state = (LoginState) evt.getNewValue();
         if (state.getUsernameError() != null) {
             JOptionPane.showMessageDialog(this, state.getUsernameError());
         }

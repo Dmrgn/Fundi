@@ -72,7 +72,7 @@ public class CreateView extends BaseView implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        CreateState state = ((CreateViewModel) evt.getSource()).getState();
+        CreateState state = (CreateState) evt.getNewValue();
         if (state.getCreateError() != null) {
             JOptionPane.showMessageDialog(this, state.getCreateError());
         }

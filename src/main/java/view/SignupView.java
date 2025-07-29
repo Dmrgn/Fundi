@@ -105,7 +105,7 @@ public class SignupView extends BaseView implements PropertyChangeListener {
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        SignupState state = ((SignupViewModel) evt.getSource()).getState();
+        SignupState state = (SignupState) evt.getNewValue();
         if (state.getUsernameError() != null) {
             JOptionPane.showMessageDialog(this, state.getUsernameError());
         } else if (state.getPasswordError() != null) {

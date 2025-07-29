@@ -49,7 +49,7 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
             if (tickers.contains(ticker)) {
                 values.put(ticker, values.get(ticker) + stockDataAccessObject.getPrice(ticker) *
                                                         Math.signum(transaction.getPrice()) * transaction.getQuantity());
-                if (values.get(ticker) == 0.0) { // Remove empty tickers
+                if (values.get(ticker) <= 0.0) { // Remove empty tickers
                     tickers.remove(ticker);
                     values.remove(ticker);
                     amounts.remove(ticker);

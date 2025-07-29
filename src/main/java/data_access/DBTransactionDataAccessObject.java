@@ -60,12 +60,12 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
     }
 
     @Override
-    public double valueOfTicker(String portfolioId, String ticker) {
-        double total = 0;
+    public int amountOfTicker(String portfolioId, String ticker) {
+        int total = 0;
         if (transactions.containsKey(portfolioId)) {
             for (Transaction transaction : transactions.get(portfolioId)) {
                 if (Objects.equals(transaction.getStockTicker(), ticker)) {
-                    total += transaction.getPrice() * transaction.getQuantity();
+                    total += transaction.getQuantity();
                 }
             }
         }

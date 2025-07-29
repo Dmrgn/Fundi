@@ -2,7 +2,7 @@ package app;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.recommend.RecommendController;
-import interface_adapter.recommend.RecommendInteractor;
+import use_case.recommend.RecommendInteractor;
 import interface_adapter.recommend.RecommendPresenter;
 import interface_adapter.recommend.RecommendViewModel;
 import use_case.recommend.RecommendDataAccessInterface;

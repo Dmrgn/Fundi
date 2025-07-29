@@ -2,11 +2,9 @@ package app;
 
 import interface_adapter.PortfolioViewModelUpdater;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.sell.SellController;
-import interface_adapter.sell.SellInteractor;
+import use_case.sell.SellInteractor;
 import interface_adapter.sell.SellPresenter;
 import interface_adapter.sell.SellViewModel;
 import use_case.sell.SellInputBoundary;

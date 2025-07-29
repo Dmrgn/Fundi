@@ -2,7 +2,7 @@ package app;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.history.HistoryController;
-import interface_adapter.history.HistoryInteractor;
+import use_case.history.HistoryInteractor;
 import interface_adapter.history.HistoryPresenter;
 import interface_adapter.history.HistoryViewModel;
 import use_case.history.HistoryDataAccessInterface;

@@ -1,10 +1,8 @@
-package interface_adapter.sell;
+package use_case.sell;
 
 import entity.Transaction;
-import use_case.sell.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class SellInteractor implements SellInputBoundary {
     SellStockDataAccessInterface stockDataAccessInterface;

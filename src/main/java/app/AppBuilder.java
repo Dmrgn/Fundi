@@ -35,7 +35,7 @@ import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
-import interface_adapter.news.NewsInteractor;
+import use_case.news.NewsInteractor;
 import interface_adapter.news.NewsPresenter;
 import interface_adapter.news.NewsViewModel;
 import interface_adapter.portfolios.*;

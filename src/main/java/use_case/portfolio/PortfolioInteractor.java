@@ -1,7 +1,6 @@
-package interface_adapter.portfolio;
+package use_case.portfolio;
 
 import entity.Transaction;
-import use_case.portfolio.*;
 
 import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;

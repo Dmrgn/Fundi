@@ -1,7 +1,4 @@
-package interface_adapter.create;
-
-import use_case.create.*;
-import use_case.login.LoginOutputBoundary;
+package use_case.create;
 
 /**
  * The Login Interactor.

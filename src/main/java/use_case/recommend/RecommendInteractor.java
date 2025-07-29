@@ -1,7 +1,6 @@
-package interface_adapter.recommend;
+package use_case.recommend;
 
 import entity.StockData;
-import use_case.recommend.*;
 
 import java.util.*;
 import java.util.stream.Collectors;

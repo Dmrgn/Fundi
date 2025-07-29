@@ -2,7 +2,7 @@ package app;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analysis.AnalysisController;
-import interface_adapter.analysis.AnalysisInteractor;
+import use_case.analysis.AnalysisInteractor;
 import interface_adapter.analysis.AnalysisPresenter;
 import interface_adapter.analysis.AnalysisViewModel;
 import use_case.analysis.AnalysisInputBoundary;

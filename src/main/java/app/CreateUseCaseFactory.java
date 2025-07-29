@@ -2,7 +2,7 @@ package app;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create.CreateController;
-import interface_adapter.create.CreateInteractor;
+import use_case.create.CreateInteractor;
 import interface_adapter.create.CreatePresenter;
 import interface_adapter.create.CreateViewModel;
 import interface_adapter.portfolios.PortfoliosViewModel;

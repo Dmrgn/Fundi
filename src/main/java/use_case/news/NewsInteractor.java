@@ -1,11 +1,10 @@
-package interface_adapter.news;
+package use_case.news;
 
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
-import use_case.news.*;
 import use_case.portfolio.PortfolioTransactionDataAccessInterface;
 
 import java.io.BufferedReader;

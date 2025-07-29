@@ -3,7 +3,7 @@ package app;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create.CreateViewModel;
 import interface_adapter.portfolios.PortfoliosController;
-import interface_adapter.portfolios.PortfoliosInteractor;
+import use_case.portfolios.PortfoliosInteractor;
 import interface_adapter.portfolios.PortfoliosPresenter;
 import interface_adapter.portfolios.PortfoliosViewModel;
 import use_case.portfolios.PortfoliosDataAccessInterface;

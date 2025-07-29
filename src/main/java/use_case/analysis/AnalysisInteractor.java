@@ -1,8 +1,7 @@
-package interface_adapter.analysis;
+package use_case.analysis;
 
 import entity.StockData;
 import entity.Transaction;
-import use_case.analysis.*;
 
 import java.util.*;
 import java.util.stream.Collectors;

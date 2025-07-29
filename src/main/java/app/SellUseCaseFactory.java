@@ -1,7 +1,10 @@
 package app;
 
+import interface_adapter.PortfolioViewModelUpdater;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioState;
+import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.sell.SellController;
 import interface_adapter.sell.SellInteractor;
 import interface_adapter.sell.SellPresenter;
@@ -17,16 +20,18 @@ public class SellUseCaseFactory {
     }
 
     public static SellController create(
+            ViewManagerModel viewManagerModel,
             SellViewModel sellViewModel,
-            PortfolioController portfolioController,
-            PortfolioState portfolioState,
+            PortfolioViewModel portfolioViewModel,
+            PortfolioViewModelUpdater portfolioViewModelUpdater,
             SellStockDataAccessInterface stockDataAccessObject,
             SellTransactionDataAccessInterface transactionDataAccessObject
     ) {
         SellOutputBoundary sellPresenter = new SellPresenter(
-                sellViewModel,
-                portfolioController,
-                portfolioState
+                viewManagerModel,
+                portfolioViewModel,
+                portfolioViewModelUpdater,
+                sellViewModel
         );
         SellInputBoundary sellInteractor = new SellInteractor(
                 stockDataAccessObject,

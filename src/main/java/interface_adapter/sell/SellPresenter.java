@@ -1,20 +1,26 @@
 package interface_adapter.sell;
 
+import interface_adapter.PortfolioViewModelUpdater;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioState;
+import interface_adapter.portfolio.PortfolioViewModel;
 import use_case.sell.SellOutputBoundary;
 import use_case.sell.SellOutputData;
 
 public class SellPresenter implements SellOutputBoundary {
-    PortfolioState portfolioState;
-    PortfolioController portfolioController;
-    SellViewModel sellViewModel;
+    private final ViewManagerModel viewManagerModel;
+    private final PortfolioViewModel portfolioViewModel;
+    private final PortfolioViewModelUpdater updater;
+    private final SellViewModel sellViewModel;
 
-    public SellPresenter(SellViewModel sellViewModel, PortfolioController portfolioController, PortfolioState portfolioState) {
+    public SellPresenter(ViewManagerModel viewManagerModel, PortfolioViewModel portfolioViewModel, PortfolioViewModelUpdater updater, SellViewModel sellViewModel) {
+        this.viewManagerModel = viewManagerModel;
+        this.portfolioViewModel = portfolioViewModel;
+        this.updater = updater;
         this.sellViewModel = sellViewModel;
-        this.portfolioController = portfolioController;
-        this.portfolioState = portfolioState;
     }
+
 
     /**
      * Prepares the success view for the Sell Use Case.
@@ -23,10 +29,11 @@ public class SellPresenter implements SellOutputBoundary {
      */
     @Override
     public void prepareSuccessView(SellOutputData outputData) {
-        SellState sellState = sellViewModel.getState();
-        sellViewModel.setState(sellState);
-        portfolioController.execute(portfolioState.getUsername(),
-                portfolioState.getPortfolioId(), portfolioState.getPortfolioName());
+        updater.update(portfolioViewModel,
+                outputData.getTicker(), outputData.getPrice(), outputData.getQuantity());
+        portfolioViewModel.firePropertyChanged();
+        viewManagerModel.setState(portfolioViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 
     /**

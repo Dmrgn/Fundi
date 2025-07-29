@@ -48,7 +48,7 @@ public class SellInteractor implements SellInputBoundary {
                     date,
                     -1 * price // Negative denotes sell
             ));
-            sellOutputBoundary.prepareSuccessView(new SellOutputData());
+            sellOutputBoundary.prepareSuccessView(new SellOutputData(ticker, -1 * price, amount));
         }
     }
 }

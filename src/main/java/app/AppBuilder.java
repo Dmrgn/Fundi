@@ -13,6 +13,7 @@ import data_access.DBTransactionDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import data_access.DBUserDataAccessObject;
+import interface_adapter.PortfolioViewModelUpdater;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analysis.AnalysisController;
 import interface_adapter.analysis.AnalysisViewModel;
@@ -72,6 +73,7 @@ public class AppBuilder {
     private HistoryViewModel historyViewModel = new HistoryViewModel();
     private AnalysisViewModel analysisViewModel = new AnalysisViewModel();
     private RecommendViewModel recommendViewModel = new RecommendViewModel();
+    private PortfolioViewModelUpdater portfolioViewModelUpdater = new PortfolioViewModelUpdater();
 
     private LoginController loginController = LoginUseCaseFactory.create(
             viewManagerModel,
@@ -111,17 +113,19 @@ public class AppBuilder {
     );
 
     private BuyController buyController = BuyUseCaseFactory.create(
+            viewManagerModel,
             buyViewModel,
-            portfolioController,
-            portfolioViewModel.getState(),
+            portfolioViewModelUpdater,
+            portfolioViewModel,
             stockDataAccessObject,
             transactionDataAccessObject
     );
 
     private SellController sellController = SellUseCaseFactory.create(
+            viewManagerModel,
             sellViewModel,
-            portfolioController,
-            portfolioViewModel.getState(),
+            portfolioViewModel,
+            portfolioViewModelUpdater,
             stockDataAccessObject,
             transactionDataAccessObject
     );

@@ -38,7 +38,7 @@ public class BuyInteractor implements BuyInputBoundary {
             Transaction transaction = new Transaction(portfolioId, ticker, amount, date, price);
             buyTransactionDataAccessInterface.save(transaction);
             buyOutputBoundary.prepareSuccessView(new BuyOutputData(
-
+                ticker, price, amount
             ));
         }
 

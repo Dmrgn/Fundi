@@ -1,11 +1,15 @@
 package app;
 
+import interface_adapter.PortfolioViewModelUpdater;
+import interface_adapter.ViewManagerModel;
+import interface_adapter.ViewModel;
 import interface_adapter.buy.BuyController;
 import interface_adapter.buy.BuyInteractor;
 import interface_adapter.buy.BuyPresenter;
 import interface_adapter.buy.BuyViewModel;
 import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioState;
+import interface_adapter.portfolio.PortfolioViewModel;
 import use_case.buy.BuyInputBoundary;
 import use_case.buy.BuyOutputBoundary;
 import use_case.buy.BuyStockDataAccessInterface;
@@ -17,16 +21,18 @@ public class BuyUseCaseFactory {
     }
 
     public static BuyController create(
+            ViewManagerModel viewManagerModel,
             BuyViewModel buyViewModel,
-            PortfolioController portfolioController,
-            PortfolioState portfolioState,
+            PortfolioViewModelUpdater portfolioViewModelUpdater,
+            PortfolioViewModel portfolioViewModel,
             BuyStockDataAccessInterface stockDataAccessObject,
             BuyTransactionDataAccessInterface transactionDataAccessObject
     ) {
         BuyOutputBoundary buyPresenter = new BuyPresenter(
+            viewManagerModel,
             buyViewModel,
-            portfolioController,
-            portfolioState
+            portfolioViewModelUpdater,
+            portfolioViewModel
         );
         BuyInputBoundary buyInteractor = new BuyInteractor(
                 stockDataAccessObject,

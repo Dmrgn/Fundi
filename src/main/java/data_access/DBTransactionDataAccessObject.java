@@ -65,7 +65,11 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
         if (transactions.containsKey(portfolioId)) {
             for (Transaction transaction : transactions.get(portfolioId)) {
                 if (Objects.equals(transaction.getStockTicker(), ticker)) {
-                    total += transaction.getQuantity();
+                    if (transaction.getPrice() > 0) {
+                        total += transaction.getQuantity();
+                    } else {
+                        total -= transaction.getQuantity();
+                    }
                 }
             }
         }

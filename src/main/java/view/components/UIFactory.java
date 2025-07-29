@@ -188,6 +188,7 @@ public class UIFactory {
         TitledBorder border = createLightTitledBorder(title);
         border.setTitleFont(new Font(font, Font.PLAIN, 12));
         panel.setBorder(border);
+        panel.setMinimumSize(new Dimension(200, 30));
 
         panel.setForeground(Color.WHITE);
         return panel;

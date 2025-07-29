@@ -1,7 +1,6 @@
-package interface_adapter.history;
+package use_case.history;
 
 import entity.Transaction;
-import use_case.history.*;
 
 import java.time.LocalDate;
 import java.util.List;

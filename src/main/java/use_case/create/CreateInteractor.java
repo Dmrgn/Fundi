@@ -1,7 +1,4 @@
-package interface_adapter.create;
-
-import use_case.create.*;
-import use_case.login.LoginOutputBoundary;
+package use_case.create;
 
 /**
  * The Login Interactor.
@@ -22,6 +19,8 @@ public class CreateInteractor implements CreateInputBoundary {
         final String portfolioName = createInputData.getPortfolioName();
         if (createDataAccessObject.existsByName(portfolioName, username)) {
             createPresenter.prepareFailView("You already have a portfolio with this name");
+        } else if (username == null || username.isEmpty()) {
+            createPresenter.prepareFailView("Please enter a valid username");
         } else {
                 createDataAccessObject.save(portfolioName, username);
                 CreateOutputData createOutputData = new CreateOutputData(

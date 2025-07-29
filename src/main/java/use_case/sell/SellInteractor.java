@@ -1,10 +1,8 @@
-package interface_adapter.sell;
+package use_case.sell;
 
 import entity.Transaction;
-import use_case.sell.*;
 
 import java.time.LocalDate;
-import java.util.List;
 
 public class SellInteractor implements SellInputBoundary {
     SellStockDataAccessInterface stockDataAccessInterface;
@@ -37,7 +35,7 @@ public class SellInteractor implements SellInputBoundary {
         final double price = stockDataAccessInterface.getPrice(ticker);
         if (amount < 0) {
             sellOutputBoundary.prepareFailView("Invalid amount");
-        } else if (transactionDataAccessInterface.valueOfTicker(portfolioId, ticker) < amount * price) {
+        } else if (transactionDataAccessInterface.amountOfTicker(portfolioId, ticker) < amount) {
             sellOutputBoundary.prepareFailView("You do not have enough of this ticker");
         } else {
             final LocalDate date = LocalDate.now();
@@ -48,7 +46,7 @@ public class SellInteractor implements SellInputBoundary {
                     date,
                     -1 * price // Negative denotes sell
             ));
-            sellOutputBoundary.prepareSuccessView(new SellOutputData());
+            sellOutputBoundary.prepareSuccessView(new SellOutputData(ticker, -1 * price, amount));
         }
     }
 }

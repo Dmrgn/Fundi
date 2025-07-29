@@ -14,4 +14,6 @@ public interface PortfolioInputBoundary {
     void routeToBuy(String portfolioId);
 
     void routeToSell(String portfolioId);
+
+    void routeToPortfolios();
 }

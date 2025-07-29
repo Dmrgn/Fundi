@@ -1,10 +1,8 @@
 package interface_adapter.recommend;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.ViewModel;
 import use_case.recommend.RecommendOutputBoundary;
 import use_case.recommend.RecommendOutputData;
-import view.RecommendView;
 
 public class RecommendPresenter implements RecommendOutputBoundary {
     RecommendViewModel recommendViewModel;

@@ -1,71 +1,42 @@
 package view;
 
-import java.awt.*;
-
-import javax.swing.*;
-
-//import interface_adapter.change_password.ChangePasswordController;
-//import interface_adapter.change_password.LoggedInState;
-//import interface_adapter.change_password.LoggedInViewModel;
-//import interface_adapter.logout.LogoutController;
-import interface_adapter.ViewManagerModel;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.portfolios.PortfoliosController;
+import view.components.UIFactory;
 
-/**
- * The View for when the user is logged into the program.
- */
-public class MainView extends JPanel {
+import javax.swing.*;
+import java.awt.*;
 
-    private final String viewName = "main";
+public class MainView extends BaseView {
     private final MainViewModel mainViewModel;
-    private ViewManagerModel viewManagerModel;
+    private final PortfoliosController portfoliosController;
+    private final NewsController newsController;
 
-    private final ViewManager viewManager;
-    private PortfoliosController portfoliosController;
-    private NewsController newsController;
-
-    public MainView(MainViewModel mainViewModel, ViewManager viewManager, ViewManagerModel viewManagerModel) {
+    public MainView(MainViewModel mainViewModel, PortfoliosController portfoliosController, NewsController newsController) {
+        super("main");
         this.mainViewModel = mainViewModel;
-        this.viewManager = viewManager;
-        setPreferredSize(new Dimension(900, 600));
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        this.portfoliosController = portfoliosController;
+        this.newsController = newsController;
 
-        // Set dark blue gradient background for the whole panel
-        setOpaque(false);
-        JPanel contentPanel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-                int w = getWidth();
-                int h = getHeight();
-                Color color1 = new Color(10, 30, 60);
-                Color color2 = new Color(30, 60, 120);
-                GradientPaint gp = new GradientPaint(0, 0, color1, w, h, color2);
-                g2d.setPaint(gp);
-                g2d.fillRect(0, 0, w, h);
-            }
-        };
-        contentPanel.setLayout(new BorderLayout(10, 10));
-        contentPanel.setOpaque(false);
+        JPanel contentPanel = createGradientContentPanel();
+        this.add(contentPanel, BorderLayout.CENTER);
 
-        // === 1. Top panel with welcome, username, and search bar ===
+        JPanel topPanel = createTopPanel();
+        contentPanel.add(topPanel, BorderLayout.NORTH);
+
+        JPanel centerPanel = createCenterPanel();
+        contentPanel.add(centerPanel, BorderLayout.CENTER);
+    }
+
+    private JPanel createTopPanel() {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setOpaque(false);
 
-        // Top row: Welcome label (centered) and gear icon (top right)
-        JPanel welcomeRow = new JPanel();
-        welcomeRow.setLayout(new BoxLayout(welcomeRow, BoxLayout.X_AXIS));
-        welcomeRow.setOpaque(false);
-        JLabel welcomeLabel = new JLabel("Welcome to Fundi!");
-        welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 48));
-        welcomeLabel.setForeground(Color.WHITE);
-        welcomeLabel.setAlignmentY(Component.TOP_ALIGNMENT);
+        // Welcome
+        JPanel welcomePanel = UIFactory.createTitlePanel("Welcome to Fundi!");
         JButton settingsButton = new JButton();
         try {
             ImageIcon gearIcon = new ImageIcon("resources/gear.png");
@@ -74,80 +45,65 @@ public class MainView extends JPanel {
         } catch (Exception e) {
             settingsButton.setText("Settings");
         }
-        settingsButton.setPreferredSize(new Dimension(40, 40));
-        settingsButton.setMaximumSize(new Dimension(40, 40));
+        settingsButton.setToolTipText("Settings");
         settingsButton.setContentAreaFilled(false);
         settingsButton.setBorderPainted(false);
         settingsButton.setFocusPainted(false);
-        settingsButton.setToolTipText("Settings");
-        // TODO: Add settings action here
-        welcomeLabel.setAlignmentY(Component.TOP_ALIGNMENT);
-        settingsButton.setAlignmentY(Component.TOP_ALIGNMENT);
-        welcomeRow.add(Box.createHorizontalGlue());
-        welcomeRow.add(welcomeLabel);
-        welcomeRow.add(Box.createHorizontalGlue());
-        welcomeRow.add(settingsButton);
-        topPanel.add(welcomeRow);
-        topPanel.add(Box.createVerticalStrut(5));
+        settingsButton.setPreferredSize(new Dimension(40, 40));
 
-        // Search bar and username (right-aligned, stacked)
-        JPanel rightStackPanel = new JPanel();
-        rightStackPanel.setLayout(new BoxLayout(rightStackPanel, BoxLayout.Y_AXIS));
-        rightStackPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        rightStackPanel.setOpaque(false);
+        welcomePanel.add(settingsButton);
 
-        JPanel searchPanel = new JPanel();
-        searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.X_AXIS));
-        searchPanel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        searchPanel.setOpaque(false);
-        JTextField searchField = new JTextField(16);
-        searchField.setPreferredSize(new Dimension(200, 30));
-        searchField.setMaximumSize(new Dimension(200, 30));
-        JButton searchButton = new JButton("Search");
-        searchButton.setPreferredSize(new Dimension(80, 30));
-        searchButton.setMaximumSize(new Dimension(80, 30));
-        searchPanel.add(Box.createHorizontalGlue());
-        searchPanel.add(searchField);
-        searchPanel.add(Box.createHorizontalStrut(5));
-        searchPanel.add(searchButton);
-
-        rightStackPanel.add(searchPanel);
-        rightStackPanel.add(Box.createVerticalStrut(5));
+        // Search and Username
+        JButton searchButton = UIFactory.createStyledButton("Search");
+        JTextField searchField = UIFactory.createTextField();
+        JPanel searchPanel = UIFactory.createSingleFieldForm(searchField, searchButton);
 
         JLabel usernameLabel = new JLabel();
-        mainViewModel.addPropertyChangeListener(evt -> {
-            MainState state = mainViewModel.getState();
-            usernameLabel.setText("Logged in as: " + state.getUsername());
-        });
         usernameLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));
         usernameLabel.setForeground(Color.WHITE);
-        usernameLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
-        rightStackPanel.add(usernameLabel);
+        mainViewModel.addPropertyChangeListener(evt -> {
+                MainState mainState = mainViewModel.getState();
+                usernameLabel.setText("Logged in as: " + mainState.getUsername());
+        });
+        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JPanel rightRow = new JPanel();
-        rightRow.setLayout(new BoxLayout(rightRow, BoxLayout.X_AXIS));
-        rightRow.setOpaque(false);
-        rightRow.add(Box.createHorizontalGlue());
-        rightRow.add(rightStackPanel);
-        topPanel.add(rightRow);
+        JPanel centerStack = new JPanel();
+        centerStack.setLayout(new BoxLayout(centerStack, BoxLayout.Y_AXIS));
+        centerStack.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerStack.setOpaque(false);
+        centerStack.add(searchPanel);
+        centerStack.add(Box.createVerticalStrut(5));
+        centerStack.add(usernameLabel);
+
+        JPanel centerRow = new JPanel();
+        centerRow.setLayout(new BoxLayout(centerRow, BoxLayout.X_AXIS));
+        centerRow.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerRow.setOpaque(false);
+        centerRow.add(Box.createHorizontalGlue());
+        centerRow.add(centerStack);
+        centerRow.add(Box.createHorizontalGlue());
+
+        topPanel.add(welcomePanel);
         topPanel.add(Box.createVerticalStrut(10));
+        topPanel.add(centerRow);
 
-        // (Image removed)
-
-        // Dummy search action
         Runnable doSearch = () -> {
             String query = searchField.getText();
-            if (!query.isEmpty()) {
+            if (query.isEmpty()) {
                 JOptionPane.showMessageDialog(this, "Searching for: " + query);
             }
         };
-        searchButton.addActionListener(e -> doSearch.run());
-        searchField.addActionListener(e -> doSearch.run());
+        searchButton.addActionListener(evt -> doSearch.run());
+        searchField.addActionListener(evt -> doSearch.run());
 
-        // === 3. Buttons ===
+        return topPanel;
+    }
+
+    private JPanel createCenterPanel() {
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setOpaque(false);
+
         JLabel promptLabel = new JLabel("What would you like to look at?");
         promptLabel.setFont(new Font("Sans Serif", Font.PLAIN, 18));
         promptLabel.setForeground(Color.WHITE);
@@ -157,7 +113,7 @@ public class MainView extends JPanel {
         buttonPanel.setMaximumSize(new Dimension(400, 100));
         buttonPanel.setOpaque(false);
 
-        String[] useCases = new String[] { "Portfolios", "News", "Watchlist", "Leaderboard" };
+        String[] useCases = {"Portfolios", "News", "Watchlist", "Leaderboard"};
         for (String useCase : useCases) {
             JButton useCaseButton = new JButton(useCase);
             useCaseButton.setFont(new Font("Sans Serif", Font.BOLD, 16));
@@ -165,43 +121,25 @@ public class MainView extends JPanel {
             useCaseButton.setForeground(Color.WHITE);
             useCaseButton.setFocusPainted(false);
             useCaseButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+
             useCaseButton.addActionListener(evt -> {
-                final MainState currentState = mainViewModel.getState();
-                currentState.setUseCase(useCase);
-                mainViewModel.setState(currentState);
-                if (useCase.equals("Portfolios")) {
-                    portfoliosController.execute(currentState.getUsername());
-                } else if (useCase.equals("News")) {
-                    newsController.execute(currentState.getUsername());
-                }
-                else if (useCase.equals("Settings")) {
-                    viewManagerModel.setState("settings");
-                    viewManagerModel.firePropertyChanged();
+                MainState mainState = mainViewModel.getState();
+                mainState.setUseCase(useCase);
+                mainViewModel.setState(mainState);
+                switch (useCase) {
+                    case "Portfolios" -> portfoliosController.execute(mainState.getUsername());
+                    case "News" -> newsController.execute(mainState.getUsername());
+
                 }
             });
+
             buttonPanel.add(useCaseButton);
         }
 
         centerPanel.add(promptLabel);
         centerPanel.add(Box.createVerticalStrut(10));
         centerPanel.add(buttonPanel);
-        centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Add to main layout
-        contentPanel.add(topPanel, BorderLayout.NORTH);
-        contentPanel.add(centerPanel, BorderLayout.CENTER);
-        this.add(contentPanel, BorderLayout.CENTER);
-    }
-
-    public String getViewName() {
-        return viewName;
-    }
-
-    public void setController(PortfoliosController portfoliosController) {
-        this.portfoliosController = portfoliosController;
-    }
-
-    public void setNewsController(NewsController newsController) {
-        this.newsController = newsController;
+        return centerPanel;
     }
 }

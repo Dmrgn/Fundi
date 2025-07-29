@@ -33,4 +33,8 @@ public class PortfolioController {
     public void routeToSell(String portfolioId) {
         portfolioUseCaseInteractor.routeToSell(portfolioId);
     }
+
+    public void routeToPortfolios() {
+        portfolioUseCaseInteractor.routeToPortfolios();
+    }
 }

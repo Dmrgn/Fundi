@@ -7,7 +7,7 @@ import java.util.List;
 /**
  * DAO for the Portfolio Use Case.
  */
-public interface PortfolioDataAccessInterface {
+public interface PortfolioTransactionDataAccessInterface {
 
     /**
      * Get the past transactions data

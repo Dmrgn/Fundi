@@ -62,4 +62,10 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
         viewManagerModel.setState("sell");
         viewManagerModel.firePropertyChanged();
     }
+
+    @Override
+    public void routeToPortfolios() {
+        viewManagerModel.setState("portfolios");
+        viewManagerModel.firePropertyChanged();
+    }
 }

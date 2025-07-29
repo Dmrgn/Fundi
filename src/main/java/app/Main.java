@@ -32,20 +32,9 @@ public class Main {
                 .addRecommendView()
                 .addNewsView()
                 .addSettingsView()
-                .addLoginUseCase()
-                .addSignupUseCase()
-                .addPortfoliosUseCase()
-                .addCreateUseCase()
-                .addPortfolioUseCase()
-                .addBuyUseCase()
-                .addSellUseCase()
-                .addHistoryUseCase()
-                .addAnalysisUseCase()
-                .addRecommendUseCase()
-                .addNewsUseCase()
                 .build();
         application.pack();
-        application.setSize(600, 400);
+        application.setSize(900, 600);
         // application.setExtendedState(JFrame.MAXIMIZED_BOTH);
         application.setVisible(true);
     }

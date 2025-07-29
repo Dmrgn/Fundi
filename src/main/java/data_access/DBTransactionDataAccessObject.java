@@ -4,7 +4,7 @@ import entity.Transaction;
 import use_case.analysis.AnalysisTransactionDataAccessInterface;
 import use_case.buy.BuyTransactionDataAccessInterface;
 import use_case.history.HistoryDataAccessInterface;
-import use_case.portfolio.PortfolioDataAccessInterface;
+import use_case.portfolio.PortfolioTransactionDataAccessInterface;
 import use_case.sell.SellTransactionDataAccessInterface;
 
 import java.sql.*;
@@ -15,7 +15,7 @@ import java.util.*;
  * DAO for user data implemented using a Database to persist the data.
  */
 public class DBTransactionDataAccessObject implements AnalysisTransactionDataAccessInterface, BuyTransactionDataAccessInterface,
-        SellTransactionDataAccessInterface, HistoryDataAccessInterface, PortfolioDataAccessInterface {
+        SellTransactionDataAccessInterface, HistoryDataAccessInterface, PortfolioTransactionDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, List<Transaction>> transactions = new HashMap<>();
 
@@ -60,12 +60,16 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
     }
 
     @Override
-    public double valueOfTicker(String portfolioId, String ticker) {
-        double total = 0;
+    public int amountOfTicker(String portfolioId, String ticker) {
+        int total = 0;
         if (transactions.containsKey(portfolioId)) {
             for (Transaction transaction : transactions.get(portfolioId)) {
                 if (Objects.equals(transaction.getStockTicker(), ticker)) {
-                    total += transaction.getPrice() * transaction.getQuantity();
+                    if (transaction.getPrice() > 0) {
+                        total += transaction.getQuantity();
+                    } else {
+                        total -= transaction.getQuantity();
+                    }
                 }
             }
         }

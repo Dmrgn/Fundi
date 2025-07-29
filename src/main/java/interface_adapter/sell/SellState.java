@@ -2,7 +2,7 @@ package interface_adapter.sell;
 
 public class SellState {
     private String portfolioId = "";
-    private String sellError = "";
+    private String sellError;
 
     public SellState(SellState copy) {
         this.portfolioId = copy.getPortfolioId();

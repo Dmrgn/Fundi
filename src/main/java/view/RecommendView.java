@@ -1,80 +1,82 @@
 package view;
 
-import java.awt.*;
-
-import javax.swing.*;
-
-//import interface_adapter.change_password.ChangePasswordController;
-//import interface_adapter.change_password.LoggedInState;
-//import interface_adapter.change_password.LoggedInViewModel;
-//import interface_adapter.logout.LogoutController;
-import interface_adapter.analysis.AnalysisController;
-import interface_adapter.analysis.AnalysisInteractor;
-import interface_adapter.analysis.AnalysisState;
-import interface_adapter.analysis.AnalysisViewModel;
-import interface_adapter.history.HistoryState;
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.portfolios.PortfoliosController;
 import interface_adapter.recommend.RecommendController;
 import interface_adapter.recommend.RecommendState;
 import interface_adapter.recommend.RecommendViewModel;
+import view.components.UIFactory;
 
-/**
- * The View for when the portfolio analysis in the program.
- */
-public class RecommendView extends JPanel {
+import javax.swing.*;
+import java.awt.*;
 
-    private final String viewName = "recommend";
+public class RecommendView extends BaseView {
     private final RecommendViewModel recommendViewModel;
-    private RecommendController recommendController;
+    private final RecommendController recommendController;
 
-    public RecommendView(RecommendViewModel recommendViewModel) {
+    private final JPanel topRecsPanel = UIFactory.createStatListPanel("Recs: ");
+
+    private final JButton backButton = UIFactory.createStyledButton("Back");
+
+    public RecommendView(RecommendViewModel recommendViewModel, RecommendController recommendController) {
+        super("recommend");
         this.recommendViewModel = recommendViewModel;
-        setPreferredSize(new Dimension(900, 600));
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        this.recommendController = recommendController;
 
-        // === 1. Top panel with plain text intro ===
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JPanel contentPanel = createGradientContentPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        JLabel welcomeLabel = new JLabel("Recommendations:");
-        welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 28));
-        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        topPanel.add(welcomeLabel);
+        contentPanel.add(UIFactory.createTitlePanel("Recommendations"));
+        contentPanel.add(Box.createVerticalStrut(10));
 
-        JPanel recPanel = new JPanel();
-        recPanel.setLayout(new BoxLayout(recPanel, BoxLayout.Y_AXIS));
-        recommendViewModel.addPropertyChangeListener(event -> {
+        JPanel topPanel = createSection("General Recommendations", topRecsPanel);
+        contentPanel.add(topPanel);
+        contentPanel.add(Box.createVerticalStrut(10));
+
+        contentPanel.add(UIFactory.createButtonPanel(backButton));
+
+        JScrollPane scrollPane = new JScrollPane(contentPanel);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        this.add(scrollPane);
+        wireListeners();
+    }
+
+    private JPanel createSection(String title, JPanel... detailPanels) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+        panel.setBorder(UIFactory.createLightTitledBorder(title));
+        panel.setForeground(Color.WHITE);
+
+        for (JPanel detailPanel : detailPanels) {
+            detailPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            detailPanel.setMinimumSize(new Dimension(200, 30));
+            panel.add(Box.createVerticalStrut(5));
+            panel.add(detailPanel);
+        }
+        panel.setMaximumSize(new Dimension(300, Integer.MAX_VALUE));
+        return panel;
+    }
+
+    private void updateListPanel(JPanel panel, String[] recs) {
+        panel.removeAll();
+        int i = 1;
+        for (String rec : recs) {
+            JLabel label = UIFactory.createListItemLabel(i + ". " + rec);
+            panel.add(label);
+            i++;
+        }
+        panel.revalidate();
+        panel.repaint();
+    }
+
+    private void wireListeners() {
+        recommendViewModel.addPropertyChangeListener(e -> {
             RecommendState recommendState = recommendViewModel.getState();
-            String[] recommendations = recommendState.getRecommendations();
-            double[] prices = recommendState.getPrices();
-            for (int i = 0; i < recommendations.length; i++) {
-                JLabel label = new JLabel((i + 1) + ". " + recommendations[i] + " (" + prices[i] + ")");
-                label.setAlignmentX(Component.CENTER_ALIGNMENT);
-                recPanel.add(label);
-            }
+            updateListPanel(topRecsPanel, recommendState.getRecommendations());
         });
 
-        JPanel bottomPanel = new JPanel();
-        JButton useCaseButton = new JButton("back");
-        useCaseButton.addActionListener(evt -> recommendController.routeToPortfolio());
-        bottomPanel.add(useCaseButton, BorderLayout.CENTER);
-        bottomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        this.add(topPanel, BorderLayout.NORTH);
-        this.add(recPanel, BorderLayout.CENTER);
-        this.add(bottomPanel, BorderLayout.SOUTH);
-    }
-
-    public String getViewName() {
-        return viewName;
-    }
-
-
-    public void setRecommendController(RecommendController recommendController) {
-        this.recommendController = recommendController;
+        backButton.addActionListener(e -> recommendController.routeToPortfolio());
     }
 }

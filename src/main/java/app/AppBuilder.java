@@ -13,75 +13,35 @@ import data_access.DBTransactionDataAccessObject;
 import entity.CommonUserFactory;
 import entity.UserFactory;
 import data_access.DBUserDataAccessObject;
+import interface_adapter.PortfolioViewModelUpdater;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analysis.AnalysisController;
-import interface_adapter.analysis.AnalysisInteractor;
-import interface_adapter.analysis.AnalysisPresenter;
 import interface_adapter.analysis.AnalysisViewModel;
 import interface_adapter.buy.BuyController;
-import interface_adapter.buy.BuyInteractor;
-import interface_adapter.buy.BuyPresenter;
 import interface_adapter.buy.BuyViewModel;
 import interface_adapter.create.CreateController;
-import interface_adapter.create.CreateInteractor;
-import interface_adapter.create.CreatePresenter;
 import interface_adapter.create.CreateViewModel;
 import interface_adapter.history.HistoryController;
-import interface_adapter.history.HistoryInteractor;
-import interface_adapter.history.HistoryPresenter;
 import interface_adapter.history.HistoryViewModel;
 import interface_adapter.login.LoginController;
-import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolio.PortfolioInteractor;
-import interface_adapter.portfolio.PortfolioPresenter;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.recommend.RecommendController;
-import interface_adapter.recommend.RecommendInteractor;
-import interface_adapter.recommend.RecommendPresenter;
 import interface_adapter.recommend.RecommendViewModel;
 import interface_adapter.sell.SellController;
-import interface_adapter.sell.SellInteractor;
-import interface_adapter.sell.SellPresenter;
 import interface_adapter.sell.SellViewModel;
 import interface_adapter.signup.SignupController;
-import interface_adapter.signup.SignupPresenter;
 import interface_adapter.signup.SignupViewModel;
-import app.LoginUseCaseFactory;
-import app.SignupUseCaseFactory;
-import view.SignupView;
-import use_case.signup.SignupInteractor;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
-import interface_adapter.news.NewsInteractor;
+import use_case.news.NewsInteractor;
 import interface_adapter.news.NewsPresenter;
 import interface_adapter.news.NewsViewModel;
 import interface_adapter.portfolios.*;
-import use_case.analysis.AnalysisInputBoundary;
-import use_case.analysis.AnalysisOutputBoundary;
-import use_case.buy.BuyInputBoundary;
-import use_case.buy.BuyOutputBoundary;
-import use_case.create.CreateInputBoundary;
-import use_case.create.CreateOutputBoundary;
-import use_case.history.HistoryInputBoundary;
-import use_case.history.HistoryOutputBoundary;
-import use_case.login.LoginInputBoundary;
-import use_case.login.LoginInteractor;
-import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.news.NewsInputBoundary;
 import use_case.news.NewsOutputBoundary;
-import use_case.portfolio.PortfolioInputBoundary;
-import use_case.portfolio.PortfolioOutputBoundary;
-import use_case.portfolios.PortfoliosInputBoundary;
-import use_case.portfolios.PortfoliosOutputBoundary;
-import use_case.recommend.RecommendInputBoundary;
-import use_case.recommend.RecommendOutputBoundary;
-import use_case.sell.SellInputBoundary;
-import use_case.sell.SellOutputBoundary;
-import use_case.signup.SignupInputBoundary;
-import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupUserDataAccessInterface;
 import view.*;
 
@@ -102,27 +62,104 @@ public class AppBuilder {
     private final DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
     private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
 
-    private PortfolioController portfolioController;
+    private final MainViewModel mainViewModel = new MainViewModel();
+    private final LoginViewModel loginViewModel = new LoginViewModel();
+    private final SignupViewModel signupViewModel = new SignupViewModel();
+    private final PortfoliosViewModel portfoliosViewModel = new PortfoliosViewModel();
+    private final NewsViewModel newsViewModel = new NewsViewModel();
+    private final CreateViewModel createViewModel = new CreateViewModel();
+    private final PortfolioViewModel portfolioViewModel = new PortfolioViewModel();
+    private final BuyViewModel buyViewModel = new BuyViewModel();
+    private final SellViewModel sellViewModel = new SellViewModel();
+    private final HistoryViewModel historyViewModel = new HistoryViewModel();
+    private final AnalysisViewModel analysisViewModel = new AnalysisViewModel();
+    private final RecommendViewModel recommendViewModel = new RecommendViewModel();
+    private final PortfolioViewModelUpdater portfolioViewModelUpdater = new PortfolioViewModelUpdater();
 
-    private MainViewModel mainViewModel;
-    private LoginViewModel loginViewModel;
-    private SignupView signupView;
-    private SignupViewModel signupViewModel;
+    private final LoginController loginController = LoginUseCaseFactory.create(
+            viewManagerModel,
+            mainViewModel,
+            loginViewModel,
+            signupViewModel,
+            userDataAccessObject
+    );
+    private final SignupController signupController = SignupUseCaseFactory.create(
+            viewManagerModel,
+            signupViewModel,
+            loginViewModel,
+            (SignupUserDataAccessInterface) userDataAccessObject
+    );
+    private final PortfoliosController portfoliosController = PortfoliosUseCaseFactory.create(
+            viewManagerModel,
+            portfoliosViewModel,
+            createViewModel,
+            portfoliosDataAccessObject
+    );
 
-    private PortfoliosViewModel portfoliosViewModel;
-    private CreateViewModel createViewModel;
-    private PortfolioViewModel portfolioViewModel;
-    private BuyViewModel buyViewModel;
-    private SellViewModel sellViewModel;
-    private HistoryViewModel historyViewModel;
-    private AnalysisViewModel analysisViewModel;
-    private RecommendViewModel recommendViewModel;
+    private final CreateController createController = CreateUseCaseFactory.create(
+            viewManagerModel,
+            portfoliosViewModel,
+            createViewModel,
+            portfoliosDataAccessObject
+    );
+
+    private final NewsController newsController = NewsUseCaseFactory.create(
+            viewManagerModel,
+            newsViewModel,
+            transactionDataAccessObject
+    );
+    private final PortfolioController portfolioController = PortfolioUseCaseFactory.create(
+            viewManagerModel,
+            portfolioViewModel,
+            buyViewModel,
+            sellViewModel,
+            transactionDataAccessObject,
+            stockDataAccessObject
+    );
+
+    private final BuyController buyController = BuyUseCaseFactory.create(
+            viewManagerModel,
+            buyViewModel,
+            portfolioViewModelUpdater,
+            portfolioViewModel,
+            stockDataAccessObject,
+            transactionDataAccessObject
+    );
+
+    private final SellController sellController = SellUseCaseFactory.create(
+            viewManagerModel,
+            sellViewModel,
+            portfolioViewModel,
+            portfolioViewModelUpdater,
+            stockDataAccessObject,
+            transactionDataAccessObject
+    );
+
+    private final HistoryController historyController = HistoryUseCaseFactory.create(
+            viewManagerModel,
+            historyViewModel,
+            transactionDataAccessObject
+    );
+
+    private final AnalysisController analysisController = AnalysisUseCaseFactory.create(
+            viewManagerModel,
+            analysisViewModel,
+            stockDataAccessObject,
+            transactionDataAccessObject
+    );
+
+    private final RecommendController recommendController = RecommendUseCaseFactory.create(
+            viewManagerModel,
+            recommendViewModel,
+            stockDataAccessObject
+    );
+
     private MainView mainView;
     private LoginView loginView;
+    private SignupView signupView;
     private PortfoliosView portfoliosView;
     private CreateView createView;
     private PortfolioView portfolioView;
-    private NewsViewModel newsViewModel;
     private NewsView newsView;
     private BuyView buyView;
     private SellView sellView;
@@ -140,25 +177,20 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addMainView() {
-        mainViewModel = new MainViewModel();
-        mainView = new MainView(mainViewModel, viewManager, viewManagerModel);
+        mainView = MainViewFactory.create(mainViewModel, portfoliosController, newsController);
         cardPanel.add(mainView, mainView.getViewName());
         return this;
     }
 
     public AppBuilder addLoginView() {
-        loginViewModel = new LoginViewModel();
-        loginView = LoginUseCaseFactory.create(viewManagerModel, mainViewModel, loginViewModel, signupViewModel,
-                userDataAccessObject);
-        cardPanel.add(loginView, loginView.viewName);
+        loginView = LoginViewFactory.create(loginViewModel, loginController);
+        cardPanel.add(loginView, loginView.getViewName());
         return this;
     }
 
     public AppBuilder addSignupView() {
-        signupViewModel = new SignupViewModel();
-        signupView = SignupUseCaseFactory.create(viewManagerModel, loginViewModel, signupViewModel,
-                (SignupUserDataAccessInterface) userDataAccessObject);
-        cardPanel.add(signupView, signupView.viewName);
+        signupView = SignupViewFactory.create(signupViewModel, signupController);
+        cardPanel.add(signupView, signupView.getViewName());
         return this;
     }
 
@@ -168,8 +200,11 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addPortfoliosView() {
-        portfoliosViewModel = new PortfoliosViewModel();
-        portfoliosView = new PortfoliosView(portfoliosViewModel);
+        portfoliosView = PortfoliosViewFactory.create(
+                portfoliosViewModel,
+                portfoliosController,
+                portfolioController
+        );
         cardPanel.add(portfoliosView, portfoliosView.getViewName());
         return this;
     }
@@ -180,8 +215,10 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addCreateView() {
-        createViewModel = new CreateViewModel();
-        createView = new CreateView(createViewModel);
+        createView = CreateViewFactory.create(
+                createViewModel,
+                createController
+        );
         cardPanel.add(createView, createView.getViewName());
         return this;
     }
@@ -192,14 +229,18 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addPortfolioView() {
-        portfolioViewModel = new PortfolioViewModel();
-        portfolioView = new PortfolioView(portfolioViewModel);
+        portfolioView = PortfolioViewFactory.create(
+                portfolioViewModel,
+                portfolioController,
+                historyController,
+                analysisController,
+                recommendController
+        );
         cardPanel.add(portfolioView, portfolioView.getViewName());
         return this;
     }
 
     public AppBuilder addNewsView() {
-        newsViewModel = new NewsViewModel();
         newsView = new NewsView(newsViewModel);
         cardPanel.add(newsView, newsView.getViewName());
         return this;
@@ -211,164 +252,47 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addBuyView() {
-        buyViewModel = new BuyViewModel();
-        buyView = new BuyView(buyViewModel);
+        buyView = BuyViewFactory.create(
+                buyViewModel,
+                buyController
+        );
         cardPanel.add(buyView, buyView.getViewName());
         return this;
     }
 
     public AppBuilder addSellView() {
-        sellViewModel = new SellViewModel();
-        sellView = new SellView(sellViewModel);
+        sellView = SellViewFactory.create(sellViewModel, sellController);
         cardPanel.add(sellView, sellView.getViewName());
         return this;
     }
 
     public AppBuilder addHistoryView() {
-        historyViewModel = new HistoryViewModel();
-        historyView = new HistoryView(historyViewModel);
+        historyView = HistoryViewFactory.create(
+                historyViewModel,
+                historyController
+        );
         cardPanel.add(historyView, historyView.getViewName());
         return this;
     }
 
     public AppBuilder addAnalysisView() {
-        analysisViewModel = new AnalysisViewModel();
-        analysisView = new AnalysisView(analysisViewModel);
+        analysisView = AnalysisViewFactory.create(
+                analysisViewModel,
+                analysisController
+        );
         cardPanel.add(analysisView, analysisView.getViewName());
         return this;
     }
 
     public AppBuilder addRecommendView() {
-        recommendViewModel = new RecommendViewModel();
-        recommendView = new RecommendView(recommendViewModel);
+        recommendView = RecommendViewFactory.create(
+                recommendViewModel,
+                recommendController
+        );
         cardPanel.add(recommendView, recommendView.getViewName());
         return this;
     }
 
-    /**
-     * Adds the Login Use Case to the application.
-     * 
-     * @return this builder
-     */
-    public AppBuilder addLoginUseCase() {
-        final LoginOutputBoundary loginOutputBoundary = new LoginPresenter(viewManagerModel,
-                mainViewModel, loginViewModel, signupViewModel);
-        final LoginInputBoundary loginInteractor = new LoginInteractor(
-                userDataAccessObject, loginOutputBoundary);
-
-        final LoginController loginController = new LoginController(loginInteractor);
-        return this;
-    }
-
-    /**
-     * Adds the Signup Use Case to the application.
-     * 
-     * @return this builder
-     */
-    public AppBuilder addSignupUseCase() {
-        final SignupOutputBoundary signupOutputBoundary = new SignupPresenter(viewManagerModel,
-                signupViewModel, loginViewModel);
-        final SignupInputBoundary userSignupInteractor = new SignupInteractor(
-                (SignupUserDataAccessInterface) userDataAccessObject, signupOutputBoundary, userFactory);
-
-        final SignupController controller = new SignupController(userSignupInteractor);
-        return this;
-    }
-
-    public AppBuilder addPortfoliosUseCase() {
-        final PortfoliosOutputBoundary portfoliosOutputBoundary = new PortfoliosPresenter(viewManagerModel,
-                portfoliosViewModel, createViewModel);
-        final PortfoliosInputBoundary portfoliosInteractor = new PortfoliosInteractor(portfoliosOutputBoundary,
-                portfoliosDataAccessObject);
-        final PortfoliosController portfoliosController = new PortfoliosController(portfoliosInteractor);
-        mainView.setController(portfoliosController);
-        portfoliosView.setPortfoliosController(portfoliosController);
-        return this;
-
-    }
-
-    public AppBuilder addCreateUseCase() {
-        final CreateOutputBoundary createOutputBoundary = new CreatePresenter(viewManagerModel, portfoliosViewModel,
-                createViewModel);
-        final CreateInputBoundary createInteractor = new CreateInteractor(portfoliosDataAccessObject,
-                createOutputBoundary);
-        final CreateController createController = new CreateController(createInteractor);
-        createView.setController(createController);
-        return this;
-    }
-
-    public AppBuilder addPortfolioUseCase() {
-        final PortfolioOutputBoundary portfolioOutputBoundary = new PortfolioPresenter(viewManagerModel,
-                portfolioViewModel, buyViewModel, sellViewModel);
-        final PortfolioInputBoundary portfolioInputBoundary = new PortfolioInteractor(transactionDataAccessObject,
-                portfolioOutputBoundary);
-
-        portfolioController = new PortfolioController(portfolioInputBoundary);
-        portfoliosView.setPortfolioController(portfolioController);
-        portfolioView.setPortfolioController(portfolioController);
-        return this;
-    }
-
-    public AppBuilder addBuyUseCase() {
-        final BuyOutputBoundary buyOutputBoundary = new BuyPresenter(buyViewModel, portfolioController,
-                portfolioViewModel.getState());
-        final BuyInputBoundary buyInputBoundary = new BuyInteractor(stockDataAccessObject, transactionDataAccessObject,
-                buyOutputBoundary);
-        final BuyController buyController = new BuyController(buyInputBoundary);
-        buyView.setBuyController(buyController);
-        return this;
-    }
-
-    public AppBuilder addSellUseCase() {
-        final SellOutputBoundary sellOutputBoundary = new SellPresenter(sellViewModel, portfolioController,
-                portfolioViewModel.getState());
-        final SellInputBoundary sellInputBoundary = new SellInteractor(stockDataAccessObject,
-                transactionDataAccessObject, sellOutputBoundary);
-        final SellController sellController = new SellController(sellInputBoundary);
-        sellView.setSellController(sellController);
-        return this;
-    }
-
-    public AppBuilder addHistoryUseCase() {
-        final HistoryOutputBoundary historyOutputBoundary = new HistoryPresenter(viewManagerModel, historyViewModel);
-        final HistoryInputBoundary historyInputBoundary = new HistoryInteractor(transactionDataAccessObject,
-                historyOutputBoundary);
-        final HistoryController historyController = new HistoryController(historyInputBoundary);
-        portfolioView.setHistoryController(historyController);
-        historyView.setHistoryController(historyController);
-        return this;
-    }
-
-    public AppBuilder addAnalysisUseCase() {
-        final AnalysisOutputBoundary analysisOutputBoundary = new AnalysisPresenter(viewManagerModel,
-                analysisViewModel);
-        final AnalysisInputBoundary analysisInputBoundary = new AnalysisInteractor(stockDataAccessObject,
-                transactionDataAccessObject, analysisOutputBoundary);
-        final AnalysisController analysisController = new AnalysisController(analysisInputBoundary);
-        portfolioView.setAnalysisController(analysisController);
-        analysisView.setAnalysisController(analysisController);
-        return this;
-    }
-
-    public AppBuilder addRecommendUseCase() {
-        final RecommendOutputBoundary recommendOutputBoundary = new RecommendPresenter(recommendViewModel,
-                viewManagerModel);
-        final RecommendInputBoundary recommendInputBoundary = new RecommendInteractor(stockDataAccessObject,
-                recommendOutputBoundary);
-        final RecommendController recommendController = new RecommendController(recommendInputBoundary);
-        portfolioView.setRecommendController(recommendController);
-        recommendView.setRecommendController(recommendController);
-        return this;
-    }
-
-    public AppBuilder addNewsUseCase() {
-        final NewsOutputBoundary newsOutputBoundary = new NewsPresenter(viewManagerModel, newsViewModel);
-        final NewsInputBoundary newsInteractor = new NewsInteractor(newsOutputBoundary, transactionDataAccessObject);
-        final NewsController newsController = new NewsController(newsInteractor);
-        newsView.setNewsController(newsController);
-        mainView.setNewsController(newsController);
-        return this;
-    }
 
     /**
      * Creates the JFrame for the application and initially sets the SignupView to

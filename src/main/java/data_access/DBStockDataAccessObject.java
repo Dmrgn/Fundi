@@ -3,6 +3,7 @@ package data_access;
 import entity.StockData;
 import use_case.analysis.AnalysisStockDataAccessInterface;
 import use_case.buy.BuyStockDataAccessInterface;
+import use_case.portfolio.PortfolioStockDataAccessInterface;
 import use_case.recommend.RecommendDataAccessInterface;
 import use_case.sell.SellStockDataAccessInterface;
 
@@ -14,7 +15,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 public class DBStockDataAccessObject implements RecommendDataAccessInterface, BuyStockDataAccessInterface,
-        SellStockDataAccessInterface, AnalysisStockDataAccessInterface {
+        SellStockDataAccessInterface, AnalysisStockDataAccessInterface, PortfolioStockDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, List<StockData>> stocks = new HashMap<>();
 //    private static final String[] TICKERS = {

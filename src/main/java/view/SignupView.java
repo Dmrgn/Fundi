@@ -1,178 +1,115 @@
 package view;
 
-import java.awt.Font;
-import java.awt.Color;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import interface_adapter.signup.SignupViewModel;
+import interface_adapter.signup.SignupState;
+import interface_adapter.signup.SignupController;
+import view.components.UIFactory;
+
+import javax.swing.*;
+import java.awt.*;
+import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.Box;
-import javax.swing.BoxLayout;
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JPasswordField;
-import javax.swing.JTextField;
-
-import interface_adapter.signup.SignupController;
-import interface_adapter.signup.SignupState;
-import interface_adapter.signup.SignupViewModel;
-
-public class SignupView extends FormPanel implements ActionListener, PropertyChangeListener {
-    public final String viewName = "signup";
-
+public class SignupView extends BaseView implements PropertyChangeListener {
     private final SignupViewModel signupViewModel;
-    private final JTextField usernameInputField = createStyledInput();
-    private final JPasswordField passwordInputField = createStyledPasswordField();
-    private final JPasswordField repeatPasswordInputField = createStyledPasswordField();
-    private SignupController signupController;
+    private final SignupController signupController;
+    private final JTextField usernameField = UIFactory.createTextField();
+    private final JPasswordField passwordField = UIFactory.createPasswordField();
+    private final JPasswordField confirmPasswordField = UIFactory.createPasswordField();
+    private final JButton loginButton = UIFactory.createStyledButton("Login");
+    private final JButton signUpButton = UIFactory.createStyledButton("Sign Up");
 
-    private final JButton signUp;
-    private final JButton logIn;
 
-    public SignupView(SignupController controller, SignupViewModel signupViewModel) {
-
-        this.signupController = controller;
+    public SignupView(SignupViewModel signupViewModel, SignupController signupController) {
+        super("signup");
         this.signupViewModel = signupViewModel;
+        this.signupController = signupController;
         signupViewModel.addPropertyChangeListener(this);
 
-        JLabel title = new JLabel("Signup Screen");
-        title.setAlignmentX(CENTER_ALIGNMENT);
-        title.setFont(new Font("Arial", Font.BOLD, 24));
-        title.setForeground(new Color(0, 119, 71));
+        JPanel contentPanel = createGradientContentPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        LabelTextPanel usernameInfo = new LabelTextPanel(
-                new JLabel(SignupViewModel.USERNAME_LABEL), usernameInputField);
-        LabelTextPanel passwordInfo = new LabelTextPanel(
-                new JLabel(SignupViewModel.PASSWORD_LABEL), passwordInputField);
-        LabelTextPanel repeatPasswordInfo = new LabelTextPanel(
-                new JLabel(SignupViewModel.REPEAT_PASSWORD_LABEL), repeatPasswordInputField);
+        JPanel titlePanel = UIFactory.createTitlePanel("Signup Screen");
+        JPanel formPanel = createFormPanel();
+        JPanel buttonPanel = UIFactory.createButtonPanel(signUpButton, loginButton);
 
-        JPanel buttons = new JPanel();
-        signUp = createStyledButton(SignupViewModel.SIGNUP_BUTTON_LABEL);
-        buttons.add(signUp);
-        logIn = createStyledButton(SignupViewModel.LOGIN_BUTTON_LABEL);
-        buttons.add(logIn);
+        contentPanel.add(Box.createVerticalGlue());
+        contentPanel.add(titlePanel);
+        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(formPanel);
+        contentPanel.add(Box.createVerticalStrut(15));
+        contentPanel.add(buttonPanel);
+        contentPanel.add(Box.createVerticalGlue());
 
-        signUp.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(signUp)) {
-                            SignupState currentState = signupViewModel.getState();
+        this.add(contentPanel, BorderLayout.CENTER);
 
-                            signupController.execute(
-                                    currentState.getUsername(),
-                                    currentState.getPassword(),
-                                    currentState.getRepeatPassword());
-                        }
-                    }
-                });
-
-        logIn.addActionListener(
-                new ActionListener() {
-                    public void actionPerformed(ActionEvent evt) {
-                        if (evt.getSource().equals(logIn)) {
-                            signupController.switchToLoginView();
-                        }
-                    }
-                });
-
-        usernameInputField.addKeyListener(
-                new KeyListener() {
-                    @Override
-                    public void keyTyped(KeyEvent e) {
-                        SignupState currentState = signupViewModel.getState();
-                        String text = usernameInputField.getText() + e.getKeyChar();
-                        currentState.setUsername(text);
-                        signupViewModel.setState(currentState);
-                    }
-
-                    @Override
-                    public void keyPressed(KeyEvent e) {
-                    }
-
-                    @Override
-                    public void keyReleased(KeyEvent e) {
-                    }
-                });
-
-        passwordInputField.addKeyListener(
-                new KeyListener() {
-                    @Override
-                    public void keyTyped(KeyEvent e) {
-                        SignupState currentState = signupViewModel.getState();
-                        currentState.setPassword(new String(passwordInputField.getPassword()) + e.getKeyChar());
-                        signupViewModel.setState(currentState);
-                    }
-
-                    @Override
-                    public void keyPressed(KeyEvent e) {
-                    }
-
-                    @Override
-                    public void keyReleased(KeyEvent e) {
-                    }
-                });
-
-        repeatPasswordInputField.addKeyListener(
-                new KeyListener() {
-                    @Override
-                    public void keyTyped(KeyEvent e) {
-                        SignupState currentState = signupViewModel.getState();
-                        currentState
-                                .setRepeatPassword(new String(repeatPasswordInputField.getPassword()) + e.getKeyChar());
-                        signupViewModel.setState(currentState);
-                    }
-
-                    @Override
-                    public void keyPressed(KeyEvent e) {
-                    }
-
-                    @Override
-                    public void keyReleased(KeyEvent e) {
-                    }
-                });
-
-        // Layout managed by FormPanel (Y_AXIS)
-        add(Box.createVerticalGlue());
-        add(Box.createVerticalStrut(20));
-        add(title);
-        add(Box.createVerticalStrut(20));
-        add(usernameInfo);
-        add(Box.createVerticalStrut(10));
-        add(passwordInfo);
-        add(Box.createVerticalStrut(15));
-        add(repeatPasswordInfo);
-        add(Box.createVerticalStrut(15));
-        add(buttons);
-        add(Box.createVerticalStrut(20));
-        add(Box.createVerticalGlue());
+        wireListeners();
     }
 
-    /**
-     * React to a button click that results in evt.
-     */
-    public void actionPerformed(ActionEvent evt) {
-        JOptionPane.showMessageDialog(this, "Login not implemented yet.");
+
+    private JPanel createFormPanel() {
+        JPanel form = new JPanel();
+        form.setOpaque(false);
+        form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
+
+        JPanel usernameInfo = UIFactory.createFormPanel("Username", usernameField);
+        JPanel passwordInfo = UIFactory.createFormPanel("Password", passwordField);
+        JPanel confirmPasswordInfo = UIFactory.createFormPanel("Confirm", confirmPasswordField);
+
+        form.add(usernameInfo);
+        form.add(Box.createVerticalStrut(10));
+        form.add(passwordInfo);
+        form.add(Box.createVerticalStrut(10));
+        form.add(confirmPasswordInfo);
+
+        return form;
+    }
+
+    private void wireListeners() {
+        signUpButton.addActionListener(e -> {
+            SignupState signupState = signupViewModel.getState();
+            signupController.execute(signupState.getUsername(), signupState.getPassword(), signupState.getRepeatPassword());
+        });
+
+        loginButton.addActionListener(e -> signupController.switchToLoginView());
+
+        usernameField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                SignupState signupState = signupViewModel.getState();
+                signupState.setUsername(usernameField.getText() + e.getKeyChar());
+                signupViewModel.setState(signupState);
+            }
+        });
+
+        passwordField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                SignupState signupState = signupViewModel.getState();
+                signupState.setPassword(new String(passwordField.getPassword()) + e.getKeyChar());
+                signupViewModel.setState(signupState);
+            }
+        });
+
+        passwordField.addKeyListener(new KeyAdapter() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                SignupState signupState = signupViewModel.getState();
+                signupState.setRepeatPassword(new String(confirmPasswordField.getPassword()) + e.getKeyChar());
+                signupViewModel.setState(signupState);
+            }
+        });
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        final SignupState state = (SignupState) evt.getNewValue();
+        SignupState state = (SignupState) evt.getNewValue();
         if (state.getUsernameError() != null) {
             JOptionPane.showMessageDialog(this, state.getUsernameError());
+        } else if (state.getPasswordError() != null) {
+            JOptionPane.showMessageDialog(this, state.getPasswordError());
         }
-    }
-
-    public String getViewName() {
-        return viewName;
-    }
-
-    public void setSignupController(SignupController controller) {
-        this.signupController = controller;
     }
 }

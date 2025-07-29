@@ -1,108 +1,70 @@
 package view;
 
-import java.awt.*;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.Map;
-
-import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
-
-import interface_adapter.create.CreateController;
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolios.PortfoliosController;
 import interface_adapter.portfolios.PortfoliosState;
 import interface_adapter.portfolios.PortfoliosViewModel;
+import interface_adapter.portfolios.PortfoliosController;
+import view.components.UIFactory;
 
-/**
- * The View for when the user is logged into the program.
- */
-public class PortfoliosView extends JPanel {
+import javax.swing.*;
+import java.awt.*;
+import java.util.Map;
 
-    private final String viewName = "portfolios";
+public class PortfoliosView extends BaseView {
     private final PortfoliosViewModel portfoliosViewModel;
-    private PortfoliosController portfoliosController;
-    private PortfolioController portfolioController;
+    private final PortfoliosController portfoliosController;
+    private final PortfolioController portfolioController;
 
-    public PortfoliosView(PortfoliosViewModel portfoliosViewModel) {
+    private final JPanel buttonPanel = UIFactory.createButtonPanel();
+
+    public PortfoliosView(PortfoliosViewModel portfoliosViewModel, PortfoliosController portfoliosController, PortfolioController portfolioController) {
+        super("portfolios");
         this.portfoliosViewModel = portfoliosViewModel;
-        setPreferredSize(new Dimension(900, 600));
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        this.portfoliosController = portfoliosController;
+        this.portfolioController = portfolioController;
 
-        // === 1. Top panel with plain text intro ===
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JPanel contentPanel = createGradientContentPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        this.add(contentPanel, BorderLayout.CENTER);
 
-        JLabel welcomeLabel = new JLabel("Portfolios");
-        welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 24));
-        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JButton newPortfolio = new JButton("Create New Portfolio");
-        newPortfolio.addActionListener(evt -> {
-            final PortfoliosState currentState = portfoliosViewModel.getState();
-            portfoliosController.routeToCreate(
-                    currentState.getUsername()
-            );
+        contentPanel.add(UIFactory.createTitlePanel("Portfolios"));
+        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(createCreateButtonPanel());
+        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(UIFactory.createLabel("Your Portfolios:"));
+        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(buttonPanel);
+        contentPanel.add(Box.createVerticalGlue());
+
+        registerViewModelListener();
+    }
+
+    private JPanel createCreateButtonPanel() {
+        JButton createButton = UIFactory.createStyledButton("Create New Portfolio");
+        createButton.setAlignmentX((Component.CENTER_ALIGNMENT));
+        createButton.addActionListener(e -> {
+            PortfoliosState portfoliosState = portfoliosViewModel.getState();
+            portfoliosController.routeToCreate(portfoliosState.getUsername());
         });
-        newPortfolio.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        topPanel.add(welcomeLabel);
-        topPanel.add(Box.createVerticalStrut(5));
-        topPanel.add(newPortfolio);
-        topPanel.add(Box.createVerticalStrut(10));
+        return UIFactory.createButtonPanel(createButton);
+    }
 
-        // === 3. Buttons ===
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        setLayout(new BorderLayout(10, 10));
-        JLabel promptLabel = new JLabel("Your Portfolios:");
-        promptLabel.setFont(new Font("Sans Serif", Font.PLAIN, 18));
-        promptLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 3, 10, 10));
-        buttonPanel.setMaximumSize(new Dimension(400, 100));
-
+    private void registerViewModelListener() {
         portfoliosViewModel.addPropertyChangeListener(evt -> {
             buttonPanel.removeAll();
-            PortfoliosState state = portfoliosViewModel.getState();
-            Map<String, String> portfolios = state.getPortfolios();
+            PortfoliosState portfoliosState = portfoliosViewModel.getState();
+            Map<String, String> portfolios = portfoliosState.getPortfolios();
 
-            portfolios.keySet().forEach(portfolio -> {
-                JButton portfolioButton = new JButton(portfolio);
-                portfolioButton.addActionListener(portEvt -> {
-                    PortfoliosState portfoliosState = portfoliosViewModel.getState();
-                    portfolioController.execute(portfoliosState.getUsername(), portfolios.get(portfolio), portfolio);
+            for (String portfolio : portfolios.keySet()) {
+                JButton button = UIFactory.createStyledButton(portfolio);
+                button.addActionListener(e -> portfolioController.execute(portfoliosState.getUsername(), portfolios.get(portfolio), portfolio));
 
-                });
-                buttonPanel.add(portfolioButton);
-            });
+                buttonPanel.add(button);
+            }
+
+            buttonPanel.revalidate();
+            buttonPanel.repaint();
         });
-
-        topPanel.add(Box.createVerticalStrut(20));
-        centerPanel.add(promptLabel, BorderLayout.NORTH);
-        topPanel.add(Box.createVerticalStrut(10));
-        centerPanel.add(buttonPanel, BorderLayout.CENTER);
-        centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        // Add to main layout
-        this.add(topPanel, BorderLayout.NORTH);
-        this.add(centerPanel, BorderLayout.CENTER);
-    }
-
-    public String getViewName() {
-        return viewName;
-    }
-
-    public void setPortfoliosController(PortfoliosController portfoliosController) {
-        this.portfoliosController = portfoliosController;
-    }
-
-    public void setPortfolioController(PortfolioController portfolioController) {
-        this.portfolioController = portfolioController;
     }
 }

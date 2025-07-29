@@ -1,20 +1,26 @@
 package interface_adapter.buy;
 
+import interface_adapter.PortfolioViewModelUpdater;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioState;
+import interface_adapter.portfolio.PortfolioViewModel;
 import use_case.buy.BuyOutputBoundary;
 import use_case.buy.BuyOutputData;
+import view.PortfolioView;
 
 public class BuyPresenter implements BuyOutputBoundary {
 
-    PortfolioState portfolioState;
-    PortfolioController portfolioController;
-    BuyViewModel buyViewModel;
+    private final ViewManagerModel viewManagerModel;
+    private final PortfolioViewModel portfolioViewModel;
+    private final PortfolioViewModelUpdater updater;
+    private final BuyViewModel buyViewModel;
 
-    public BuyPresenter(BuyViewModel buyViewModel, PortfolioController portfolioController, PortfolioState portfolioState) {
+    public BuyPresenter(ViewManagerModel viewManagerModel, BuyViewModel buyViewModel, PortfolioViewModelUpdater updater, PortfolioViewModel portfolioViewModel) {
+        this.viewManagerModel = viewManagerModel;
         this.buyViewModel = buyViewModel;
-        this.portfolioController = portfolioController;
-        this.portfolioState = portfolioState;
+        this.updater = updater;
+        this.portfolioViewModel = portfolioViewModel;
     }
 
     /**
@@ -24,11 +30,10 @@ public class BuyPresenter implements BuyOutputBoundary {
      */
     @Override
     public void prepareSuccessView(BuyOutputData outputData) {
-        BuyState buyState = buyViewModel.getState();
-        buyState.setBuyError("");
-        buyViewModel.setState(buyState);
-        portfolioController.execute(portfolioState.getUsername(),
-                portfolioState.getPortfolioId(), portfolioState.getPortfolioName());
+        updater.update(portfolioViewModel, outputData.getTicker(), outputData.getPrice(), outputData.getQuantity());
+        portfolioViewModel.firePropertyChanged();
+        viewManagerModel.setState(portfolioViewModel.getViewName());
+        viewManagerModel.firePropertyChanged();
     }
 
     /**

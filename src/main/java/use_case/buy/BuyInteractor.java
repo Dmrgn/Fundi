@@ -1,7 +1,6 @@
-package interface_adapter.buy;
+package use_case.buy;
 
 import entity.Transaction;
-import use_case.buy.*;
 
 import java.time.LocalDate;
 
@@ -38,7 +37,7 @@ public class BuyInteractor implements BuyInputBoundary {
             Transaction transaction = new Transaction(portfolioId, ticker, amount, date, price);
             buyTransactionDataAccessInterface.save(transaction);
             buyOutputBoundary.prepareSuccessView(new BuyOutputData(
-
+                ticker, price, amount
             ));
         }
 

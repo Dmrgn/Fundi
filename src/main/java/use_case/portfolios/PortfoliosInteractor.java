@@ -1,6 +1,4 @@
-package interface_adapter.portfolios;
-
-import use_case.portfolios.*;
+package use_case.portfolios;
 
 import java.util.Map;
 

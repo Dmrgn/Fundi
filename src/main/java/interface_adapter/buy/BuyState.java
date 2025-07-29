@@ -2,7 +2,7 @@ package interface_adapter.buy;
 
 public class BuyState {
     private String portfolioId = "";
-    private String buyError = "";
+    private String buyError;
 
     public BuyState(BuyState copy) {
         this.portfolioId = copy.getPortfolioId();

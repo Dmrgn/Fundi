@@ -30,7 +30,7 @@ public class AnalysisState {
     }
 
     public Map<String, Double> getMajorityTickers() {
-        return new HashMap<>(majorityTickers);
+        return new LinkedHashMap<>(majorityTickers);
     }
 
     public void setMajorityTickers(Map<String, Double> majorityTickers) {

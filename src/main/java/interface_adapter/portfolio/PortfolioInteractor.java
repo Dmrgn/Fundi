@@ -85,4 +85,9 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
     public void routeToSell(String portfolioId) {
         portfolioPresenter.routeToSell(portfolioId);
     }
+
+    @Override
+    public void routeToPortfolios() {
+        portfolioPresenter.routeToPortfolios();
+    }
 }

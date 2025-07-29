@@ -142,7 +142,7 @@ public class PortfolioView extends BaseView {
         }
 
         backButton.addActionListener(e -> {
-
+            portfolioController.routeToPortfolios();
         });
     }
 }

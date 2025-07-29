@@ -13,4 +13,6 @@ public interface PortfolioOutputBoundary {
     void routeToBuy(String portfolioId);
 
     void routeToSell(String portfolioId);
+
+    void routeToPortfolios();
 }

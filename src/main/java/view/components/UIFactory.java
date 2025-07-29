@@ -3,6 +3,8 @@ package view.components;
 import org.jetbrains.annotations.NotNull;
 
 import javax.swing.*;
+import javax.swing.border.Border;
+import javax.swing.border.TitledBorder;
 import javax.swing.table.TableModel;
 import java.awt.*;
 
@@ -162,5 +164,39 @@ public class UIFactory {
         } else {
             return String.format("%.2f%%", value);
         }
+    }
+
+    public static JLabel createStatLabel() {
+        JLabel statLabel = new JLabel();
+        statLabel.setFont(new Font(font, Font.BOLD, 18));
+        statLabel.setForeground(Color.WHITE);
+        return statLabel;
+    }
+
+    public static JLabel createListItemLabel(String text) {
+        JLabel label = new JLabel(text);
+        label.setFont(new Font(font, Font.PLAIN, 16));
+        label.setForeground(Color.WHITE);
+        return label;
+    }
+
+    public static JPanel createStatListPanel(String title) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        TitledBorder border = createLightTitledBorder(title);
+        border.setTitleFont(new Font(font, Font.PLAIN, 12));
+        panel.setBorder(border);
+
+        panel.setForeground(Color.WHITE);
+        return panel;
+    }
+
+    public static TitledBorder createLightTitledBorder(String title) {
+        TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), title);
+        border.setTitleFont(new Font(font, Font.BOLD, 14));
+        border.setTitleColor(Color.WHITE);
+        return border;
     }
 }

@@ -25,7 +25,6 @@ public class BuyPresenter implements BuyOutputBoundary {
     @Override
     public void prepareSuccessView(BuyOutputData outputData) {
         BuyState buyState = buyViewModel.getState();
-        buyState.setBuyError("");
         buyViewModel.setState(buyState);
         portfolioController.execute(portfolioState.getUsername(),
                 portfolioState.getPortfolioId(), portfolioState.getPortfolioName());

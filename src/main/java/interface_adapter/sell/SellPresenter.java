@@ -24,7 +24,6 @@ public class SellPresenter implements SellOutputBoundary {
     @Override
     public void prepareSuccessView(SellOutputData outputData) {
         SellState sellState = sellViewModel.getState();
-        sellState.setSellError("");
         sellViewModel.setState(sellState);
         portfolioController.execute(portfolioState.getUsername(),
                 portfolioState.getPortfolioId(), portfolioState.getPortfolioName());

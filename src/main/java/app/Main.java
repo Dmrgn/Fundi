@@ -35,7 +35,7 @@ public class Main {
                 .addNewsUseCase()
                 .build();
         application.pack();
-        application.setSize(600, 400);
+        application.setSize(900, 600);
         // application.setExtendedState(JFrame.MAXIMIZED_BOTH);
         application.setVisible(true);
     }

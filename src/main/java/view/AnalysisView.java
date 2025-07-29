@@ -1,187 +1,109 @@
 package view;
 
-import java.awt.*;
-
-import javax.swing.*;
-
-//import interface_adapter.change_password.ChangePasswordController;
-//import interface_adapter.change_password.LoggedInState;
-//import interface_adapter.change_password.LoggedInViewModel;
-//import interface_adapter.logout.LogoutController;
 import interface_adapter.analysis.AnalysisController;
-import interface_adapter.analysis.AnalysisInteractor;
 import interface_adapter.analysis.AnalysisState;
 import interface_adapter.analysis.AnalysisViewModel;
-import interface_adapter.history.HistoryState;
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.portfolios.PortfoliosController;
 import view.components.UIFactory;
 
-/**
- * The View for when the portfolio analysis in the program.
- */
-public class AnalysisView extends JPanel {
+import javax.swing.*;
+import java.awt.*;
+import java.util.Map;
 
-    private final String viewName = "analysis";
+public class AnalysisView extends BaseView {
     private final AnalysisViewModel analysisViewModel;
-    private AnalysisController analysisController;
+    private final AnalysisController analysisController;
+
+    private final JLabel numTickersLabel = UIFactory.createStatLabel();
+    private final JLabel volatilityLabel = UIFactory.createStatLabel();
+    private final JLabel returnLabel = UIFactory.createStatLabel();
+
+    private final JPanel topHoldingsPanel = UIFactory.createStatListPanel("Highest Holdings:");
+    private final JPanel topVolatilityPanel = UIFactory.createStatListPanel("Most Volatile:");
+    private final JPanel lowVolatilityPanel = UIFactory.createStatListPanel("Least Volatile:");
+    private final JPanel topReturnPanel = UIFactory.createStatListPanel("Top Returns:");
+    private final JPanel lowReturnPanel = UIFactory.createStatListPanel("Worst Returns:");
+
+    private final JButton backButton = UIFactory.createStyledButton("Back");
 
     public AnalysisView(AnalysisViewModel analysisViewModel, AnalysisController analysisController) {
+        super("analysis");
         this.analysisViewModel = analysisViewModel;
         this.analysisController = analysisController;
-        setPreferredSize(new Dimension(900, 600));
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // === 1. Top panel with plain text intro ===
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        JPanel contentPanel = createGradientContentPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        JLabel welcomeLabel = new JLabel("Portfolio Analysis");
-        welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 28));
-        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        topPanel.add(welcomeLabel);
+        contentPanel.add(UIFactory.createTitlePanel("Portfolio Analysis"));
+        contentPanel.add(Box.createVerticalStrut(10));
 
-        JPanel spreadPanel = new JPanel();
-        spreadPanel.setLayout(new BoxLayout(spreadPanel, BoxLayout.Y_AXIS));
-        JLabel numTickersLabel = new JLabel();
+        JPanel spreadPanel = createSection("Spread", numTickersLabel, topHoldingsPanel);
+        contentPanel.add(spreadPanel);
+        contentPanel.add(Box.createVerticalStrut(10));
 
-        analysisViewModel.addPropertyChangeListener(event -> {
-            AnalysisState analysisState = analysisViewModel.getState();
-            numTickersLabel.setText("Number of Tickers : " + analysisState.getNumTickers());
-            numTickersLabel.setFont(new Font("Sans Serif", Font.BOLD, 20));
-        });
+        JPanel volPanel = createSection("Volatility", volatilityLabel, topVolatilityPanel, lowVolatilityPanel);
+        contentPanel.add(volPanel);
+        contentPanel.add(Box.createVerticalStrut(10));
 
-        JPanel topSpreadPanel = new JPanel();
-        topSpreadPanel.add(new JLabel("Highest Holdings:" ));
-        topSpreadPanel.setLayout(new BoxLayout(topSpreadPanel, BoxLayout.Y_AXIS));
-        analysisViewModel.addPropertyChangeListener(event -> {
-            AnalysisState analysisState = analysisViewModel.getState();
-            int i = 1;
-            for (String ticker : analysisState.getMajorityTickers().keySet()) {
-                topSpreadPanel.add(new JLabel(i  + ". " + ticker + ": " + UIFactory.format(analysisState.getMajorityTickers().get(ticker))));
-                topSpreadPanel.setFont(new Font("Sans Serif", Font.PLAIN, 20));
-                i++;
-            }
-        });
-        topSpreadPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        spreadPanel.add(numTickersLabel);
-        spreadPanel.add(topSpreadPanel);
+        JPanel returnPanel = createSection("Return", returnLabel, topReturnPanel, lowReturnPanel);
+        contentPanel.add(returnPanel);
+        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(Box.createVerticalGlue());
 
-        JPanel volPanel = new JPanel();
-        volPanel.setLayout(new BoxLayout(volPanel, BoxLayout.Y_AXIS));
-        JLabel volLabel = new JLabel();
+        contentPanel.add(UIFactory.createButtonPanel(backButton));
 
-        analysisViewModel.addPropertyChangeListener(event -> {
-            AnalysisState analysisState = analysisViewModel.getState();
-            volLabel.setText("Total Volatility: " + UIFactory.format(analysisState.getVolatility()));
-            volLabel.setFont(new Font("Sans Serif", Font.BOLD, 20));
-        });
-
-        JPanel topVolPanel = new JPanel();
-        topVolPanel.add(new JLabel("Highest Volatility:"));
-        topVolPanel.setLayout(new BoxLayout(topVolPanel, BoxLayout.Y_AXIS));
-        analysisViewModel.addPropertyChangeListener(event -> {
-            AnalysisState analysisState = analysisViewModel.getState();
-            int i = 1;
-            for (String ticker : analysisState.getMostVolTickers().keySet()) {
-                topVolPanel.add(new JLabel(i  + ". " + ticker + ": " + UIFactory.format(analysisState.getMostVolTickers().get(ticker))));
-                topVolPanel.setFont(new Font("Sans Serif", Font.PLAIN, 20));
-                i++;
-            }
-        });
-
-        JPanel bottomVolPanel = new JPanel();
-        bottomVolPanel.add(new JLabel("Lowest Volatility:"));
-        bottomVolPanel.setLayout(new BoxLayout(bottomVolPanel, BoxLayout.Y_AXIS));
-        analysisViewModel.addPropertyChangeListener(event -> {
-            AnalysisState analysisState = analysisViewModel.getState();
-            int i = 1;
-            for (String ticker : analysisState.getLeastVolTickers().keySet()) {
-                bottomVolPanel.add(new JLabel(i  + ". " + ticker + ": " + UIFactory.format(analysisState.getLeastVolTickers().get(ticker))));
-                bottomVolPanel.setFont(new Font("Sans Serif", Font.PLAIN, 20));
-                i++;
-            }
-        });
-
-        topVolPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        bottomVolPanel.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-
-        volPanel.add(volLabel);
-        volPanel.add(topVolPanel);
-        volPanel.add(bottomVolPanel);
-
-        JPanel returnPanel = new JPanel();
-        returnPanel.setLayout(new BoxLayout(returnPanel, BoxLayout.Y_AXIS));
-        JLabel returnLabel = new JLabel();
-
-        analysisViewModel.addPropertyChangeListener(event -> {
-            AnalysisState analysisState = analysisViewModel.getState();
-            returnLabel.setText("Total Return: " + UIFactory.format(analysisState.getPastReturn()));
-            returnLabel.setFont(new Font("Sans Serif", Font.BOLD, 20));
-        });
-
-        JPanel topReturn = new JPanel();
-        topReturn.add(new JLabel("Highest Returns:"));
-        topReturn.setLayout(new BoxLayout(topReturn, BoxLayout.Y_AXIS));
-        analysisViewModel.addPropertyChangeListener(event -> {
-            AnalysisState analysisState = analysisViewModel.getState();
-            int i = 1;
-            for (String ticker : analysisState.getTopReturns().keySet()) {
-                topReturn.add(new JLabel(i  + ". " + ticker + ": " + UIFactory.format(analysisState.getTopReturns().get(ticker))));
-                topReturn.setFont(new Font("Sans Serif", Font.PLAIN, 20));
-                i++;
-            }
-        });
-
-        JPanel bottomReturn = new JPanel();
-        bottomReturn.add(new JLabel("Lowest Returns:"));
-        bottomReturn.setLayout(new BoxLayout(bottomReturn, BoxLayout.Y_AXIS));
-        analysisViewModel.addPropertyChangeListener(event -> {
-            AnalysisState analysisState = analysisViewModel.getState();
-            int i = 1;
-            for (String ticker : analysisState.getWorstReturns().keySet()) {
-                bottomReturn.add(new JLabel(i + ". " + ticker + ": " + UIFactory.format(analysisState.getWorstReturns().get(ticker))));
-                i++;
-            }
-        });
-
-        topReturn.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-        bottomReturn.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
-
-        returnPanel.add(returnLabel);
-        returnPanel.add(topReturn);
-        returnPanel.add(bottomReturn);
-
-        spreadPanel.setBorder(BorderFactory.createTitledBorder("Spread"));
-        volPanel.setBorder(BorderFactory.createTitledBorder("Volatility"));
-        returnPanel.setBorder(BorderFactory.createTitledBorder("Returns"));
-
-        this.add(topPanel, BorderLayout.NORTH);
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(spreadPanel);
-        mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(volPanel);
-        mainPanel.add(Box.createVerticalStrut(10));
-        mainPanel.add(returnPanel);
-        this.add(mainPanel, BorderLayout.CENTER);
-
-        JPanel bottomPanel = new JPanel();
-
-        JButton useCaseButton = new JButton("Back");
-
-        useCaseButton.addActionListener(evt -> this.analysisController.routeToPortfolio());
-        bottomPanel.add(useCaseButton, BorderLayout.CENTER);
-        bottomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        this.add(bottomPanel, BorderLayout.SOUTH);
+        JScrollPane scrollPane = new JScrollPane(contentPanel);
+        scrollPane.setBorder(null);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.setOpaque(false);
+        scrollPane.getViewport().setOpaque(false);
+        this.add(scrollPane);
+        wireListeners();
     }
 
-    public String getViewName() {
-        return viewName;
+    private JPanel createSection(String title, JLabel summaryLabel, JPanel... detailPanels) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setOpaque(false);
+        panel.setBorder(UIFactory.createLightTitledBorder(title));
+        panel.setForeground(Color.WHITE);
+
+        summaryLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(summaryLabel);
+        for (JPanel detailPanel : detailPanels) {
+            detailPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+            panel.add(Box.createVerticalStrut(5));
+            panel.add(detailPanel);
+        }
+        panel.setMaximumSize(new Dimension(300, Integer.MAX_VALUE));
+        return panel;
+    }
+
+    private void updateListPanel(JPanel panel, Map<String, Double> data) {
+        panel.removeAll();
+        int i = 1;
+        for (Map.Entry<String, Double> entry : data.entrySet()) {
+            JLabel label = UIFactory.createListItemLabel(i + ". " + entry.getKey() + ": " + UIFactory.format(entry.getValue()));
+            panel.add(label);
+            i++;
+        }
+        panel.revalidate();
+        panel.repaint();
+    }
+
+    private void wireListeners() {
+        analysisViewModel.addPropertyChangeListener(e -> {
+            AnalysisState analysisState = analysisViewModel.getState();
+            numTickersLabel.setText("Number of Tickers: " + analysisState.getNumTickers());
+            volatilityLabel.setText("Total Volatility: " + UIFactory.format(analysisState.getVolatility()));
+            returnLabel.setText("Total Return: " + UIFactory.format(analysisState.getPastReturn()));
+
+            updateListPanel(topHoldingsPanel, analysisState.getMajorityTickers());
+            updateListPanel(topVolatilityPanel, analysisState.getMostVolTickers());
+            updateListPanel(lowVolatilityPanel, analysisState.getLeastVolTickers());
+            updateListPanel(topReturnPanel, analysisState.getTopReturns());
+            updateListPanel(lowReturnPanel, analysisState.getWorstReturns());
+        });
+
+        backButton.addActionListener(e -> analysisController.routeToPortfolio());
     }
 }

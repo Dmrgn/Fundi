@@ -1,87 +1,118 @@
 package view;
 
-import java.awt.*;
-
-import javax.swing.*;
-import javax.swing.table.DefaultTableModel;
-
-//import interface_adapter.change_password.ChangePasswordController;
-//import interface_adapter.change_password.LoggedInState;
-//import interface_adapter.change_password.LoggedInViewModel;
-//import interface_adapter.logout.LogoutController;
 import interface_adapter.analysis.AnalysisController;
 import interface_adapter.history.HistoryController;
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
-import interface_adapter.portfolios.PortfoliosController;
 import interface_adapter.recommend.RecommendController;
+import view.components.UIFactory;
 
-/**
- * The View for when the user is looking at a portfolio in the program.
- */
-public class PortfolioView extends JPanel {
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
+import java.awt.*;
 
-    private final String viewName = "portfolio";
+public class PortfolioView extends BaseView {
     private final PortfolioViewModel portfolioViewModel;
     private final PortfolioController portfolioController;
     private final HistoryController historyController;
     private final AnalysisController analysisController;
     private final RecommendController recommendController;
+    private final JLabel titleLabel = UIFactory.createTitleLabel("");
+    private final JLabel usernameLabel = UIFactory.createLabel("");
+    private static final String[] columnNames = {"Ticker", "Quantity", "Price"};
+    private static final String[] useCases = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell", "Delete"};
+    private final JButton backButton = UIFactory.createStyledButton("Back");
+    private final JButton[] useCaseButtons = new JButton[useCases.length];
+    private final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+    };
 
-    public PortfolioView(PortfolioViewModel portfolioViewModel,
-                         PortfolioController portfolioController,
-                         HistoryController historyController,
-                         AnalysisController analysisController,
-                         RecommendController recommendController) {
+
+    public PortfolioView(PortfolioViewModel portfolioViewModel, PortfolioController portfolioController, HistoryController historyController, AnalysisController analysisController, RecommendController recommendController) {
+        super("portfolio");
         this.portfolioViewModel = portfolioViewModel;
         this.portfolioController = portfolioController;
         this.historyController = historyController;
         this.analysisController = analysisController;
         this.recommendController = recommendController;
-        setPreferredSize(new Dimension(900, 600));
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
-        // === 1. Top panel with plain text intro ===
+        generateButtons();
+
+        JPanel contentPanel = createGradientContentPanel();
+        this.add(contentPanel, BorderLayout.CENTER);
+
+        JPanel topPanel = createTopPanel();
+        JPanel centerPanel = createCenterPanel();
+        JPanel bottomPanel = createBottomPanel();
+
+        contentPanel.add(topPanel, BorderLayout.NORTH);
+        contentPanel.add(centerPanel, BorderLayout.CENTER);
+        contentPanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        wireListeners();
+    }
+
+    private JPanel createTopPanel() {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel welcomeLabel = new JLabel();
-        portfolioViewModel.addPropertyChangeListener(evt -> {
-            welcomeLabel.setText("Portfolio: " + portfolioViewModel.getState().getPortfolioName());
-        });
-        welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 24));
-        welcomeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        JLabel usernameLabel = new JLabel();
-        portfolioViewModel.addPropertyChangeListener(evt -> {
-            PortfolioState state = portfolioViewModel.getState();
-            usernameLabel.setText("Logged in as: " + state.getUsername());
-        });
-        usernameLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));
-        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        topPanel.add(welcomeLabel);
-        topPanel.add(Box.createVerticalStrut(5));
-        topPanel.add(usernameLabel);
+        topPanel.setOpaque(false);
+        topPanel.add(titleLabel);
         topPanel.add(Box.createVerticalStrut(10));
+        topPanel.add(usernameLabel);
+        return topPanel;
+    }
 
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        setLayout(new BorderLayout(10, 10));
+    private JPanel createCenterPanel() {
+        JPanel centerPanel = new JPanel(new BorderLayout());
+        centerPanel.setOpaque(false);
+        JScrollPane table = UIFactory.createStyledTable(tableModel);
+        centerPanel.add(table, BorderLayout.CENTER);
+        return centerPanel;
+    }
 
-        String[] columnNames = {"Ticker", "Quantity", "Price"};
-        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        JTable table = new JTable(tableModel);
-        table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        JScrollPane scrollPane = new JScrollPane(table);
-        scrollPane.setPreferredSize(new Dimension(900, 600));
-        centerPanel.add(scrollPane, BorderLayout.CENTER);
-        portfolioViewModel.addPropertyChangeListener(evt -> {
+    private JPanel createBottomPanel() {
+        JPanel bottomPanel = new JPanel();
+        bottomPanel.setOpaque(false);
+        bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
+        JPanel buttonPanel = UIFactory.createButtonPanel(useCaseButtons);
+        buttonPanel.setLayout(new GridBagLayout());
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.NONE;
+
+        for (int i = 0; i < useCaseButtons.length; i++) {
+            gbc.gridx = i % 3;
+            gbc.gridy = i / 3;
+            buttonPanel.add(useCaseButtons[i], gbc);
+        }
+        buttonPanel.setMaximumSize(new Dimension(600, 100));
+        buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bottomPanel.add(buttonPanel);
+        bottomPanel.add(Box.createVerticalStrut(20));
+        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        bottomPanel.add(backButton);
+        return bottomPanel;
+    }
+
+    private void generateButtons() {
+        for (int i = 0; i < useCases.length; i++) {
+            this.useCaseButtons[i] = UIFactory.createStyledButton(useCases[i]);
+            this.useCaseButtons[i].setPreferredSize(new Dimension(180, 30));
+            this.useCaseButtons[i].setMaximumSize(new Dimension(180, 30));
+            this.useCaseButtons[i].setMinimumSize(new Dimension(180, 30));
+        }
+    }
+
+    private void wireListeners() {
+        this.portfolioViewModel.addPropertyChangeListener(evt -> {
             PortfolioState state = this.portfolioViewModel.getState();
+            this.usernameLabel.setText("Logged in as: " + state.getUsername());
+            this.titleLabel.setText("Portfolio: " + state.getPortfolioName());
+
             String[] names = state.getStockNames();
             int[] amounts = state.getStockAmounts();
             double[] prices = state.getStockPrices();
@@ -92,44 +123,26 @@ public class PortfolioView extends JPanel {
             }
         });
 
-
-        // === 3. Buttons ===
-        JPanel bottomPanel = new JPanel();
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 3, 10, 10));
-        buttonPanel.setMaximumSize(new Dimension(400, 100));
-
-        String[] useCases = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell", "Delete"};
-
-        for (String useCase : useCases) {
-            JButton useCaseButton = new JButton(useCase);
+        for (int i = 0; i < useCases.length; i++) {
             PortfolioState state = this.portfolioViewModel.getState();
-
-            useCaseButton.addActionListener(evt -> {
-                    if (useCaseButton.getText().equals("Buy")) {
-                        this.portfolioController.routeToBuy(state.getPortfolioId());
-                    } else if (useCaseButton.getText().equals("Sell")) {
-                        this.portfolioController.routeToSell(state.getPortfolioId());
-                    } else if (useCaseButton.getText().equals("History")) {
-                        this.historyController.execute(state.getPortfolioId());
-                    } else if (useCaseButton.getText().equals("Analysis")) {
-                        this.analysisController.execute(state.getPortfolioId());
-                    } else if (useCaseButton.getText().equals("Recommendations")) {
-                        this.recommendController.execute();
-                    }
+            JButton useCaseButton = useCaseButtons[i];
+            useCaseButton.addActionListener(e -> {
+                if (useCaseButton.getText().equals("Buy")) {
+                    this.portfolioController.routeToBuy(state.getPortfolioId());
+                } else if (useCaseButton.getText().equals("Sell")) {
+                    this.portfolioController.routeToSell(state.getPortfolioId());
+                } else if (useCaseButton.getText().equals("History")) {
+                    this.historyController.execute(state.getPortfolioId());
+                } else if (useCaseButton.getText().equals("Analysis")) {
+                    this.analysisController.execute(state.getPortfolioId());
+                } else if (useCaseButton.getText().equals("Recommendations")) {
+                   this. recommendController.execute();
+                }
             });
-            buttonPanel.add(useCaseButton);
         }
 
-        bottomPanel.add(buttonPanel, BorderLayout.CENTER);
-        bottomPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        backButton.addActionListener(e -> {
 
-        // Add to main layout
-        this.add(topPanel, BorderLayout.NORTH);
-        this.add(centerPanel, BorderLayout.CENTER);
-        this.add(bottomPanel, BorderLayout.SOUTH);
-    }
-
-    public String getViewName() {
-        return viewName;
+        });
     }
 }

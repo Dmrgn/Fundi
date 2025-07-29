@@ -3,16 +3,8 @@ package interface_adapter.portfolios;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create.CreateState;
 import interface_adapter.create.CreateViewModel;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.portfolio.PortfolioState;
-import interface_adapter.portfolio.PortfolioViewModel;
-import interface_adapter.portfolios.PortfoliosState;
-import interface_adapter.portfolios.PortfoliosViewModel;
-import use_case.main.MainOutputBoundary;
-import use_case.main.MainOutputData;
 import use_case.portfolios.PortfoliosOutputBoundary;
 import use_case.portfolios.PortfoliosOutputData;
-import view.PortfolioView;
 
 /**
  * The Presenter for the portfolios Use Case.

@@ -32,7 +32,6 @@ public class Main {
                 .addRecommendView()
                 .addNewsView()
                 .addSettingsView()
-                .addNewsUseCase()
                 .build();
         application.pack();
         application.setSize(900, 600);

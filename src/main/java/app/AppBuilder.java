@@ -62,48 +62,53 @@ public class AppBuilder {
     private final DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
     private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
 
-    private MainViewModel mainViewModel = new MainViewModel();
-    private LoginViewModel loginViewModel = new LoginViewModel();
-    private SignupViewModel signupViewModel = new SignupViewModel();
-    private PortfoliosViewModel portfoliosViewModel = new PortfoliosViewModel();
-    private CreateViewModel createViewModel = new CreateViewModel();
-    private PortfolioViewModel portfolioViewModel = new PortfolioViewModel();
-    private BuyViewModel buyViewModel = new BuyViewModel();
-    private SellViewModel sellViewModel = new SellViewModel();
-    private HistoryViewModel historyViewModel = new HistoryViewModel();
-    private AnalysisViewModel analysisViewModel = new AnalysisViewModel();
-    private RecommendViewModel recommendViewModel = new RecommendViewModel();
-    private PortfolioViewModelUpdater portfolioViewModelUpdater = new PortfolioViewModelUpdater();
+    private final MainViewModel mainViewModel = new MainViewModel();
+    private final LoginViewModel loginViewModel = new LoginViewModel();
+    private final SignupViewModel signupViewModel = new SignupViewModel();
+    private final PortfoliosViewModel portfoliosViewModel = new PortfoliosViewModel();
+    private final NewsViewModel newsViewModel = new NewsViewModel();
+    private final CreateViewModel createViewModel = new CreateViewModel();
+    private final PortfolioViewModel portfolioViewModel = new PortfolioViewModel();
+    private final BuyViewModel buyViewModel = new BuyViewModel();
+    private final SellViewModel sellViewModel = new SellViewModel();
+    private final HistoryViewModel historyViewModel = new HistoryViewModel();
+    private final AnalysisViewModel analysisViewModel = new AnalysisViewModel();
+    private final RecommendViewModel recommendViewModel = new RecommendViewModel();
+    private final PortfolioViewModelUpdater portfolioViewModelUpdater = new PortfolioViewModelUpdater();
 
-    private LoginController loginController = LoginUseCaseFactory.create(
+    private final LoginController loginController = LoginUseCaseFactory.create(
             viewManagerModel,
             mainViewModel,
             loginViewModel,
             signupViewModel,
             userDataAccessObject
     );
-    private SignupController signupController = SignupUseCaseFactory.create(
+    private final SignupController signupController = SignupUseCaseFactory.create(
             viewManagerModel,
             signupViewModel,
             loginViewModel,
             (SignupUserDataAccessInterface) userDataAccessObject
     );
-    private PortfoliosController portfoliosController = PortfoliosUseCaseFactory.create(
+    private final PortfoliosController portfoliosController = PortfoliosUseCaseFactory.create(
             viewManagerModel,
             portfoliosViewModel,
             createViewModel,
             portfoliosDataAccessObject
     );
 
-    private CreateController createController = CreateUseCaseFactory.create(
+    private final CreateController createController = CreateUseCaseFactory.create(
             viewManagerModel,
             portfoliosViewModel,
             createViewModel,
             portfoliosDataAccessObject
     );
 
-    private NewsController newsController;
-    private PortfolioController portfolioController = PortfolioUseCaseFactory.create(
+    private final NewsController newsController = NewsUseCaseFactory.create(
+            viewManagerModel,
+            newsViewModel,
+            transactionDataAccessObject
+    );
+    private final PortfolioController portfolioController = PortfolioUseCaseFactory.create(
             viewManagerModel,
             portfolioViewModel,
             buyViewModel,
@@ -112,7 +117,7 @@ public class AppBuilder {
             stockDataAccessObject
     );
 
-    private BuyController buyController = BuyUseCaseFactory.create(
+    private final BuyController buyController = BuyUseCaseFactory.create(
             viewManagerModel,
             buyViewModel,
             portfolioViewModelUpdater,
@@ -121,7 +126,7 @@ public class AppBuilder {
             transactionDataAccessObject
     );
 
-    private SellController sellController = SellUseCaseFactory.create(
+    private final SellController sellController = SellUseCaseFactory.create(
             viewManagerModel,
             sellViewModel,
             portfolioViewModel,
@@ -130,20 +135,20 @@ public class AppBuilder {
             transactionDataAccessObject
     );
 
-    private HistoryController historyController = HistoryUseCaseFactory.create(
+    private final HistoryController historyController = HistoryUseCaseFactory.create(
             viewManagerModel,
             historyViewModel,
             transactionDataAccessObject
     );
 
-    private AnalysisController analysisController = AnalysisUseCaseFactory.create(
+    private final AnalysisController analysisController = AnalysisUseCaseFactory.create(
             viewManagerModel,
             analysisViewModel,
             stockDataAccessObject,
             transactionDataAccessObject
     );
 
-    private RecommendController recommendController = RecommendUseCaseFactory.create(
+    private final RecommendController recommendController = RecommendUseCaseFactory.create(
             viewManagerModel,
             recommendViewModel,
             stockDataAccessObject
@@ -155,7 +160,6 @@ public class AppBuilder {
     private PortfoliosView portfoliosView;
     private CreateView createView;
     private PortfolioView portfolioView;
-    private NewsViewModel newsViewModel;
     private NewsView newsView;
     private BuyView buyView;
     private SellView sellView;
@@ -237,7 +241,6 @@ public class AppBuilder {
     }
 
     public AppBuilder addNewsView() {
-        newsViewModel = new NewsViewModel();
         newsView = new NewsView(newsViewModel);
         cardPanel.add(newsView, newsView.getViewName());
         return this;
@@ -290,14 +293,6 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addNewsUseCase() {
-        final NewsOutputBoundary newsOutputBoundary = new NewsPresenter(viewManagerModel, newsViewModel);
-        final NewsInputBoundary newsInteractor = new NewsInteractor(newsOutputBoundary, transactionDataAccessObject);
-        final NewsController newsController = new NewsController(newsInteractor);
-        newsView.setNewsController(newsController);
-//        mainView.setNewsController(newsController);
-        return this;
-    }
 
     /**
      * Creates the JFrame for the application and initially sets the SignupView to

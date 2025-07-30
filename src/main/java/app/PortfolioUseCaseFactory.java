@@ -11,29 +11,29 @@ import use_case.portfolio.PortfolioStockDataAccessInterface;
 import use_case.portfolio.PortfolioTransactionDataAccessInterface;
 import use_case.portfolio.PortfolioInputBoundary;
 import use_case.portfolio.PortfolioOutputBoundary;
+import interface_adapter.navigation.NavigationController;
 
 public class PortfolioUseCaseFactory {
-    private PortfolioUseCaseFactory() {
+        private PortfolioUseCaseFactory() {
 
-    }
+        }
 
-    public static PortfolioController create(
-            ViewManagerModel viewManagerModel,
-            PortfolioViewModel portfolioViewModel,
-            BuyViewModel buyViewModel,
-            SellViewModel sellViewModel,
-            PortfolioTransactionDataAccessInterface transactionDataAccessObject,
-            PortfolioStockDataAccessInterface stockDataAccessObject
-            ) {
-        PortfolioOutputBoundary portfolioPresenter = new PortfolioPresenter(
-                viewManagerModel,
-                portfolioViewModel,
-                buyViewModel,
-                sellViewModel
-        );
-        PortfolioInputBoundary portfolioInteractor = new PortfolioInteractor(
-                transactionDataAccessObject, stockDataAccessObject, portfolioPresenter
-        );
-        return new PortfolioController(portfolioInteractor);
-    }
+        public static PortfolioController create(
+                        ViewManagerModel viewManagerModel,
+                        PortfolioViewModel portfolioViewModel,
+                        BuyViewModel buyViewModel,
+                        SellViewModel sellViewModel,
+                        PortfolioTransactionDataAccessInterface transactionDataAccessObject,
+                        PortfolioStockDataAccessInterface stockDataAccessObject,
+                        NavigationController navigationController) {
+                PortfolioOutputBoundary portfolioPresenter = new PortfolioPresenter(
+                                viewManagerModel,
+                                portfolioViewModel,
+                                buyViewModel,
+                                sellViewModel,
+                                navigationController);
+                PortfolioInputBoundary portfolioInteractor = new PortfolioInteractor(
+                                transactionDataAccessObject, stockDataAccessObject, portfolioPresenter);
+                return new PortfolioController(portfolioInteractor);
+        }
 }

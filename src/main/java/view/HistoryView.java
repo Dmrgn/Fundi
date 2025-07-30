@@ -20,16 +20,18 @@ import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.portfolios.PortfoliosController;
 import view.components.UIFactory;
+import interface_adapter.navigation.NavigationController;
 
 /**
- * The View for when the user is looking their history for a portfolio in the program.
+ * The View for when the user is looking their history for a portfolio in the
+ * program.
  */
 public class HistoryView extends BaseView {
 
     private final HistoryViewModel historyViewModel;
-    private HistoryController historyController;
-    private static final String[] columnNames = {"Ticker", "Quantity", "Price", "Date"};
-    private final JButton backButton = UIFactory.createStyledButton("Back");
+    private final HistoryController historyController;
+    private final interface_adapter.navigation.NavigationController navigationController;
+    private static final String[] columnNames = { "Ticker", "Quantity", "Price", "Date" };
     private final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {
@@ -37,17 +39,19 @@ public class HistoryView extends BaseView {
         }
     };
 
-
-    public HistoryView(HistoryViewModel historyViewModel, HistoryController historyController) {
+    public HistoryView(HistoryViewModel historyViewModel, HistoryController historyController,
+            interface_adapter.navigation.NavigationController navigationController) {
         super("history");
         this.historyViewModel = historyViewModel;
         this.historyController = historyController;
+        this.navigationController = navigationController;
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.add(UIFactory.createTitlePanel("Portfolio History"), BorderLayout.NORTH);
-        contentPanel.add(createCenterPanel(), BorderLayout.CENTER);
-        contentPanel.add(UIFactory.createButtonPanel(backButton), BorderLayout.SOUTH);
+        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
+        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(UIFactory.createTitlePanel("Portfolio History"));
+        contentPanel.add(createCenterPanel());
         this.add(contentPanel);
 
         wireListeners();
@@ -72,10 +76,8 @@ public class HistoryView extends BaseView {
             tableModel.setRowCount(0);
 
             for (int i = 0; i < names.length; i++) {
-                tableModel.addRow(new Object[]{names[i], amounts[i], String.format("$%.2f", prices[i]), dates[i]});
+                tableModel.addRow(new Object[] { names[i], amounts[i], String.format("$%.2f", prices[i]), dates[i] });
             }
         });
-
-        backButton.addActionListener(evt -> this.historyController.routeToPortfolio());
     }
 }

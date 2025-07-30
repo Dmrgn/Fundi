@@ -1,19 +1,24 @@
 package view;
+import view.BaseView;
 
 import javax.swing.*;
 import java.awt.*;
 import interface_adapter.news.NewsViewModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.news.NewsState;
+import interface_adapter.navigation.NavigationController;
 
-public class NewsView extends JPanel {
+public class NewsView extends BaseView {
     private final String viewName = "news";
     private final NewsViewModel newsViewModel;
     private final JPanel newsPanel;
     private NewsController newsController;
+    private NavigationController navigationController;
 
-    public NewsView(NewsViewModel newsViewModel) {
+    public NewsView(NewsViewModel newsViewModel, NavigationController navigationController) {
+        super("news");
         this.newsViewModel = newsViewModel;
+        this.navigationController = navigationController;
         setPreferredSize(new Dimension(900, 600));
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
@@ -23,13 +28,24 @@ public class NewsView extends JPanel {
         titleLabel.setFont(new Font("Sans Serif", Font.BOLD, 24));
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
+        // Back button panel
+        JPanel backPanel = createBackButtonPanel(e -> navigationController.goBack());
+
         // News content panel
         newsPanel = new JPanel();
         newsPanel.setLayout(new BoxLayout(newsPanel, BoxLayout.Y_AXIS));
         JScrollPane scrollPane = new JScrollPane(newsPanel);
 
+        // Top panel with back button and title
+        JPanel topPanel = new JPanel();
+        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.setOpaque(false);
+        topPanel.add(backPanel);
+        topPanel.add(Box.createVerticalStrut(10));
+        topPanel.add(titleLabel);
+
         // Layout
-        add(titleLabel, BorderLayout.NORTH);
+        add(topPanel, BorderLayout.NORTH);
         add(scrollPane, BorderLayout.CENTER);
 
         // Listen for news updates

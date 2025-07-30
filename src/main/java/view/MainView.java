@@ -5,6 +5,7 @@ import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.portfolios.PortfoliosController;
 import view.components.UIFactory;
+import interface_adapter.navigation.NavigationController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,12 +14,14 @@ public class MainView extends BaseView {
     private final MainViewModel mainViewModel;
     private final PortfoliosController portfoliosController;
     private final NewsController newsController;
+    private final NavigationController navigationController;
 
-    public MainView(MainViewModel mainViewModel, PortfoliosController portfoliosController, NewsController newsController) {
+    public MainView(MainViewModel mainViewModel, PortfoliosController portfoliosController, NewsController newsController, NavigationController navigationController) {
         super("main");
         this.mainViewModel = mainViewModel;
         this.portfoliosController = portfoliosController;
         this.newsController = newsController;
+        this.navigationController = navigationController;
 
         JPanel contentPanel = createGradientContentPanel();
         this.add(contentPanel, BorderLayout.CENTER);
@@ -126,6 +129,7 @@ public class MainView extends BaseView {
                 MainState mainState = mainViewModel.getState();
                 mainState.setUseCase(useCase);
                 mainViewModel.setState(mainState);
+                navigationController.navigateTo(mainViewModel.getViewName(), useCase.toLowerCase());
                 switch (useCase) {
                     case "Portfolios" -> portfoliosController.execute(mainState.getUsername());
                     case "News" -> newsController.execute(mainState.getUsername());

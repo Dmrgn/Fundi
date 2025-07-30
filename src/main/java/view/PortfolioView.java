@@ -7,6 +7,7 @@ import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.recommend.RecommendController;
 import view.components.UIFactory;
+import interface_adapter.navigation.NavigationController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -18,27 +19,30 @@ public class PortfolioView extends BaseView {
     private final HistoryController historyController;
     private final AnalysisController analysisController;
     private final RecommendController recommendController;
+    private final NavigationController navigationController;
     private final JLabel titleLabel = UIFactory.createTitleLabel("");
     private final JLabel usernameLabel = UIFactory.createLabel("");
-    private static final String[] columnNames = {"Ticker", "Quantity", "Price"};
-    private static final String[] useCases = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell", "Delete"};
-    private final JButton backButton = UIFactory.createStyledButton("Back");
+    private static final String[] columnNames = { "Ticker", "Quantity", "Price" };
+    private static final String[] useCases = new String[] { "Analysis", "Recommendations", "History", "Buy", "Sell",
+            "Delete" };
     private final JButton[] useCaseButtons = new JButton[useCases.length];
     private final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
-            @Override
-            public boolean isCellEditable(int row, int column) {
-                return false;
-            }
+        @Override
+        public boolean isCellEditable(int row, int column) {
+            return false;
+        }
     };
 
-
-    public PortfolioView(PortfolioViewModel portfolioViewModel, PortfolioController portfolioController, HistoryController historyController, AnalysisController analysisController, RecommendController recommendController) {
+    public PortfolioView(PortfolioViewModel portfolioViewModel, PortfolioController portfolioController,
+            HistoryController historyController, AnalysisController analysisController,
+            RecommendController recommendController, NavigationController navigationController) {
         super("portfolio");
         this.portfolioViewModel = portfolioViewModel;
         this.portfolioController = portfolioController;
         this.historyController = historyController;
         this.analysisController = analysisController;
         this.recommendController = recommendController;
+        this.navigationController = navigationController;
 
         generateButtons();
 
@@ -59,6 +63,7 @@ public class PortfolioView extends BaseView {
     private JPanel createTopPanel() {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
+        topPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
         topPanel.setOpaque(false);
         topPanel.add(titleLabel);
         topPanel.add(Box.createVerticalStrut(10));
@@ -93,8 +98,7 @@ public class PortfolioView extends BaseView {
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         bottomPanel.add(buttonPanel);
         bottomPanel.add(Box.createVerticalStrut(20));
-        backButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        bottomPanel.add(backButton);
+        // bottomPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
         return bottomPanel;
     }
 
@@ -119,7 +123,7 @@ public class PortfolioView extends BaseView {
             tableModel.setRowCount(0);
 
             for (int i = 0; i < names.length; i++) {
-                tableModel.addRow(new Object[]{names[i], amounts[i], String.format("$%.2f", prices[i])});
+                tableModel.addRow(new Object[] { names[i], amounts[i], String.format("$%.2f", prices[i]) });
             }
         });
 
@@ -136,13 +140,9 @@ public class PortfolioView extends BaseView {
                 } else if (useCaseButton.getText().equals("Analysis")) {
                     this.analysisController.execute(state.getPortfolioId());
                 } else if (useCaseButton.getText().equals("Recommendations")) {
-                   this. recommendController.execute(state.getPortfolioId());
+                    this.recommendController.execute(state.getPortfolioId());
                 }
             });
         }
-
-        backButton.addActionListener(e -> {
-            portfolioController.routeToPortfolios();
-        });
     }
 }

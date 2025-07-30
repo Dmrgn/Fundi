@@ -5,17 +5,20 @@ import use_case.analysis.AnalysisTransactionDataAccessInterface;
 import use_case.buy.BuyTransactionDataAccessInterface;
 import use_case.history.HistoryDataAccessInterface;
 import use_case.portfolio.PortfolioTransactionDataAccessInterface;
+import use_case.recommend.RecommendTransactionDataAccessInterface;
 import use_case.sell.SellTransactionDataAccessInterface;
 
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * DAO for user data implemented using a Database to persist the data.
  */
 public class DBTransactionDataAccessObject implements AnalysisTransactionDataAccessInterface, BuyTransactionDataAccessInterface,
-        SellTransactionDataAccessInterface, HistoryDataAccessInterface, PortfolioTransactionDataAccessInterface {
+        SellTransactionDataAccessInterface, HistoryDataAccessInterface, PortfolioTransactionDataAccessInterface,
+        RecommendTransactionDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, List<Transaction>> transactions = new HashMap<>();
 
@@ -101,5 +104,13 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
         } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
+    }
+
+    @Override
+    public Set<String> getPortfolioTickers(String portfolioId) {
+        return pastTransactions(portfolioId).stream()
+                .map(Transaction::getStockTicker)
+                .filter(ticker -> amountOfTicker(portfolioId, ticker) > 0)
+                .collect(Collectors.toSet());
     }
 }

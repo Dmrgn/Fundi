@@ -16,8 +16,9 @@ public class RecommendPresenter implements RecommendOutputBoundary {
     @Override
     public void prepareView(RecommendOutputData recommendOutputData) {
         RecommendState recommendState = recommendViewModel.getState();
-        recommendState.setRecommendations(recommendOutputData.getRecommendations());
-        recommendState.setPrices(recommendOutputData.getPrices());
+        recommendState.setHaveRecs(recommendOutputData.getHaveRecs());
+        recommendState.setNotHaveRecs(recommendOutputData.getNotHaveRecs());
+        recommendState.setSafeRecs(recommendOutputData.getSafeRecs());
         recommendViewModel.setState(recommendState);
         recommendViewModel.firePropertyChanged();
         viewManagerModel.setState(recommendViewModel.getViewName());

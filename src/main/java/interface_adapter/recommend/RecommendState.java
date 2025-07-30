@@ -1,31 +1,44 @@
 package interface_adapter.recommend;
 
-public class RecommendState {
-    String[] recommendations;
-    double[] prices;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
-    public RecommendState(RecommendState copy) {
-        this.recommendations = copy.recommendations;
-        this.prices = copy.prices;
+public class RecommendState {
+    private Map<String, Double> haveRecs;
+    private Map<String, Double> notHaveRecs;
+    private Map<String, Double> safeRecs;
+
+    public RecommendState(RecommendState clone) {
+        this.haveRecs = new LinkedHashMap<>(clone.haveRecs);
+        this.notHaveRecs = new LinkedHashMap<>(clone.notHaveRecs);
+        this.safeRecs = new LinkedHashMap<>(clone.safeRecs);
     }
 
     public RecommendState() {
 
     }
 
-    public String[] getRecommendations() {
-        return recommendations.clone();
+    public Map<String, Double> getHaveRecs() {
+        return new LinkedHashMap<>(haveRecs);
     }
 
-    public void setRecommendations(String[] recommendations) {
-        this.recommendations = recommendations.clone();
+    public void setHaveRecs(Map<String, Double> haveRecs) {
+        this.haveRecs = new LinkedHashMap<>(haveRecs);
     }
 
-    public double[] getPrices() {
-        return prices.clone();
+    public Map<String, Double> getNotHaveRecs() {
+        return new LinkedHashMap<>(notHaveRecs);
     }
 
-    public void setPrices(double[] prices) {
-        this.prices = prices.clone();
+    public void setNotHaveRecs(Map<String, Double> notHaveRecs) {
+        this.notHaveRecs = new LinkedHashMap<>(notHaveRecs);
+    }
+
+    public Map<String, Double> getSafeRecs() {
+        return new LinkedHashMap<>(safeRecs);
+    }
+
+    public void setSafeRecs(Map<String, Double> safeRecs) {
+        this.safeRecs = new LinkedHashMap<>(safeRecs);
     }
 }

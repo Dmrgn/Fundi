@@ -7,12 +7,17 @@ import view.components.UIFactory;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 public class RecommendView extends BaseView {
     private final RecommendViewModel recommendViewModel;
     private final RecommendController recommendController;
 
-    private final JPanel topRecsPanel = UIFactory.createStatListPanel("Recs: ");
+    private static final String LABEL = "Recs: ";
+    private final JPanel haveRecsPanel = UIFactory.createStatListPanel(LABEL);
+    private final JPanel notHaveRecsPanel = UIFactory.createStatListPanel(LABEL);
+    private final JPanel safeRecsPanel = UIFactory.createStatListPanel(LABEL);
+
 
     private final JButton backButton = UIFactory.createStyledButton("Back");
 
@@ -27,9 +32,19 @@ public class RecommendView extends BaseView {
         contentPanel.add(UIFactory.createTitlePanel("Recommendations"));
         contentPanel.add(Box.createVerticalStrut(10));
 
-        JPanel topPanel = createSection("General Recommendations", topRecsPanel);
-        contentPanel.add(topPanel);
+        JPanel havePanel = createSection("Recs In Your Portfolio", haveRecsPanel);
+        contentPanel.add(havePanel);
         contentPanel.add(Box.createVerticalStrut(10));
+
+        JPanel notHavePanel = createSection("Recs Not In Your Portfolio", notHaveRecsPanel);
+        contentPanel.add(notHavePanel);
+        contentPanel.add(Box.createVerticalStrut(10));
+
+        JPanel safePanel = createSection("Safe Recs In Your Portfolio", safeRecsPanel);
+        contentPanel.add(safePanel);
+        contentPanel.add(Box.createVerticalStrut(10));
+
+
 
         contentPanel.add(UIFactory.createButtonPanel(backButton));
 
@@ -59,11 +74,11 @@ public class RecommendView extends BaseView {
         return panel;
     }
 
-    private void updateListPanel(JPanel panel, String[] recs) {
+    private void updateListPanel(JPanel panel, Map<String, Double> recs) {
         panel.removeAll();
         int i = 1;
-        for (String rec : recs) {
-            JLabel label = UIFactory.createListItemLabel(i + ". " + rec);
+        for (Map.Entry<String, Double> entry : recs.entrySet()) {
+            JLabel label = UIFactory.createListItemLabel(i + ". " + entry.getKey() + ": " + String.format("$%.2f", entry.getValue()));
             panel.add(label);
             i++;
         }
@@ -74,7 +89,9 @@ public class RecommendView extends BaseView {
     private void wireListeners() {
         recommendViewModel.addPropertyChangeListener(e -> {
             RecommendState recommendState = recommendViewModel.getState();
-            updateListPanel(topRecsPanel, recommendState.getRecommendations());
+            updateListPanel(haveRecsPanel, recommendState.getHaveRecs());
+            updateListPanel(notHaveRecsPanel, recommendState.getNotHaveRecs());
+            updateListPanel(safeRecsPanel, recommendState.getSafeRecs());
         });
 
         backButton.addActionListener(e -> recommendController.routeToPortfolio());

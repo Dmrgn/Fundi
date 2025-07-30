@@ -42,6 +42,7 @@ import interface_adapter.portfolios.*;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.news.NewsInputBoundary;
 import use_case.news.NewsOutputBoundary;
+import use_case.recommend.RecommendTransactionDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 import view.*;
 
@@ -151,7 +152,8 @@ public class AppBuilder {
     private final RecommendController recommendController = RecommendUseCaseFactory.create(
             viewManagerModel,
             recommendViewModel,
-            stockDataAccessObject
+            stockDataAccessObject,
+            transactionDataAccessObject
     );
 
     private MainView mainView;

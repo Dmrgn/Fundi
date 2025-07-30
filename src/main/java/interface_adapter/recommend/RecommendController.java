@@ -10,8 +10,8 @@ public class RecommendController {
         this.recommendInputBoundary = recommendInputBoundary;
     }
 
-    public void execute() {
-        recommendInputBoundary.execute(new RecommendInputData());
+    public void execute(String portfolioId) {
+        recommendInputBoundary.execute(new RecommendInputData(portfolioId));
     }
 
     public void routeToPortfolio() {

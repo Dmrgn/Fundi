@@ -136,7 +136,7 @@ public class PortfolioView extends BaseView {
                 } else if (useCaseButton.getText().equals("Analysis")) {
                     this.analysisController.execute(state.getPortfolioId());
                 } else if (useCaseButton.getText().equals("Recommendations")) {
-                   this. recommendController.execute();
+                   this. recommendController.execute(state.getPortfolioId());
                 }
             });
         }

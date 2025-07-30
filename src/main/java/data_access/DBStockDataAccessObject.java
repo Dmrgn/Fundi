@@ -4,7 +4,7 @@ import entity.StockData;
 import use_case.analysis.AnalysisStockDataAccessInterface;
 import use_case.buy.BuyStockDataAccessInterface;
 import use_case.portfolio.PortfolioStockDataAccessInterface;
-import use_case.recommend.RecommendDataAccessInterface;
+import use_case.recommend.RecommendStockDataAccessInterface;
 import use_case.sell.SellStockDataAccessInterface;
 
 import java.io.IOException;
@@ -14,7 +14,7 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
-public class DBStockDataAccessObject implements RecommendDataAccessInterface, BuyStockDataAccessInterface,
+public class DBStockDataAccessObject implements RecommendStockDataAccessInterface, BuyStockDataAccessInterface,
         SellStockDataAccessInterface, AnalysisStockDataAccessInterface, PortfolioStockDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, List<StockData>> stocks = new HashMap<>();
@@ -68,8 +68,8 @@ public class DBStockDataAccessObject implements RecommendDataAccessInterface, Bu
     }
 
     @Override
-    public String[] getAvailableTickers() {
-        return TICKERS.toArray(new String[0]);
+    public List<String> getAvailableTickers() {
+        return TICKERS.stream().toList();
     }
 
     private List<LocalDate> mostRecentNTradingDays(LocalDate today) {

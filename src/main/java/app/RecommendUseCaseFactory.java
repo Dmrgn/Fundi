@@ -2,12 +2,10 @@ package app;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.recommend.RecommendController;
-import use_case.recommend.RecommendInteractor;
+import use_case.recommend.*;
 import interface_adapter.recommend.RecommendPresenter;
 import interface_adapter.recommend.RecommendViewModel;
-import use_case.recommend.RecommendDataAccessInterface;
-import use_case.recommend.RecommendInputBoundary;
-import use_case.recommend.RecommendOutputBoundary;
+import use_case.recommend.RecommendStockDataAccessInterface;
 
 public class RecommendUseCaseFactory {
     private RecommendUseCaseFactory() {
@@ -17,14 +15,16 @@ public class RecommendUseCaseFactory {
     public static RecommendController create(
             ViewManagerModel viewManagerModel,
             RecommendViewModel recommendViewModel,
-            RecommendDataAccessInterface dataAccessObject
+            RecommendStockDataAccessInterface stockDataAccessObject,
+            RecommendTransactionDataAccessInterface transactionDataAccessObject
     ) {
         RecommendOutputBoundary recommendPresenter = new RecommendPresenter(
                 recommendViewModel,
                 viewManagerModel
         );
         RecommendInputBoundary recommendInteractor = new RecommendInteractor(
-                dataAccessObject,
+                stockDataAccessObject,
+                transactionDataAccessObject,
                 recommendPresenter
         );
         return new RecommendController(recommendInteractor);

@@ -1,19 +1,28 @@
 package use_case.recommend;
 
+import java.util.Map;
+
 public class RecommendOutputData {
-    String[] recommendations;
-    double[] prices;
+    private final Map<String, Double> haveRecs;
+    private final Map<String, Double> notHaveRecs;
+    private final Map<String, Double> safeRecs;
 
-    public RecommendOutputData(String[] recommendations, double[] prices) {
-        this.recommendations = recommendations;
-        this.prices = prices;
+
+    public RecommendOutputData(Map<String, Double> haveRecs, Map<String, Double> notHaveRecs, Map<String, Double> safeRecs) {
+        this.haveRecs = haveRecs;
+        this.notHaveRecs = notHaveRecs;
+        this.safeRecs = safeRecs;
     }
 
-    public String[] getRecommendations() {
-        return recommendations;
+    public Map<String, Double> getHaveRecs() {
+        return haveRecs;
     }
 
-    public double[] getPrices() {
-        return prices;
+    public Map<String, Double> getNotHaveRecs() {
+        return notHaveRecs;
+    }
+
+    public Map<String, Double> getSafeRecs() {
+        return safeRecs;
     }
 }

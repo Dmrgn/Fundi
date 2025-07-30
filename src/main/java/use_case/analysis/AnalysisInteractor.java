@@ -1,5 +1,6 @@
 package use_case.analysis;
 
+import entity.SortingUtil;
 import entity.StockData;
 import entity.Transaction;
 import entity.FinancialCalculator;
@@ -11,7 +12,7 @@ public class AnalysisInteractor implements AnalysisInputBoundary {
     private final AnalysisStockDataAccessInterface stockDataAccessInterface;
     private final AnalysisTransactionDataAccessInterface transactionDataAccessInterface;
     private final AnalysisOutputBoundary analysisOutputBoundary;
-    private static final int n = 2;
+    private static final int N = 2;
 
     public AnalysisInteractor(AnalysisStockDataAccessInterface stockDataAccessInterface,
                               AnalysisTransactionDataAccessInterface analysisTransactionDataAccessInterface,
@@ -48,13 +49,13 @@ public class AnalysisInteractor implements AnalysisInputBoundary {
 
         analysisOutputBoundary.prepareView(new AnalysisOutputData(
                 totalStocks,
-                FinancialCalculator.getTopNByValue(percentages, n, true),
+                SortingUtil.getTopNByValue(percentages, N, true),
                 totalVol,
-                FinancialCalculator.getTopNByValue(vols, n, true),
-                FinancialCalculator.getTopNByValue(vols, n, false),
+                SortingUtil.getTopNByValue(vols, N, true),
+                SortingUtil.getTopNByValue(vols, N, false),
                 totalReturn,
-                FinancialCalculator.getTopNByValue(returns, n, true),
-                FinancialCalculator.getTopNByValue(returns, n, false)
+                SortingUtil.getTopNByValue(returns, N, true),
+                SortingUtil.getTopNByValue(returns, N, false)
         ));
     }
 

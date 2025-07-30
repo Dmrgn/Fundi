@@ -84,4 +84,19 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
     public String getId(String username) {
         return nameToId.get(username);
     }
+
+    public void remove(String username) {
+        accounts.remove(username);
+        nameToId.remove(username);
+        String query = """
+                DELETE FROM users WHERE username = ?;
+                """;
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, username);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
+    }
 }

@@ -68,6 +68,9 @@ public class DBPortfoliosDataAccessObject implements PortfoliosDataAccessInterfa
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 userId = rs.getString(1);
+                if (!userToId.containsKey(username)) {
+                    userToId.put(username, userId);
+                }
             }
         } catch (SQLException e) {
             System.out.println(e.getMessage());
@@ -85,6 +88,9 @@ public class DBPortfoliosDataAccessObject implements PortfoliosDataAccessInterfa
             ResultSet rs = pstmt.executeQuery();
             while (rs.next()) {
                 portfolioId = rs.getString(1);
+                if (!portfolios.containsKey(userId)) {
+                    portfolios.put(userId, new HashMap<>());
+                }
             }
 
         } catch (SQLException e) {
@@ -102,6 +108,7 @@ public class DBPortfoliosDataAccessObject implements PortfoliosDataAccessInterfa
     public void save(String portfolioName, String username) {
         String id = saveDB(portfolioName, username);
         String userId = userToId.get(username);
+        portfolios.put(userId, new HashMap<>());
         portfolios.get(userId).put(portfolioName, id);
     }
 
@@ -117,5 +124,22 @@ public class DBPortfoliosDataAccessObject implements PortfoliosDataAccessInterfa
     @Override
     public String getId(String username) {
         return userToId.get(username);
+    }
+
+    public void remove(String portfolioName, String username) {
+        portfolios.get(userToId.get(username)).remove(portfolioName);
+        String userId = userToId.get(username);
+        userToId.remove(username);
+        String query = """
+                DELETE FROM portfolios WHERE user_id = ? and name = ?;
+                """;
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, userId);
+            pstmt.setString(2, portfolioName);
+            pstmt.executeUpdate();
+
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
+        }
     }
 }

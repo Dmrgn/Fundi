@@ -34,12 +34,42 @@ public class MainView extends BaseView {
     }
 
     private JPanel createTopPanel() {
+        setPreferredSize(new Dimension(900, 600));
+        setLayout(new BorderLayout(10, 10));
+        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        // Set dark blue gradient background for the whole panel
+        setOpaque(false);
+        JPanel contentPanel = new JPanel() {
+            @Override
+            protected void paintComponent(Graphics g) {
+                super.paintComponent(g);
+                Graphics2D g2d = (Graphics2D) g;
+                int w = getWidth();
+                int h = getHeight();
+                Color color1 = new Color(10, 30, 60);
+                Color color2 = new Color(30, 60, 120);
+                GradientPaint gp = new GradientPaint(0, 0, color1, w, h, color2);
+                g2d.setPaint(gp);
+                g2d.fillRect(0, 0, w, h);
+            }
+        };
+        contentPanel.setLayout(new BorderLayout(10, 10));
+        contentPanel.setOpaque(false);
+
+        // === 1. Top panel with welcome, username, and search bar ===
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setOpaque(false);
 
-        // Welcome
-        JPanel welcomePanel = UIFactory.createTitlePanel("Welcome to Fundi!");
+        // Top row: Welcome label (centered) and gear icon (top right)
+        JPanel welcomeRow = new JPanel();
+        welcomeRow.setLayout(new BoxLayout(welcomeRow, BoxLayout.X_AXIS));
+        welcomeRow.setOpaque(false);
+        JLabel welcomeLabel = new JLabel("Welcome to Fundi!");
+        welcomeLabel.setFont(new Font("Sans Serif", Font.BOLD, 48));
+        welcomeLabel.setForeground(Color.WHITE);
+        welcomeLabel.setAlignmentY(Component.TOP_ALIGNMENT);
         JButton settingsButton = new JButton();
         try {
             ImageIcon gearIcon = new ImageIcon("resources/gear.png");
@@ -96,11 +126,8 @@ public class MainView extends BaseView {
                 JOptionPane.showMessageDialog(this, "Searching for: " + query);
             }
         };
-        searchButton.addActionListener(evt -> doSearch.run());
-        searchField.addActionListener(evt -> doSearch.run());
-
-        return topPanel;
-    }
+        searchButton.addActionListener(e -> doSearch.run());
+        searchField.addActionListener(e -> doSearch.run());
 
     private JPanel createCenterPanel() {
         JPanel centerPanel = new JPanel();
@@ -116,7 +143,7 @@ public class MainView extends BaseView {
         buttonPanel.setMaximumSize(new Dimension(400, 100));
         buttonPanel.setOpaque(false);
 
-        String[] useCases = {"Portfolios", "News", "Watchlist", "Leaderboard"};
+        String[] useCases = new String[] { "Portfolios", "News", "Watchlist", "Leaderboard" };
         for (String useCase : useCases) {
             JButton useCaseButton = new JButton(useCase);
             useCaseButton.setFont(new Font("Sans Serif", Font.BOLD, 16));

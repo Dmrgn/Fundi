@@ -4,7 +4,10 @@ import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.portfolios.PortfoliosController;
 import interface_adapter.navigation.NavigationController;
+import interface_adapter.search.SearchController;
+import interface_adapter.search.SearchViewModel;
 import view.MainView;
+
 
 public class MainViewFactory {
     private MainViewFactory() {
@@ -15,13 +18,17 @@ public class MainViewFactory {
             MainViewModel mainViewModel,
             PortfoliosController portfoliosController,
             NewsController newsController,
-            NavigationController navigationController
+            NavigationController navigationController,
+            SearchController searchController,
+            SearchViewModel searchViewModel
     ) {
         return new MainView(
                 mainViewModel,
                 portfoliosController,
                 newsController,
-                navigationController
+                navigationController,
+                searchController,
+                searchViewModel
         );
     }
 }

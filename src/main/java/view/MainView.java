@@ -6,6 +6,8 @@ import interface_adapter.news.NewsController;
 import interface_adapter.portfolios.PortfoliosController;
 import view.components.UIFactory;
 import interface_adapter.navigation.NavigationController;
+import interface_adapter.search.SearchController;
+import interface_adapter.search.SearchViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,13 +17,19 @@ public class MainView extends BaseView {
     private final PortfoliosController portfoliosController;
     private final NewsController newsController;
     private final NavigationController navigationController;
+    private final SearchController searchController;
+    private final SearchViewModel searchViewModel;
+    private final JPanel searchResultsPanel = new JPanel();
 
-    public MainView(MainViewModel mainViewModel, PortfoliosController portfoliosController, NewsController newsController, NavigationController navigationController) {
+
+    public MainView(MainViewModel mainViewModel, PortfoliosController portfoliosController, NewsController newsController, NavigationController navigationController, SearchController searchController, SearchViewModel searchViewModel) {
         super("main");
         this.mainViewModel = mainViewModel;
         this.portfoliosController = portfoliosController;
         this.newsController = newsController;
         this.navigationController = navigationController;
+        this.searchController = searchController;
+        this.searchViewModel = searchViewModel;
 
         JPanel contentPanel = createGradientContentPanel();
         this.add(contentPanel, BorderLayout.CENTER);
@@ -91,8 +99,10 @@ public class MainView extends BaseView {
 
         Runnable doSearch = () -> {
             String query = searchField.getText();
-            if (query.isEmpty()) {
-                JOptionPane.showMessageDialog(this, "Searching for: " + query);
+            if (!query.isEmpty()) {
+                searchController.execute(query); // <-- Call the use case
+            } else {
+                JOptionPane.showMessageDialog(this, "Please enter a search query.");
             }
         };
         searchButton.addActionListener(e -> doSearch.run());

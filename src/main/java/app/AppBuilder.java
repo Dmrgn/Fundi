@@ -1,6 +1,7 @@
 package app;
 
 import java.awt.CardLayout;
+import java.io.IOException;
 import java.sql.SQLException;
 
 import javax.swing.JFrame;
@@ -41,6 +42,14 @@ import interface_adapter.navigation.NavigationPresenter;
 import use_case.navigation.NavigationInteractor;
 import use_case.navigation.NavigationOutputBoundary;
 import interface_adapter.navigation.NavigationPresenter;
+import interface_adapter.search.SearchController;
+import interface_adapter.search.SearchPresenter;
+import interface_adapter.search.SearchViewModel;
+import use_case.search.GetMatches;
+import use_case.search.SearchDataAccessInterface;
+import use_case.search.SearchInputBoundary;
+import use_case.search.SearchOutputBoundary;
+import data_access.APISearchDataAccessObject;
 import use_case.news.NewsInteractor;
 import interface_adapter.news.NewsPresenter;
 import interface_adapter.news.NewsViewModel;
@@ -158,6 +167,9 @@ public class AppBuilder {
                         recommendViewModel,
                         stockDataAccessObject,
                         transactionDataAccessObject);
+        
+        private final SearchViewModel searchViewModel = new SearchViewModel();
+        private final SearchController searchController;
 
         private MainView mainView;
         private LoginView loginView;
@@ -172,7 +184,17 @@ public class AppBuilder {
         private AnalysisView analysisView;
         private RecommendView recommendView;
 
-        public AppBuilder() throws SQLException {
+        public AppBuilder() throws SQLException, IOException {
+                cardPanel.setLayout(cardLayout);
+                SearchOutputBoundary searchPresenter = new SearchPresenter(searchViewModel);
+                SearchDataAccessInterface searchDataAccessObject;
+                try {
+                        searchDataAccessObject = new APISearchDataAccessObject();
+                } catch (IOException e) {
+                        throw new RuntimeException("Failed to initialize APISearchDataAccessObject", e);
+                }
+                SearchInputBoundary getMatches = new GetMatches(searchDataAccessObject, searchPresenter);
+                this.searchController = new SearchController(getMatches);
                 cardPanel.setLayout(cardLayout);
         }
 
@@ -183,7 +205,7 @@ public class AppBuilder {
          */
         public AppBuilder addMainView() {
                 mainView = MainViewFactory.create(mainViewModel, portfoliosController, newsController,
-                                navigationController);
+                                navigationController, searchController, searchViewModel);
                 cardPanel.add(mainView, mainView.getViewName());
                 return this;
         }

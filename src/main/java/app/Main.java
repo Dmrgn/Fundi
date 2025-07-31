@@ -1,6 +1,8 @@
 package app; // START USING BRANCHES.........!!!!!!!!!!!!
 
 import javax.swing.JFrame;
+
+import java.io.IOException;
 import java.sql.SQLException;
 
 import com.formdev.flatlaf.FlatLightLaf;
@@ -15,7 +17,7 @@ public class Main {
      * @param args unused arguments
      */
 
-    public static void main(String[] args) throws SQLException {
+    public static void main(String[] args) throws SQLException, IOException {
         FlatLightLaf.setup();
         final AppBuilder appBuilder = new AppBuilder();
         final JFrame application = appBuilder

@@ -45,6 +45,7 @@ public class APISearchDataAccessObject implements SearchDataAccessInterface {
             }
 
             final String responseBody = response.body().string();
+            System.out.println("API response: " + responseBody);
             return parseSearchResults(responseBody);
         }
     }

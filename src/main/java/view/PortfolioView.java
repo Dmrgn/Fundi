@@ -20,7 +20,7 @@ public class PortfolioView extends BaseView {
     private final RecommendController recommendController;
     private final JLabel titleLabel = UIFactory.createTitleLabel("");
     private final JLabel usernameLabel = UIFactory.createLabel("");
-    private static final String[] columnNames = {"Ticker", "Quantity", "Price"};
+    private static final String[] columnNames = {"Ticker", "Quantity", "Value"};
     private static final String[] useCases = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell", "Delete"};
     private final JButton backButton = UIFactory.createStyledButton("Back");
     private final JButton[] useCaseButtons = new JButton[useCases.length];
@@ -141,8 +141,6 @@ public class PortfolioView extends BaseView {
             });
         }
 
-        backButton.addActionListener(e -> {
-            portfolioController.routeToPortfolios();
-        });
+        backButton.addActionListener(e -> portfolioController.routeToPortfolios());
     }
 }

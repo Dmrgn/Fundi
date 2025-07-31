@@ -166,7 +166,7 @@ public class AppBuilder {
                         recommendViewModel,
                         stockDataAccessObject,
                         transactionDataAccessObject);
-        
+
         private final SearchViewModel searchViewModel = new SearchViewModel();
         private SearchController searchController;
 
@@ -191,9 +191,9 @@ public class AppBuilder {
                         searchDataAccessObject = new APISearchDataAccessObject();
                 } catch (IOException e) {
                         javax.swing.JOptionPane.showMessageDialog(null,
-                                "Failed to initialize search API. Application exiting...\n" + e.getMessage(),
-                                "Initialization Error",
-                                javax.swing.JOptionPane.ERROR_MESSAGE);
+                                        "Failed to initialize search API. Application exiting...\n" + e.getMessage(),
+                                        "Initialization Error",
+                                        javax.swing.JOptionPane.ERROR_MESSAGE);
                         System.exit(1);
                         return;
                 }

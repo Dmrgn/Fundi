@@ -6,7 +6,6 @@ import use_case.analysis.AnalysisInteractor;
 import interface_adapter.analysis.AnalysisPresenter;
 import interface_adapter.analysis.AnalysisViewModel;
 import interface_adapter.navigation.NavigationController;
-import interface_adapter.navigation.NavigationController;
 
 import use_case.analysis.AnalysisInputBoundary;
 import use_case.analysis.AnalysisOutputBoundary;

@@ -113,4 +113,39 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
                 .filter(ticker -> amountOfTicker(portfolioId, ticker) > 0)
                 .collect(Collectors.toSet());
     }
+
+    public void remove(String portfolioId, String ticker, int amount) {
+        if (transactions.containsKey(portfolioId)) {
+            List<Transaction> transactionList = transactions.get(portfolioId);
+            for (Transaction transaction : transactionList) {
+                if (Objects.equals(transaction.getStockTicker(), ticker) && transaction.getQuantity() == amount) {
+                    transactions.remove(transaction.getPortfolioId());
+                }
+            }
+        }
+
+        String query = """
+                DELETE FROM transactions
+                WHERE portfolio_id = ? and stock_name = ? and amount = ?
+                """;
+        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+            pstmt.setString(1, portfolioId);
+            pstmt.setString(2, ticker);
+            pstmt.setInt(3, amount);
+            pstmt.executeUpdate();
+        } catch (SQLException sqlException) {
+            System.out.println(sqlException.getMessage());
+        }
+    }
+
+    public boolean hasTransaction(String portfolioId, String ticker, int amount) {
+        if (transactions.containsKey(portfolioId)) {
+            for (Transaction transaction : transactions.get(portfolioId)) {
+                if (transaction.getStockTicker().equals(ticker) && transaction.getQuantity() == amount) {
+                    return true;
+                }
+            }
+        }
+        return false;
+    }
 }

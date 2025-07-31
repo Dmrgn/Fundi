@@ -93,7 +93,7 @@ public class SignupView extends BaseView implements PropertyChangeListener {
             }
         });
 
-        passwordField.addKeyListener(new KeyAdapter() {
+        confirmPasswordField.addKeyListener(new KeyAdapter() {
             @Override
             public void keyTyped(KeyEvent e) {
                 SignupState signupState = signupViewModel.getState();

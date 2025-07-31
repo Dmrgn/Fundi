@@ -5,18 +5,12 @@ package use_case.login;
  */
 public class LoginOutputData {
 
-    private final String id;
     private final String username;
     private final boolean useCaseFailed;
 
-    public LoginOutputData(String id, String username, boolean useCaseFailed) {
-        this.id = id;
+    public LoginOutputData(String username, boolean useCaseFailed) {
         this.username = username;
         this.useCaseFailed = useCaseFailed;
-    }
-
-    public String getId() {
-        return id;
     }
 
     public String getUsername() {

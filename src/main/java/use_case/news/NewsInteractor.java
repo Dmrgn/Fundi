@@ -68,37 +68,6 @@ public class NewsInteractor implements NewsInputBoundary {
                 allNews.add(new String[]{"", ""});
             }
             
-            // // Get top 5 stocks
-            // Map<String, Integer> stockCounts = new HashMap<>();
-            // // TODO: Implement logic to get top stocks from portfolios
-
-            // // Fetch news for each stock
-            // List<String[]> allNews = new ArrayList<>();
-            // OkHttpClient client = new OkHttpClient();
-
-            // for (String stockSymbol : stockCounts.keySet()) {
-            //     String url = String.format(
-            //         "https://newsapi.org/v2/everything?q=%s&apiKey=%s&pageSize=3",
-            //         stockSymbol, apiKey
-            //     );
-
-            //     Request request = new Request.Builder().url(url).build();
-            //     Response response = client.newCall(request).execute();
-            //     String jsonData = response.body().string();
-
-            //     JSONObject json = new JSONObject(jsonData);
-            //     JSONArray articles = json.getJSONArray("articles");
-
-            //     for (int i = 0; i < articles.length(); i++) {
-            //         JSONObject article = articles.getJSONObject(i);
-            //         String[] newsItem = new String[]{
-            //             article.getString("title"),
-            //             article.getString("description")
-            //         };
-            //         allNews.add(newsItem);
-            //     }
-            // }
-
             // Convert to array and present
             String[][] newsArray = allNews.toArray(new String[0][]);
             NewsOutputData outputData = new NewsOutputData(newsArray);

@@ -34,7 +34,7 @@ public class PortfolioViewModelUpdater {
                 }
             } else {
                 outTickers.add(tickers[i]);
-                outPrice.add(prices[i]);
+                outPrice.add(prices[i] * amounts[i]);
                 outQuantity.add(amounts[i]);
             }
         }

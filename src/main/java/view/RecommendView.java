@@ -1,9 +1,12 @@
 package view;
 
+import interface_adapter.navigation.NavigationController;
 import interface_adapter.recommend.RecommendController;
 import interface_adapter.recommend.RecommendState;
 import interface_adapter.recommend.RecommendViewModel;
 import view.components.UIFactory;
+// Import the Navigation Controller
+import interface_adapter.navigation.NavigationController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,18 +21,19 @@ public class RecommendView extends BaseView {
     private final JPanel notHaveRecsPanel = UIFactory.createStatListPanel(LABEL);
     private final JPanel safeRecsPanel = UIFactory.createStatListPanel(LABEL);
 
+    private final NavigationController navigationController;
 
-    private final JButton backButton = UIFactory.createStyledButton("Back");
-
-    public RecommendView(RecommendViewModel recommendViewModel, RecommendController recommendController) {
+    public RecommendView(RecommendViewModel recommendViewModel, RecommendController recommendController, NavigationController navigationController) {
         super("recommend");
         this.recommendViewModel = recommendViewModel;
         this.recommendController = recommendController;
+        this.navigationController = navigationController;
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        contentPanel.add(UIFactory.createTitlePanel("Recommendations"));
+        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
+
         contentPanel.add(Box.createVerticalStrut(10));
 
         JPanel havePanel = createSection("Recs In Your Portfolio", haveRecsPanel);
@@ -44,9 +48,6 @@ public class RecommendView extends BaseView {
         contentPanel.add(safePanel);
         contentPanel.add(Box.createVerticalStrut(10));
 
-
-
-        contentPanel.add(UIFactory.createButtonPanel(backButton));
 
         JScrollPane scrollPane = new JScrollPane(contentPanel);
         scrollPane.setBorder(null);
@@ -94,6 +95,5 @@ public class RecommendView extends BaseView {
             updateListPanel(safeRecsPanel, recommendState.getSafeRecs());
         });
 
-        backButton.addActionListener(e -> recommendController.routeToPortfolio());
     }
 }

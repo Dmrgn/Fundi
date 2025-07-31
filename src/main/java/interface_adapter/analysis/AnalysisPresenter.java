@@ -1,6 +1,7 @@
 package interface_adapter.analysis;
 
 import interface_adapter.ViewManagerModel;
+import interface_adapter.navigation.NavigationController;
 import interface_adapter.sell.SellState;
 import use_case.analysis.AnalysisOutputBoundary;
 import use_case.analysis.AnalysisOutputData;
@@ -8,10 +9,14 @@ import use_case.analysis.AnalysisOutputData;
 public class AnalysisPresenter implements AnalysisOutputBoundary {
     private final ViewManagerModel viewManagerModel;
     private final AnalysisViewModel analysisViewModel;
+    private final NavigationController navigationController;
 
-    public AnalysisPresenter(ViewManagerModel viewManagerModel, AnalysisViewModel analysisViewModel) {
+
+    public AnalysisPresenter(ViewManagerModel viewManagerModel, AnalysisViewModel analysisViewModel, 
+                             NavigationController navigationController) {
         this.viewManagerModel = viewManagerModel;
         this.analysisViewModel = analysisViewModel;
+        this.navigationController = navigationController;
     }
 
     @Override
@@ -27,8 +32,10 @@ public class AnalysisPresenter implements AnalysisOutputBoundary {
         analysisState.setWorstReturns(analysisOutputData.getWorstReturns());
         analysisViewModel.setState(analysisState);
         this.analysisViewModel.firePropertyChanged();
+        navigationController.navigateTo(viewManagerModel.getState(), "analysis");
         this.viewManagerModel.setState(analysisViewModel.getViewName());
         this.viewManagerModel.firePropertyChanged();
+
     }
 
     @Override

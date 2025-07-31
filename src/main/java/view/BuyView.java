@@ -23,6 +23,7 @@ import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolios.PortfoliosState;
 import interface_adapter.portfolios.PortfoliosViewModel;
+import interface_adapter.navigation.NavigationController;
 import view.components.UIFactory;
 
 /**
@@ -32,17 +33,22 @@ public class BuyView extends BaseView implements PropertyChangeListener {
 
     private final BuyViewModel buyViewModel;
     private final BuyController buyController;
+    private final NavigationController navigationController;
 
-    public BuyView(BuyViewModel buyViewModel, BuyController buyController) {
+    public BuyView(BuyViewModel buyViewModel, BuyController buyController, NavigationController navigationController) {
         super("buy");
         this.buyViewModel = buyViewModel;
         this.buyController = buyController;
+        this.navigationController = navigationController;
         this.buyViewModel.addPropertyChangeListener(this);
 
         JPanel contentPanel = createGradientContentPanel();
 
+        // Add back button (top left) using w/ NavigationController
+        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()), BorderLayout.NORTH);
+
         JPanel welcomePanel = UIFactory.createTitlePanel("Buy Stock");
-        contentPanel.add(welcomePanel, BorderLayout.NORTH);
+        contentPanel.add(welcomePanel, BorderLayout.CENTER);
 
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
@@ -68,11 +74,9 @@ public class BuyView extends BaseView implements PropertyChangeListener {
                         this.buyController.execute(
                                 currentState.getPortfolioId(),
                                 tickerField.getText(),
-                                Integer.parseInt(amountField.getText())
-                        );
+                                Integer.parseInt(amountField.getText()));
                     }
-                }
-        );
+                });
         contentPanel.add(UIFactory.createButtonPanel(buy), BorderLayout.SOUTH);
         add(contentPanel, BorderLayout.CENTER);
     }

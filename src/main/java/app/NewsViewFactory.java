@@ -1,14 +1,15 @@
 package app;
 
 import interface_adapter.news.NewsViewModel;
+import interface_adapter.navigation.NavigationController;
 import view.NewsView;
 
 public class NewsViewFactory {
     private NewsViewFactory() {
-
+    
     }
 
-    public static NewsView create(NewsViewModel newsViewModel) {
-        return new NewsView(newsViewModel);
+    public static NewsView create(NewsViewModel newsViewModel, NavigationController navigationController) {
+        return new NewsView(newsViewModel, navigationController);
     }
 }

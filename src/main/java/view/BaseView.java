@@ -8,6 +8,7 @@ import java.awt.*;
  */
 public abstract class BaseView extends JPanel {
     protected String viewName;
+    protected final JButton backButton = new JButton("Back");
 
     protected BaseView(String viewName) {
         this.viewName = viewName;
@@ -17,12 +18,30 @@ public abstract class BaseView extends JPanel {
         setOpaque(false);
     }
 
+    /**
+     * Call in subclass for a back button.
+     * 
+     * @param action the ActionListener for the back button
+     * @return the panel containing the back button
+     */
+    protected JPanel createBackButtonPanel(java.awt.event.ActionListener action) {
+        for (java.awt.event.ActionListener l : backButton.getActionListeners()) {
+            backButton.removeActionListener(l);
+        }
+        backButton.addActionListener(action);
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        panel.setOpaque(false);
+        panel.add(backButton);
+        return panel;
+    }
+
     public String getViewName() {
         return viewName;
     }
 
     /**
      * Build the generic panel for the app
+     * 
      * @return the coloured panel
      */
     protected JPanel createGradientContentPanel() {
@@ -43,4 +62,5 @@ public abstract class BaseView extends JPanel {
         panel.setOpaque(false);
         return panel;
     }
+
 }

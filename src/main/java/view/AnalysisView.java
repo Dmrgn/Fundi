@@ -4,6 +4,7 @@ import interface_adapter.analysis.AnalysisController;
 import interface_adapter.analysis.AnalysisState;
 import interface_adapter.analysis.AnalysisViewModel;
 import view.components.UIFactory;
+import interface_adapter.navigation.NavigationController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -23,17 +24,19 @@ public class AnalysisView extends BaseView {
     private final JPanel topReturnPanel = UIFactory.createStatListPanel("Top Returns:");
     private final JPanel lowReturnPanel = UIFactory.createStatListPanel("Worst Returns:");
 
-    private final JButton backButton = UIFactory.createStyledButton("Back");
+    private final NavigationController navigationController;
 
-    public AnalysisView(AnalysisViewModel analysisViewModel, AnalysisController analysisController) {
+    public AnalysisView(AnalysisViewModel analysisViewModel, AnalysisController analysisController, NavigationController navigationController) {
         super("analysis");
         this.analysisViewModel = analysisViewModel;
         this.analysisController = analysisController;
+        this.navigationController = navigationController;
+
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        contentPanel.add(UIFactory.createTitlePanel("Portfolio Analysis"));
+        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
         contentPanel.add(Box.createVerticalStrut(10));
 
         JPanel spreadPanel = createSection("Spread", numTickersLabel, topHoldingsPanel);
@@ -48,8 +51,6 @@ public class AnalysisView extends BaseView {
         contentPanel.add(returnPanel);
         contentPanel.add(Box.createVerticalStrut(10));
         contentPanel.add(Box.createVerticalGlue());
-
-        contentPanel.add(UIFactory.createButtonPanel(backButton));
 
         JScrollPane scrollPane = new JScrollPane(contentPanel);
         scrollPane.setBorder(null);
@@ -104,6 +105,5 @@ public class AnalysisView extends BaseView {
             updateListPanel(lowReturnPanel, analysisState.getWorstReturns());
         });
 
-        backButton.addActionListener(e -> analysisController.routeToPortfolio());
     }
 }

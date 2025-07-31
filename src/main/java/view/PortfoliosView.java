@@ -4,6 +4,7 @@ import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolios.PortfoliosState;
 import interface_adapter.portfolios.PortfoliosViewModel;
 import interface_adapter.portfolios.PortfoliosController;
+import interface_adapter.navigation.NavigationController;
 import view.components.UIFactory;
 
 import javax.swing.*;
@@ -14,17 +15,23 @@ public class PortfoliosView extends BaseView {
     private final PortfoliosViewModel portfoliosViewModel;
     private final PortfoliosController portfoliosController;
     private final PortfolioController portfolioController;
+    private final NavigationController navigationController;
+
 
     private final JPanel buttonPanel = UIFactory.createButtonPanel();
 
-    public PortfoliosView(PortfoliosViewModel portfoliosViewModel, PortfoliosController portfoliosController, PortfolioController portfolioController) {
+    public PortfoliosView(PortfoliosViewModel portfoliosViewModel, PortfoliosController portfoliosController, PortfolioController portfolioController, NavigationController navigationController) {
         super("portfolios");
         this.portfoliosViewModel = portfoliosViewModel;
         this.portfoliosController = portfoliosController;
         this.portfolioController = portfolioController;
+        this.navigationController = navigationController;
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+
+        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
+
         this.add(contentPanel, BorderLayout.CENTER);
 
         contentPanel.add(UIFactory.createTitlePanel("Portfolios"));

@@ -5,6 +5,9 @@ import interface_adapter.analysis.AnalysisController;
 import use_case.analysis.AnalysisInteractor;
 import interface_adapter.analysis.AnalysisPresenter;
 import interface_adapter.analysis.AnalysisViewModel;
+import interface_adapter.navigation.NavigationController;
+import interface_adapter.navigation.NavigationController;
+
 import use_case.analysis.AnalysisInputBoundary;
 import use_case.analysis.AnalysisOutputBoundary;
 import use_case.analysis.AnalysisStockDataAccessInterface;
@@ -19,11 +22,13 @@ public class AnalysisUseCaseFactory {
             ViewManagerModel viewManagerModel,
             AnalysisViewModel analysisViewModel,
             AnalysisStockDataAccessInterface stockDataAccessObject,
-            AnalysisTransactionDataAccessInterface transactionDataAccessObject
+            AnalysisTransactionDataAccessInterface transactionDataAccessObject,
+            NavigationController navigationController
     ) {
         AnalysisOutputBoundary analysisPresenter = new AnalysisPresenter(
                 viewManagerModel,
-                analysisViewModel
+                analysisViewModel,
+                navigationController
         );
         AnalysisInputBoundary analysisInteractor = new AnalysisInteractor(stockDataAccessObject,
                 transactionDataAccessObject, analysisPresenter);

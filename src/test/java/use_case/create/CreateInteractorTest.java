@@ -54,8 +54,10 @@ class CreateInteractorTest {
     }
 
     @AfterAll
-    static void setUp() throws SQLException {
+    static void tearDown() throws SQLException {
         DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
-        portfoliosDataAccessObject.remove("testPortfolio", "Paul");
+        if (portfoliosDataAccessObject.existsByName("testPortfolio", "Paul")) {
+            portfoliosDataAccessObject.remove("testPortfolio", "Paul");
+        }
     }
 }

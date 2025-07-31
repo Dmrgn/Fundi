@@ -1,7 +1,7 @@
 package use_case.create;
 
 import data_access.DBPortfoliosDataAccessObject;
-import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -9,6 +9,15 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CreateInteractorTest {
+
+    @BeforeAll
+    static void tearDown() throws SQLException {
+        DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
+        if (portfoliosDataAccessObject.existsByName("testPortfolio", "Paul")) {
+            portfoliosDataAccessObject.remove("testPortfolio", "Paul");
+        }
+    }
+
     @Test
     void createSuccessTest() throws SQLException {
         CreateDataAccessInterface createDataAccessInterface = new DBPortfoliosDataAccessObject();
@@ -51,13 +60,5 @@ class CreateInteractorTest {
         };
         CreateInteractor createInteractor = new CreateInteractor(createDataAccessInterface, createOutputBoundary);
         createInteractor.execute(createInputData);
-    }
-
-    @AfterAll
-    static void tearDown() throws SQLException {
-        DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
-        if (portfoliosDataAccessObject.existsByName("testPortfolio", "Paul")) {
-            portfoliosDataAccessObject.remove("testPortfolio", "Paul");
-        }
     }
 }

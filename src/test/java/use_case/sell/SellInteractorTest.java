@@ -17,7 +17,7 @@ class SellInteractorTest {
 
         String ticker = "NVDA";
         int amount = 1;
-        String portfolioId = "32"; // Using test portfolio from create
+        String portfolioId = "51"; // Using test portfolio from create
 
         SellInputData sellInputData = new SellInputData(portfolioId, ticker, amount);
         SellOutputBoundary sellPresenter = new SellOutputBoundary() {
@@ -42,7 +42,7 @@ class SellInteractorTest {
 
         String ticker = "NVDA";
         int amount = -1;
-        String portfolioId = "32"; // Using test portfolio from create
+        String portfolioId = "51"; // Using test portfolio from create
 
         SellInputData buyInputData = new SellInputData(portfolioId, ticker, amount);
         SellOutputBoundary sellPresenter = new SellOutputBoundary() {
@@ -67,7 +67,7 @@ class SellInteractorTest {
 
         String ticker = "NVDA";
         int amount = 11;
-        String portfolioId = "32"; // Using test portfolio from create
+        String portfolioId = "51"; // Using test portfolio from create
 
         SellInputData buyInputData = new SellInputData(portfolioId, ticker, amount);
         SellOutputBoundary sellPresenter = new SellOutputBoundary() {
@@ -92,7 +92,7 @@ class SellInteractorTest {
 
         String ticker = "wrong";
         int amount = 5;
-        String portfolioId = "32"; // Using test portfolio from create
+        String portfolioId = "51"; // Using test portfolio from create
 
         SellInputData buyInputData = new SellInputData(portfolioId, ticker, amount);
         SellOutputBoundary sellPresenter = new SellOutputBoundary() {

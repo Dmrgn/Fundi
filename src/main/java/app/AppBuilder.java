@@ -41,7 +41,6 @@ import interface_adapter.navigation.NavigationController;
 import interface_adapter.navigation.NavigationPresenter;
 import use_case.navigation.NavigationInteractor;
 import use_case.navigation.NavigationOutputBoundary;
-import interface_adapter.navigation.NavigationPresenter;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
@@ -169,7 +168,7 @@ public class AppBuilder {
                         transactionDataAccessObject);
         
         private final SearchViewModel searchViewModel = new SearchViewModel();
-        private final SearchController searchController;
+        private SearchController searchController;
 
         private MainView mainView;
         private LoginView loginView;
@@ -191,11 +190,15 @@ public class AppBuilder {
                 try {
                         searchDataAccessObject = new APISearchDataAccessObject();
                 } catch (IOException e) {
-                        throw new RuntimeException("Failed to initialize APISearchDataAccessObject", e);
+                        javax.swing.JOptionPane.showMessageDialog(null,
+                                "Failed to initialize search API. Application exiting...\n" + e.getMessage(),
+                                "Initialization Error",
+                                javax.swing.JOptionPane.ERROR_MESSAGE);
+                        System.exit(1);
+                        return;
                 }
                 SearchInputBoundary getMatches = new GetMatches(searchDataAccessObject, searchPresenter);
                 this.searchController = new SearchController(getMatches);
-                cardPanel.setLayout(cardLayout);
         }
 
         /**

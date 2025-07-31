@@ -170,7 +170,9 @@ public class AppBuilder {
         private final SearchViewModel searchViewModel = new SearchViewModel();
         private SearchController searchController;
 
-        private MainView mainView;
+        private TabbedMainView tabbedMainView;
+        private WatchlistView watchlistView;
+        private LeaderboardView leaderboardView;
         private LoginView loginView;
         private SignupView signupView;
         private PortfoliosView portfoliosView;
@@ -202,14 +204,19 @@ public class AppBuilder {
         }
 
         /**
-         * Adds the Main View to the application.
+         * Adds the Tabbed Main View to the application.
          * 
          * @return this builder
          */
-        public AppBuilder addMainView() {
-                mainView = MainViewFactory.create(mainViewModel, portfoliosController, newsController,
-                                navigationController, searchController, searchViewModel);
-                cardPanel.add(mainView, mainView.getViewName());
+        public AppBuilder addTabbedMainView() {
+                // Create placeholder views
+                watchlistView = new WatchlistView(navigationController);
+                leaderboardView = new LeaderboardView(navigationController);
+
+                tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfoliosController, newsController,
+                                portfolioController, navigationController, searchController, searchViewModel,
+                                portfoliosView, newsView, watchlistView, leaderboardView);
+                cardPanel.add(tabbedMainView, tabbedMainView.getViewName());
                 return this;
         }
 

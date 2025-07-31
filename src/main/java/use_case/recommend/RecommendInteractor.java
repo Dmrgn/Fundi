@@ -24,12 +24,7 @@ public class RecommendInteractor implements RecommendInputBoundary {
     public void execute(RecommendInputData recommendInputData) {
         List<String> tickers = stockDataAccessInterface.getAvailableTickers();
         Set<String> portfolioTickers = transactionDataAccessInterface.getPortfolioTickers(recommendInputData.getPortfolioId());
-        Set<String> nonPortfolioTickers;
-        if (portfolioTickers.isEmpty()) {
-            nonPortfolioTickers = new HashSet<>(stockDataAccessInterface.getAvailableTickers());
-        } else {
-            nonPortfolioTickers = portfolioTickers.stream().filter(p -> !tickers.contains(p)).collect(Collectors.toSet());
-        }
+        Set<String> nonPortfolioTickers = tickers.stream().filter(p -> !portfolioTickers.contains(p)).collect(Collectors.toSet());
         Map<String, Double> sharpeRatios = new LinkedHashMap<>();
         Map<String, Double> volatility = new LinkedHashMap<>();
         Map<String, Double> pricesMap = new LinkedHashMap<>();

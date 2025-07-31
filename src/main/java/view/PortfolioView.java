@@ -23,7 +23,7 @@ public class PortfolioView extends BaseView {
     private final JLabel titleLabel = UIFactory.createTitleLabel("");
     private final JLabel usernameLabel = UIFactory.createLabel("");
     private static final String[] columnNames = {"Ticker", "Quantity", "Price"};
-    private static final String[] useCases = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell", "Delete"};
+    private static final String[] useCases = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell"};
     private final JButton backButton = UIFactory.createStyledButton("Back");
     private final JButton[] useCaseButtons = new JButton[useCases.length];
     private final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {

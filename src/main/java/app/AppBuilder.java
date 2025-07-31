@@ -170,6 +170,10 @@ public class AppBuilder {
         private final SearchViewModel searchViewModel = new SearchViewModel();
         private SearchController searchController;
 
+        // Dashboard components
+        private final interface_adapter.dashboard.DashboardViewModel dashboardViewModel = new interface_adapter.dashboard.DashboardViewModel();
+        private interface_adapter.dashboard.DashboardController dashboardController;
+
         private TabbedMainView tabbedMainView;
         private DashboardView dashboardView;
         private WatchlistView watchlistView;
@@ -202,6 +206,9 @@ public class AppBuilder {
                 }
                 SearchInputBoundary getMatches = new GetMatches(searchDataAccessObject, searchPresenter);
                 this.searchController = new SearchController(getMatches);
+
+                // Initialize dashboard controller
+                this.dashboardController = DashboardUseCaseFactory.createDashboardController(dashboardViewModel);
         }
 
         /**
@@ -210,8 +217,9 @@ public class AppBuilder {
          * @return this builder
          */
         public AppBuilder addTabbedMainView() {
-                // Create dashboard view
-                dashboardView = new DashboardView(mainViewModel, searchController, searchViewModel);
+                // Create dashboard view using the factory
+                dashboardView = DashboardViewFactory.create(mainViewModel, searchController, searchViewModel,
+                                dashboardViewModel, dashboardController);
 
                 // Create placeholder views
                 watchlistView = new WatchlistView(navigationController);

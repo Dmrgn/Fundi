@@ -141,7 +141,7 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
     public boolean hasTransaction(String portfolioId, String ticker, int amount) {
         if (transactions.containsKey(portfolioId)) {
             for (Transaction transaction : transactions.get(portfolioId)) {
-                if (Objects.equals(transaction.getStockTicker(), ticker) && transaction.getQuantity() == amount) {
+                if (transaction.getStockTicker().equals(ticker) && transaction.getQuantity() == amount) {
                     return true;
                 }
             }

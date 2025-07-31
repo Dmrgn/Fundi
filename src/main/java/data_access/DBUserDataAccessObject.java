@@ -45,8 +45,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
             statement.setString(2, password);
-            statement.executeQuery();
-            ResultSet rs = statement.getResultSet();
+            ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 id = rs.getString("id");
             }

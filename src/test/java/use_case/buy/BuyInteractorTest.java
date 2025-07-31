@@ -13,7 +13,7 @@ class BuyInteractorTest {
     @BeforeAll
     static void setUp() throws SQLException {
         DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
-        transactionDataAccessObject.remove("32", "NVDA", 10);
+        transactionDataAccessObject.remove("51", "NVDA", 10); // Update portfolio id accordingly
     }
 
     @Test
@@ -23,7 +23,7 @@ class BuyInteractorTest {
 
         String ticker = "NVDA";
         int amount = 10;
-        String portfolioId = "32"; // Using test portfolio from create
+        String portfolioId = "51"; // Using test portfolio from create
 
         BuyInputData buyInputData = new BuyInputData(portfolioId, ticker, amount);
         BuyOutputBoundary buyPresenter = new BuyOutputBoundary() {
@@ -48,7 +48,7 @@ class BuyInteractorTest {
 
         String ticker = "NVDA";
         int amount = -1;
-        String portfolioId = "32"; // Using test portfolio from create
+        String portfolioId = "51"; // Using test portfolio from create
 
         BuyInputData buyInputData = new BuyInputData(portfolioId, ticker, amount);
         BuyOutputBoundary buyPresenter = new BuyOutputBoundary() {
@@ -73,7 +73,7 @@ class BuyInteractorTest {
 
         String ticker = "WRONG";
         int amount = 1;
-        String portfolioId = "32"; // Using test portfolio from create
+        String portfolioId = "51"; // Using test portfolio from create
 
         BuyInputData buyInputData = new BuyInputData(portfolioId, ticker, amount);
         BuyOutputBoundary buyPresenter = new BuyOutputBoundary() {

@@ -15,6 +15,8 @@ public class NewsView extends BaseView {
     private final NavigationController navigationController;
     private final JLabel titleLabel = UIFactory.createTitleLabel("Stock Market News");
     private final JLabel usernameLabel = UIFactory.createLabel("");
+    private final JTextField searchField;
+    private final JButton searchButton;
 
     public NewsView(NewsViewModel newsViewModel, NavigationController navigationController) {
         super("news");
@@ -25,21 +27,49 @@ public class NewsView extends BaseView {
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BorderLayout(10, 10));
 
-        // Top panel with back button and title
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setOpaque(false);
-        topPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
-        topPanel.add(titleLabel);
-        topPanel.add(Box.createVerticalStrut(10));
-        topPanel.add(usernameLabel);
+        // Create top container for back button, title, and search
+        JPanel topContainer = new JPanel();
+        topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
+        topContainer.setOpaque(false);
+
+        // Add back button
+        topContainer.add(createBackButtonPanel(e -> navigationController.goBack()));
+        
+        // Add title
+        topContainer.add(titleLabel);
+        topContainer.add(Box.createVerticalStrut(10));
+        topContainer.add(usernameLabel);
+        
+        // Create search panel
+        JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        searchPanel.setOpaque(false);
+        
+        // Create and style search field
+        searchField = new JTextField(25);
+        searchField.setFont(new Font("Sans Serif", Font.PLAIN, 14));
+        searchField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(30, 60, 120), 1),
+            BorderFactory.createEmptyBorder(8, 8, 8, 8)
+        ));
+        
+        // Create and style search button
+        searchButton = UIFactory.createStyledButton("Search News");
+        
+        // Add search components to search panel
+        searchPanel.add(searchField);
+        searchPanel.add(searchButton);
+
+        // Add search panel to top container
+        topContainer.add(Box.createVerticalStrut(10));
+        topContainer.add(searchPanel);
+        topContainer.add(Box.createVerticalStrut(15));
 
         // News content panel with styling
         newsPanel = new JPanel();
         newsPanel.setLayout(new BoxLayout(newsPanel, BoxLayout.Y_AXIS));
         newsPanel.setOpaque(false);
 
-        // Create a basic JScrollPane with custom styling
+        // Create scroll pane
         JScrollPane scrollPane = new JScrollPane(newsPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
         scrollPane.setBackground(new Color(15, 25, 55));
@@ -47,23 +77,43 @@ public class NewsView extends BaseView {
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setOpaque(false);
 
-        // Style the scroll bar
+        // Style scroll bar
         JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
-        verticalBar.setUnitIncrement(16); // Smoother scrolling
+        verticalBar.setUnitIncrement(16);
         verticalBar.setBackground(new Color(30, 40, 80));
         verticalBar.setForeground(new Color(60, 90, 150));
 
-        // Layout
-        contentPanel.add(topPanel, BorderLayout.NORTH);
+        // Add components to main layout
+        contentPanel.add(topContainer, BorderLayout.NORTH);
         contentPanel.add(scrollPane, BorderLayout.CENTER);
 
         this.add(contentPanel);
+
+        // Wire up search functionality
+        setupSearchListeners();
 
         // Listen for news updates
         newsViewModel.addPropertyChangeListener(evt -> {
             NewsState state = newsViewModel.getState();
             updateNewsPanel(state);
         });
+    }
+
+    private void setupSearchListeners() {
+        // Handle search button click
+        searchButton.addActionListener(e -> performSearch());
+        
+        // Handle Enter key in search field
+        searchField.addActionListener(e -> performSearch());
+    }
+
+    private void performSearch() {
+        String query = searchField.getText().trim();
+        if (!query.isEmpty() && newsController != null) {
+            System.out.println("Searching news for: " + query); // Debug line
+            newsController.executeSearch(query);
+            searchField.setText(""); // Clear the search field
+        }
     }
 
     private void updateNewsPanel(NewsState state) {

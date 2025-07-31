@@ -11,6 +11,8 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import javax.swing.event.DocumentListener;
+import javax.swing.event.DocumentEvent;
 
 public class SignupView extends BaseView implements PropertyChangeListener {
     private final SignupViewModel signupViewModel;
@@ -70,36 +72,34 @@ public class SignupView extends BaseView implements PropertyChangeListener {
     private void wireListeners() {
         signUpButton.addActionListener(e -> {
             SignupState signupState = signupViewModel.getState();
-            signupController.execute(signupState.getUsername(), signupState.getPassword(), signupState.getRepeatPassword());
+            // Get the current password field values directly when signing up
+            signupState.setPassword(new String(passwordField.getPassword()));
+            signupState.setRepeatPassword(new String(confirmPasswordField.getPassword()));
+            signupState.setUsername(usernameField.getText());
+            signupViewModel.setState(signupState);
+            signupController.execute(
+                signupState.getUsername(), 
+                signupState.getPassword(), 
+                signupState.getRepeatPassword()
+            );
         });
 
         loginButton.addActionListener(e -> signupController.switchToLoginView());
 
-        usernameField.addKeyListener(new KeyAdapter() {
-            @Override
-            public void keyTyped(KeyEvent e) {
+        // Replace KeyListeners with DocumentListeners for better text input handling
+        usernameField.getDocument().addDocumentListener(new DocumentListener() {
+            private void updateState() {
                 SignupState signupState = signupViewModel.getState();
-                signupState.setUsername(usernameField.getText() + e.getKeyChar());
+                signupState.setUsername(usernameField.getText());
                 signupViewModel.setState(signupState);
             }
-        });
-
-        passwordField.addKeyListener(new KeyAdapter() {
+            
             @Override
-            public void keyTyped(KeyEvent e) {
-                SignupState signupState = signupViewModel.getState();
-                signupState.setPassword(new String(passwordField.getPassword()) + e.getKeyChar());
-                signupViewModel.setState(signupState);
-            }
-        });
-
-        passwordField.addKeyListener(new KeyAdapter() {
+            public void insertUpdate(DocumentEvent e) { updateState(); }
             @Override
-            public void keyTyped(KeyEvent e) {
-                SignupState signupState = signupViewModel.getState();
-                signupState.setRepeatPassword(new String(confirmPasswordField.getPassword()) + e.getKeyChar());
-                signupViewModel.setState(signupState);
-            }
+            public void removeUpdate(DocumentEvent e) { updateState(); }
+            @Override
+            public void changedUpdate(DocumentEvent e) { updateState(); }
         });
     }
 

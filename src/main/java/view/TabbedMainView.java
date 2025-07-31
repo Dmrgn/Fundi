@@ -22,6 +22,7 @@ public class TabbedMainView extends BaseView {
     private final SearchController searchController;
     private final SearchViewModel searchViewModel;
 
+    private final DashboardView dashboardView;
     private final PortfoliosView portfoliosView;
     private final NewsView newsView;
     private final WatchlistView watchlistView;
@@ -36,6 +37,7 @@ public class TabbedMainView extends BaseView {
             NavigationController navigationController,
             SearchController searchController,
             SearchViewModel searchViewModel,
+            DashboardView dashboardView,
             PortfoliosView portfoliosView,
             NewsView newsView,
             WatchlistView watchlistView,
@@ -48,6 +50,7 @@ public class TabbedMainView extends BaseView {
         this.navigationController = navigationController;
         this.searchController = searchController;
         this.searchViewModel = searchViewModel;
+        this.dashboardView = dashboardView;
         this.portfoliosView = portfoliosView;
         this.newsView = newsView;
         this.watchlistView = watchlistView;
@@ -56,11 +59,7 @@ public class TabbedMainView extends BaseView {
         JPanel contentPanel = createGradientContentPanel();
         this.add(contentPanel, BorderLayout.CENTER);
 
-        // Create top panel with welcome, search, and username
-        JPanel topPanel = createTopPanel();
-        contentPanel.add(topPanel, BorderLayout.NORTH);
-
-        // Create tabbed pane
+        // Create tabbed pane (no top panel needed now)
         tabbedPane = createTabbedPane();
         contentPanel.add(tabbedPane, BorderLayout.CENTER);
 
@@ -73,78 +72,6 @@ public class TabbedMainView extends BaseView {
         });
     }
 
-    private JPanel createTopPanel() {
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setOpaque(false);
-
-        // Welcome panel with settings button
-        JPanel welcomePanel = UIFactory.createTitlePanel("Welcome to Fundi!");
-        JButton settingsButton = new JButton();
-        try {
-            ImageIcon gearIcon = new ImageIcon("resources/gear.png");
-            Image gearImg = gearIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-            settingsButton.setIcon(new ImageIcon(gearImg));
-        } catch (Exception e) {
-            settingsButton.setText("Settings");
-        }
-        settingsButton.setToolTipText("Settings");
-        settingsButton.setContentAreaFilled(false);
-        settingsButton.setBorderPainted(false);
-        settingsButton.setFocusPainted(false);
-        settingsButton.setPreferredSize(new Dimension(40, 40));
-        welcomePanel.add(settingsButton);
-
-        // Search and Username
-        JButton searchButton = UIFactory.createStyledButton("Search");
-        JTextField searchField = UIFactory.createTextField();
-        JPanel searchPanel = UIFactory.createSingleFieldForm(searchField, searchButton);
-
-        JLabel usernameLabel = new JLabel();
-        usernameLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));
-        usernameLabel.setForeground(Color.WHITE);
-        mainViewModel.addPropertyChangeListener(evt -> {
-            MainState mainState = mainViewModel.getState();
-            usernameLabel.setText("Logged in as: " + mainState.getUsername());
-        });
-        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JPanel centerStack = new JPanel();
-        centerStack.setLayout(new BoxLayout(centerStack, BoxLayout.Y_AXIS));
-        centerStack.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerStack.setOpaque(false);
-        centerStack.add(searchPanel);
-        centerStack.add(Box.createVerticalStrut(5));
-        centerStack.add(usernameLabel);
-
-        JPanel centerRow = new JPanel();
-        centerRow.setLayout(new BoxLayout(centerRow, BoxLayout.X_AXIS));
-        centerRow.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerRow.setOpaque(false);
-        centerRow.add(Box.createHorizontalGlue());
-        centerRow.add(centerStack);
-        centerRow.add(Box.createHorizontalGlue());
-
-        topPanel.add(welcomePanel);
-        topPanel.add(Box.createVerticalStrut(10));
-        topPanel.add(centerRow);
-        topPanel.add(Box.createVerticalStrut(15));
-
-        // Wire up search functionality
-        Runnable doSearch = () -> {
-            String query = searchField.getText();
-            if (!query.isEmpty()) {
-                searchController.execute(query);
-            } else {
-                JOptionPane.showMessageDialog(this, "Please enter a search query.");
-            }
-        };
-        searchButton.addActionListener(e -> doSearch.run());
-        searchField.addActionListener(e -> doSearch.run());
-
-        return topPanel;
-    }
-
     private JTabbedPane createTabbedPane() {
         JTabbedPane tabbedPane = new JTabbedPane();
 
@@ -153,7 +80,8 @@ public class TabbedMainView extends BaseView {
         tabbedPane.setForeground(Color.WHITE);
         tabbedPane.setFont(new Font("Sans Serif", Font.BOLD, 14));
 
-        // Add tabs
+        // Add tabs with Dashboard first
+        tabbedPane.addTab("Dashboard", dashboardView);
         tabbedPane.addTab("Portfolios", portfoliosView);
         tabbedPane.addTab("News", newsView);
         tabbedPane.addTab("Watchlist", watchlistView);
@@ -165,20 +93,23 @@ public class TabbedMainView extends BaseView {
             MainState mainState = mainViewModel.getState();
 
             switch (selectedIndex) {
-                case 0: // Portfolios
+                case 0: // Dashboard
+                    // Dashboard is always available, no special action needed
+                    break;
+                case 1: // Portfolios
                     if (mainState.getUsername() != null) {
                         portfoliosController.execute(mainState.getUsername());
                     }
                     break;
-                case 1: // News
+                case 2: // News
                     if (mainState.getUsername() != null) {
                         newsController.execute(mainState.getUsername());
                     }
                     break;
-                case 2: // Watchlist
+                case 3: // Watchlist
                     // Future implementation
                     break;
-                case 3: // Leaderboard
+                case 4: // Leaderboard
                     // Future implementation
                     break;
             }

@@ -23,7 +23,8 @@ public class RecommendView extends BaseView {
 
     private final NavigationController navigationController;
 
-    public RecommendView(RecommendViewModel recommendViewModel, RecommendController recommendController, NavigationController navigationController) {
+    public RecommendView(RecommendViewModel recommendViewModel, RecommendController recommendController,
+            NavigationController navigationController) {
         super("recommend");
         this.recommendViewModel = recommendViewModel;
         this.recommendController = recommendController;
@@ -32,7 +33,10 @@ public class RecommendView extends BaseView {
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
+        contentPanel.add(createBackButtonPanel(e -> {
+            // Navigate back to the portfolio view explicitly
+            navigationController.navigateTo("recommend", "portfolio");
+        }));
 
         contentPanel.add(Box.createVerticalStrut(10));
 
@@ -47,7 +51,6 @@ public class RecommendView extends BaseView {
         JPanel safePanel = createSection("Safe Recs In Your Portfolio", safeRecsPanel);
         contentPanel.add(safePanel);
         contentPanel.add(Box.createVerticalStrut(10));
-
 
         JScrollPane scrollPane = new JScrollPane(contentPanel);
         scrollPane.setBorder(null);
@@ -79,7 +82,8 @@ public class RecommendView extends BaseView {
         panel.removeAll();
         int i = 1;
         for (Map.Entry<String, Double> entry : recs.entrySet()) {
-            JLabel label = UIFactory.createListItemLabel(i + ". " + entry.getKey() + ": " + String.format("$%.2f", entry.getValue()));
+            JLabel label = UIFactory
+                    .createListItemLabel(i + ". " + entry.getKey() + ": " + String.format("$%.2f", entry.getValue()));
             panel.add(label);
             i++;
         }

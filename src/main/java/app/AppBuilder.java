@@ -171,6 +171,7 @@ public class AppBuilder {
         private SearchController searchController;
 
         private TabbedMainView tabbedMainView;
+        private DashboardView dashboardView;
         private WatchlistView watchlistView;
         private LeaderboardView leaderboardView;
         private LoginView loginView;
@@ -209,13 +210,16 @@ public class AppBuilder {
          * @return this builder
          */
         public AppBuilder addTabbedMainView() {
+                // Create dashboard view
+                dashboardView = new DashboardView(mainViewModel, searchController, searchViewModel);
+
                 // Create placeholder views
                 watchlistView = new WatchlistView(navigationController);
                 leaderboardView = new LeaderboardView(navigationController);
 
                 tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfoliosController, newsController,
                                 portfolioController, navigationController, searchController, searchViewModel,
-                                portfoliosView, newsView, watchlistView, leaderboardView);
+                                dashboardView, portfoliosView, newsView, watchlistView, leaderboardView);
                 cardPanel.add(tabbedMainView, tabbedMainView.getViewName());
                 return this;
         }
@@ -255,7 +259,8 @@ public class AppBuilder {
         public AppBuilder addCreateView() {
                 createView = CreateViewFactory.create(
                                 createViewModel,
-                                createController);
+                                createController,
+                                navigationController);
                 cardPanel.add(createView, createView.getViewName());
                 return this;
         }

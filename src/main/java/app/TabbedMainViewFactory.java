@@ -8,6 +8,7 @@ import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
 import view.TabbedMainView;
+import view.DashboardView;
 import view.PortfoliosView;
 import view.NewsView;
 import view.WatchlistView;
@@ -26,6 +27,7 @@ public class TabbedMainViewFactory {
             NavigationController navigationController,
             SearchController searchController,
             SearchViewModel searchViewModel,
+            DashboardView dashboardView,
             PortfoliosView portfoliosView,
             NewsView newsView,
             WatchlistView watchlistView,
@@ -38,6 +40,7 @@ public class TabbedMainViewFactory {
                 navigationController,
                 searchController,
                 searchViewModel,
+                dashboardView,
                 portfoliosView,
                 newsView,
                 watchlistView,

@@ -28,8 +28,7 @@ public class SignupInteractor implements SignupInputBoundary {
         } else if (signupInputData.getPassword().trim().length() < 3) {
             userPresenter.prepareFailView("Enter a valid password at least 3 characters long.");
         } else {
-            String id = userDataAccessObject.getId(signupInputData.getUsername());
-            final User user = userFactory.create(id, signupInputData.getUsername(), signupInputData.getPassword());
+            final User user = userFactory.create(signupInputData.getUsername(), signupInputData.getPassword());
             userDataAccessObject.save(user);
 
             final SignupOutputData signupOutputData = new SignupOutputData(user.getName(), false);

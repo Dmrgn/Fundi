@@ -4,20 +4,12 @@ package entity;
  * A simple implementation of the User interface.
  */
 public class CommonUser implements User {
-
-    private final String id;
     private final String name;
     private final String password;
 
-    public CommonUser(String id, String name, String password) {
-        this.id = id;
+    public CommonUser(String name,  String password) {
         this.name = name;
         this.password = password;
-    }
-
-    @Override
-    public String getId() {
-        return id;
     }
 
     @Override

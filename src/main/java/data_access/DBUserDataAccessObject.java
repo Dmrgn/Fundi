@@ -27,7 +27,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                 String id = rs.getString("id");
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                accounts.put(id, userFactory.create(id, username, password));
+                accounts.put(id, userFactory.create(username, password));
                 nameToId.put(username, id);
             }
         } catch (SQLException e) {
@@ -86,7 +86,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
     }
 
     public void remove(String username) {
-        accounts.remove(username);
+        accounts.remove(nameToId.get(username));
         nameToId.remove(username);
         String query = """
                 DELETE FROM users WHERE username = ?;

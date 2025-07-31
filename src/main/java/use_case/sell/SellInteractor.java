@@ -31,6 +31,7 @@ public class SellInteractor implements SellInputBoundary {
 
         if (!stockDataAccessInterface.hasTicker(ticker)) {
             sellOutputBoundary.prepareFailView("Invalid ticker");
+            return;
         }
         final double price = stockDataAccessInterface.getPrice(ticker);
         if (amount < 0) {

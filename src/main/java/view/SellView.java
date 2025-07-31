@@ -21,6 +21,7 @@ import interface_adapter.create.CreateViewModel;
 import interface_adapter.login.LoginState;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
+import interface_adapter.navigation.NavigationController;
 import interface_adapter.portfolios.PortfoliosState;
 import interface_adapter.portfolios.PortfoliosViewModel;
 import interface_adapter.sell.SellController;
@@ -28,6 +29,7 @@ import interface_adapter.sell.SellPresenter;
 import interface_adapter.sell.SellState;
 import interface_adapter.sell.SellViewModel;
 import view.components.UIFactory;
+import interface_adapter.navigation.NavigationController;
 
 /**
  * The View for when the user is trying to create a portfolio.
@@ -37,11 +39,13 @@ public class SellView extends BaseView implements PropertyChangeListener {
     private final SellViewModel sellViewModel;
     private final JLabel sellError = new JLabel();
     private final SellController sellController;
+    private final NavigationController navigationController;
 
-    public SellView(SellViewModel sellViewModel, SellController sellController) {
+    public SellView(SellViewModel sellViewModel, SellController sellController, NavigationController navigationController) {
         super("sell");
         this.sellViewModel = sellViewModel;
         this.sellController = sellController;
+        this.navigationController = navigationController;
         this.sellViewModel.addPropertyChangeListener(this);
 
         JPanel contentPanel = createGradientContentPanel();
@@ -51,6 +55,7 @@ public class SellView extends BaseView implements PropertyChangeListener {
 
         JPanel titlePanel = UIFactory.createTitlePanel("Sell Stock");
         contentPanel.add(titlePanel, BorderLayout.NORTH);
+        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()), BorderLayout.NORTH);
 
         JTextField tickerField = UIFactory.createTextField();
         JPanel tickerPanel = UIFactory.createFormPanel("Ticker", tickerField);

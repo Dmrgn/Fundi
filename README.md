@@ -34,21 +34,37 @@ From the main directory,
     mvn dependency:copy-dependencies
     ```
 
-3. Run the following to run the program.
+3. Run the following to run the program (Windows):
 
     ```powershell
-    java -cp target/fundi-1.0-SNAPSHOT.jar app.Main
+    java -cp "target/fundi-1.0-SNAPSHOT.jar;target/dependency/*" app.Main
+    ```
+
+   For Mac/Linux, use a colon (:) instead of a semicolon (;):
+
+    ```bash
+    java -cp "target/fundi-1.0-SNAPSHOT.jar:target/dependency/*" app.Main
     ```
 
 - Note: Only need to run steps 1 and 2 once.
 
-- For now (developers), the following command will re-compile and run the app in one step.
+- For now (developers), the following command will re-compile and run the app in one step (Windows):
 
 ```powershell
 mvn package; mvn dependency:copy-dependencies; java -cp "target/fundi-1.0-SNAPSHOT.jar;target/dependency/*" app.Main;
 ```
-# do this to build the app
-mvn package
-# do this to run the app
-mvn -q exec:java -Dexec.mainClass="app.Main"
+
+For Mac/Linux:
+
+```bash
+mvn package && mvn dependency:copy-dependencies && java -cp "target/fundi-1.0-SNAPSHOT.jar:target/dependency/*" app.Main
 ```
+
+---
+
+**Troubleshooting:**
+
+- If you see `Error: Could not find or load main class app.Main`, ensure:
+  - The `Main.java` file is in the `app` package and the first line is `package app;`.
+  - The compiled JAR contains `app/Main.class`.
+  - You are using the correct classpath separator for your OS (see above).

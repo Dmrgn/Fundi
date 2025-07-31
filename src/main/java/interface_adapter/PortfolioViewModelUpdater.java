@@ -41,7 +41,7 @@ public class PortfolioViewModelUpdater {
 
         if (!found) {
             outTickers.add(ticker);
-            outPrice.add(price);
+            outPrice.add(price * quantity);
             outQuantity.add(quantity);
         }
         portfolioState.setStockNames(outTickers.toArray(new String[0]));

@@ -14,4 +14,9 @@ public class NewsController {
         NewsInputData inputData = new NewsInputData(username);
         newsUseCaseInteractor.execute(inputData);
     }
+
+    public void executeSearch(String searchQuery) {
+        NewsInputData inputData = new NewsInputData(searchQuery);
+        newsUseCaseInteractor.execute(inputData);
+    }
 }

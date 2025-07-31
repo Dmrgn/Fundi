@@ -59,6 +59,9 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
 
     @Override
     public List<Transaction> pastTransactions(String portfolioId) {
+        if (!transactions.containsKey(portfolioId)) {
+            return new ArrayList<>();
+        }
         return transactions.get(portfolioId);
     }
 
@@ -108,6 +111,9 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
 
     @Override
     public Set<String> getPortfolioTickers(String portfolioId) {
+        if (!transactions.containsKey(portfolioId)) {
+            return new HashSet<>();
+        }
         return pastTransactions(portfolioId).stream()
                 .map(Transaction::getStockTicker)
                 .filter(ticker -> amountOfTicker(portfolioId, ticker) > 0)

@@ -260,7 +260,7 @@ public class AppBuilder {
                 createView = CreateViewFactory.create(
                                 createViewModel,
                                 createController,
-                                navigationController);
+                                viewManagerModel);
                 cardPanel.add(createView, createView.getViewName());
                 return this;
         }
@@ -277,7 +277,7 @@ public class AppBuilder {
                                 historyController,
                                 analysisController,
                                 recommendController,
-                                navigationController);
+                                viewManagerModel);
                 cardPanel.add(portfolioView, portfolioView.getViewName());
                 return this;
         }
@@ -330,7 +330,7 @@ public class AppBuilder {
                 recommendView = RecommendViewFactory.create(
                                 recommendViewModel,
                                 recommendController,
-                                navigationController);
+                                viewManagerModel);
                 cardPanel.add(recommendView, recommendView.getViewName());
                 return this;
         }

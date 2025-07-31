@@ -1,12 +1,10 @@
 package view;
 
-import interface_adapter.navigation.NavigationController;
+import interface_adapter.ViewManagerModel;
 import interface_adapter.recommend.RecommendController;
 import interface_adapter.recommend.RecommendState;
 import interface_adapter.recommend.RecommendViewModel;
 import view.components.UIFactory;
-// Import the Navigation Controller
-import interface_adapter.navigation.NavigationController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -21,21 +19,21 @@ public class RecommendView extends BaseView {
     private final JPanel notHaveRecsPanel = UIFactory.createStatListPanel(LABEL);
     private final JPanel safeRecsPanel = UIFactory.createStatListPanel(LABEL);
 
-    private final NavigationController navigationController;
+    private final BackNavigationHelper backNavigationHelper;
 
     public RecommendView(RecommendViewModel recommendViewModel, RecommendController recommendController,
-            NavigationController navigationController) {
+            ViewManagerModel viewManagerModel) {
         super("recommend");
         this.recommendViewModel = recommendViewModel;
         this.recommendController = recommendController;
-        this.navigationController = navigationController;
+        this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
         contentPanel.add(createBackButtonPanel(e -> {
             // Navigate back to the portfolio view explicitly
-            navigationController.navigateTo("recommend", "portfolio");
+            backNavigationHelper.goBackToPortfolio();
         }));
 
         contentPanel.add(Box.createVerticalStrut(10));

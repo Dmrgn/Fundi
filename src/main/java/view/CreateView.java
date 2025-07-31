@@ -21,7 +21,7 @@ import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolios.PortfoliosState;
 import interface_adapter.portfolios.PortfoliosViewModel;
-import interface_adapter.navigation.NavigationController;
+import interface_adapter.ViewManagerModel;
 import view.components.UIFactory;
 
 /**
@@ -30,14 +30,14 @@ import view.components.UIFactory;
 public class CreateView extends BaseView implements PropertyChangeListener {
     private final CreateViewModel createViewModel;
     private final CreateController createController;
-    private final NavigationController navigationController;
+    private final BackNavigationHelper backNavigationHelper;
 
     public CreateView(CreateViewModel createViewModel, CreateController createController,
-            NavigationController navigationController) {
+            ViewManagerModel viewManagerModel) {
         super("create");
         this.createViewModel = createViewModel;
         this.createController = createController;
-        this.navigationController = navigationController;
+        this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
         this.createViewModel.addPropertyChangeListener(this);
         JPanel contentPanel = createGradientContentPanel();
         setLayout(new BorderLayout(10, 10));
@@ -45,7 +45,7 @@ public class CreateView extends BaseView implements PropertyChangeListener {
         this.add(contentPanel, BorderLayout.CENTER);
 
         // Add back button
-        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()), BorderLayout.NORTH);
+        contentPanel.add(createBackButtonPanel(e -> backNavigationHelper.goBackToPortfolios()), BorderLayout.NORTH);
 
         // === 1. Top panel with plain text intro ===
         JPanel centerPanel = new JPanel();

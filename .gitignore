@@ -29,7 +29,7 @@ replay_pid*
 #API
 com/fundi/news_key.txt
 
-.sqlite
+*.sqlite
 .db
 notes.txt
 data/fundi.sqlite

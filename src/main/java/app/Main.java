@@ -21,7 +21,6 @@ public class Main {
         FlatLightLaf.setup();
         final AppBuilder appBuilder = new AppBuilder();
         final JFrame application = appBuilder
-                .addMainView()
                 .addLoginView()
                 .addSignupView()
                 .addPortfoliosView()
@@ -33,6 +32,7 @@ public class Main {
                 .addAnalysisView()
                 .addRecommendView()
                 .addNewsView()
+                .addTabbedMainView()
                 .addSettingsView()
                 .build();
         application.pack();

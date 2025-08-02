@@ -170,7 +170,14 @@ public class AppBuilder {
         private final SearchViewModel searchViewModel = new SearchViewModel();
         private SearchController searchController;
 
-        private MainView mainView;
+        // Dashboard components
+        private final interface_adapter.dashboard.DashboardViewModel dashboardViewModel = new interface_adapter.dashboard.DashboardViewModel();
+        private interface_adapter.dashboard.DashboardController dashboardController;
+
+        private TabbedMainView tabbedMainView;
+        private DashboardView dashboardView;
+        private WatchlistView watchlistView;
+        private LeaderboardView leaderboardView;
         private LoginView loginView;
         private SignupView signupView;
         private PortfoliosView portfoliosView;
@@ -199,17 +206,29 @@ public class AppBuilder {
                 }
                 SearchInputBoundary getMatches = new GetMatches(searchDataAccessObject, searchPresenter);
                 this.searchController = new SearchController(getMatches);
+
+                // Initialize dashboard controller
+                this.dashboardController = DashboardUseCaseFactory.createDashboardController(dashboardViewModel);
         }
 
         /**
-         * Adds the Main View to the application.
+         * Adds the Tabbed Main View to the application.
          * 
          * @return this builder
          */
-        public AppBuilder addMainView() {
-                mainView = MainViewFactory.create(mainViewModel, portfoliosController, newsController,
-                                navigationController, searchController, searchViewModel);
-                cardPanel.add(mainView, mainView.getViewName());
+        public AppBuilder addTabbedMainView() {
+                // Create dashboard view using the factory
+                dashboardView = DashboardViewFactory.create(mainViewModel, searchController, searchViewModel,
+                                dashboardViewModel, dashboardController);
+
+                // Create placeholder views
+                watchlistView = new WatchlistView(navigationController);
+                leaderboardView = new LeaderboardView(navigationController);
+
+                tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfoliosController, newsController,
+                                portfolioController, navigationController, searchController, searchViewModel,
+                                dashboardView, portfoliosView, newsView, watchlistView, leaderboardView);
+                cardPanel.add(tabbedMainView, tabbedMainView.getViewName());
                 return this;
         }
 
@@ -248,7 +267,8 @@ public class AppBuilder {
         public AppBuilder addCreateView() {
                 createView = CreateViewFactory.create(
                                 createViewModel,
-                                createController);
+                                createController,
+                                viewManagerModel);
                 cardPanel.add(createView, createView.getViewName());
                 return this;
         }
@@ -265,7 +285,7 @@ public class AppBuilder {
                                 historyController,
                                 analysisController,
                                 recommendController,
-                                navigationController);
+                                viewManagerModel);
                 cardPanel.add(portfolioView, portfolioView.getViewName());
                 return this;
         }
@@ -318,7 +338,7 @@ public class AppBuilder {
                 recommendView = RecommendViewFactory.create(
                                 recommendViewModel,
                                 recommendController,
-                                navigationController);
+                                viewManagerModel);
                 cardPanel.add(recommendView, recommendView.getViewName());
                 return this;
         }

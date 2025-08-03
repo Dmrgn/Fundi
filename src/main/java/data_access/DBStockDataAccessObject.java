@@ -93,7 +93,9 @@ public class DBStockDataAccessObject implements RecommendStockDataAccessInterfac
     private List<StockData> getStockData(String ticker) {
         String query = """
         SELECT date, price FROM stocks
-                 WHERE name = ? LIMIT 10
+                 WHERE name = ?
+                 ORDER BY date DESC
+                 LIMIT 10
         """;
         List<StockData> pastStocks = new ArrayList<>();
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {

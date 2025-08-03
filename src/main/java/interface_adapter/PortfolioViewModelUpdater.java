@@ -28,7 +28,7 @@ public class PortfolioViewModelUpdater {
                     int newAmount = amounts[i] - quantity;
                     if (newAmount > 0) {
                         outTickers.add(tickers[i]);
-                        outPrice.add(Math.max(price * newAmount, 0.0));
+                        outPrice.add(Math.max(Math.abs(price) * newAmount, 0.0));
                         outQuantity.add(newAmount);
                     }
                 }

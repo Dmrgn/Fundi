@@ -24,7 +24,7 @@ public class CreateInteractor implements CreateInputBoundary {
         } else {
                 createDataAccessObject.save(portfolioName, username);
                 CreateOutputData createOutputData = new CreateOutputData(
-                        username,createDataAccessObject.getPortfolios(username));
+                        username, createDataAccessObject.getPortfolios(username));
                 createPresenter.prepareSuccessView(createOutputData);
         }
     }

@@ -108,7 +108,9 @@ public class DBPortfoliosDataAccessObject implements PortfoliosDataAccessInterfa
     public void save(String portfolioName, String username) {
         String id = saveDB(portfolioName, username);
         String userId = userToId.get(username);
-        portfolios.put(userId, new HashMap<>());
+        if (!portfolios.containsKey(userId)) {
+            portfolios.put(userId, new HashMap<>());
+        }
         portfolios.get(userId).put(portfolioName, id);
     }
 

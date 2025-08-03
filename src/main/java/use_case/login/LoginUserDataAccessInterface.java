@@ -5,7 +5,7 @@ import entity.User;
 /**
  * DAO for the Login Use Case.
  */
-public interface LoginUserDataAccessInterface extends UserDataAccessInterface {
+public interface LoginUserDataAccessInterface {
 
     /**
      * Checks if the given username exists.

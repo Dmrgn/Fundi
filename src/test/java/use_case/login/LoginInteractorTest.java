@@ -13,7 +13,7 @@ class LoginInteractorTest {
     @Test
     void successTest() throws SQLException {
         LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject();
+        DBUserDataAccessObject userRepository = new DBUserDataAccessObject();
 
         // For the success test, we need to add Paul to the data access repository before we log in.
         userRepository.save(new User("Paul", "password"));

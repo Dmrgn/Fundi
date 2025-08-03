@@ -97,16 +97,6 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
     }
 
     /**
-     * Get the id of the user
-     * @param username The username
-     * @return The id of the username
-     */
-    @Override
-    public String getId(String username) {
-        return nameToId.get(username);
-    }
-
-    /**
      * Remove the user from the DAO
      * (For testing only)
      * @param username The username

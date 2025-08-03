@@ -25,7 +25,8 @@ public class DBStockDataAccessObject implements RecommendStockDataAccessInterfac
 //            "MCD", "AMD", "TMO", "INTC", "LIN", "DHR", "ORCL", "TXN", "NEE", "AMGN",
 //            "PFE", "QCOM", "NKE", "UPS", "MS", "MDT", "PM", "BA", "HON", "UNP"
 //    };
-    private static final Set<String> TICKERS = Set.of(new String[]{"AAPL", "MSFT", "AMZN", "NVDA"});
+    private static final Set<String> TICKERS = Set.of(new String[]{"AAPL", "MSFT", "AMZN", "NVDA", "GOOGL", "META",
+        "BRK-B", "TSLA", "LLY", "UNH", "JPM", "V"});
     private static final int NUM_DAYS = 10;
 
     public DBStockDataAccessObject() throws SQLException {
@@ -92,7 +93,7 @@ public class DBStockDataAccessObject implements RecommendStockDataAccessInterfac
     private List<StockData> getStockData(String ticker) {
         String query = """
         SELECT date, price FROM stocks
-                 WHERE name = ?
+                 WHERE name = ? LIMIT 10
         """;
         List<StockData> pastStocks = new ArrayList<>();
         try (PreparedStatement pstmt = connection.prepareStatement(query)) {

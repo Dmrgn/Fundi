@@ -21,6 +21,7 @@ import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolios.PortfoliosState;
 import interface_adapter.portfolios.PortfoliosViewModel;
+import interface_adapter.ViewManagerModel;
 import view.components.UIFactory;
 
 /**
@@ -29,16 +30,22 @@ import view.components.UIFactory;
 public class CreateView extends BaseView implements PropertyChangeListener {
     private final CreateViewModel createViewModel;
     private final CreateController createController;
+    private final BackNavigationHelper backNavigationHelper;
 
-    public CreateView(CreateViewModel createViewModel, CreateController createController) {
+    public CreateView(CreateViewModel createViewModel, CreateController createController,
+            ViewManagerModel viewManagerModel) {
         super("create");
         this.createViewModel = createViewModel;
         this.createController = createController;
+        this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
         this.createViewModel.addPropertyChangeListener(this);
         JPanel contentPanel = createGradientContentPanel();
         setLayout(new BorderLayout(10, 10));
         setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
         this.add(contentPanel, BorderLayout.CENTER);
+
+        // Add back button
+        contentPanel.add(createBackButtonPanel(e -> backNavigationHelper.goBackToPortfolios()), BorderLayout.NORTH);
 
         // === 1. Top panel with plain text intro ===
         JPanel centerPanel = new JPanel();
@@ -52,7 +59,7 @@ public class CreateView extends BaseView implements PropertyChangeListener {
         centerPanel.add(Box.createVerticalStrut(5));
 
         JTextField createNameField = UIFactory.createTextField();
-        final JPanel form = UIFactory.createFormPanel("Name: ",createNameField);
+        final JPanel form = UIFactory.createFormPanel("Name: ", createNameField);
         centerPanel.add(form);
         final JButton create = UIFactory.createStyledButton("create");
         create.addActionListener(
@@ -61,8 +68,7 @@ public class CreateView extends BaseView implements PropertyChangeListener {
                         final CreateState currentState = createViewModel.getState();
                         this.createController.execute(currentState.getUsername(), createNameField.getText());
                     }
-                }
-        );
+                });
         create.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerPanel.add(create);
 

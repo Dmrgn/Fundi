@@ -36,7 +36,7 @@ class SignupInteractorTest {
             }
         };
 
-        SignupInputBoundary interactor = new SignupInteractor(userRepository, successPresenter, new CommonUserFactory());
+        SignupInputBoundary interactor = new SignupInteractor(userRepository, successPresenter);
         interactor.execute(inputData);
     }
 
@@ -64,7 +64,7 @@ class SignupInteractorTest {
             }
         };
 
-        SignupInputBoundary interactor = new SignupInteractor(userRepository, failurePresenter, new CommonUserFactory());
+        SignupInputBoundary interactor = new SignupInteractor(userRepository, failurePresenter);
         interactor.execute(inputData);
     }
 
@@ -96,7 +96,7 @@ class SignupInteractorTest {
             }
         };
 
-        SignupInputBoundary interactor = new SignupInteractor(userRepository, failurePresenter, new CommonUserFactory());
+        SignupInputBoundary interactor = new SignupInteractor(userRepository, failurePresenter);
         interactor.execute(inputData);
     }
 

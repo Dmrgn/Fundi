@@ -9,7 +9,7 @@ import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class PortfoliosInteractorTest {
+public class PortfolioHubInteractorTest {
 
     @Test
     public void successTest() throws SQLException {

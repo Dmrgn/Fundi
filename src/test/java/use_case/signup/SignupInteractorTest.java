@@ -1,9 +1,7 @@
 package use_case.signup;
 
 import data_access.DBUserDataAccessObject;
-import entity.CommonUserFactory;
 import entity.User;
-import entity.UserFactory;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.Test;
 
@@ -16,7 +14,7 @@ class SignupInteractorTest {
     @Test
     void successTest() throws SQLException {
         SignupInputData inputData = new SignupInputData("Bob", "password", "password");
-        SignupUserDataAccessInterface userRepository = new DBUserDataAccessObject(new CommonUserFactory());
+        SignupUserDataAccessInterface userRepository = new DBUserDataAccessObject();
 
         // This creates a successPresenter that tests whether the test case is as we expect.
         SignupOutputBoundary successPresenter = new SignupOutputBoundary() {
@@ -45,7 +43,7 @@ class SignupInteractorTest {
     @Test
     void failurePasswordMismatchTest() throws SQLException {
         SignupInputData inputData = new SignupInputData("Bob", "password", "wrong");
-        SignupUserDataAccessInterface userRepository = new DBUserDataAccessObject(new CommonUserFactory());
+        SignupUserDataAccessInterface userRepository = new DBUserDataAccessObject();
 
         // This creates a presenter that tests whether the test case is as we expect.
         SignupOutputBoundary failurePresenter = new SignupOutputBoundary() {
@@ -73,11 +71,10 @@ class SignupInteractorTest {
     @Test
     void failureUserExistsTest() throws SQLException {
         SignupInputData inputData = new SignupInputData("Bob", "password", "wrong");
-        SignupUserDataAccessInterface userRepository = new DBUserDataAccessObject(new CommonUserFactory());
+        SignupUserDataAccessInterface userRepository = new DBUserDataAccessObject();
 
         // Add Paul to the repo so that when we check later they already exist
-        UserFactory factory = new CommonUserFactory();
-        User user = factory.create("Bob", "pwd");
+        User user = new User("Bob", "pwd");
         userRepository.save(user);
 
         // This creates a presenter that tests whether the test case is as we expect.
@@ -105,7 +102,7 @@ class SignupInteractorTest {
 
     @AfterAll
     static void removeUser() throws SQLException {
-        DBUserDataAccessObject userRepository = new DBUserDataAccessObject(new CommonUserFactory());
+        DBUserDataAccessObject userRepository = new DBUserDataAccessObject();
         userRepository.remove("Bob");
     }
 }

@@ -1,7 +1,6 @@
 package entity;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class FinancialCalculator {
     private FinancialCalculator() {

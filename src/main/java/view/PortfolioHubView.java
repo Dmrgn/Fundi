@@ -1,9 +1,9 @@
 package view;
 
 import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolios.PortfoliosState;
-import interface_adapter.portfolios.PortfoliosViewModel;
-import interface_adapter.portfolios.PortfoliosController;
+import interface_adapter.portfolioHub.PortfolioHubState;
+import interface_adapter.portfolioHub.PortfolioHubViewModel;
+import interface_adapter.portfolioHub.PortfolioHubController;
 import interface_adapter.navigation.NavigationController;
 import view.components.UIFactory;
 
@@ -11,19 +11,19 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
-public class PortfoliosView extends BaseView {
-    private final PortfoliosViewModel portfoliosViewModel;
-    private final PortfoliosController portfoliosController;
+public class PortfolioHubView extends BaseView {
+    private final PortfolioHubViewModel portfoliosViewModel;
+    private final PortfolioHubController portfolioHubController;
     private final PortfolioController portfolioController;
     private final NavigationController navigationController;
 
     private final JPanel buttonPanel = UIFactory.createButtonPanel();
 
-    public PortfoliosView(PortfoliosViewModel portfoliosViewModel, PortfoliosController portfoliosController,
-            PortfolioController portfolioController, NavigationController navigationController) {
-        super("portfolios");
+    public PortfolioHubView(PortfolioHubViewModel portfoliosViewModel, PortfolioHubController portfolioHubController,
+                            PortfolioController portfolioController, NavigationController navigationController) {
+        super("portfolio hub");
         this.portfoliosViewModel = portfoliosViewModel;
-        this.portfoliosController = portfoliosController;
+        this.portfolioHubController = portfolioHubController;
         this.portfolioController = portfolioController;
         this.navigationController = navigationController;
 
@@ -48,8 +48,8 @@ public class PortfoliosView extends BaseView {
         JButton createButton = UIFactory.createStyledButton("Create New Portfolio");
         createButton.setAlignmentX((Component.CENTER_ALIGNMENT));
         createButton.addActionListener(e -> {
-            PortfoliosState portfoliosState = portfoliosViewModel.getState();
-            portfoliosController.routeToCreate(portfoliosState.getUsername());
+            PortfolioHubState portfoliosState = portfoliosViewModel.getState();
+            portfolioHubController.routeToCreate(portfoliosState.getUsername());
         });
 
         return UIFactory.createButtonPanel(createButton);
@@ -58,7 +58,7 @@ public class PortfoliosView extends BaseView {
     private void registerViewModelListener() {
         portfoliosViewModel.addPropertyChangeListener(evt -> {
             buttonPanel.removeAll();
-            PortfoliosState portfoliosState = portfoliosViewModel.getState();
+            PortfolioHubState portfoliosState = portfoliosViewModel.getState();
             Map<String, String> portfolios = portfoliosState.getPortfolios();
 
             for (String portfolio : portfolios.keySet()) {

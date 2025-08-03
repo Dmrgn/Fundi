@@ -3,7 +3,7 @@ package view;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
-import interface_adapter.portfolios.PortfoliosController;
+import interface_adapter.portfolioHub.PortfolioHubController;
 import view.components.UIFactory;
 import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
@@ -16,7 +16,7 @@ import java.awt.event.MouseEvent;
 
 public class MainView extends BaseView {
     private final MainViewModel mainViewModel;
-    private final PortfoliosController portfoliosController;
+    private final PortfolioHubController portfolioHubController;
     private final NewsController newsController;
     private final NavigationController navigationController;
     private final SearchController searchController;
@@ -26,10 +26,10 @@ public class MainView extends BaseView {
     private int notificationCount = 0;
 
 
-    public MainView(MainViewModel mainViewModel, PortfoliosController portfoliosController, NewsController newsController, NavigationController navigationController, SearchController searchController, SearchViewModel searchViewModel) {
+    public MainView(MainViewModel mainViewModel, PortfolioHubController portfolioHubController, NewsController newsController, NavigationController navigationController, SearchController searchController, SearchViewModel searchViewModel) {
         super("main");
         this.mainViewModel = mainViewModel;
-        this.portfoliosController = portfoliosController;
+        this.portfolioHubController = portfolioHubController;
         this.newsController = newsController;
         this.navigationController = navigationController;
         this.searchController = searchController;
@@ -150,7 +150,7 @@ public class MainView extends BaseView {
                 mainViewModel.setState(mainState);
                 navigationController.navigateTo(mainViewModel.getViewName(), useCase.toLowerCase());
                 switch (useCase) {
-                    case "Portfolios" -> portfoliosController.execute(mainState.getUsername());
+                    case "Portfolios" -> portfolioHubController.execute(mainState.getUsername());
                     case "News" -> newsController.execute(mainState.getUsername());
 
                 }

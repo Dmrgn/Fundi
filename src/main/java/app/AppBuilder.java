@@ -11,9 +11,7 @@ import javax.swing.WindowConstants;
 import data_access.DBPortfoliosDataAccessObject;
 import data_access.DBStockDataAccessObject;
 import data_access.DBTransactionDataAccessObject;
-import entity.CommonUserFactory;
 import entity.NavigationState;
-import entity.UserFactory;
 import data_access.DBUserDataAccessObject;
 import interface_adapter.PortfolioViewModelUpdater;
 import interface_adapter.ViewManagerModel;
@@ -49,14 +47,9 @@ import use_case.search.SearchDataAccessInterface;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchOutputBoundary;
 import data_access.APISearchDataAccessObject;
-import use_case.news.NewsInteractor;
-import interface_adapter.news.NewsPresenter;
 import interface_adapter.news.NewsViewModel;
-import interface_adapter.portfolios.*;
+import interface_adapter.portfolioHub.*;
 import use_case.login.LoginUserDataAccessInterface;
-import use_case.news.NewsInputBoundary;
-import use_case.news.NewsOutputBoundary;
-import use_case.recommend.RecommendTransactionDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 import view.*;
 
@@ -69,10 +62,9 @@ import view.*;
 public class AppBuilder {
         private final JPanel cardPanel = new JPanel();
         private final CardLayout cardLayout = new CardLayout();
-        private final UserFactory userFactory = new CommonUserFactory();
         private final ViewManagerModel viewManagerModel = new ViewManagerModel();
         private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-        private final LoginUserDataAccessInterface userDataAccessObject = new DBUserDataAccessObject(userFactory);
+        private final LoginUserDataAccessInterface userDataAccessObject = new DBUserDataAccessObject();
         private final DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
         private final DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
         private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
@@ -80,7 +72,7 @@ public class AppBuilder {
         private final MainViewModel mainViewModel = new MainViewModel();
         private final LoginViewModel loginViewModel = new LoginViewModel();
         private final SignupViewModel signupViewModel = new SignupViewModel();
-        private final PortfoliosViewModel portfoliosViewModel = new PortfoliosViewModel();
+        private final PortfolioHubViewModel portfoliosViewModel = new PortfolioHubViewModel();
         private final NewsViewModel newsViewModel = new NewsViewModel();
         private final CreateViewModel createViewModel = new CreateViewModel();
         private final PortfolioViewModel portfolioViewModel = new PortfolioViewModel();
@@ -107,7 +99,7 @@ public class AppBuilder {
                         signupViewModel,
                         loginViewModel,
                         (SignupUserDataAccessInterface) userDataAccessObject);
-        private final PortfoliosController portfoliosController = PortfoliosUseCaseFactory.create(
+        private final PortfolioHubController portfolioHubController = PortfolioHubUseCaseFactory.create(
                         viewManagerModel,
                         portfoliosViewModel,
                         createViewModel,
@@ -180,7 +172,7 @@ public class AppBuilder {
         private LeaderboardView leaderboardView;
         private LoginView loginView;
         private SignupView signupView;
-        private PortfoliosView portfoliosView;
+        private PortfolioHubView portfoliosView;
         private CreateView createView;
         private PortfolioView portfolioView;
         private NewsView newsView;
@@ -225,7 +217,7 @@ public class AppBuilder {
                 watchlistView = new WatchlistView(navigationController);
                 leaderboardView = new LeaderboardView(navigationController);
 
-                tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfoliosController, newsController,
+                tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfolioHubController, newsController,
                                 portfolioController, navigationController, searchController, searchViewModel,
                                 dashboardView, portfoliosView, newsView, watchlistView, leaderboardView);
                 cardPanel.add(tabbedMainView, tabbedMainView.getViewName());
@@ -250,9 +242,9 @@ public class AppBuilder {
          * @return this builder
          */
         public AppBuilder addPortfoliosView() {
-                portfoliosView = PortfoliosViewFactory.create(
+                portfoliosView = PortfolioHubViewFactory.create(
                                 portfoliosViewModel,
-                                portfoliosController,
+                                portfolioHubController,
                                 portfolioController,
                                 navigationController);
                 cardPanel.add(portfoliosView, portfoliosView.getViewName());

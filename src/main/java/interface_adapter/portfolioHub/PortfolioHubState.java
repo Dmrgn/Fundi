@@ -1,23 +1,23 @@
-package interface_adapter.portfolios;
+package interface_adapter.portfolioHub;
 
 import java.util.Map;
 
 /**
  * The State information representing the portfolios page user.
  */
-public class PortfoliosState {
+public class PortfolioHubState {
     private Map<String, String> portfolios;
     private String username;
     private String id;
 
-    public PortfoliosState(PortfoliosState copy) {
+    public PortfolioHubState(PortfolioHubState copy) {
         portfolios = copy.portfolios;
         username = copy.username;
         id = copy.id;
     }
 
     // Because of the previous copy constructor, the default constructor must be explicit.
-    public PortfoliosState() {
+    public PortfolioHubState() {
 
     }
 

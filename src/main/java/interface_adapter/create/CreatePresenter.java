@@ -1,14 +1,10 @@
 package interface_adapter.create;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.portfolios.PortfoliosState;
-import interface_adapter.portfolios.PortfoliosViewModel;
+import interface_adapter.portfolioHub.PortfolioHubState;
+import interface_adapter.portfolioHub.PortfolioHubViewModel;
 import use_case.create.CreateOutputBoundary;
 import use_case.create.CreateOutputData;
-import use_case.login.LoginOutputBoundary;
-import use_case.login.LoginOutputData;
 
 /**
  * The Presenter for the Create Use Case.
@@ -16,11 +12,11 @@ import use_case.login.LoginOutputData;
 public class CreatePresenter implements CreateOutputBoundary {
 
     private final CreateViewModel createViewModel;
-    private final PortfoliosViewModel portfoliosViewModel;
+    private final PortfolioHubViewModel portfoliosViewModel;
     private final ViewManagerModel viewManagerModel;
 
     public CreatePresenter(ViewManagerModel viewManagerModel,
-                          PortfoliosViewModel portfoliosViewModel,
+                          PortfolioHubViewModel portfoliosViewModel,
                           CreateViewModel createViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.portfoliosViewModel = portfoliosViewModel;
@@ -31,7 +27,7 @@ public class CreatePresenter implements CreateOutputBoundary {
     public void prepareSuccessView(CreateOutputData response) {
         // On success, switch to the logged in view.
 
-        final PortfoliosState portfoliosState = portfoliosViewModel.getState();
+        final PortfolioHubState portfoliosState = portfoliosViewModel.getState();
         portfoliosState.setUsername(response.getUsername());
         portfoliosState.setPortfolios(response.getPortfolios());
         this.portfoliosViewModel.setState(portfoliosState);

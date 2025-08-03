@@ -1,11 +1,11 @@
 package use_case.create;
 
-import use_case.portfolios.PortfoliosDataAccessInterface;
+import use_case.portfolioHub.PortfolioHubDataAccessInterface;
 
 /**
  * DAO for the Create Use Case.
  */
-public interface CreateDataAccessInterface extends PortfoliosDataAccessInterface {
+public interface CreateDataAccessInterface extends PortfolioHubDataAccessInterface {
 
     /**
      * Checks if the given portfolio exists for the user.

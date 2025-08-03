@@ -1,11 +1,7 @@
 package use_case.login;
 
 import data_access.DBUserDataAccessObject;
-import entity.CommonUser;
-import entity.CommonUserFactory;
 import entity.User;
-import entity.UserFactory;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -17,10 +13,10 @@ class LoginInteractorTest {
     @Test
     void successTest() throws SQLException {
         LoginInputData inputData = new LoginInputData("Paul", "password");
-        LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new CommonUserFactory());
+        LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject();
 
         // For the success test, we need to add Paul to the data access repository before we log in.
-        userRepository.save(new CommonUser("Paul", "password"));
+        userRepository.save(new User("Paul", "password"));
 
         // This creates a successPresenter that tests whether the test case is as we expect.
         LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
@@ -47,7 +43,7 @@ class LoginInteractorTest {
     @Test
     void failurePasswordMismatchTest() throws SQLException {
         LoginInputData inputData = new LoginInputData("Paul", "wrong");
-        LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new CommonUserFactory());
+        LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject();
 
         // For this failure test, we need to add Paul to the data access repository before we log in, and
         // the passwords should not match.
@@ -78,7 +74,7 @@ class LoginInteractorTest {
     @Test
     void failureUserDoesNotExistTest() throws SQLException {
         LoginInputData inputData = new LoginInputData("newPaul", "password");
-        LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject(new CommonUserFactory());
+        LoginUserDataAccessInterface userRepository = new DBUserDataAccessObject();
 
         // Add Paul to the repo so that when we check later they already exist
 

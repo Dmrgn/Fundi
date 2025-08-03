@@ -1,16 +1,16 @@
-package interface_adapter.portfolios;
+package interface_adapter.portfolioHub;
 
-import use_case.portfolios.*;
+import use_case.portfolioHub.*;
 
 
 /**
  * Controller for the Portfolios Use Case.
  */
-public class PortfoliosController {
+public class PortfolioHubController {
 
-    private final PortfoliosInputBoundary portfoliosUseCaseInteractor;
+    private final PortfolioHubInputBoundary portfoliosUseCaseInteractor;
 
-    public PortfoliosController(PortfoliosInputBoundary portfoliosUseCaseInteractor) {
+    public PortfolioHubController(PortfolioHubInputBoundary portfoliosUseCaseInteractor) {
         this.portfoliosUseCaseInteractor = portfoliosUseCaseInteractor;
     }
 
@@ -20,7 +20,7 @@ public class PortfoliosController {
      * @param username the current user
      */
     public void execute(String username) {
-        final PortfoliosInputData portfoliosInputData = new PortfoliosInputData(username);
+        final PortfolioHubInputData portfoliosInputData = new PortfolioHubInputData(username);
         portfoliosUseCaseInteractor.execute(portfoliosInputData);
     }
 

@@ -1,16 +1,16 @@
-package use_case.portfolios;
+package use_case.portfolioHub;
 
 
 /**
  * Input boundary for portfolios functionality
  */
-public interface PortfoliosInputBoundary {
+public interface PortfolioHubInputBoundary {
 
     /**
      * Executes the portfolio usecase.
      * @param portfoliosInputData the input data.
      */
-    void execute(PortfoliosInputData portfoliosInputData);
+    void execute(PortfolioHubInputData portfoliosInputData);
 
     void routeToCreate(String username);
 }

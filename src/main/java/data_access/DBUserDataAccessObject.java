@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import entity.User;
-import entity.UserFactory;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
@@ -17,7 +16,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
     private final Map<String, User> accounts = new HashMap<>();
     private final Map<String, String> nameToId = new HashMap<>();
 
-    public DBUserDataAccessObject(UserFactory userFactory) throws SQLException {
+    public DBUserDataAccessObject() throws SQLException {
         String query = """
                 SELECT * FROM users
                 """;
@@ -27,7 +26,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                 String id = rs.getString("id");
                 String username = rs.getString("username");
                 String password = rs.getString("password");
-                accounts.put(id, userFactory.create(username, password));
+                accounts.put(id, new User(username, password));
                 nameToId.put(username, id);
             }
         } catch (SQLException e) {

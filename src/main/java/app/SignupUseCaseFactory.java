@@ -1,6 +1,5 @@
 package app;
 
-import entity.CommonUserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;
@@ -30,8 +29,7 @@ public class SignupUseCaseFactory {
         );
         SignupInputBoundary signupInteractor = new SignupInteractor(
                 dataAccessObject,
-                signupPresenter,
-                new CommonUserFactory()
+                signupPresenter
         );
         return new SignupController(signupInteractor);
     }

@@ -1,29 +1,29 @@
-package interface_adapter.portfolios;
+package interface_adapter.portfolioHub;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create.CreateState;
 import interface_adapter.create.CreateViewModel;
-import use_case.portfolios.PortfoliosOutputBoundary;
-import use_case.portfolios.PortfoliosOutputData;
+import use_case.portfolioHub.PortfolioHubOutputBoundary;
+import use_case.portfolioHub.PortfolioHubOutputData;
 
 /**
  * The Presenter for the portfolios Use Case.
  */
-public class PortfoliosPresenter implements PortfoliosOutputBoundary {
+public class PortfolioHubPresenter implements PortfolioHubOutputBoundary {
 
     private final ViewManagerModel viewManagerModel;
-    private final PortfoliosViewModel portfoliosViewModel;
+    private final PortfolioHubViewModel portfoliosViewModel;
     private final CreateViewModel createViewModel;
 
-    public PortfoliosPresenter(ViewManagerModel viewManagerModel, PortfoliosViewModel portfoliosViewModel, CreateViewModel createViewModel)  {
+    public PortfolioHubPresenter(ViewManagerModel viewManagerModel, PortfolioHubViewModel portfoliosViewModel, CreateViewModel createViewModel)  {
         this.viewManagerModel = viewManagerModel;
         this.portfoliosViewModel = portfoliosViewModel;
         this.createViewModel = createViewModel;
     }
 
     @Override
-    public void prepareView(PortfoliosOutputData portfoliosOutputData) {
-        final PortfoliosState portfoliosState = portfoliosViewModel.getState();
+    public void prepareView(PortfolioHubOutputData portfoliosOutputData) {
+        final PortfolioHubState portfoliosState = portfoliosViewModel.getState();
         portfoliosState.setUsername(portfoliosOutputData.getUsername());
         portfoliosState.setPortfolios(portfoliosOutputData.getPortfolios());
 

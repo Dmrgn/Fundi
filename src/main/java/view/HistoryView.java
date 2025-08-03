@@ -13,14 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import interface_adapter.history.HistoryController;
 import interface_adapter.history.HistoryState;
 import interface_adapter.history.HistoryViewModel;
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolio.PortfolioState;
-import interface_adapter.portfolio.PortfolioViewModel;
-import interface_adapter.portfolios.PortfoliosController;
 import view.components.UIFactory;
-import interface_adapter.navigation.NavigationController;
 
 /**
  * The View for when the user is looking their history for a portfolio in the

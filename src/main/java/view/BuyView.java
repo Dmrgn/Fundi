@@ -1,28 +1,14 @@
 package view;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import interface_adapter.buy.BuyController;
 import interface_adapter.buy.BuyState;
 import interface_adapter.buy.BuyViewModel;
-import interface_adapter.create.CreateController;
-import interface_adapter.create.CreateState;
-import interface_adapter.create.CreateViewModel;
-import interface_adapter.login.LoginState;
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.portfolios.PortfoliosState;
-import interface_adapter.portfolios.PortfoliosViewModel;
 import interface_adapter.navigation.NavigationController;
 import view.components.UIFactory;
 

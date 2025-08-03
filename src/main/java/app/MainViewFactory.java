@@ -2,7 +2,7 @@ package app;
 
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
-import interface_adapter.portfolios.PortfoliosController;
+import interface_adapter.portfolioHub.PortfolioHubController;
 import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
@@ -16,7 +16,7 @@ public class MainViewFactory {
 
     public static MainView create(
             MainViewModel mainViewModel,
-            PortfoliosController portfoliosController,
+            PortfolioHubController portfolioHubController,
             NewsController newsController,
             NavigationController navigationController,
             SearchController searchController,
@@ -24,7 +24,7 @@ public class MainViewFactory {
     ) {
         return new MainView(
                 mainViewModel,
-                portfoliosController,
+                portfolioHubController,
                 newsController,
                 navigationController,
                 searchController,

@@ -10,6 +10,9 @@ import use_case.history.HistoryDataAccessInterface;
 import use_case.history.HistoryInputBoundary;
 import use_case.history.HistoryOutputBoundary;
 
+/**
+ * Factory for the History Use Case
+ */
 public class HistoryUseCaseFactory {
     private HistoryUseCaseFactory() {
 

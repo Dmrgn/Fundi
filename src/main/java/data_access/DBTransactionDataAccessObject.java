@@ -14,7 +14,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * DAO for user data implemented using a Database to persist the data.
+ * DAO for transaction data implemented using a Database to persist the data.
  */
 public class DBTransactionDataAccessObject implements AnalysisTransactionDataAccessInterface, BuyTransactionDataAccessInterface,
         SellTransactionDataAccessInterface, HistoryDataAccessInterface, PortfolioTransactionDataAccessInterface,
@@ -22,6 +22,10 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, List<Transaction>> transactions = new HashMap<>();
 
+    /**
+     * Load the transaction data into memory
+     * @throws SQLException If SQL connection fails
+     */
     public DBTransactionDataAccessObject() throws SQLException {
         String query = """
                 SELECT t.portfolio_id as portfolio_id,
@@ -57,6 +61,11 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
 
     }
 
+    /**
+     * The past transactions for the given portfolio
+     * @param portfolioId the id to search at
+     * @return A list of previous transactions
+     */
     @Override
     public List<Transaction> pastTransactions(String portfolioId) {
         if (!transactions.containsKey(portfolioId)) {
@@ -65,6 +74,12 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
         return transactions.get(portfolioId);
     }
 
+    /**
+     * The amount of a given ticker in the portfolio
+     * @param portfolioId The portfolio to look at
+     * @param ticker The ticker to look for
+     * @return The amount of the given ticker in the portfolio
+     */
     @Override
     public int amountOfTicker(String portfolioId, String ticker) {
         int total = 0;
@@ -82,6 +97,10 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
         return total;
     }
 
+    /**
+     * Save a transaction into the DAO
+     * @param transaction The transaction to save
+     */
     @Override
     public void save(Transaction transaction) {
         saveToDB(transaction);
@@ -109,6 +128,11 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
         }
     }
 
+    /**
+     * Get all of the tickers in the portfolio
+     * @param portfolioId The portfolio to look at
+     * @return A set of tickers in the portfolio
+     */
     @Override
     public Set<String> getPortfolioTickers(String portfolioId) {
         if (!transactions.containsKey(portfolioId)) {
@@ -120,6 +144,13 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
                 .collect(Collectors.toSet());
     }
 
+    /**
+     * Remove a transaction from the DAO
+     * (For testing only)
+     * @param portfolioId The portfolio Id
+     * @param ticker The ticker
+     * @param amount The amount
+     */
     public void remove(String portfolioId, String ticker, int amount) {
         if (transactions.containsKey(portfolioId)) {
             List<Transaction> transactionList = transactions.get(portfolioId);
@@ -144,6 +175,14 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
         }
     }
 
+    /**
+     * Whether or not the transaction specified exists
+     * (For testing only)
+     * @param portfolioId The portfolio Id
+     * @param ticker The ticker to look for
+     * @param amount The amount of the ticker
+     * @return Whether or not the transaction exists
+     */
     public boolean hasTransaction(String portfolioId, String ticker, int amount) {
         if (transactions.containsKey(portfolioId)) {
             for (Transaction transaction : transactions.get(portfolioId)) {

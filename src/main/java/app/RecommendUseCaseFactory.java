@@ -7,6 +7,9 @@ import interface_adapter.recommend.RecommendPresenter;
 import interface_adapter.recommend.RecommendViewModel;
 import use_case.recommend.RecommendStockDataAccessInterface;
 
+/**
+ * Factory for the Recommend Use Case
+ */
 public class RecommendUseCaseFactory {
     private RecommendUseCaseFactory() {
 

@@ -9,6 +9,9 @@ import use_case.news.NewsInteractor;
 import use_case.news.NewsOutputBoundary;
 import use_case.portfolio.PortfolioTransactionDataAccessInterface;
 
+/**
+ * Factory for the News Use Case
+ */
 public class NewsUseCaseFactory {
     private NewsUseCaseFactory() {
 

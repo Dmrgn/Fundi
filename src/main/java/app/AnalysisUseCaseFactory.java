@@ -12,6 +12,9 @@ import use_case.analysis.AnalysisOutputBoundary;
 import use_case.analysis.AnalysisStockDataAccessInterface;
 import use_case.analysis.AnalysisTransactionDataAccessInterface;
 
+/**
+ * Factory for the Analysis Use case
+ */
 public class AnalysisUseCaseFactory {
     private AnalysisUseCaseFactory() {
 

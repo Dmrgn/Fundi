@@ -9,7 +9,7 @@ import java.sql.SQLException;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-public class AnalysisInteractorTest {
+class AnalysisInteractorTest {
     @BeforeAll
     static void setUp() {
         // Assuming portfolio hub test was already run

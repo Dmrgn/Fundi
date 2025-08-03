@@ -12,6 +12,9 @@ import use_case.buy.BuyOutputBoundary;
 import use_case.buy.BuyStockDataAccessInterface;
 import use_case.buy.BuyTransactionDataAccessInterface;
 
+/**
+ * Factory for the Buy Use Case
+ */
 public class BuyUseCaseFactory {
     private BuyUseCaseFactory() {
 

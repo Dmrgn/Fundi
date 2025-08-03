@@ -2,11 +2,19 @@ package entity;
 
 import java.util.*;
 
+/**
+ * A class containing helper functions for financial calculations
+ */
 public class FinancialCalculator {
     private FinancialCalculator() {
 
     }
 
+    /**
+     * Return a mapping from each ticker in the transaction list to its corresponding total amount
+     * @param transactions The list of transactions to parse
+     * @return The mapping from ticker to amount
+     */
     public static Map<String, Integer> getTickerAmounts(List<Transaction> transactions) {
         Map<String, Integer> tickerAmounts = new HashMap<>();
         for (Transaction transaction : transactions) {
@@ -28,15 +36,31 @@ public class FinancialCalculator {
         return tickerAmounts;
     }
 
+    /**
+     * The total amount of tickers in the ticker mapping
+     * @param tickerAmounts A mapping from ticker to amount
+     * @return The total number of tickers
+     */
     public static int getTotalAmount(Map<String, Integer> tickerAmounts) {
         return tickerAmounts.keySet().stream().mapToInt(tickerAmounts::get).sum();
     }
 
+    /**
+     * Compute what percentage the given amount is of the total amount
+     * @param totalAmount The total
+     * @param amount The part to compute the percentage for
+     * @return The percentage
+     */
     public static double computePercentage(int totalAmount, int amount) {
         return (double) amount / totalAmount * 100;
     }
 
 
+    /**
+     * Compute the volatility of a price time series for a single ticker
+     * @param prices The price time series
+     * @return The volatility
+     */
     public static double computeVolatility(List<Double> prices) {
         List<Double> returns = computeReturns(prices);
         double mean = computeMean(returns);
@@ -47,6 +71,11 @@ public class FinancialCalculator {
         return vol / returns.size();
     }
 
+    /**
+     * Compute the return timeseries of price time series
+     * @param prices The price time series
+     * @return The return time series
+     */
     public static List<Double> computeReturns(List<Double> prices) {
         List<Double> returns = new ArrayList<>();
         for (int i = 1; i < prices.size(); i++) {
@@ -57,6 +86,11 @@ public class FinancialCalculator {
         return returns;
     }
 
+    /**
+     * Compute the mean of a list
+     * @param values The list
+     * @return The mean
+     */
     public static double computeMean(List<Double> values) {
         double sum = 0;
         for (Double value : values) {
@@ -65,6 +99,11 @@ public class FinancialCalculator {
         return sum / values.size();
     }
 
+    /**
+     * Compute the return of a time series of stockdata
+     * @param stockData The stock data time series
+     * @return The total return
+     */
     public static double computeReturn(List<StockData> stockData) {
         // Enforce sorting
         List<StockData> sortedStockData = stockData.stream().
@@ -74,6 +113,11 @@ public class FinancialCalculator {
         return (latestPrice - earliestPrice) / earliestPrice * 100;
     }
 
+    /**
+     * Compute the Sharpe Ratio of a price time series
+     * @param prices The price time series
+     * @return The Sharpe Ratio of the time series
+     */
     public static double sharpeRatio(List<Double> prices) {
         List<Double> returns = FinancialCalculator.computeReturns(prices);
         double avgReturn = computeMean(returns);

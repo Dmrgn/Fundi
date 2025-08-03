@@ -13,6 +13,9 @@ import use_case.portfolio.PortfolioInputBoundary;
 import use_case.portfolio.PortfolioOutputBoundary;
 import interface_adapter.navigation.NavigationController;
 
+/**
+ * Factory for the Portfolio Use Case
+ */
 public class PortfolioUseCaseFactory {
         private PortfolioUseCaseFactory() {
 

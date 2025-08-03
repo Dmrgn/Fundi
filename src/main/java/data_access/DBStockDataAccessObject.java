@@ -14,21 +14,21 @@ import java.time.LocalDate;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * DAO for stock data implemented using a Database to persist data
+ */
 public class DBStockDataAccessObject implements RecommendStockDataAccessInterface, BuyStockDataAccessInterface,
         SellStockDataAccessInterface, AnalysisStockDataAccessInterface, PortfolioStockDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, List<StockData>> stocks = new HashMap<>();
-//    private static final String[] TICKERS = {
-//            "AAPL", "MSFT", "AMZN", "NVDA", "GOOGL", "META", "BRK-B", "TSLA", "LLY", "UNH",
-//            "JPM", "V", "JNJ", "PG", "HD", "MA", "XOM", "MRK", "AVGO", "COST",
-//            "ABBV", "WMT", "ADBE", "PEP", "CVX", "KO", "CRM", "NFLX", "ACN", "ABT",
-//            "MCD", "AMD", "TMO", "INTC", "LIN", "DHR", "ORCL", "TXN", "NEE", "AMGN",
-//            "PFE", "QCOM", "NKE", "UPS", "MS", "MDT", "PM", "BA", "HON", "UNP"
-//    };
-    private static final Set<String> TICKERS = Set.of(new String[]{"AAPL", "MSFT", "AMZN", "NVDA", "GOOGL", "META",
-        "BRK-B", "TSLA", "LLY", "UNH", "JPM", "V"});
+    private static final Set<String> TICKERS = Set.of("AAPL", "MSFT", "AMZN", "NVDA", "GOOGL", "META",
+            "BRK-B", "TSLA", "LLY", "UNH", "JPM", "V");
     private static final int NUM_DAYS = 10;
 
+    /**
+     * Load the stock data into memory from SQL database
+     * @throws SQLException If SQL connection fails
+     */
     public DBStockDataAccessObject() throws SQLException {
         LocalDate today = LocalDate.now();
         List<LocalDate> days = mostRecentNTradingDays(today);
@@ -53,24 +53,43 @@ public class DBStockDataAccessObject implements RecommendStockDataAccessInterfac
         }
     }
 
+    /**
+     * Return the current price of a given ticker
+     * @param ticker The ticker to get the price of
+     * @return The price of the ticker on the most recent trading day
+     */
     @Override
     public double getPrice(String ticker) {
         return stocks.get(ticker).get(0).getPrice();
     }
 
+    /**
+     * Check whether the given ticker is tracked in this DAO
+     * @param ticker The ticker name
+     * @return True or false if the ticker is valid
+     */
     @Override
     public boolean hasTicker(String ticker) {
         return TICKERS.contains(ticker);
     }
 
+    /**
+     * Get the previous data for a given ticker
+     * @param ticker The ticker to get the previous data for
+     * @return The stock data for the previous 10 trading days for the ticker
+     */
     @Override
     public List<StockData> pastStockData(String ticker) {
         return stocks.get(ticker);
     }
 
+    /**
+     * Get the tickers supported by the DAO
+     * @return The tickers as a list
+     */
     @Override
-    public List<String> getAvailableTickers() {
-        return TICKERS.stream().toList();
+    public Set<String> getAvailableTickers() {
+        return TICKERS;
     }
 
     private List<LocalDate> mostRecentNTradingDays(LocalDate today) {
@@ -127,10 +146,5 @@ public class DBStockDataAccessObject implements RecommendStockDataAccessInterfac
                 System.out.println(e.getMessage());
             }
         }
-    }
-
-    @Override
-    public List<StockData> getPastPrices(String ticker) {
-        return stocks.get(ticker);
     }
 }

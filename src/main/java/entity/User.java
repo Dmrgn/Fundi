@@ -1,7 +1,7 @@
 package entity;
 
 /**
- * A simple implementation of the User interface.
+ * An entity representing a User.
  */
 public class User {
     private final String name;

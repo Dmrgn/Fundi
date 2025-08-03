@@ -8,13 +8,17 @@ import use_case.create.CreateDataAccessInterface;
 import use_case.portfolioHub.PortfolioHubDataAccessInterface;
 
 /**
- * DAO for user data implemented using a Database to persist the data.
+ * DAO for portfolios data implemented using a Database to persist the data.
  */
 public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInterface, CreateDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, Map<String, String>> portfolios = new HashMap<>();
     private final Map<String, String> userToId = new HashMap<>();
 
+    /**
+     * Load the portfolio data into memory from SQL database
+     * @throws SQLException If database connection fails
+     */
     public DBPortfoliosDataAccessObject() throws SQLException {
         String query = """
                 SELECT p.id, p.name, u.id, u.username FROM portfolios p
@@ -44,7 +48,6 @@ public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInter
 
     /**
      * Get the portfolio data
-     *
      * @param username the name to search at
      * @return A list of portfolio names
      */
@@ -56,7 +59,6 @@ public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInter
         return portfolios.get(userToId.get(username));
     }
 
-    // Way too big --> TODO REFACTOR!!
     private String saveDB(String portfolioName, String username) {
         String query = """ 
                 SELECT id FROM users WHERE username = ?
@@ -101,7 +103,6 @@ public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInter
 
     /**
      * Update the portfolio map
-     *
      * @param portfolioName the Name
      */
     @Override
@@ -114,6 +115,12 @@ public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInter
         portfolios.get(userId).put(portfolioName, id);
     }
 
+    /**
+     *
+     * @param portfolioName the portfolioName to look for
+     * @param username the users name
+     * @return
+     */
     @Override
     public boolean existsByName(String portfolioName, String username) {
         String userId = userToId.get(username);
@@ -123,11 +130,22 @@ public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInter
         return userPortfolios.containsKey(portfolioName);
     }
 
+    /**
+     * Get the Id of a user
+     * @param username The username
+     * @return The id of the user
+     */
     @Override
     public String getId(String username) {
         return userToId.get(username);
     }
 
+    /**
+     * Delete the portfolio for the given user from the DAO
+     * (For Testing Only)
+     * @param portfolioName The portfolio name to delete
+     * @param username The username to delete the portfolio at
+     */
     public void remove(String portfolioName, String username) {
         portfolios.get(userToId.get(username)).remove(portfolioName);
         String userId = userToId.get(username);

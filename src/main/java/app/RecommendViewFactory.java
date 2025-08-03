@@ -5,6 +5,9 @@ import interface_adapter.recommend.RecommendViewModel;
 import interface_adapter.ViewManagerModel;
 import view.RecommendView;
 
+/**
+ * Factory for the Recommend View
+ */
 public class RecommendViewFactory {
     private RecommendViewFactory() {
 

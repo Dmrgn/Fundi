@@ -4,6 +4,9 @@ import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupViewModel;
 import view.SignupView;
 
+/**
+ * Factory for the Signup View
+ */
 public class SignupViewFactory {
     private SignupViewFactory() {
 

@@ -1,4 +1,4 @@
-package app; // START USING BRANCHES.........!!!!!!!!!!!!
+package app;
 
 import javax.swing.JFrame;
 
@@ -37,7 +37,6 @@ public class Main {
                 .build();
         application.pack();
         application.setSize(900, 600);
-        // application.setExtendedState(JFrame.MAXIMIZED_BOTH);
         application.setVisible(true);
     }
 }

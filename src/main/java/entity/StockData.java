@@ -1,8 +1,10 @@
 package entity;
 
 import java.time.LocalDate;
-import java.util.Map;
 
+/**
+ * An entity representing data for a given stock
+ */
 public class StockData {
     String ticker;
     LocalDate timestamp;

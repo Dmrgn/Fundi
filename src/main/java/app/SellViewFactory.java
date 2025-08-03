@@ -5,6 +5,9 @@ import interface_adapter.sell.SellViewModel;
 import view.SellView;
 import interface_adapter.navigation.NavigationController;
 
+/**
+ * Factory for the Sell View
+ */
 public class SellViewFactory {
     private SellViewFactory() {
 

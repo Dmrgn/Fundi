@@ -8,6 +8,9 @@ import interface_adapter.recommend.RecommendController;
 import interface_adapter.ViewManagerModel;
 import view.PortfolioView;
 
+/**
+ * Factory for the Portfolio View
+ */
 public class PortfolioViewFactory {
     private PortfolioViewFactory() {
 

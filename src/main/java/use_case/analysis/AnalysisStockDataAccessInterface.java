@@ -5,5 +5,5 @@ import entity.StockData;
 import java.util.List;
 
 public interface AnalysisStockDataAccessInterface {
-    List<StockData> getPastPrices(String ticker);
+    List<StockData> pastStockData(String ticker);
 }

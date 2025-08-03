@@ -11,6 +11,9 @@ import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
 
+/**
+ * Factory for the Login Use Case
+ */
 public class LoginUseCaseFactory {
 
     /** Prevent instantiation. */

@@ -14,6 +14,9 @@ import view.NewsView;
 import view.WatchlistView;
 import view.LeaderboardView;
 
+/**
+ * Factory for the Tabbed Main View
+ */
 public class TabbedMainViewFactory {
     private TabbedMainViewFactory() {
 

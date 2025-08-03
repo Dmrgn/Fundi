@@ -10,6 +10,9 @@ import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupUserDataAccessInterface;
 
+/**
+ * Factory for the Signup Use Case
+ */
 public class SignupUseCaseFactory {
 
     /** Prevent instantiation. */

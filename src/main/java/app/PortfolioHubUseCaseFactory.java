@@ -10,6 +10,9 @@ import use_case.portfolioHub.PortfolioHubDataAccessInterface;
 import use_case.portfolioHub.PortfolioHubInputBoundary;
 import use_case.portfolioHub.PortfolioHubOutputBoundary;
 
+/**
+ * Factory for the Portfolio Hub Use Case
+ */
 public class PortfolioHubUseCaseFactory {
     private PortfolioHubUseCaseFactory() {
 

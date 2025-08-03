@@ -16,6 +16,10 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
     private final Map<String, User> accounts = new HashMap<>();
     private final Map<String, String> nameToId = new HashMap<>();
 
+    /**
+     * Load the user data into memory
+     * @throws SQLException If the SQL connection fails
+     */
     public DBUserDataAccessObject() throws SQLException {
         String query = """
                 SELECT * FROM users
@@ -54,6 +58,10 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
         return id;
     }
 
+    /**
+     * Save the user into the DAO
+     * @param user the user to save
+     */
     @Override
     public void save(User user) {
         String id = this.save(user.getName(), user.getPassword());
@@ -61,6 +69,11 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
         nameToId.put(user.getName(), id);
     }
 
+    /**
+     * Get the user corresponding with the username
+     * @param username the username to look up
+     * @return The user object
+     */
     @Override
     public User get(String username) {
         if (!nameToId.containsKey(username)) {
@@ -73,16 +86,31 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
         return accounts.get(id);
     }
 
+    /**
+     * Check if a user exists in the database
+     * @param username the username to look for
+     * @return True or false based on whether the username exists
+     */
     @Override
     public boolean existsByName(String username) {
         return nameToId.containsKey(username);
     }
 
+    /**
+     * Get the id of the user
+     * @param username The username
+     * @return The id of the username
+     */
     @Override
     public String getId(String username) {
         return nameToId.get(username);
     }
 
+    /**
+     * Remove the user from the DAO
+     * (For testing only)
+     * @param username The username
+     */
     public void remove(String username) {
         accounts.remove(nameToId.get(username));
         nameToId.remove(username);

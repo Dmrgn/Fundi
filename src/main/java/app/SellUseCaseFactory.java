@@ -12,6 +12,9 @@ import use_case.sell.SellOutputBoundary;
 import use_case.sell.SellStockDataAccessInterface;
 import use_case.sell.SellTransactionDataAccessInterface;
 
+/**
+ * Factory for the Sell Use Case
+ */
 public class SellUseCaseFactory {
     private SellUseCaseFactory() {
 

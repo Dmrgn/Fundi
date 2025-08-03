@@ -5,6 +5,9 @@ import interface_adapter.analysis.AnalysisViewModel;
 import interface_adapter.navigation.NavigationController;
 import view.AnalysisView;
 
+/**
+ * Factory for the Analysis View
+ */
 public class AnalysisViewFactory {
     private AnalysisViewFactory() {
 

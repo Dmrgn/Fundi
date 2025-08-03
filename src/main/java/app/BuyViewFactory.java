@@ -5,6 +5,9 @@ import interface_adapter.buy.BuyViewModel;
 import interface_adapter.navigation.NavigationController;
 import view.BuyView;
 
+/**
+ * Factory for the Buy View
+ */
 public class BuyViewFactory {
     private BuyViewFactory() {
 

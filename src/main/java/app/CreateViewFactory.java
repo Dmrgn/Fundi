@@ -5,6 +5,9 @@ import interface_adapter.create.CreateViewModel;
 import interface_adapter.ViewManagerModel;
 import view.CreateView;
 
+/**
+ * Factory for the Create View
+ */
 public class CreateViewFactory {
     private CreateViewFactory() {
 

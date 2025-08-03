@@ -9,14 +9,23 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+/**
+ * A client class for the Alpha Vantage Stock API
+ */
 public class AlphaVantageClient {
     private final OkHttpClient client = new OkHttpClient();
     private static final String API_KEY = "RPMO4OR4VEE0XJ8V";
 
+    /**
+     * Return a list of stock data for a given ticker for a given number of days
+     * @param ticker The ticker to get the data for
+     * @param numDays The number of days of stock price data needed
+     * @return A List of stock data objects for the previous days
+     * @throws IOException IOException is thrown if OKHTTP request fails
+     */
     public List<StockData> fetch(String ticker, int numDays) throws IOException {
         String url = "https://www.alphavantage.co/query?function=TIME_SERIES_DAILY"
                      + "&symbol=" + ticker + "&outputsize=compact&apikey=" + API_KEY;

@@ -3,7 +3,7 @@ package entity;
 import java.time.LocalDate;
 
 /**
- * The representation of a stock.
+ * An entity representing a transaction.
  */
 public class Transaction {
     private final String portfolioId;

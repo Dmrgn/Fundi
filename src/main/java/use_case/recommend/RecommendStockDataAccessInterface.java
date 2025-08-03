@@ -8,5 +8,5 @@ import java.util.Set;
 
 public interface RecommendStockDataAccessInterface {
     List<StockData> pastStockData(String ticker);
-    List<String> getAvailableTickers();
+    Set<String> getAvailableTickers();
 }

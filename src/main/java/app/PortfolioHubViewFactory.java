@@ -6,6 +6,9 @@ import interface_adapter.portfolioHub.PortfolioHubViewModel;
 import interface_adapter.navigation.NavigationController;
 import view.PortfolioHubView;
 
+/**
+ * Factory for the Portfolio Hub View
+ */
 public class PortfolioHubViewFactory {
     private PortfolioHubViewFactory() {
 

@@ -10,6 +10,9 @@ import use_case.create.CreateDataAccessInterface;
 import use_case.create.CreateInputBoundary;
 import use_case.create.CreateOutputBoundary;
 
+/**
+ * Factory for the Create Use Case
+ */
 public class CreateUseCaseFactory {
     private CreateUseCaseFactory() {
 

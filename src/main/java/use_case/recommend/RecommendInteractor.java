@@ -22,7 +22,7 @@ public class RecommendInteractor implements RecommendInputBoundary {
 
     @Override
     public void execute(RecommendInputData recommendInputData) {
-        List<String> tickers = stockDataAccessInterface.getAvailableTickers();
+        Set<String> tickers = stockDataAccessInterface.getAvailableTickers();
         Set<String> portfolioTickers = transactionDataAccessInterface.getPortfolioTickers(recommendInputData.getPortfolioId());
         Set<String> nonPortfolioTickers = tickers.stream().filter(p -> !portfolioTickers.contains(p)).collect(Collectors.toSet());
         Map<String, Double> sharpeRatios = new LinkedHashMap<>();

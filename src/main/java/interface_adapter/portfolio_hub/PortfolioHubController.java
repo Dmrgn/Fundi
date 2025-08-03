@@ -1,10 +1,10 @@
-package interface_adapter.portfolioHub;
+package interface_adapter.portfolio_hub;
 
-import use_case.portfolioHub.*;
+import use_case.portfolio_hub.*;
 
 
 /**
- * Controller for the Portfolios Use Case.
+ * Controller for the Portfolio Hub Use Case.
  */
 public class PortfolioHubController {
 
@@ -15,8 +15,7 @@ public class PortfolioHubController {
     }
 
     /**
-     * Executes the Main Use Case.
-     *
+     * Executes the Portfolio Hub Use Case.
      * @param username the current user
      */
     public void execute(String username) {
@@ -24,6 +23,10 @@ public class PortfolioHubController {
         portfoliosUseCaseInteractor.execute(portfoliosInputData);
     }
 
+    /**
+     * Switch to the Create View
+     * @param username The username to update the state of the Create View Model
+     */
     public void routeToCreate(String username) {
         portfoliosUseCaseInteractor.routeToCreate(username);
     }

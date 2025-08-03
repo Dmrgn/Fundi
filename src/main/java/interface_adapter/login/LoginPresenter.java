@@ -2,11 +2,13 @@ package interface_adapter.login;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.main.MainViewModel;
-import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupViewModel;
 import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
 
+/**
+ * Presenter for the login use case
+ */
 public class LoginPresenter implements LoginOutputBoundary {
 
     private final LoginViewModel loginViewModel;
@@ -24,6 +26,10 @@ public class LoginPresenter implements LoginOutputBoundary {
         this.signUpViewModel = signUpViewModel;
     }
 
+    /**
+     * Prepare the success view
+     * @param response the output data
+     */
     public void prepareSuccessView(LoginOutputData response) {
         // On success, switch to the tabbed main view.
         mainViewModel.getState().setUsername(response.getUsername());
@@ -33,12 +39,19 @@ public class LoginPresenter implements LoginOutputBoundary {
         viewManagerModel.firePropertyChanged();
     }
 
+    /**
+     * Prepare the fail view
+     * @param error the explanation of the failure
+     */
     public void prepareFailView(String error) {
         LoginState loginState = loginViewModel.getState();
         loginState.setUsernameError(error);
         loginViewModel.firePropertyChanged();
     }
 
+    /**
+     * Switch to the signup view
+     */
     @Override
     public void switchToSignupView() {
         viewManagerModel.setState(signUpViewModel.getViewName());

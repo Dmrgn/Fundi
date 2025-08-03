@@ -10,6 +10,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * The View for the Recommend Use Case
+ */
 public class RecommendView extends BaseView {
     private final RecommendViewModel recommendViewModel;
     private final RecommendController recommendController;

@@ -1,5 +1,8 @@
 package use_case.sell;
 
+/**
+ * Output data for the Sell Use Case
+ */
 public class SellOutputData {
     String ticker;
     double price;

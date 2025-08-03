@@ -15,7 +15,7 @@ public class BuyController {
     }
 
     /**
-     * Executes the buy Use Case.
+     * Executes the Buy Use Case.
      * @param portfolioId the portfolio id
      * @param ticker the stock ticker
      * @param amount the amount of stock to buy

@@ -1,7 +1,7 @@
-package use_case.portfolioHub;
+package use_case.portfolio_hub;
 
 /**
- * The Input Data for the Portfolios Use Case.
+ * The Input Data for the Portfolio Hub Use Case.
  */
 public class PortfolioHubInputData {
 

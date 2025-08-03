@@ -6,10 +6,10 @@ import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupViewModel;
-import use_case.UserDataAccessInterface;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
+import use_case.login.LoginUserDataAccessInterface;
 
 /**
  * Factory for the Login Use Case
@@ -25,7 +25,7 @@ public class LoginUseCaseFactory {
             MainViewModel  mainViewModel,
             LoginViewModel loginViewModel,
             SignupViewModel signupViewModel,
-            UserDataAccessInterface dataAccessObject
+            LoginUserDataAccessInterface dataAccessObject
     ) {
         LoginOutputBoundary loginPresenter = new LoginPresenter(
                 viewManagerModel,

@@ -48,7 +48,7 @@ import use_case.search.SearchInputBoundary;
 import use_case.search.SearchOutputBoundary;
 import data_access.APISearchDataAccessObject;
 import interface_adapter.news.NewsViewModel;
-import interface_adapter.portfolioHub.*;
+import interface_adapter.portfolio_hub.*;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 import view.*;
@@ -311,7 +311,6 @@ public class AppBuilder {
         public AppBuilder addHistoryView() {
                 historyView = HistoryViewFactory.create(
                                 historyViewModel,
-                                historyController,
                                 navigationController);
                 cardPanel.add(historyView, historyView.getViewName());
                 return this;
@@ -320,7 +319,6 @@ public class AppBuilder {
         public AppBuilder addAnalysisView() {
                 analysisView = AnalysisViewFactory.create(
                                 analysisViewModel,
-                                analysisController,
                                 navigationController);
                 cardPanel.add(analysisView, analysisView.getViewName());
                 return this;

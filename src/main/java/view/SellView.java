@@ -13,12 +13,11 @@ import interface_adapter.sell.SellViewModel;
 import view.components.UIFactory;
 
 /**
- * The View for when the user is trying to create a portfolio.
+ * The View for the Sell Use Case
  */
 public class SellView extends BaseView implements PropertyChangeListener {
 
     private final SellViewModel sellViewModel;
-    private final JLabel sellError = new JLabel();
     private final SellController sellController;
     private final NavigationController navigationController;
 
@@ -36,7 +35,7 @@ public class SellView extends BaseView implements PropertyChangeListener {
 
         JPanel titlePanel = UIFactory.createTitlePanel("Sell Stock");
         contentPanel.add(titlePanel, BorderLayout.NORTH);
-        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()), BorderLayout.NORTH);
+        contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()), BorderLayout.NORTH);
 
         JTextField tickerField = UIFactory.createTextField();
         JPanel tickerPanel = UIFactory.createFormPanel("Ticker", tickerField);

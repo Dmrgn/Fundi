@@ -3,6 +3,9 @@ package interface_adapter.recommend;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * The state for the Recommend View Model
+ */
 public class RecommendState {
     private Map<String, Double> haveRecs;
     private Map<String, Double> notHaveRecs;

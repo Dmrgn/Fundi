@@ -1,8 +1,8 @@
 package app;
 
 import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolioHub.PortfolioHubController;
-import interface_adapter.portfolioHub.PortfolioHubViewModel;
+import interface_adapter.portfolio_hub.PortfolioHubController;
+import interface_adapter.portfolio_hub.PortfolioHubViewModel;
 import interface_adapter.navigation.NavigationController;
 import view.PortfolioHubView;
 

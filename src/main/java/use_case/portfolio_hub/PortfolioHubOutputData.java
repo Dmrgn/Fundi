@@ -1,9 +1,9 @@
-package use_case.portfolioHub;
+package use_case.portfolio_hub;
 
 import java.util.Map;
 
 /**
- * Output Data for the Portfolios Use Case.
+ * Output Data for the Portfolio Hub Use Case.
  */
 public class PortfolioHubOutputData {
 

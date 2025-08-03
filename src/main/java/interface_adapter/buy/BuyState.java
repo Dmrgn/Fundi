@@ -1,5 +1,8 @@
 package interface_adapter.buy;
 
+/**
+ * The state for the Buy View Model
+ */
 public class BuyState {
     private String portfolioId = "";
     private String buyError;

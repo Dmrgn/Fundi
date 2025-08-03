@@ -13,6 +13,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+/**
+ * The View for the Portfolio Use Case
+ */
 public class PortfolioView extends BaseView {
     private final PortfolioViewModel portfolioViewModel;
     private final PortfolioController portfolioController;

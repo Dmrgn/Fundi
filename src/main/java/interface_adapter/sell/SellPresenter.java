@@ -2,12 +2,13 @@ package interface_adapter.sell;
 
 import interface_adapter.PortfolioViewModelUpdater;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
 import use_case.sell.SellOutputBoundary;
 import use_case.sell.SellOutputData;
 
+/**
+ * The Presenter for the Sell Use Case
+ */
 public class SellPresenter implements SellOutputBoundary {
     private final ViewManagerModel viewManagerModel;
     private final PortfolioViewModel portfolioViewModel;

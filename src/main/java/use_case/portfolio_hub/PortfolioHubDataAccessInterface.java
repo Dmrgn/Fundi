@@ -1,9 +1,9 @@
-package use_case.portfolioHub;
+package use_case.portfolio_hub;
 
 import java.util.Map;
 
 /**
- * DAO for the main use ase.
+ * DAO for the Portfolio Hub Use Case.
  */
 public interface PortfolioHubDataAccessInterface {
 
@@ -20,11 +20,4 @@ public interface PortfolioHubDataAccessInterface {
      * @param username the username
      */
     void save(String portfolioName, String username);
-
-    /**
-     * Returns the id of the given username
-     * @param username The username
-     * @return The id of the username
-     */
-    String getId(String username);
 }

@@ -2,13 +2,13 @@ package interface_adapter.buy;
 
 import interface_adapter.PortfolioViewModelUpdater;
 import interface_adapter.ViewManagerModel;
-import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
 import use_case.buy.BuyOutputBoundary;
 import use_case.buy.BuyOutputData;
-import view.PortfolioView;
 
+/**
+ * Presenter for the Buy Use Case
+ */
 public class BuyPresenter implements BuyOutputBoundary {
 
     private final ViewManagerModel viewManagerModel;
@@ -25,7 +25,6 @@ public class BuyPresenter implements BuyOutputBoundary {
 
     /**
      * Prepares the success view for the Buy Use Case.
-     *
      * @param outputData the output data
      */
     @Override
@@ -38,7 +37,6 @@ public class BuyPresenter implements BuyOutputBoundary {
 
     /**
      * Prepares the failure view for the Buy Use Case.
-     *
      * @param errorMessage the explanation of the failure
      */
     @Override

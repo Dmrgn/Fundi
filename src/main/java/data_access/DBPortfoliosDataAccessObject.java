@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import use_case.create.CreateDataAccessInterface;
-import use_case.portfolioHub.PortfolioHubDataAccessInterface;
+import use_case.portfolio_hub.PortfolioHubDataAccessInterface;
 
 /**
  * DAO for portfolios data implemented using a Database to persist the data.
@@ -128,16 +128,6 @@ public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInter
 
         Map<String, String> userPortfolios = portfolios.get(userId);
         return userPortfolios.containsKey(portfolioName);
-    }
-
-    /**
-     * Get the Id of a user
-     * @param username The username
-     * @return The id of the user
-     */
-    @Override
-    public String getId(String username) {
-        return userToId.get(username);
     }
 
     /**

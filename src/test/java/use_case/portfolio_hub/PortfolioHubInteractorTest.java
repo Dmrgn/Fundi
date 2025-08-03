@@ -1,4 +1,4 @@
-package use_case.portfolioHub;
+package use_case.portfolio_hub;
 
 import data_access.DBPortfoliosDataAccessObject;
 import org.junit.jupiter.api.Test;

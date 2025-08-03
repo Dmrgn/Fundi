@@ -1,18 +1,20 @@
 package interface_adapter.analysis;
 
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
+/**
+ * The state for the Analysis View Model
+ */
 public class AnalysisState {
-    int numTickers;
-    Map<String, Double> majorityTickers;
-    double volatility;
-    Map<String, Double> mostVolTickers;
-    Map<String, Double> leastVolTickers;
-    double pastReturn;
-    Map<String, Double> topReturns;
-    Map<String, Double> worstReturns;
+    private int numTickers;
+    private Map<String, Double> majorityTickers;
+    private double volatility;
+    private Map<String, Double> mostVolTickers;
+    private Map<String, Double> leastVolTickers;
+    private double pastReturn;
+    private Map<String, Double> topReturns;
+    private Map<String, Double> worstReturns;
 
     public AnalysisState(AnalysisState copy) {
         this.numTickers = copy.numTickers;

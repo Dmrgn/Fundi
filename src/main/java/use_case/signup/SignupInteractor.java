@@ -17,7 +17,7 @@ public class SignupInteractor implements SignupInputBoundary {
             userPresenter.prepareFailView("User already exists.");
         } else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
             userPresenter.prepareFailView("Passwords don't match.");
-        } else if (signupInputData.getUsername().trim().length() == 0) {
+        } else if (signupInputData.getUsername().trim().isEmpty()) {
             userPresenter.prepareFailView("Enter a valid username.");
         } else if (signupInputData.getPassword().trim().length() < 3) {
             userPresenter.prepareFailView("Enter a valid password at least 3 characters long.");

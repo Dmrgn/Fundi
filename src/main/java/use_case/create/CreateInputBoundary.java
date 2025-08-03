@@ -1,12 +1,12 @@
 package use_case.create;
 
 /**
- * Input boundary for create portfolio functionality
+ * Input boundary for Create Use Case
  */
 public interface CreateInputBoundary {
 
     /**
-     * Executes the login usecase.
+     * Executes the Portfolio Use Case.
      * @param createInputData the input data.
      */
     void execute(CreateInputData createInputData);

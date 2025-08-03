@@ -12,6 +12,9 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * View for the Signup Use Case
+ */
 public class SignupView extends BaseView implements PropertyChangeListener {
     private final SignupViewModel signupViewModel;
     private final SignupController signupController;

@@ -7,7 +7,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 
 /**
- * The Portfolio Interactor.
+ * Interactor for the Portfolio Use Case.
  */
 public class PortfolioInteractor implements PortfolioInputBoundary {
     private final PortfolioTransactionDataAccessInterface transactionDataAccessObject;
@@ -22,6 +22,10 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
         this.portfolioPresenter = portfolioPresenter;
     }
 
+    /**
+     * Execute the Portofolio Use Case
+     * @param portfolioInputData the input data.
+     */
     @Override
     public void execute(PortfolioInputData portfolioInputData) {
         final String portfolioId = portfolioInputData.getPortfolioId();
@@ -75,18 +79,21 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
         portfolioPresenter.prepareView(outputData);
     }
 
+    /**
+     * Switch to the Buy View
+     * @param portfolioId The portfolio id to update the state of the Buy View Model
+     */
     @Override
     public void routeToBuy(String portfolioId) {
         portfolioPresenter.routeToBuy(portfolioId);
     }
 
+    /**
+     * Switch to the Sell View
+     * @param portfolioId The portfolio id to update the state of the Sell View Model
+     */
     @Override
     public void routeToSell(String portfolioId) {
         portfolioPresenter.routeToSell(portfolioId);
-    }
-
-    @Override
-    public void routeToPortfolios() {
-        portfolioPresenter.routeToPortfolios();
     }
 }

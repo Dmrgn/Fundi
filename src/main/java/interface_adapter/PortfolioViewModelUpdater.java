@@ -5,7 +5,17 @@ import interface_adapter.portfolio.PortfolioViewModel;
 
 import java.util.ArrayList;
 
+/**
+ * The updater for the Portfolio View Model
+ */
 public class PortfolioViewModelUpdater {
+    /**
+     * Update the Portfolio View Model
+     * @param portfolioViewModel The view model
+     * @param ticker The ticker of the new transaction
+     * @param price The price of the ticker
+     * @param quantity The quantity in the trade
+     */
     public void update(PortfolioViewModel portfolioViewModel, String ticker, double price, int quantity) {
         PortfolioState portfolioState = portfolioViewModel.getState();
         ArrayList<String> outTickers = new ArrayList<>();

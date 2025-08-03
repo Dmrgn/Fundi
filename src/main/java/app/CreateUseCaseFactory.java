@@ -5,7 +5,7 @@ import interface_adapter.create.CreateController;
 import use_case.create.CreateInteractor;
 import interface_adapter.create.CreatePresenter;
 import interface_adapter.create.CreateViewModel;
-import interface_adapter.portfolioHub.PortfolioHubViewModel;
+import interface_adapter.portfolio_hub.PortfolioHubViewModel;
 import use_case.create.CreateDataAccessInterface;
 import use_case.create.CreateInputBoundary;
 import use_case.create.CreateOutputBoundary;

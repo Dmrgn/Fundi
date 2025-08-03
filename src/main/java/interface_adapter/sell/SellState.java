@@ -1,5 +1,8 @@
 package interface_adapter.sell;
 
+/**
+ * The state for the Sell View Model
+ */
 public class SellState {
     private String portfolioId = "";
     private String sellError;

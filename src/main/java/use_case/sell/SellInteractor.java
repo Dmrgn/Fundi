@@ -4,6 +4,9 @@ import entity.Transaction;
 
 import java.time.LocalDate;
 
+/**
+ * Interactor for the Sell Use Case
+ */
 public class SellInteractor implements SellInputBoundary {
     SellStockDataAccessInterface stockDataAccessInterface;
     SellTransactionDataAccessInterface transactionDataAccessInterface;

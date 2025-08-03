@@ -3,7 +3,7 @@ package view;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
-import interface_adapter.portfolioHub.PortfolioHubController;
+import interface_adapter.portfolio_hub.PortfolioHubController;
 import view.components.UIFactory;
 import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
@@ -14,6 +14,9 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * The Main View
+ */
 public class MainView extends BaseView {
     private final MainViewModel mainViewModel;
     private final PortfolioHubController portfolioHubController;
@@ -79,7 +82,7 @@ public class MainView extends BaseView {
         JLabel usernameLabel = new JLabel();
         usernameLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));
         usernameLabel.setForeground(Color.WHITE);
-        mainViewModel.addPropertyChangeListener(evt -> {
+        this.mainViewModel.addPropertyChangeListener(evt -> {
                 MainState mainState = mainViewModel.getState();
                 usernameLabel.setText("Logged in as: " + mainState.getUsername());
         });
@@ -108,7 +111,7 @@ public class MainView extends BaseView {
         Runnable doSearch = () -> {
             String query = searchField.getText();
             if (!query.isEmpty()) {
-                searchController.execute(query); // <-- Call the use case
+                this.searchController.execute(query); // <-- Call the use case
             } else {
                 JOptionPane.showMessageDialog(this, "Please enter a search query.");
             }
@@ -148,10 +151,10 @@ public class MainView extends BaseView {
                 MainState mainState = mainViewModel.getState();
                 mainState.setUseCase(useCase);
                 mainViewModel.setState(mainState);
-                navigationController.navigateTo(mainViewModel.getViewName(), useCase.toLowerCase());
+                this.navigationController.navigateTo(mainViewModel.getViewName(), useCase.toLowerCase());
                 switch (useCase) {
-                    case "Portfolios" -> portfolioHubController.execute(mainState.getUsername());
-                    case "News" -> newsController.execute(mainState.getUsername());
+                    case "Portfolios" -> this.portfolioHubController.execute(mainState.getUsername());
+                    case "News" -> this.newsController.execute(mainState.getUsername());
 
                 }
             });

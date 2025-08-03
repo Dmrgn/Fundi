@@ -10,19 +10,17 @@ import javax.swing.table.DefaultTableModel;
 //import interface_adapter.change_password.LoggedInState;
 //import interface_adapter.change_password.LoggedInViewModel;
 //import interface_adapter.logout.LogoutController;
-import interface_adapter.history.HistoryController;
 import interface_adapter.history.HistoryState;
 import interface_adapter.history.HistoryViewModel;
+import interface_adapter.navigation.NavigationController;
 import view.components.UIFactory;
 
 /**
- * The View for when the user is looking their history for a portfolio in the
- * program.
+ * The View for the History Use Case
  */
 public class HistoryView extends BaseView {
 
     private final HistoryViewModel historyViewModel;
-    private final HistoryController historyController;
     private final interface_adapter.navigation.NavigationController navigationController;
     private static final String[] columnNames = { "Ticker", "Quantity", "Price", "Date" };
     private final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
@@ -32,16 +30,15 @@ public class HistoryView extends BaseView {
         }
     };
 
-    public HistoryView(HistoryViewModel historyViewModel, HistoryController historyController,
-            interface_adapter.navigation.NavigationController navigationController) {
+    public HistoryView(HistoryViewModel historyViewModel,
+                       NavigationController navigationController) {
         super("history");
         this.historyViewModel = historyViewModel;
-        this.historyController = historyController;
         this.navigationController = navigationController;
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
+        contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()));
         contentPanel.add(Box.createVerticalStrut(10));
         contentPanel.add(UIFactory.createTitlePanel("Portfolio History"));
         contentPanel.add(createCenterPanel());

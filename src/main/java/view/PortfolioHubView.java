@@ -1,9 +1,9 @@
 package view;
 
 import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolioHub.PortfolioHubState;
-import interface_adapter.portfolioHub.PortfolioHubViewModel;
-import interface_adapter.portfolioHub.PortfolioHubController;
+import interface_adapter.portfolio_hub.PortfolioHubState;
+import interface_adapter.portfolio_hub.PortfolioHubViewModel;
+import interface_adapter.portfolio_hub.PortfolioHubController;
 import interface_adapter.navigation.NavigationController;
 import view.components.UIFactory;
 
@@ -11,6 +11,9 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * The View for the Portfolio Hub Use Case
+ */
 public class PortfolioHubView extends BaseView {
     private final PortfolioHubViewModel portfoliosViewModel;
     private final PortfolioHubController portfolioHubController;
@@ -48,8 +51,8 @@ public class PortfolioHubView extends BaseView {
         JButton createButton = UIFactory.createStyledButton("Create New Portfolio");
         createButton.setAlignmentX((Component.CENTER_ALIGNMENT));
         createButton.addActionListener(e -> {
-            PortfolioHubState portfoliosState = portfoliosViewModel.getState();
-            portfolioHubController.routeToCreate(portfoliosState.getUsername());
+            PortfolioHubState portfoliosState = this.portfoliosViewModel.getState();
+            this.portfolioHubController.routeToCreate(portfoliosState.getUsername());
         });
 
         return UIFactory.createButtonPanel(createButton);

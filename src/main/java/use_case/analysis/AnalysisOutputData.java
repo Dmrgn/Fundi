@@ -2,6 +2,9 @@ package use_case.analysis;
 
 import java.util.Map;
 
+/**
+ * The Output Data for the Analysis Use Case
+ */
 public class AnalysisOutputData {
     int numTickers;
     Map<String, Double> majorityTickers;

@@ -1,7 +1,7 @@
 package interface_adapter.create;
 
 /**
- * The State information representing the create page user.
+ * The State for the create use case.
  */
 public class CreateState {
     private String username = "";

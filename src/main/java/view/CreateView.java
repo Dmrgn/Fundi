@@ -13,7 +13,7 @@ import interface_adapter.ViewManagerModel;
 import view.components.UIFactory;
 
 /**
- * The View for when the user is trying to create a portfolio.
+ * The View For the Create Use Case
  */
 public class CreateView extends BaseView implements PropertyChangeListener {
     private final CreateViewModel createViewModel;

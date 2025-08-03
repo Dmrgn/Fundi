@@ -1,5 +1,8 @@
 package use_case.sell;
 
+/**
+ * Output Boundary for the Sell Use Case
+ */
 public interface SellOutputBoundary {
     /**
      * Prepares the success view for the Sell Use Case.

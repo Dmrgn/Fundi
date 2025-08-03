@@ -1,13 +1,13 @@
 package view.components;
 
-import org.jetbrains.annotations.NotNull;
-
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.TableModel;
 import java.awt.*;
 
+/**
+ * A class containing helper functions for UI design
+ */
 public class UIFactory {
     private static final String font = "Sans Serif";
 
@@ -15,6 +15,11 @@ public class UIFactory {
 
     }
 
+    /**
+     * Create a titled panel
+     * @param text The text
+     * @return The titled panel
+     */
     public static JPanel createTitlePanel(String text) {
         JLabel title = createTitleLabel(text);
 
@@ -27,6 +32,11 @@ public class UIFactory {
         return panel;
     }
 
+    /**
+     * Create a titled label
+     * @param text The text
+     * @return The title label
+     */
     public static JLabel createTitleLabel(String text) {
         JLabel title = new JLabel(text);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -35,6 +45,11 @@ public class UIFactory {
         return title;
     }
 
+    /**
+     * Create a styled button
+     * @param text The text
+     * @return The styled button
+     */
     public static JButton createStyledButton(String text) {
         JButton button = new JButton(text);
         button.setFont(new Font(font, Font.BOLD, 14));
@@ -45,6 +60,11 @@ public class UIFactory {
         return button;
     }
 
+    /**
+     * Create a form label
+     * @param text the text
+     * @return The label
+     */
     public static JLabel createFormLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font(font, Font.PLAIN, 14));
@@ -53,6 +73,10 @@ public class UIFactory {
         return label;
     }
 
+    /**
+     * Create a text field
+     * @return The field
+     */
     public static JTextField createTextField() {
         JTextField textField = new JTextField("", 30);
         textField.setFont(new Font(font, Font.PLAIN, 14));
@@ -61,6 +85,10 @@ public class UIFactory {
         return textField;
     }
 
+    /**
+     * Create a password field
+     * @return The field
+     */
     public static JPasswordField createPasswordField() {
         JPasswordField passwordField = new JPasswordField("", 30);
         passwordField.setFont(new Font(font, Font.PLAIN, 14));
@@ -69,6 +97,12 @@ public class UIFactory {
         return passwordField;
     }
 
+    /**
+     * Create a form panel
+     * @param text The text
+     * @param textField the text field
+     * @return The form panel
+     */
     public static JPanel createFormPanel(String text, JTextField textField) {
         JPanel panel = new JPanel();
         JLabel label = createFormLabel(text);
@@ -90,6 +124,11 @@ public class UIFactory {
         return panel;
     }
 
+    /**
+     * Create a regular label
+     * @param text The text
+     * @return The label
+     */
     public static JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font(font, Font.PLAIN, 18));
@@ -98,6 +137,12 @@ public class UIFactory {
         return label;
     }
 
+    /**
+     * Create a single field form
+     * @param textField The text field
+     * @param button The button
+     * @return The form
+     */
     public static JPanel createSingleFieldForm(JTextField textField, JButton button) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
@@ -120,6 +165,11 @@ public class UIFactory {
         return panel;
     }
 
+    /**
+     * Create a button panel
+     * @param buttons The buttons
+     * @return The panel
+     */
     public static JPanel createButtonPanel(JButton... buttons) {
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
@@ -133,6 +183,11 @@ public class UIFactory {
         return buttonPanel;
     }
 
+    /**
+     * Create a styled table
+     * @param model The table model
+     * @return The table
+     */
     public static JScrollPane createStyledTable(TableModel model) {
         JTable table = new JTable(model);
         table.setFillsViewportHeight(true);
@@ -158,6 +213,11 @@ public class UIFactory {
         return scrollPane;
     }
 
+    /**
+     * Format a number as a percent
+     * @param value The number
+     * @return The percent representation
+     */
     public static String format(double value) {
         if (value < 0.01) {
             return String.format("%.1E%%", value);
@@ -166,6 +226,10 @@ public class UIFactory {
         }
     }
 
+    /**
+     * Create a stat label
+     * @return The label
+     */
     public static JLabel createStatLabel() {
         JLabel statLabel = new JLabel();
         statLabel.setFont(new Font(font, Font.BOLD, 18));
@@ -173,6 +237,11 @@ public class UIFactory {
         return statLabel;
     }
 
+    /**
+     * Create a list item label
+     * @param text The text
+     * @return The label
+     */
     public static JLabel createListItemLabel(String text) {
         JLabel label = new JLabel(text);
         label.setFont(new Font(font, Font.PLAIN, 16));
@@ -180,6 +249,11 @@ public class UIFactory {
         return label;
     }
 
+    /**
+     * Create a stat list panel
+     * @param title The text
+     * @return The panel
+     */
     public static JPanel createStatListPanel(String title) {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
@@ -194,6 +268,11 @@ public class UIFactory {
         return panel;
     }
 
+    /**
+     * Create a titled border
+     * @param title The text
+     * @return The border
+     */
     public static TitledBorder createLightTitledBorder(String title) {
         TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), title);
         border.setTitleFont(new Font(font, Font.BOLD, 14));

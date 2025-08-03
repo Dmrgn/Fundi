@@ -11,6 +11,9 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * The View for the Login Use Case
+ */
 public class LoginView extends BaseView implements PropertyChangeListener {
 
     private final LoginViewModel loginViewModel;

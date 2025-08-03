@@ -1,9 +1,9 @@
-package interface_adapter.portfolioHub;
+package interface_adapter.portfolio_hub;
 
 import java.util.Map;
 
 /**
- * The State information representing the portfolios page user.
+ * The State for Portfolio Hub View Model
  */
 public class PortfolioHubState {
     private Map<String, String> portfolios;

@@ -13,7 +13,7 @@ import interface_adapter.navigation.NavigationController;
 import view.components.UIFactory;
 
 /**
- * The View for when the user is trying to create a portfolio.
+ * The View for the Buy Use Case
  */
 public class BuyView extends BaseView implements PropertyChangeListener {
 
@@ -31,7 +31,7 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         JPanel contentPanel = createGradientContentPanel();
 
         // Add back button (top left) using w/ NavigationController
-        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()), BorderLayout.NORTH);
+        contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()), BorderLayout.NORTH);
 
         JPanel welcomePanel = UIFactory.createTitlePanel("Buy Stock");
         contentPanel.add(welcomePanel, BorderLayout.CENTER);

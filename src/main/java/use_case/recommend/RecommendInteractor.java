@@ -7,6 +7,9 @@ import entity.FinancialCalculator;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * Interactor for the Recommend Use Case
+ */
 public class RecommendInteractor implements RecommendInputBoundary {
     private final RecommendStockDataAccessInterface stockDataAccessInterface;
     private final RecommendTransactionDataAccessInterface transactionDataAccessInterface;
@@ -20,6 +23,10 @@ public class RecommendInteractor implements RecommendInputBoundary {
         this.recommendOutputBoundary = recommendOutputBoundary;
     }
 
+    /**
+     * Execute the Recommend Use Case
+     * @param recommendInputData the input data
+     */
     @Override
     public void execute(RecommendInputData recommendInputData) {
         Set<String> tickers = stockDataAccessInterface.getAvailableTickers();
@@ -44,6 +51,9 @@ public class RecommendInteractor implements RecommendInputBoundary {
         ));
     }
 
+    /**
+     * Switch to the Portfolio View
+     */
     @Override
     public void routeToPortfolio() {
         recommendOutputBoundary.routeToPortfolio();

@@ -2,6 +2,9 @@ package use_case.recommend;
 
 import java.util.Map;
 
+/**
+ * Recommend Output Data
+ */
 public class RecommendOutputData {
     private final Map<String, Double> haveRecs;
     private final Map<String, Double> notHaveRecs;

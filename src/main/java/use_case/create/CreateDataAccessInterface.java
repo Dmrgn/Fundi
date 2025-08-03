@@ -1,6 +1,6 @@
 package use_case.create;
 
-import use_case.portfolioHub.PortfolioHubDataAccessInterface;
+import use_case.portfolio_hub.PortfolioHubDataAccessInterface;
 
 /**
  * DAO for the Create Use Case.

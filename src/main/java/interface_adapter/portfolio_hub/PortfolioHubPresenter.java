@@ -1,13 +1,13 @@
-package interface_adapter.portfolioHub;
+package interface_adapter.portfolio_hub;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create.CreateState;
 import interface_adapter.create.CreateViewModel;
-import use_case.portfolioHub.PortfolioHubOutputBoundary;
-import use_case.portfolioHub.PortfolioHubOutputData;
+import use_case.portfolio_hub.PortfolioHubOutputBoundary;
+import use_case.portfolio_hub.PortfolioHubOutputData;
 
 /**
- * The Presenter for the portfolios Use Case.
+ * The Presenter for the Portfolio Hub Use Case.
  */
 public class PortfolioHubPresenter implements PortfolioHubOutputBoundary {
 
@@ -21,6 +21,10 @@ public class PortfolioHubPresenter implements PortfolioHubOutputBoundary {
         this.createViewModel = createViewModel;
     }
 
+    /**
+     * Prepare the portfolio hub view
+     * @param portfoliosOutputData the output data
+     */
     @Override
     public void prepareView(PortfolioHubOutputData portfoliosOutputData) {
         final PortfolioHubState portfoliosState = portfoliosViewModel.getState();
@@ -34,6 +38,10 @@ public class PortfolioHubPresenter implements PortfolioHubOutputBoundary {
         this.viewManagerModel.firePropertyChanged();
     }
 
+    /**
+     * Switch to the Create View
+     * @param username The username to update the state of the Create View Model
+     */
     @Override
     public void routeToCreate(String username) {
         CreateState state = createViewModel.getState();

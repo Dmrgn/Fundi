@@ -2,11 +2,14 @@ package interface_adapter.history;
 
 import java.time.LocalDate;
 
+/**
+ * State for the History View Model
+ */
 public class HistoryState {
-    String[] tickers;
-    double[] prices;
-    int[] amounts;
-    LocalDate[] dates;
+    private String[] tickers;
+    private double[] prices;
+    private int[] amounts;
+    private LocalDate[] dates;
 
     public HistoryState(HistoryState copy) {
         this.tickers = copy.tickers;

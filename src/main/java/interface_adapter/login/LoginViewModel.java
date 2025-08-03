@@ -5,7 +5,10 @@ import java.beans.PropertyChangeSupport;
 
 import interface_adapter.ViewModel;
 
-public class LoginViewModel extends ViewModel {
+/**
+ * The view model for the Login View
+ */
+public class LoginViewModel extends ViewModel<LoginState> {
 
     public static final String TITLE_LABEL = "Login View";
     public static final String USERNAME_LABEL = "Username";

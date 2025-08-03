@@ -1,5 +1,8 @@
 package use_case.analysis;
 
+/**
+ * The Analysis Use Case Input Data
+ */
 public class AnalysisInputData {
     String portfolioId;
 

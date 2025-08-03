@@ -1,7 +1,7 @@
 package use_case.create;
 
 /**
- * The Input Data for the create portfolio Use Case.
+ * The Input Data for the Create Use Case.
  */
 public class CreateInputData {
 

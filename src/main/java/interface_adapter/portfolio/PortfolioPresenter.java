@@ -30,6 +30,10 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
         this.navigationController = navigationController;
     }
 
+    /**
+     * Prepare the view for the portfolio use case
+     * @param portfolioOutputData the output data
+     */
     @Override
     public void prepareView(PortfolioOutputData portfolioOutputData) {
         final PortfolioState portfolioState = portfolioViewModel.getState();
@@ -49,6 +53,10 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
         this.viewManagerModel.firePropertyChanged();
     }
 
+    /**
+     * Switch to the Buy View
+     * @param portfolioId Set the state information for the Buy View Model
+     */
     @Override
     public void routeToBuy(String portfolioId) {
         BuyState state = buyViewModel.getState();
@@ -61,6 +69,10 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
         viewManagerModel.firePropertyChanged();
     }
 
+    /**
+     * Switch to the Sell View
+     * @param portfolioId Set the state information for the Sell View Model
+     */
     @Override
     public void routeToSell(String portfolioId) {
         SellState state = sellViewModel.getState();
@@ -69,13 +81,6 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
         sellViewModel.firePropertyChanged();
         navigationController.navigateTo(viewManagerModel.getState(), "sell");
         viewManagerModel.setState("sell");
-        viewManagerModel.firePropertyChanged();
-    }
-
-    // Obsolete (now use back button)
-    @Override
-    public void routeToPortfolios() {
-        viewManagerModel.setState("portfolios");
         viewManagerModel.firePropertyChanged();
     }
 }

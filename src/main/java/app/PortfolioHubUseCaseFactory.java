@@ -2,13 +2,13 @@ package app;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.create.CreateViewModel;
-import interface_adapter.portfolioHub.PortfolioHubController;
-import use_case.portfolioHub.PortfolioHubInteractor;
-import interface_adapter.portfolioHub.PortfolioHubPresenter;
-import interface_adapter.portfolioHub.PortfolioHubViewModel;
-import use_case.portfolioHub.PortfolioHubDataAccessInterface;
-import use_case.portfolioHub.PortfolioHubInputBoundary;
-import use_case.portfolioHub.PortfolioHubOutputBoundary;
+import interface_adapter.portfolio_hub.PortfolioHubController;
+import use_case.portfolio_hub.PortfolioHubInteractor;
+import interface_adapter.portfolio_hub.PortfolioHubPresenter;
+import interface_adapter.portfolio_hub.PortfolioHubViewModel;
+import use_case.portfolio_hub.PortfolioHubDataAccessInterface;
+import use_case.portfolio_hub.PortfolioHubInputBoundary;
+import use_case.portfolio_hub.PortfolioHubOutputBoundary;
 
 /**
  * Factory for the Portfolio Hub Use Case

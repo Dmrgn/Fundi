@@ -1,6 +1,5 @@
 package view;
 
-import interface_adapter.analysis.AnalysisController;
 import interface_adapter.analysis.AnalysisState;
 import interface_adapter.analysis.AnalysisViewModel;
 import view.components.UIFactory;
@@ -12,7 +11,7 @@ import java.util.Map;
 
 public class AnalysisView extends BaseView {
     private final AnalysisViewModel analysisViewModel;
-    private final AnalysisController analysisController;
+    private final NavigationController navigationController;
 
     private final JLabel numTickersLabel = UIFactory.createStatLabel();
     private final JLabel volatilityLabel = UIFactory.createStatLabel();
@@ -24,19 +23,18 @@ public class AnalysisView extends BaseView {
     private final JPanel topReturnPanel = UIFactory.createStatListPanel("Top Returns:");
     private final JPanel lowReturnPanel = UIFactory.createStatListPanel("Worst Returns:");
 
-    private final NavigationController navigationController;
 
-    public AnalysisView(AnalysisViewModel analysisViewModel, AnalysisController analysisController, NavigationController navigationController) {
+    public AnalysisView(AnalysisViewModel analysisViewModel, NavigationController navigationController) {
         super("analysis");
         this.analysisViewModel = analysisViewModel;
-        this.analysisController = analysisController;
+
         this.navigationController = navigationController;
 
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
+        contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()));
         contentPanel.add(Box.createVerticalStrut(10));
 
         JPanel spreadPanel = createSection("Spread", numTickersLabel, topHoldingsPanel);

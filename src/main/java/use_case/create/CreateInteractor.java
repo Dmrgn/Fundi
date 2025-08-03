@@ -1,7 +1,7 @@
 package use_case.create;
 
 /**
- * The Login Interactor.
+ * The Create Interactor.
  */
 public class CreateInteractor implements CreateInputBoundary {
     private final CreateDataAccessInterface createDataAccessObject;
@@ -13,6 +13,10 @@ public class CreateInteractor implements CreateInputBoundary {
         this.createPresenter = createOutputBoundary;
     }
 
+    /**
+     * Execute the Create Use Case
+     * @param createInputData the input data.
+     */
     @Override
     public void execute(CreateInputData createInputData) {
         final String username = createInputData.getUsername();

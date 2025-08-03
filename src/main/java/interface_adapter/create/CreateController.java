@@ -15,7 +15,7 @@ public class CreateController {
     }
 
     /**
-     * Executes the create Use Case.
+     * Executes the Create Use Case.
      * @param username the username of the user logging in
      * @param portfolioName the new portfolio name
      */

@@ -8,6 +8,9 @@ import entity.FinancialCalculator;
 import java.util.*;
 import java.util.stream.Collectors;
 
+/**
+ * The Interactor for the Analysis Use Case
+ */
 public class AnalysisInteractor implements AnalysisInputBoundary {
     private final AnalysisStockDataAccessInterface stockDataAccessInterface;
     private final AnalysisTransactionDataAccessInterface transactionDataAccessInterface;

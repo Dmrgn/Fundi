@@ -10,9 +10,15 @@ public interface PortfolioOutputBoundary {
      */
     void prepareView(PortfolioOutputData outputData);
 
+    /**
+     * Switch to the Buy View
+     * @param portfolioId The portfolio id to update the state of the Buy View Model
+     */
     void routeToBuy(String portfolioId);
 
+    /**
+     * Switch to the Sell View
+     * @param portfolioId The portfolio id to update the state of the Sell View Model
+     */
     void routeToSell(String portfolioId);
-
-    void routeToPortfolios();
 }

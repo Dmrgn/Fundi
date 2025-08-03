@@ -2,7 +2,7 @@ package app;
 
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
-import interface_adapter.portfolioHub.PortfolioHubController;
+import interface_adapter.portfolio_hub.PortfolioHubController;
 import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;

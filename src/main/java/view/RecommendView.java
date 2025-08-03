@@ -1,10 +1,12 @@
 package view;
 
-import interface_adapter.ViewManagerModel;
+import interface_adapter.navigation.NavigationController;
 import interface_adapter.recommend.RecommendController;
 import interface_adapter.recommend.RecommendState;
 import interface_adapter.recommend.RecommendViewModel;
 import view.components.UIFactory;
+// Import the Navigation Controller
+import interface_adapter.navigation.NavigationController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,22 +21,18 @@ public class RecommendView extends BaseView {
     private final JPanel notHaveRecsPanel = UIFactory.createStatListPanel(LABEL);
     private final JPanel safeRecsPanel = UIFactory.createStatListPanel(LABEL);
 
-    private final BackNavigationHelper backNavigationHelper;
+    private final NavigationController navigationController;
 
-    public RecommendView(RecommendViewModel recommendViewModel, RecommendController recommendController,
-            ViewManagerModel viewManagerModel) {
+    public RecommendView(RecommendViewModel recommendViewModel, RecommendController recommendController, NavigationController navigationController) {
         super("recommend");
         this.recommendViewModel = recommendViewModel;
         this.recommendController = recommendController;
-        this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
+        this.navigationController = navigationController;
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        contentPanel.add(createBackButtonPanel(e -> {
-            // Navigate back to the portfolio view explicitly
-            backNavigationHelper.goBackToPortfolio();
-        }));
+        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
 
         contentPanel.add(Box.createVerticalStrut(10));
 
@@ -49,6 +47,7 @@ public class RecommendView extends BaseView {
         JPanel safePanel = createSection("Safe Recs In Your Portfolio", safeRecsPanel);
         contentPanel.add(safePanel);
         contentPanel.add(Box.createVerticalStrut(10));
+
 
         JScrollPane scrollPane = new JScrollPane(contentPanel);
         scrollPane.setBorder(null);
@@ -80,8 +79,7 @@ public class RecommendView extends BaseView {
         panel.removeAll();
         int i = 1;
         for (Map.Entry<String, Double> entry : recs.entrySet()) {
-            JLabel label = UIFactory
-                    .createListItemLabel(i + ". " + entry.getKey() + ": " + String.format("$%.2f", entry.getValue()));
+            JLabel label = UIFactory.createListItemLabel(i + ". " + entry.getKey() + ": " + String.format("$%.2f", entry.getValue()));
             panel.add(label);
             i++;
         }

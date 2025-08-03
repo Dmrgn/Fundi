@@ -11,6 +11,8 @@ import interface_adapter.search.SearchViewModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class MainView extends BaseView {
     private final MainViewModel mainViewModel;
@@ -20,6 +22,8 @@ public class MainView extends BaseView {
     private final SearchController searchController;
     private final SearchViewModel searchViewModel;
     private final JPanel searchResultsPanel = new JPanel();
+    private final JButton notificationButton = createNotificationButton();
+    private int notificationCount = 0;
 
 
     public MainView(MainViewModel mainViewModel, PortfoliosController portfoliosController, NewsController newsController, NavigationController navigationController, SearchController searchController, SearchViewModel searchViewModel) {
@@ -39,6 +43,10 @@ public class MainView extends BaseView {
 
         JPanel centerPanel = createCenterPanel();
         contentPanel.add(centerPanel, BorderLayout.CENTER);
+
+        // Add bottom panel with notification button
+        JPanel bottomPanel = createBottomPanel();
+        contentPanel.add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private JPanel createTopPanel() {
@@ -156,5 +164,77 @@ public class MainView extends BaseView {
         centerPanel.add(buttonPanel);
 
         return centerPanel;
+    }
+
+    // Add this method to create the notification button
+    private JButton createNotificationButton() {
+        JButton button = new JButton();
+        button.setLayout(new BorderLayout());
+
+        // Create the main button
+        JLabel iconLabel = new JLabel("🔔"); // Bell emoji as icon
+        iconLabel.setFont(new Font("Sans Serif", Font.PLAIN, 20));
+        button.add(iconLabel, BorderLayout.CENTER);
+
+        // Create notification badge
+        JLabel badge = new JLabel("0");
+        badge.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        badge.setForeground(Color.WHITE);
+        badge.setBackground(new Color(255, 59, 48)); // Red color
+        badge.setOpaque(true);
+        badge.setBorder(BorderFactory.createEmptyBorder(2, 6, 2, 6));
+        badge.setVisible(false); // Hidden by default
+        button.add(badge, BorderLayout.EAST);
+
+        // Style the button
+        button.setContentAreaFilled(false);
+        button.setBorderPainted(false);
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+
+        // Add hover effect
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                button.setContentAreaFilled(true);
+                button.setBackground(new Color(40, 70, 130, 50));
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                button.setContentAreaFilled(false);
+            }
+        });
+
+        return button;
+    }
+
+    // Modify the existing createBottomPanel method or add it if it doesn't exist
+    private JPanel createBottomPanel() {
+        JPanel bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.setOpaque(false);
+
+        // Create notification button panel
+        JPanel notificationPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        notificationPanel.setOpaque(false);
+        notificationPanel.add(notificationButton);
+
+        bottomPanel.add(notificationPanel, BorderLayout.EAST);
+        return bottomPanel;
+    }
+
+    // Add methods to control notifications
+    public void incrementNotification() {
+        notificationCount++;
+        JLabel badge = (JLabel) notificationButton.getComponent(1);
+        badge.setText(String.valueOf(notificationCount));
+        badge.setVisible(true);
+    }
+
+    public void clearNotifications() {
+        notificationCount = 0;
+        JLabel badge = (JLabel) notificationButton.getComponent(1);
+        badge.setText("0");
+        badge.setVisible(false);
     }
 }

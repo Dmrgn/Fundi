@@ -27,34 +27,30 @@ public class NewsView extends BaseView {
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BorderLayout(10, 10));
 
-        // Create top container for back button, title, and search
+        // Create top container for title and search
         JPanel topContainer = new JPanel();
         topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
         topContainer.setOpaque(false);
 
-        // Add back button
-        topContainer.add(createBackButtonPanel(e -> navigationController.goBack()));
-        
         // Add title
         topContainer.add(titleLabel);
         topContainer.add(Box.createVerticalStrut(10));
         topContainer.add(usernameLabel);
-        
+
         // Create search panel
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         searchPanel.setOpaque(false);
-        
+
         // Create and style search field
         searchField = new JTextField(25);
         searchField.setFont(new Font("Sans Serif", Font.PLAIN, 14));
         searchField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(30, 60, 120), 1),
-            BorderFactory.createEmptyBorder(8, 8, 8, 8)
-        ));
-        
+                BorderFactory.createLineBorder(new Color(30, 60, 120), 1),
+                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
+
         // Create and style search button
         searchButton = UIFactory.createStyledButton("Search News");
-        
+
         // Add search components to search panel
         searchPanel.add(searchField);
         searchPanel.add(searchButton);
@@ -102,7 +98,7 @@ public class NewsView extends BaseView {
     private void setupSearchListeners() {
         // Handle search button click
         searchButton.addActionListener(e -> performSearch());
-        
+
         // Handle Enter key in search field
         searchField.addActionListener(e -> performSearch());
     }
@@ -124,8 +120,7 @@ public class NewsView extends BaseView {
             itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
             itemPanel.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(new Color(30, 60, 120), 1),
-                    BorderFactory.createEmptyBorder(15, 15, 15, 15)
-            ));
+                    BorderFactory.createEmptyBorder(15, 15, 15, 15)));
             itemPanel.setBackground(new Color(20, 30, 70));
             itemPanel.setMaximumSize(new Dimension(800, 150));
             itemPanel.setAlignmentX(Component.CENTER_ALIGNMENT);

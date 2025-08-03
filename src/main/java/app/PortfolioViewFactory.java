@@ -5,7 +5,7 @@ import interface_adapter.history.HistoryController;
 import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.recommend.RecommendController;
-import interface_adapter.navigation.NavigationController;
+import interface_adapter.ViewManagerModel;
 import view.PortfolioView;
 
 public class PortfolioViewFactory {
@@ -19,7 +19,7 @@ public class PortfolioViewFactory {
             HistoryController historyController,
             AnalysisController analysisController,
             RecommendController recommendController,
-            NavigationController navigationController
+            ViewManagerModel viewManagerModel
 
     ) {
         return new PortfolioView(
@@ -28,7 +28,6 @@ public class PortfolioViewFactory {
                 historyController,
                 analysisController,
                 recommendController,
-                navigationController
-        );
+                viewManagerModel);
     }
 }

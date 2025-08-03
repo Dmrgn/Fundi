@@ -32,4 +32,6 @@ com/fundi/news_key.txt
 *.sqlite
 .db
 notes.txt
+
+#
 data/fundi.sqlite

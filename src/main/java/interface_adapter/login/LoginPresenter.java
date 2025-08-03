@@ -25,11 +25,11 @@ public class LoginPresenter implements LoginOutputBoundary {
     }
 
     public void prepareSuccessView(LoginOutputData response) {
-        // On success, switch to the tabbed main view.
+        // On success, switch to the main view.
         mainViewModel.getState().setUsername(response.getUsername());
         mainViewModel.firePropertyChanged();
 
-        viewManagerModel.setState("tabbedmain");
+        viewManagerModel.setState(mainViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
     }
 

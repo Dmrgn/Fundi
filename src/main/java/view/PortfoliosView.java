@@ -17,10 +17,10 @@ public class PortfoliosView extends BaseView {
     private final PortfolioController portfolioController;
     private final NavigationController navigationController;
 
+
     private final JPanel buttonPanel = UIFactory.createButtonPanel();
 
-    public PortfoliosView(PortfoliosViewModel portfoliosViewModel, PortfoliosController portfoliosController,
-            PortfolioController portfolioController, NavigationController navigationController) {
+    public PortfoliosView(PortfoliosViewModel portfoliosViewModel, PortfoliosController portfoliosController, PortfolioController portfolioController, NavigationController navigationController) {
         super("portfolios");
         this.portfoliosViewModel = portfoliosViewModel;
         this.portfoliosController = portfoliosController;
@@ -29,6 +29,8 @@ public class PortfoliosView extends BaseView {
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+
+        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
 
         this.add(contentPanel, BorderLayout.CENTER);
 
@@ -63,8 +65,7 @@ public class PortfoliosView extends BaseView {
 
             for (String portfolio : portfolios.keySet()) {
                 JButton button = UIFactory.createStyledButton(portfolio);
-                button.addActionListener(e -> portfolioController.execute(portfoliosState.getUsername(),
-                        portfolios.get(portfolio), portfolio));
+                button.addActionListener(e -> portfolioController.execute(portfoliosState.getUsername(), portfolios.get(portfolio), portfolio));
 
                 buttonPanel.add(button);
             }

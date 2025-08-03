@@ -6,8 +6,8 @@ import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.recommend.RecommendController;
-import interface_adapter.ViewManagerModel;
 import view.components.UIFactory;
+import interface_adapter.navigation.NavigationController;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,11 +19,11 @@ public class PortfolioView extends BaseView {
     private final HistoryController historyController;
     private final AnalysisController analysisController;
     private final RecommendController recommendController;
-    private final BackNavigationHelper backNavigationHelper;
+    private final NavigationController navigationController;
     private final JLabel titleLabel = UIFactory.createTitleLabel("");
     private final JLabel usernameLabel = UIFactory.createLabel("");
-    private static final String[] columnNames = { "Ticker", "Quantity", "Amount" };
-    private static final String[] useCases = new String[] { "Analysis", "Recommendations", "History", "Buy", "Sell" };
+    private static final String[] columnNames = {"Ticker", "Quantity", "Amount"};
+    private static final String[] useCases = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell"};
     private final JButton backButton = UIFactory.createStyledButton("Back");
     private final JButton[] useCaseButtons = new JButton[useCases.length];
     private final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
@@ -35,14 +35,14 @@ public class PortfolioView extends BaseView {
 
     public PortfolioView(PortfolioViewModel portfolioViewModel, PortfolioController portfolioController,
             HistoryController historyController, AnalysisController analysisController,
-            RecommendController recommendController, ViewManagerModel viewManagerModel) {
+            RecommendController recommendController, NavigationController navigationController) {
         super("portfolio");
         this.portfolioViewModel = portfolioViewModel;
         this.portfolioController = portfolioController;
         this.historyController = historyController;
         this.analysisController = analysisController;
         this.recommendController = recommendController;
-        this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
+        this.navigationController = navigationController;
 
         generateButtons();
 
@@ -63,7 +63,7 @@ public class PortfolioView extends BaseView {
     private JPanel createTopPanel() {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.add(createBackButtonPanel(e -> backNavigationHelper.goBackToPortfolios()));
+        topPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
         topPanel.setOpaque(false);
         topPanel.add(titleLabel);
         topPanel.add(Box.createVerticalStrut(10));

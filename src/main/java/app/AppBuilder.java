@@ -13,6 +13,8 @@ import entity.CommonUserFactory;
 import entity.UserFactory;
 import data_access.DBUserDataAccessObject;
 import interface_adapter.ViewManagerModel;
+import interface_adapter.change_password.ChangePwdController;
+import interface_adapter.change_password.ChangePwdViewModel;
 import interface_adapter.create.CreateController;
 import interface_adapter.create.CreateInteractor;
 import interface_adapter.create.CreatePresenter;
@@ -30,6 +32,10 @@ import interface_adapter.signup.SignupViewModel;
 import interface_adapter.signup.SignupInteractor;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.portfolios.*;
+import use_case.change_password.ChangePwdInputBoundary;
+import use_case.change_password.ChangePwdInteractor;
+import use_case.change_password.ChangePwdOutputBoundary;
+import use_case.change_password.ChangePwdPresenter;
 import use_case.create.CreateInputBoundary;
 import use_case.create.CreateOutputBoundary;
 import use_case.login.LoginInputBoundary;
@@ -57,8 +63,7 @@ public class AppBuilder {
     private final UserFactory userFactory = new CommonUserFactory();
     private final ViewManagerModel viewManagerModel = new ViewManagerModel();
     private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-    private final LoginUserDataAccessInterface userDataAccessObject =
-            new DBUserDataAccessObject(userFactory);
+    private final LoginUserDataAccessInterface userDataAccessObject = new DBUserDataAccessObject(userFactory);
     private final DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
     private final DBPortfolioDataAccessObject portfolioDataAccessObject = new DBPortfolioDataAccessObject();
 
@@ -74,6 +79,10 @@ public class AppBuilder {
     private PortfoliosView portfoliosView;
     private CreateView createView;
     private PortfolioView portfolioView;
+    private ChangePwdViewModel changePwdViewModel;
+    private SettingsView settingsView;
+
+
 
     public AppBuilder() throws SQLException {
         cardPanel.setLayout(cardLayout);
@@ -226,8 +235,16 @@ public class AppBuilder {
      * @return this builder
      */
     public AppBuilder addSettingsView() {
-        SettingsView settingsView = new SettingsView(viewManager);
-        cardPanel.add(settingsView, "settings");
+        changePwdViewModel = new ChangePwdViewModel();
+        settingsView = new SettingsView(changePwdViewModel, viewManager, loginView); // Updated constructor
+        cardPanel.add(settingsView, settingsView.getViewName());
+        return this;
+    }
+    public AppBuilder addChangePwdUseCase() {
+        ChangePwdOutputBoundary presenter = new ChangePwdPresenter(changePwdViewModel);
+        ChangePwdInputBoundary interactor = new ChangePwdInteractor(userDataAccessObject, presenter, mainViewModel);
+        ChangePwdController controller = new ChangePwdController(interactor, mainViewModel);
+        settingsView.setController(controller);
         return this;
     }
 

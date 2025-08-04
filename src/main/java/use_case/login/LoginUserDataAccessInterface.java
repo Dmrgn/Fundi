@@ -20,4 +20,8 @@ public interface LoginUserDataAccessInterface {
      * @return the user with the given username
      */
     User get(String username);
+
+    void changePassword(String username, String newPassword);
+
+    void save(String username, String newPassword);
 }

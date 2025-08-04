@@ -25,6 +25,7 @@ public class Main {
                 .addSignupUseCase()
                 .addPortfoliosUseCase()
                 .addCreateUseCase()
+                .addChangePwdUseCase()
                 .addPortfolioUseCase()
                 .build();
         application.pack();

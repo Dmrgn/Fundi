@@ -4,7 +4,7 @@ import use_case.analysis.AnalysisInputBoundary;
 import use_case.analysis.AnalysisInputData;
 
 /**
- * The controller for the Analysis Use Case
+ * The controller for the Analysis Use Case.
  */
 public class AnalysisController {
     private final AnalysisInputBoundary analysisInputBoundary;
@@ -14,7 +14,7 @@ public class AnalysisController {
     }
 
     /**
-     * Executes the Analysis Use Case
+     * Executes the Analysis Use Case.
      * @param portfolioId The id of the portfolio to analyze
      */
     public void execute(String portfolioId) {
@@ -22,7 +22,7 @@ public class AnalysisController {
     }
 
     /**
-     * Route to the Portfolio View
+     * Route to the Portfolio View.
      */
     public void routeToPortfolio() {
         analysisInputBoundary.routeToPortfolio();

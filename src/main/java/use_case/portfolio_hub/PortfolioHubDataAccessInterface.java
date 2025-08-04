@@ -8,14 +8,14 @@ import java.util.Map;
 public interface PortfolioHubDataAccessInterface {
 
     /**
-     * Get the portfolio data
+     * Get the portfolio data.
      * @param username the name to search at
      * @return A map from id to portfolio name
      */
     Map<String, String> getPortfolios(String username);
 
     /**
-     * Save portfolio data
+     * Save portfolio data.
      * @param portfolioName the Name
      * @param username the username
      */

@@ -15,10 +15,18 @@ public class PortfolioHubOutputData {
         this.portfolios = portfolios;
     }
 
+    /**
+     * Getter.
+     * @return Username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Getter.
+     * @return Portfolios
+     */
     public Map<String, String> getPortfolios() {
         return portfolios;
     }

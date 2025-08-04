@@ -6,7 +6,7 @@ import use_case.history.HistoryOutputBoundary;
 import use_case.history.HistoryOutputData;
 
 /**
- * The presenter for the History Use Case
+ * The presenter for the History Use Case.
  */
 public class HistoryPresenter implements HistoryOutputBoundary {
     private final ViewManagerModel viewManagerModel;
@@ -20,7 +20,7 @@ public class HistoryPresenter implements HistoryOutputBoundary {
     }
 
     /**
-     * Prepare the view
+     * Prepare the view.
      * @param historyOutputData The portfolio history
      */
     @Override
@@ -38,7 +38,7 @@ public class HistoryPresenter implements HistoryOutputBoundary {
     }
 
     /**
-     * Switch to the portfolio view
+     * Switch to the portfolio view.
      */
     @Override
     public void routeToPortfolio() {

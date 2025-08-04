@@ -1,7 +1,7 @@
 package interface_adapter.sell;
 
 /**
- * The state for the Sell View Model
+ * The state for the Sell View Model.
  */
 public class SellState {
     private String portfolioId = "";
@@ -16,18 +16,34 @@ public class SellState {
 
     }
 
+    /**
+     * Getter.
+     * @return Portfolio Id
+     */
     public String getPortfolioId() {
         return portfolioId;
     }
 
+    /**
+     * Setter.
+     * @param portfolioId Value
+     */
     public void setPortfolioId(String portfolioId) {
         this.portfolioId = portfolioId;
     }
 
+    /**
+     * Getter.
+     * @return Sell Error
+     */
     public String getSellError() {
         return sellError;
     }
 
+    /**
+     * Setter.
+     * @param sellError Value
+     */
     public void setSellError(String sellError) {
         this.sellError = sellError;
     }

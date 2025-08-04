@@ -1,9 +1,9 @@
 package app;
 
-import javax.swing.JFrame;
-
 import java.io.IOException;
 import java.sql.SQLException;
+
+import javax.swing.JFrame;
 
 import com.formdev.flatlaf.FlatLightLaf;
 
@@ -11,12 +11,15 @@ import com.formdev.flatlaf.FlatLightLaf;
  * The Main class of our application.
  */
 public class Main {
-    /**
-     * Builds and runs the CA architecture of the application.
-     * 
-     * @param args unused arguments
-     */
+    private static final int HEIGHT = 600;
+    private static final int WIDTH = 900;
 
+    /**
+     * Our runnable Clean Architecture App.
+     * @param args Unused args
+     * @throws SQLException If the DAO queries fail
+     * @throws IOException If the API calls fail
+     */
     public static void main(String[] args) throws SQLException, IOException {
         FlatLightLaf.setup();
         final AppBuilder appBuilder = new AppBuilder();
@@ -36,7 +39,7 @@ public class Main {
                 .addSettingsView()
                 .build();
         application.pack();
-        application.setSize(900, 600);
+        application.setSize(WIDTH, HEIGHT);
         application.setVisible(true);
     }
 }

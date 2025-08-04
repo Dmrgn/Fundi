@@ -1,27 +1,28 @@
 package view;
 
-import interface_adapter.analysis.AnalysisState;
-import interface_adapter.analysis.AnalysisViewModel;
-import view.components.UIFactory;
-import interface_adapter.navigation.NavigationController;
+import java.awt.*;
 
 import javax.swing.*;
-import java.awt.*;
+
 import java.util.Map;
+
+import interface_adapter.analysis.AnalysisViewModel;
+import interface_adapter.navigation.NavigationController;
+import view.components.UiFactory;
 
 public class AnalysisView extends BaseView {
     private final AnalysisViewModel analysisViewModel;
     private final NavigationController navigationController;
 
-    private final JLabel numTickersLabel = UIFactory.createStatLabel();
-    private final JLabel volatilityLabel = UIFactory.createStatLabel();
-    private final JLabel returnLabel = UIFactory.createStatLabel();
+    private final JLabel numTickersLabel = UiFactory.createStatLabel();
+    private final JLabel volatilityLabel = UiFactory.createStatLabel();
+    private final JLabel returnLabel = UiFactory.createStatLabel();
 
-    private final JPanel topHoldingsPanel = UIFactory.createStatListPanel("Highest Holdings:");
-    private final JPanel topVolatilityPanel = UIFactory.createStatListPanel("Most Volatile:");
-    private final JPanel lowVolatilityPanel = UIFactory.createStatListPanel("Least Volatile:");
-    private final JPanel topReturnPanel = UIFactory.createStatListPanel("Top Returns:");
-    private final JPanel lowReturnPanel = UIFactory.createStatListPanel("Worst Returns:");
+    private final JPanel topHoldingsPanel = UiFactory.createStatListPanel("Highest Holdings:");
+    private final JPanel topVolatilityPanel = UiFactory.createStatListPanel("Most Volatile:");
+    private final JPanel lowVolatilityPanel = UiFactory.createStatListPanel("Least Volatile:");
+    private final JPanel topReturnPanel = UiFactory.createStatListPanel("Top Returns:");
+    private final JPanel lowReturnPanel = UiFactory.createStatListPanel("Worst Returns:");
 
 
     public AnalysisView(AnalysisViewModel analysisViewModel, NavigationController navigationController) {
@@ -30,11 +31,10 @@ public class AnalysisView extends BaseView {
 
         this.navigationController = navigationController;
 
-
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()));
+        contentPanel.add(createBackButtonPanel(evt -> this.navigationController.goBack()));
         contentPanel.add(Box.createVerticalStrut(10));
 
         JPanel spreadPanel = createSection("Spread", numTickersLabel, topHoldingsPanel);
@@ -63,7 +63,7 @@ public class AnalysisView extends BaseView {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
-        panel.setBorder(UIFactory.createLightTitledBorder(title));
+        panel.setBorder(UiFactory.createLightTitledBorder(title));
         panel.setForeground(Color.WHITE);
 
         summaryLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
@@ -81,7 +81,7 @@ public class AnalysisView extends BaseView {
         panel.removeAll();
         int i = 1;
         for (Map.Entry<String, Double> entry : data.entrySet()) {
-            JLabel label = UIFactory.createListItemLabel(i + ". " + entry.getKey() + ": " + UIFactory.format(entry.getValue()));
+            JLabel label = UiFactory.createListItemLabel(i + ". " + entry.getKey() + ": " + UiFactory.format(entry.getValue()));
             panel.add(label);
             i++;
         }
@@ -90,17 +90,15 @@ public class AnalysisView extends BaseView {
     }
 
     private void wireListeners() {
-        analysisViewModel.addPropertyChangeListener(e -> {
-            AnalysisState analysisState = analysisViewModel.getState();
-            numTickersLabel.setText("Number of Tickers: " + analysisState.getNumTickers());
-            volatilityLabel.setText("Total Volatility: " + UIFactory.format(analysisState.getVolatility()));
-            returnLabel.setText("Total Return: " + UIFactory.format(analysisState.getPastReturn()));
-
-            updateListPanel(topHoldingsPanel, analysisState.getMajorityTickers());
-            updateListPanel(topVolatilityPanel, analysisState.getMostVolTickers());
-            updateListPanel(lowVolatilityPanel, analysisState.getLeastVolTickers());
-            updateListPanel(topReturnPanel, analysisState.getTopReturns());
-            updateListPanel(lowReturnPanel, analysisState.getWorstReturns());
+        analysisViewModel.addPropertyChangeListener(evt -> {
+            numTickersLabel.setText("Number of Tickers: " + analysisViewModel.getState().getNumTickers());
+            volatilityLabel.setText("Total Volatility: " + UiFactory.format(analysisViewModel.getState().getVolatility()));
+            returnLabel.setText("Total Return: " + UiFactory.format(analysisViewModel.getState().getPastReturn()));
+            updateListPanel(topHoldingsPanel, analysisViewModel.getState().getMajorityTickers());
+            updateListPanel(topVolatilityPanel, analysisViewModel.getState().getMostVolTickers());
+            updateListPanel(lowVolatilityPanel, analysisViewModel.getState().getLeastVolTickers());
+            updateListPanel(topReturnPanel, analysisViewModel.getState().getTopReturns());
+            updateListPanel(lowReturnPanel, analysisViewModel.getState().getWorstReturns());
         });
 
     }

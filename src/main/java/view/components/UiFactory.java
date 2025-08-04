@@ -1,22 +1,23 @@
 package view.components;
 
+import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.border.TitledBorder;
 import javax.swing.table.TableModel;
-import java.awt.*;
 
 /**
- * A class containing helper functions for UI design
+ * A class containing helper functions for UI design.
  */
-public class UIFactory {
-    private static final String font = "Sans Serif";
+public class UiFactory {
+    private static final String FONT = "Sans Serif";
 
-    private UIFactory() {
+    private UiFactory() {
 
     }
 
     /**
-     * Create a titled panel
+     * Create a titled panel.
      * @param text The text
      * @return The titled panel
      */
@@ -40,7 +41,7 @@ public class UIFactory {
     public static JLabel createTitleLabel(String text) {
         JLabel title = new JLabel(text);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setFont(new Font(font, Font.BOLD, 36));
+        title.setFont(new Font(FONT, Font.BOLD, 36));
         title.setForeground(Color.WHITE);
         return title;
     }
@@ -52,7 +53,7 @@ public class UIFactory {
      */
     public static JButton createStyledButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(new Font(font, Font.BOLD, 14));
+        button.setFont(new Font(FONT, Font.BOLD, 14));
         button.setBackground(new Color(30, 60, 120));
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
@@ -67,7 +68,7 @@ public class UIFactory {
      */
     public static JLabel createFormLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font(font, Font.PLAIN, 14));
+        label.setFont(new Font(FONT, Font.PLAIN, 14));
         label.setForeground(Color.WHITE);
 
         return label;
@@ -79,7 +80,7 @@ public class UIFactory {
      */
     public static JTextField createTextField() {
         JTextField textField = new JTextField("", 30);
-        textField.setFont(new Font(font, Font.PLAIN, 14));
+        textField.setFont(new Font(FONT, Font.PLAIN, 14));
         textField.setForeground(Color.BLACK);
         textField.setBackground(Color.WHITE);
         return textField;
@@ -91,7 +92,7 @@ public class UIFactory {
      */
     public static JPasswordField createPasswordField() {
         JPasswordField passwordField = new JPasswordField("", 30);
-        passwordField.setFont(new Font(font, Font.PLAIN, 14));
+        passwordField.setFont(new Font(FONT, Font.PLAIN, 14));
         passwordField.setForeground(Color.BLACK);
         passwordField.setBackground(Color.WHITE);
         return passwordField;
@@ -131,7 +132,7 @@ public class UIFactory {
      */
     public static JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font(font, Font.PLAIN, 18));
+        label.setFont(new Font(FONT, Font.PLAIN, 18));
         label.setForeground(Color.WHITE);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         return label;
@@ -192,7 +193,7 @@ public class UIFactory {
         JTable table = new JTable(model);
         table.setFillsViewportHeight(true);
         table.setRowHeight(28);
-        table.setFont(new Font(font, Font.PLAIN, 14));
+        table.setFont(new Font(FONT, Font.PLAIN, 14));
         table.setGridColor(Color.GRAY);
         table.setShowGrid(true);
         table.setSelectionBackground(Color.WHITE);
@@ -200,7 +201,7 @@ public class UIFactory {
         table.setRowMargin(4);
         table.setIntercellSpacing(new Dimension(8, 4));
 
-        table.getTableHeader().setFont(new Font(font, Font.BOLD, 14));
+        table.getTableHeader().setFont(new Font(FONT, Font.BOLD, 14));
         table.getTableHeader().setBackground(Color.WHITE);
         table.getTableHeader().setBorder(BorderFactory.createMatteBorder(0, 0, 1, 0, Color.GRAY));
 
@@ -232,7 +233,7 @@ public class UIFactory {
      */
     public static JLabel createStatLabel() {
         JLabel statLabel = new JLabel();
-        statLabel.setFont(new Font(font, Font.BOLD, 18));
+        statLabel.setFont(new Font(FONT, Font.BOLD, 18));
         statLabel.setForeground(Color.WHITE);
         return statLabel;
     }
@@ -244,7 +245,7 @@ public class UIFactory {
      */
     public static JLabel createListItemLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(new Font(font, Font.PLAIN, 16));
+        label.setFont(new Font(FONT, Font.PLAIN, 16));
         label.setForeground(Color.WHITE);
         return label;
     }
@@ -260,7 +261,7 @@ public class UIFactory {
         panel.setOpaque(false);
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
         TitledBorder border = createLightTitledBorder(title);
-        border.setTitleFont(new Font(font, Font.PLAIN, 12));
+        border.setTitleFont(new Font(FONT, Font.PLAIN, 12));
         panel.setBorder(border);
         panel.setMinimumSize(new Dimension(200, 30));
 
@@ -275,7 +276,7 @@ public class UIFactory {
      */
     public static TitledBorder createLightTitledBorder(String title) {
         TitledBorder border = BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.GRAY), title);
-        border.setTitleFont(new Font(font, Font.BOLD, 14));
+        border.setTitleFont(new Font(FONT, Font.BOLD, 14));
         border.setTitleColor(Color.WHITE);
         return border;
     }

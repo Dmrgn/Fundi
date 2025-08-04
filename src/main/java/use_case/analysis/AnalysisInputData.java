@@ -1,15 +1,19 @@
 package use_case.analysis;
 
 /**
- * The Analysis Use Case Input Data
+ * The Analysis Use Case Input Data.
  */
 public class AnalysisInputData {
-    String portfolioId;
+    private final String portfolioId;
 
     public AnalysisInputData(String portfolioId) {
         this.portfolioId = portfolioId;
     }
 
+    /**
+     * Getter.
+     * @return Portfolio Id
+     */
     public String getPortfolioId() {
         return portfolioId;
     }

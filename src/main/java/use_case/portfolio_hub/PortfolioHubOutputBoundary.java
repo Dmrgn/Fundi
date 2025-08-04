@@ -11,7 +11,7 @@ public interface PortfolioHubOutputBoundary {
     void prepareView(PortfolioHubOutputData outputData);
 
     /**
-     * Switch to the Create View
+     * Switch to the Create View.
      * @param username The username to update the state of the Create View Model
      */
     void routeToCreate(String username);

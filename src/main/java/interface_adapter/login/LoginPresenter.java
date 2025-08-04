@@ -7,14 +7,14 @@ import use_case.login.LoginOutputBoundary;
 import use_case.login.LoginOutputData;
 
 /**
- * Presenter for the login use case
+ * Presenter for the login use case.
  */
 public class LoginPresenter implements LoginOutputBoundary {
 
     private final LoginViewModel loginViewModel;
     private final SignupViewModel signUpViewModel;
     private final MainViewModel mainViewModel;
-    private ViewManagerModel viewManagerModel;
+    private final ViewManagerModel viewManagerModel;
 
     public LoginPresenter(ViewManagerModel viewManagerModel,
             MainViewModel mainViewModel,
@@ -27,7 +27,7 @@ public class LoginPresenter implements LoginOutputBoundary {
     }
 
     /**
-     * Prepare the success view
+     * Prepare the success view.
      * @param response the output data
      */
     public void prepareSuccessView(LoginOutputData response) {
@@ -40,7 +40,7 @@ public class LoginPresenter implements LoginOutputBoundary {
     }
 
     /**
-     * Prepare the fail view
+     * Prepare the fail view.
      * @param error the explanation of the failure
      */
     public void prepareFailView(String error) {
@@ -50,7 +50,7 @@ public class LoginPresenter implements LoginOutputBoundary {
     }
 
     /**
-     * Switch to the signup view
+     * Switch to the signup view.
      */
     @Override
     public void switchToSignupView() {

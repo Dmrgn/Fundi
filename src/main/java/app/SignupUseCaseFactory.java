@@ -11,14 +11,22 @@ import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupUserDataAccessInterface;
 
 /**
- * Factory for the Signup Use Case
+ * Factory for the Signup Use Case.
  */
-public class SignupUseCaseFactory {
+public final class SignupUseCaseFactory {
 
     /** Prevent instantiation. */
     private SignupUseCaseFactory() {
     }
 
+    /**
+     * Create the Signup Controller.
+     * @param viewManagerModel The View Manager Model
+     * @param signupViewModel The Signup View Model
+     * @param loginViewModel The Login View Model
+     * @param dataAccessObject The DAO
+     * @return The Signup Controller
+     */
     public static SignupController create(
             ViewManagerModel viewManagerModel,
             SignupViewModel signupViewModel,

@@ -1,5 +1,21 @@
 package data_access;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
+import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
+import java.util.stream.Collectors;
+
 import entity.Transaction;
 import use_case.analysis.AnalysisTransactionDataAccessInterface;
 import use_case.buy.BuyTransactionDataAccessInterface;
@@ -8,22 +24,18 @@ import use_case.portfolio.PortfolioTransactionDataAccessInterface;
 import use_case.recommend.RecommendTransactionDataAccessInterface;
 import use_case.sell.SellTransactionDataAccessInterface;
 
-import java.sql.*;
-import java.time.LocalDate;
-import java.util.*;
-import java.util.stream.Collectors;
-
 /**
  * DAO for transaction data implemented using a Database to persist the data.
  */
-public class DBTransactionDataAccessObject implements AnalysisTransactionDataAccessInterface, BuyTransactionDataAccessInterface,
-        SellTransactionDataAccessInterface, HistoryDataAccessInterface, PortfolioTransactionDataAccessInterface,
+public class DBTransactionDataAccessObject implements AnalysisTransactionDataAccessInterface,
+        BuyTransactionDataAccessInterface, SellTransactionDataAccessInterface,
+        HistoryDataAccessInterface, PortfolioTransactionDataAccessInterface,
         RecommendTransactionDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, List<Transaction>> transactions = new HashMap<>();
 
     /**
-     * Load the transaction data into memory
+     * Load the transaction data into memory.
      * @throws SQLException If SQL connection fails
      */
     public DBTransactionDataAccessObject() throws SQLException {
@@ -55,14 +67,16 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
                         price
                 ));
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
 
     }
 
     /**
-     * The past transactions for the given portfolio
+     * The past transactions for the given portfolio.
      * @param portfolioId the id to search at
      * @return A list of previous transactions
      */
@@ -75,7 +89,7 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
     }
 
     /**
-     * The amount of a given ticker in the portfolio
+     * The amount of a given ticker in the portfolio.
      * @param portfolioId The portfolio to look at
      * @param ticker The ticker to look for
      * @return The amount of the given ticker in the portfolio
@@ -88,7 +102,9 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
                 if (Objects.equals(transaction.getStockTicker(), ticker)) {
                     if (transaction.getPrice() > 0) {
                         total += transaction.getQuantity();
-                    } else {
+                    }
+
+                    else {
                         total -= transaction.getQuantity();
                     }
                 }
@@ -98,7 +114,7 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
     }
 
     /**
-     * Save a transaction into the DAO
+     * Save a transaction into the DAO.
      * @param transaction The transaction to save
      */
     @Override
@@ -123,13 +139,15 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
             pstmt.setDate(4, java.sql.Date.valueOf(transaction.getTimestamp()));
             pstmt.setDouble(5, transaction.getPrice());
             pstmt.executeUpdate();
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
     }
 
     /**
-     * Get all of the tickers in the portfolio
+     * Get all of the tickers in the portfolio.
      * @param portfolioId The portfolio to look at
      * @return A set of tickers in the portfolio
      */
@@ -145,7 +163,7 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
     }
 
     /**
-     * Remove a transaction from the DAO
+     * Remove a transaction from the DAO.
      * (For testing only)
      * @param portfolioId The portfolio Id
      * @param ticker The ticker
@@ -170,13 +188,15 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
             pstmt.setString(2, ticker);
             pstmt.setInt(3, amount);
             pstmt.executeUpdate();
-        } catch (SQLException sqlException) {
+        }
+
+        catch (SQLException sqlException) {
             System.out.println(sqlException.getMessage());
         }
     }
 
     /**
-     * Whether or not the transaction specified exists
+     * Whether or not the transaction specified exists.
      * (For testing only)
      * @param portfolioId The portfolio Id
      * @param ticker The ticker to look for

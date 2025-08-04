@@ -15,7 +15,7 @@ public class PortfolioHubInteractor implements PortfolioHubInputBoundary {
     }
 
     /**
-     * Execute the Portfolio Hub Use Case
+     * Execute the Portfolio Hub Use Case.
      * @param portfoliosInputData the input data.
      */
     @Override
@@ -25,7 +25,7 @@ public class PortfolioHubInteractor implements PortfolioHubInputBoundary {
     }
 
     /**
-     * Switch to the Create View
+     * Switch to the Create View.
      * @param username The username to update the state of the Create View Model
      */
     @Override

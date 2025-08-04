@@ -3,12 +3,11 @@ package interface_adapter.portfolio;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.buy.BuyState;
 import interface_adapter.buy.BuyViewModel;
+import interface_adapter.navigation.NavigationController;
 import interface_adapter.sell.SellState;
 import interface_adapter.sell.SellViewModel;
 import use_case.portfolio.PortfolioOutputBoundary;
 import use_case.portfolio.PortfolioOutputData;
-import view.SellView;
-import interface_adapter.navigation.NavigationController;
 
 /**
  * The Presenter for the portfolio Use Case.
@@ -31,7 +30,7 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
     }
 
     /**
-     * Prepare the view for the portfolio use case
+     * Prepare the view for the portfolio use case.
      * @param portfolioOutputData the output data
      */
     @Override
@@ -54,7 +53,7 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
     }
 
     /**
-     * Switch to the Buy View
+     * Switch to the Buy View.
      * @param portfolioId Set the state information for the Buy View Model
      */
     @Override
@@ -70,7 +69,7 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
     }
 
     /**
-     * Switch to the Sell View
+     * Switch to the Sell View.
      * @param portfolioId Set the state information for the Sell View Model
      */
     @Override

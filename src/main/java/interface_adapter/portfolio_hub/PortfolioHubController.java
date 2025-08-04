@@ -1,7 +1,7 @@
 package interface_adapter.portfolio_hub;
 
-import use_case.portfolio_hub.*;
-
+import use_case.portfolio_hub.PortfolioHubInputBoundary;
+import use_case.portfolio_hub.PortfolioHubInputData;
 
 /**
  * Controller for the Portfolio Hub Use Case.
@@ -24,7 +24,7 @@ public class PortfolioHubController {
     }
 
     /**
-     * Switch to the Create View
+     * Switch to the Create View.
      * @param username The username to update the state of the Create View Model
      */
     public void routeToCreate(String username) {

@@ -1,6 +1,11 @@
 package data_access;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -16,7 +21,7 @@ public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInter
     private final Map<String, String> userToId = new HashMap<>();
 
     /**
-     * Load the portfolio data into memory from SQL database
+     * Load the portfolio data into memory from SQL database.
      * @throws SQLException If database connection fails
      */
     public DBPortfoliosDataAccessObject() throws SQLException {
@@ -36,18 +41,22 @@ public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInter
                 if (!portfolios.containsKey(userId)) {
                     portfolios.put(userId, new HashMap<>());
                     portfolios.get(userId).put(name, id);
-                } else {
+                }
+
+                else {
                     portfolios.get(userId).put(name, id);
                 }
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
 
     }
 
     /**
-     * Get the portfolio data
+     * Get the portfolio data.
      * @param username the name to search at
      * @return A list of portfolio names
      */
@@ -74,8 +83,10 @@ public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInter
                     userToId.put(username, userId);
                 }
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
 
         query = """
@@ -95,14 +106,16 @@ public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInter
                 }
             }
 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
         return portfolioId;
     }
 
     /**
-     * Update the portfolio map
+     * Update the portfolio map.
      * @param portfolioName the Name
      */
     @Override
@@ -116,22 +129,24 @@ public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInter
     }
 
     /**
-     *
+     * Return whether a portfolio exists for a user.
      * @param portfolioName the portfolioName to look for
      * @param username the users name
-     * @return
+     * @return A boolean value
      */
     @Override
     public boolean existsByName(String portfolioName, String username) {
         String userId = userToId.get(username);
-        if (!portfolios.containsKey(userId)) return false;
+        if (!portfolios.containsKey(userId)) {
+            return false;
+        }
 
         Map<String, String> userPortfolios = portfolios.get(userId);
         return userPortfolios.containsKey(portfolioName);
     }
 
     /**
-     * Delete the portfolio for the given user from the DAO
+     * Delete the portfolio for the given user from the DAO.
      * (For Testing Only)
      * @param portfolioName The portfolio name to delete
      * @param username The username to delete the portfolio at
@@ -148,8 +163,10 @@ public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInter
             pstmt.setString(2, portfolioName);
             pstmt.executeUpdate();
 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
     }
 }

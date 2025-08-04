@@ -24,7 +24,7 @@ public class CreatePresenter implements CreateOutputBoundary {
     }
 
     /**
-     * Prepare the success view
+     * Prepare the success view.
      * @param response the output data for the success view
      */
     @Override
@@ -41,7 +41,7 @@ public class CreatePresenter implements CreateOutputBoundary {
     }
 
     /**
-     * Prepare the fail view
+     * Prepare the fail view.
      * @param error the explanation of the failure
      */
     @Override

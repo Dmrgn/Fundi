@@ -1,21 +1,23 @@
 package use_case.analysis;
 
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import entity.FinancialCalculator;
 import entity.SortingUtil;
 import entity.StockData;
 import entity.Transaction;
-import entity.FinancialCalculator;
-
-import java.util.*;
-import java.util.stream.Collectors;
 
 /**
- * The Interactor for the Analysis Use Case
+ * The Interactor for the Analysis Use Case.
  */
 public class AnalysisInteractor implements AnalysisInputBoundary {
+    private static final int N = 2;
     private final AnalysisStockDataAccessInterface stockDataAccessInterface;
     private final AnalysisTransactionDataAccessInterface transactionDataAccessInterface;
     private final AnalysisOutputBoundary analysisOutputBoundary;
-    private static final int N = 2;
 
     public AnalysisInteractor(AnalysisStockDataAccessInterface stockDataAccessInterface,
                               AnalysisTransactionDataAccessInterface analysisTransactionDataAccessInterface,
@@ -52,13 +54,13 @@ public class AnalysisInteractor implements AnalysisInputBoundary {
 
         analysisOutputBoundary.prepareView(new AnalysisOutputData(
                 totalStocks,
-                SortingUtil.getTopNByValue(percentages, N, true),
+                SortingUtil.getTopnByValue(percentages, N, true),
                 totalVol,
-                SortingUtil.getTopNByValue(vols, N, true),
-                SortingUtil.getTopNByValue(vols, N, false),
+                SortingUtil.getTopnByValue(vols, N, true),
+                SortingUtil.getTopnByValue(vols, N, false),
                 totalReturn,
-                SortingUtil.getTopNByValue(returns, N, true),
-                SortingUtil.getTopNByValue(returns, N, false)
+                SortingUtil.getTopnByValue(returns, N, true),
+                SortingUtil.getTopnByValue(returns, N, false)
         ));
     }
 

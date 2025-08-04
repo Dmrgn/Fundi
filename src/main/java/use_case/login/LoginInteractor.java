@@ -3,12 +3,12 @@ package use_case.login;
 import entity.User;
 
 /**
- * Interactor for the Login Use Case
+ * Interactor for the Login Use Case.
  */
 public class LoginInteractor implements LoginInputBoundary {
 
-    final LoginUserDataAccessInterface userDataAccessObject;
-    final LoginOutputBoundary loginPresenter;
+    private final LoginUserDataAccessInterface userDataAccessObject;
+    private final LoginOutputBoundary loginPresenter;
 
     public LoginInteractor(LoginUserDataAccessInterface userDataAccessInterface,
             LoginOutputBoundary loginOutputBoundary) {
@@ -17,7 +17,7 @@ public class LoginInteractor implements LoginInputBoundary {
     }
 
     /**
-     * Execute the Login Use Case
+     * Execute the Login Use Case.
      * @param loginInputData the input data.
      */
     @Override
@@ -38,6 +38,9 @@ public class LoginInteractor implements LoginInputBoundary {
         }
     }
 
+    /**
+     * Switch to the Signup View.
+     */
     public void switchToSignupView() {
         loginPresenter.switchToSignupView();
     }

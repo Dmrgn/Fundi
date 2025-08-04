@@ -1,12 +1,12 @@
 package use_case.buy;
 
 /**
- * Output data for the Buy Use Case
+ * Output data for the Buy Use Case.
  */
 public class BuyOutputData {
-    String ticker;
-    double price;
-    int quantity;
+    private final String ticker;
+    private final double price;
+    private final int quantity;
 
     public BuyOutputData(String ticker, double price, int quantity) {
         this.ticker = ticker;
@@ -14,14 +14,26 @@ public class BuyOutputData {
         this.quantity = quantity;
     }
 
+    /**
+     * Getter.
+     * @return Ticker
+     */
     public String getTicker() {
         return ticker;
     }
 
+    /**
+     * Getter.
+     * @return Price
+     */
     public double getPrice() {
         return price;
     }
 
+    /**
+     * Getter.
+     * @return Quantity
+     */
     public int getQuantity() {
         return quantity;
     }

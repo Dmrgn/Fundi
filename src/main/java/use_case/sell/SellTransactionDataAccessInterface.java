@@ -3,11 +3,11 @@ package use_case.sell;
 import entity.Transaction;
 
 /**
- * The Transaction DAO for the Sell Use Case
+ * The Transaction DAO for the Sell Use Case.
  */
 public interface SellTransactionDataAccessInterface {
     /**
-     * Get the amount of a ticker in the given portfolio
+     * Get the amount of a ticker in the given portfolio.
      * @param portfolioId The portfolio id
      * @param ticker The name of the ticker
      * @return The amount of the ticker in the portfolio
@@ -15,7 +15,7 @@ public interface SellTransactionDataAccessInterface {
     int amountOfTicker(String portfolioId, String ticker);
 
     /**
-     * Save the transaction in the DAO
+     * Save the transaction in the DAO.
      * @param transaction The new transaction
      */
     void save(Transaction transaction);

@@ -1,12 +1,19 @@
 package use_case.history;
 
+/**
+ * Input data for the History Use Case.
+ */
 public class HistoryInputData {
-    String portfolioId;
+    private final String portfolioId;
 
     public HistoryInputData(String portfolioId) {
         this.portfolioId = portfolioId;
     }
 
+    /**
+     * Getter.
+     * @return Portfolio Id
+     */
     public String getPortfolioId() {
         return portfolioId;
     }

@@ -20,22 +20,42 @@ public class Transaction {
         this.price = price;
     }
 
+    /**
+     * Getter.
+     * @return Portfolio Id
+     */
     public String getPortfolioId() {
         return portfolioId;
     }
 
+    /**
+     * Getter.
+     * @return Ticker
+     */
     public String getStockTicker() {
         return stockTicker;
     }
 
+    /**
+     * Getter.
+     * @return Quantity
+     */
     public int getQuantity() {
         return quantity;
     }
 
+    /**
+     * Getter.
+     * @return Timestamp
+     */
     public LocalDate getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * Getter.
+     * @return Price
+     */
     public double getPrice() {
         return price;
     }

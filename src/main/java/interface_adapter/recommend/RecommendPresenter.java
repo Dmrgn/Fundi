@@ -5,11 +5,11 @@ import use_case.recommend.RecommendOutputBoundary;
 import use_case.recommend.RecommendOutputData;
 
 /**
- * The Presenter for the Recommend Use Case
+ * The Presenter for the Recommend Use Case.
  */
 public class RecommendPresenter implements RecommendOutputBoundary {
-    RecommendViewModel recommendViewModel;
-    ViewManagerModel viewManagerModel;
+    private final RecommendViewModel recommendViewModel;
+    private final ViewManagerModel viewManagerModel;
 
     public RecommendPresenter(RecommendViewModel recommendViewModel, ViewManagerModel viewManagerModel) {
         this.recommendViewModel = recommendViewModel;
@@ -17,7 +17,7 @@ public class RecommendPresenter implements RecommendOutputBoundary {
     }
 
     /**
-     * Prepare the view
+     * Prepare the view.
      * @param recommendOutputData The output data
      */
     @Override
@@ -33,7 +33,7 @@ public class RecommendPresenter implements RecommendOutputBoundary {
     }
 
     /**
-     * Switch to the Portfolio View
+     * Switch to the Portfolio View.
      */
     @Override
     public void routeToPortfolio() {

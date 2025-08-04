@@ -8,17 +8,25 @@ import java.util.Map;
 public class CreateOutputData {
 
     private final String username;
-    private Map<String, String> portfolios;
+    private final Map<String, String> portfolios;
 
     public CreateOutputData(String username, Map<String, String> portfolios) {
         this.username = username;
         this.portfolios = portfolios;
     }
 
+    /**
+     * Getter.
+     * @return Username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Getter.
+     * @return Portfolios
+     */
     public Map<String, String> getPortfolios() {
         return portfolios;
     }

@@ -17,18 +17,34 @@ public class CreateState {
 
     }
 
+    /**
+     * Getter.
+     * @return Username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Setter.
+     * @param username Value
+     */
     public void setUsername(String username) {
         this.username = username;
     }
 
+    /**
+     * Getter.
+     * @return Create Error
+     */
     public String getCreateError() {
         return createError;
     }
 
+    /**
+     * Setter.
+     * @param createError Value
+     */
     public void setCreateError(String createError) {
         this.createError = createError;
     }

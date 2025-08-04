@@ -4,22 +4,32 @@ import interface_adapter.PortfolioViewModelUpdater;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.sell.SellController;
-import use_case.sell.SellInteractor;
 import interface_adapter.sell.SellPresenter;
 import interface_adapter.sell.SellViewModel;
 import use_case.sell.SellInputBoundary;
+import use_case.sell.SellInteractor;
 import use_case.sell.SellOutputBoundary;
 import use_case.sell.SellStockDataAccessInterface;
 import use_case.sell.SellTransactionDataAccessInterface;
 
 /**
- * Factory for the Sell Use Case
+ * Factory for the Sell Use Case.
  */
-public class SellUseCaseFactory {
+public final class SellUseCaseFactory {
     private SellUseCaseFactory() {
 
     }
 
+    /**
+     * Create the Sell Controller.
+     * @param viewManagerModel The View Manager Model
+     * @param sellViewModel The Sell View Model
+     * @param portfolioViewModel The Portfolio View Model
+     * @param portfolioViewModelUpdater The Portfolio View Model Updater
+     * @param stockDataAccessObject The Stock DAO
+     * @param transactionDataAccessObject The Transaction DAO
+     * @return The Sell Controller
+     */
     public static SellController create(
             ViewManagerModel viewManagerModel,
             SellViewModel sellViewModel,

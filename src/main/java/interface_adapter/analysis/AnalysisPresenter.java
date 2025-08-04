@@ -6,7 +6,7 @@ import use_case.analysis.AnalysisOutputBoundary;
 import use_case.analysis.AnalysisOutputData;
 
 /**
- * The presenter for the analysis use case
+ * The presenter for the analysis use .
  */
 public class AnalysisPresenter implements AnalysisOutputBoundary {
     private final ViewManagerModel viewManagerModel;
@@ -22,7 +22,7 @@ public class AnalysisPresenter implements AnalysisOutputBoundary {
     }
 
     /**
-     * Prepare the analysis view
+     * Prepare the analysis view.
      * @param analysisOutputData The analysis of the portfolio
      */
     @Override
@@ -45,7 +45,7 @@ public class AnalysisPresenter implements AnalysisOutputBoundary {
     }
 
     /**
-     * Switch to the portfolio view
+     * Switch to the portfolio view.
      */
     @Override
     public void routeToPortfolio() {

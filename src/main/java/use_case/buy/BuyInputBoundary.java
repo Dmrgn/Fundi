@@ -1,7 +1,7 @@
 package use_case.buy;
 
 /**
- * Input boundary for Buy Use Case
+ * Input boundary for Buy Use Case.
  */
 public interface BuyInputBoundary {
 

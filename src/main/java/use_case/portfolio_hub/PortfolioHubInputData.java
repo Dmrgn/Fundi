@@ -11,6 +11,10 @@ public class PortfolioHubInputData {
         this.username = username;
     }
 
+    /**
+     * Getter.
+     * @return Username
+     */
     public String getUsername() {
         return username;
     }

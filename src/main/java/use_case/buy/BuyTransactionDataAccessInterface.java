@@ -7,7 +7,7 @@ import entity.Transaction;
  */
 public interface BuyTransactionDataAccessInterface {
     /**
-     * Save the transaction in the DAO
+     * Save the transaction in the DAO.
      * @param transaction The new transaction
      */
     void save(Transaction transaction);

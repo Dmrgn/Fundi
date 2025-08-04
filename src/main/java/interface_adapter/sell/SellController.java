@@ -4,7 +4,7 @@ import use_case.sell.SellInputBoundary;
 import use_case.sell.SellInputData;
 
 /**
- * The Controller for the Sell Use Case
+ * The Controller for the Sell Use Case.
  */
 public class SellController {
     private final SellInputBoundary sellUseCaseInteractor;

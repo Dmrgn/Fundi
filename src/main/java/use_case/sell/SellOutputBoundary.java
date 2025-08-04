@@ -1,7 +1,7 @@
 package use_case.sell;
 
 /**
- * Output Boundary for the Sell Use Case
+ * Output Boundary for the Sell Use Case.
  */
 public interface SellOutputBoundary {
     /**

@@ -1,18 +1,25 @@
 package app;
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.create.CreateController;
 import interface_adapter.create.CreateViewModel;
-import interface_adapter.ViewManagerModel;
 import view.CreateView;
 
 /**
- * Factory for the Create View
+ * Factory for the Create View.
  */
-public class CreateViewFactory {
+public final class CreateViewFactory {
     private CreateViewFactory() {
 
     }
 
+    /**
+     * Create the Create View.
+     * @param createViewModel The Create View Model
+     * @param createController The Create Controller
+     * @param viewManagerModel The View Manager Model
+     * @return The Create View
+     */
     public static CreateView create(
             CreateViewModel createViewModel,
             CreateController createController,

@@ -1,7 +1,7 @@
 package use_case.create;
 
 /**
- * Input boundary for Create Use Case
+ * Input boundary for Create Use Case.
  */
 public interface CreateInputBoundary {
 

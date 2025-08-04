@@ -21,26 +21,50 @@ public class PortfolioOutputData {
         this.stockPrices = stockPrices;
     }
 
+    /**
+     * Getter.
+     * @return Stock Names
+     */
     public String[] getStockNames() {
         return stockNames;
     }
 
+    /**
+     * Getter.
+     * @return Stock Amounts
+     */
     public int[] getStockAmounts() {
         return stockAmounts;
     }
 
+    /**
+     * Getter.
+     * @return Stock Prices
+     */
     public double[] getStockPrices() {
         return stockPrices;
     }
 
+    /**
+     * Getter.
+     * @return Portfolio Id
+     */
     public String getPortfolioId() {
         return portfolioId;
     }
 
+    /**
+     * Getter.
+     * @return Portfolio Name
+     */
     public String getPortfolioName() {
         return portfolioName;
     }
 
+    /**
+     * Getter.
+     * @return Username
+     */
     public String getUsername() {
         return username;
     }

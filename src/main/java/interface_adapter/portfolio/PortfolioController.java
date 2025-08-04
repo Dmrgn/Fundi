@@ -27,7 +27,7 @@ public class PortfolioController {
     }
 
     /**
-     * Switch to the Buy View
+     * Switch to the Buy View.
      * @param portfolioId Set the state information for the Buy View Model
      */
     public void routeToBuy(String portfolioId) {
@@ -35,7 +35,7 @@ public class PortfolioController {
     }
 
     /**
-     * Switch to the Sell View
+     * Switch to the Sell View.
      * @param portfolioId Set the state information for the Sell View Model
      */
     public void routeToSell(String portfolioId) {

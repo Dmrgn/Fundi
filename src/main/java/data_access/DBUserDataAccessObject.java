@@ -1,6 +1,11 @@
 package data_access;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +22,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
     private final Map<String, String> nameToId = new HashMap<>();
 
     /**
-     * Load the user data into memory
+     * Load the user data into memory.
      * @throws SQLException If the SQL connection fails
      */
     public DBUserDataAccessObject() throws SQLException {
@@ -33,8 +38,10 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                 accounts.put(id, new User(username, password));
                 nameToId.put(username, id);
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
 
     }
@@ -52,14 +59,16 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
             while (rs.next()) {
                 id = rs.getString("id");
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
         return id;
     }
 
     /**
-     * Save the user into the DAO
+     * Save the user into the DAO.
      * @param user the user to save
      */
     @Override
@@ -70,24 +79,20 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
     }
 
     /**
-     * Get the user corresponding with the username
+     * Get the user corresponding with the username.
      * @param username the username to look up
      * @return The user object
      */
     @Override
     public User get(String username) {
-        if (!nameToId.containsKey(username)) {
+        if (!nameToId.containsKey(username) || accounts.containsKey(nameToId.get(username))) {
             return null;
         }
-        String id = nameToId.get(username);
-        if (!accounts.containsKey(id)) {
-            return null;
-        }
-        return accounts.get(id);
+        return accounts.get(nameToId.get(username));
     }
 
     /**
-     * Check if a user exists in the database
+     * Check if a user exists in the database.
      * @param username the username to look for
      * @return True or false based on whether the username exists
      */
@@ -97,7 +102,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
     }
 
     /**
-     * Remove the user from the DAO
+     * Remove the user from the DAO.
      * (For testing only)
      * @param username The username
      */
@@ -111,8 +116,10 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
             pstmt.setString(1, username);
             pstmt.executeUpdate();
 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
     }
 }

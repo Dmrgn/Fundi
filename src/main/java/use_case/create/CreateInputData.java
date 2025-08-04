@@ -13,10 +13,18 @@ public class CreateInputData {
         this.portfolioName = portfolioName;
     }
 
+    /**
+     * Getter.
+     * @return Username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Getter.
+     * @return Portfolio Name
+     */
     public String getPortfolioName() {
         return portfolioName;
     }

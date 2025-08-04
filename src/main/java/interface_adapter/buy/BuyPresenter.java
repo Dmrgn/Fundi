@@ -7,7 +7,7 @@ import use_case.buy.BuyOutputBoundary;
 import use_case.buy.BuyOutputData;
 
 /**
- * Presenter for the Buy Use Case
+ * Presenter for the Buy Use Case.
  */
 public class BuyPresenter implements BuyOutputBoundary {
 

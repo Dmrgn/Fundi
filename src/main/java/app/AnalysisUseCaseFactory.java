@@ -2,24 +2,32 @@ package app;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analysis.AnalysisController;
-import use_case.analysis.AnalysisInteractor;
 import interface_adapter.analysis.AnalysisPresenter;
 import interface_adapter.analysis.AnalysisViewModel;
 import interface_adapter.navigation.NavigationController;
-
 import use_case.analysis.AnalysisInputBoundary;
+import use_case.analysis.AnalysisInteractor;
 import use_case.analysis.AnalysisOutputBoundary;
 import use_case.analysis.AnalysisStockDataAccessInterface;
 import use_case.analysis.AnalysisTransactionDataAccessInterface;
 
 /**
- * Factory for the Analysis Use case
+ * Factory for the Analysis Use case.
  */
-public class AnalysisUseCaseFactory {
+public final class AnalysisUseCaseFactory {
     private AnalysisUseCaseFactory() {
 
     }
 
+    /**
+     * Create the Analysis Controller.
+     * @param viewManagerModel The View Manager Model
+     * @param analysisViewModel The Analysis View Model
+     * @param stockDataAccessObject The Stock DAO
+     * @param transactionDataAccessObject The Transaction DAO
+     * @param navigationController The Navigation Controller
+     * @return The Analysis Controller
+     */
     public static AnalysisController create(
             ViewManagerModel viewManagerModel,
             AnalysisViewModel analysisViewModel,

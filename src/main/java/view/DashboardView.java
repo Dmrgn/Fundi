@@ -1,11 +1,14 @@
 package view;
 
 import entity.PortfolioValuePoint;
+import entity.SearchResult;
+import interface_adapter.company_details.CompanyDetailsController;
 import interface_adapter.dashboard.DashboardController;
 import interface_adapter.dashboard.DashboardState;
 import interface_adapter.dashboard.DashboardViewModel;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
+import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
 import org.jfree.chart.ChartFactory;
@@ -30,32 +33,61 @@ public class DashboardView extends BaseView {
     private final SearchViewModel searchViewModel;
     private final DashboardViewModel dashboardViewModel;
     private final DashboardController dashboardController;
+    private final NavigationController navigationController;
+    private final CompanyDetailsController companyDetailsController;
     private ChartPanel chartPanel;
+    private JPanel resultsPanel; // Keep reference to results panel for back button functionality
+    private JPanel backButtonPanel; // Reference for top-left back button
 
     public DashboardView(MainViewModel mainViewModel, SearchController searchController,
             SearchViewModel searchViewModel, DashboardViewModel dashboardViewModel,
-            DashboardController dashboardController) {
+            DashboardController dashboardController, NavigationController navigationController,
+            CompanyDetailsController companyDetailsController) {
         super("dashboard");
         this.mainViewModel = mainViewModel;
         this.searchController = searchController;
         this.searchViewModel = searchViewModel;
         this.dashboardViewModel = dashboardViewModel;
         this.dashboardController = dashboardController;
+        this.navigationController = navigationController;
+        this.companyDetailsController = companyDetailsController;
 
         JPanel contentPanel = createGradientContentPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setLayout(new BorderLayout());
+
+        // Create back button panel (top-left corner)
+        backButtonPanel = createBackButtonPanel(e -> {
+            // Clear search results and hide results panel
+            var searchState = searchViewModel.getState();
+            searchState.setSearchResults(null);
+            searchState.setSearchError(null);
+            searchState.setQuery("");
+            searchViewModel.setState(searchState);
+            searchViewModel.firePropertyChanged();
+        });
+        backButtonPanel.setVisible(false);
+        // Use left-aligned FlowLayout for top panel
+        JPanel topPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
+        topPanel.setOpaque(false);
+        topPanel.add(backButtonPanel);
+        contentPanel.add(topPanel, BorderLayout.NORTH);
+
+        // Wrap dashboard content in a separate panel
+        JPanel dashboardContent = new JPanel();
+        dashboardContent.setLayout(new BoxLayout(dashboardContent, BoxLayout.Y_AXIS));
+        dashboardContent.setOpaque(false);
+        dashboardContent.add(createWelcomePanel());
+        dashboardContent.add(Box.createVerticalStrut(20));
+        dashboardContent.add(createSearchPanel());
+        dashboardContent.add(Box.createVerticalStrut(20));
+        dashboardContent.add(createPortfolioChart());
+        dashboardContent.add(Box.createVerticalStrut(20));
+        dashboardContent.add(createUsernamePanel());
+        dashboardContent.add(Box.createVerticalGlue());
+
+        contentPanel.add(dashboardContent, BorderLayout.CENTER);
 
         this.add(contentPanel, BorderLayout.CENTER);
-
-        // Create the dashboard content
-        contentPanel.add(createWelcomePanel());
-        contentPanel.add(Box.createVerticalStrut(20));
-        contentPanel.add(createSearchPanel());
-        contentPanel.add(Box.createVerticalStrut(20));
-        contentPanel.add(createPortfolioChart());
-        contentPanel.add(Box.createVerticalStrut(20));
-        contentPanel.add(createUsernamePanel());
-        contentPanel.add(Box.createVerticalGlue());
 
         // Set up listeners
         setupListeners();
@@ -100,6 +132,12 @@ public class DashboardView extends BaseView {
         JTextField searchField = UIFactory.createTextField();
         JPanel searchPanel = UIFactory.createSingleFieldForm(searchField, searchButton);
 
+        // Create results area
+        resultsPanel = new JPanel();
+        resultsPanel.setLayout(new BoxLayout(resultsPanel, BoxLayout.Y_AXIS));
+        resultsPanel.setOpaque(false);
+        resultsPanel.setVisible(false); // Initially hidden
+
         // Wire up search functionality
         Runnable doSearch = () -> {
             String query = searchField.getText();
@@ -112,9 +150,112 @@ public class DashboardView extends BaseView {
         searchButton.addActionListener(e -> doSearch.run());
         searchField.addActionListener(e -> doSearch.run());
 
+        // Listen for search results
+        searchViewModel.addPropertyChangeListener(evt -> {
+            var searchState = searchViewModel.getState();
+
+            // Clear previous results
+            resultsPanel.removeAll();
+
+            if (searchState.getSearchError() != null) {
+                // Show error and back button
+                JLabel errorLabel = new JLabel("Error: " + searchState.getSearchError());
+                errorLabel.setForeground(Color.RED);
+                errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+                resultsPanel.add(errorLabel);
+                resultsPanel.setVisible(true);
+                backButtonPanel.setVisible(true);
+            } else if (searchState.getSearchResults() != null && !searchState.getSearchResults().isEmpty()) {
+                // Show results and back button
+                JLabel resultsTitle = new JLabel("Search Results:");
+                resultsTitle.setFont(new Font("Sans Serif", Font.BOLD, 14));
+                resultsTitle.setForeground(Color.WHITE);
+                resultsTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+                resultsPanel.add(resultsTitle);
+                resultsPanel.add(Box.createVerticalStrut(10));
+
+                for (var result : searchState.getSearchResults()) {
+                    JPanel resultItem = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
+                    resultItem.setOpaque(false);
+                    resultItem.setMaximumSize(new Dimension(600, 35));
+                    resultItem.setPreferredSize(new Dimension(600, 35));
+                    resultItem.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                    resultItem.setBorder(BorderFactory.createEmptyBorder(5, 10, 5, 10));
+
+                    // Make the result item clickable
+                    resultItem.addMouseListener(new java.awt.event.MouseAdapter() {
+                        @Override
+                        public void mouseClicked(java.awt.event.MouseEvent e) {
+                            // Trigger company details fetch and update navigation stack
+                            companyDetailsController.execute(result.getSymbol(), "tabbedmain");
+                        }
+
+                        @Override
+                        public void mouseEntered(java.awt.event.MouseEvent e) {
+                            resultItem.setOpaque(true);
+                            resultItem.setBackground(new Color(70, 100, 150, 180));
+                            resultItem.setBorder(BorderFactory.createLineBorder(Color.CYAN, 2));
+                            resultItem.revalidate();
+                            resultItem.repaint();
+                        }
+
+                        @Override
+                        public void mouseExited(java.awt.event.MouseEvent e) {
+                            resultItem.setOpaque(false);
+                            resultItem.setBackground(null);
+                            resultItem.setBorder(null);
+                            resultItem.revalidate();
+                            resultItem.repaint();
+                        }
+                    });
+
+                    JLabel symbolLabel = new JLabel(result.getSymbol());
+                    symbolLabel.setFont(new Font("Sans Serif", Font.BOLD, 14));
+                    symbolLabel.setForeground(Color.CYAN);
+                    symbolLabel.setPreferredSize(new Dimension(80, 25));
+
+                    JLabel nameLabel = new JLabel(result.getName());
+                    nameLabel.setFont(new Font("Sans Serif", Font.PLAIN, 13));
+                    nameLabel.setForeground(Color.WHITE);
+                    nameLabel.setPreferredSize(new Dimension(300, 25));
+
+                    JLabel typeLabel = new JLabel("(" + result.getType() + ")");
+                    typeLabel.setFont(new Font("Sans Serif", Font.ITALIC, 11));
+                    typeLabel.setForeground(Color.LIGHT_GRAY);
+
+                    // Add click hint
+                    JLabel clickHint = new JLabel("→ Click for details");
+                    clickHint.setFont(new Font("Sans Serif", Font.ITALIC, 10));
+                    clickHint.setForeground(new Color(100, 149, 237));
+
+                    resultItem.add(symbolLabel);
+                    resultItem.add(nameLabel);
+                    resultItem.add(typeLabel);
+                    resultItem.add(clickHint);
+
+                    resultsPanel.add(resultItem);
+                }
+                resultsPanel.setVisible(true);
+                backButtonPanel.setVisible(true);
+            } else {
+                // No results or cleared results - hide everything
+                resultsPanel.setVisible(false);
+                backButtonPanel.setVisible(false);
+            }
+
+            resultsPanel.revalidate();
+            resultsPanel.repaint();
+            backButtonPanel.revalidate();
+            backButtonPanel.repaint();
+            searchContainer.revalidate();
+            searchContainer.repaint();
+        });
+
         searchContainer.add(searchTitle);
         searchContainer.add(Box.createVerticalStrut(10));
         searchContainer.add(searchPanel);
+        searchContainer.add(Box.createVerticalStrut(10));
+        searchContainer.add(resultsPanel);
 
         return searchContainer;
     }

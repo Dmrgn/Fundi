@@ -85,7 +85,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
      */
     @Override
     public User get(String username) {
-        if (!nameToId.containsKey(username) || accounts.containsKey(nameToId.get(username))) {
+        if (!nameToId.containsKey(username) || !accounts.containsKey(nameToId.get(username))) {
             return null;
         }
         return accounts.get(nameToId.get(username));

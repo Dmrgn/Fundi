@@ -1,17 +1,24 @@
 package entity;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
- * A class containing helper functions for financial calculations
+ * A class containing helper functions for financial calculations.
  */
-public class FinancialCalculator {
+public final class FinancialCalculator {
+    private static final double PERCENT = 100;
+    private static final double TOLERANCE = 1e-8;
+
     private FinancialCalculator() {
 
     }
 
     /**
-     * Return a mapping from each ticker in the transaction list to its corresponding total amount
+     * Return a mapping from each ticker in the transaction list to its corresponding total amount.
      * @param transactions The list of transactions to parse
      * @return The mapping from ticker to amount
      */
@@ -25,7 +32,9 @@ public class FinancialCalculator {
             }
             if (!tickerAmounts.containsKey(ticker)) {
                 tickerAmounts.put(ticker, quantity);
-            } else {
+            }
+
+            else {
                 tickerAmounts.put(ticker, tickerAmounts.get(ticker) + quantity);
             }
 
@@ -37,7 +46,7 @@ public class FinancialCalculator {
     }
 
     /**
-     * The total amount of tickers in the ticker mapping
+     * The total amount of tickers in the ticker mapping.
      * @param tickerAmounts A mapping from ticker to amount
      * @return The total number of tickers
      */
@@ -46,18 +55,17 @@ public class FinancialCalculator {
     }
 
     /**
-     * Compute what percentage the given amount is of the total amount
+     * Compute what percentage the given amount is of the total amount.
      * @param totalAmount The total
      * @param amount The part to compute the percentage for
      * @return The percentage
      */
     public static double computePercentage(int totalAmount, int amount) {
-        return (double) amount / totalAmount * 100;
+        return (double) amount / totalAmount * PERCENT;
     }
 
-
     /**
-     * Compute the volatility of a price time series for a single ticker
+     * Compute the volatility of a price time series for a single ticker.
      * @param prices The price time series
      * @return The volatility
      */
@@ -72,7 +80,7 @@ public class FinancialCalculator {
     }
 
     /**
-     * Compute the return timeseries of price time series
+     * Compute the return timeseries of price time series.
      * @param prices The price time series
      * @return The return time series
      */
@@ -87,7 +95,7 @@ public class FinancialCalculator {
     }
 
     /**
-     * Compute the mean of a list
+     * Compute the mean of a list.
      * @param values The list
      * @return The mean
      */
@@ -100,21 +108,21 @@ public class FinancialCalculator {
     }
 
     /**
-     * Compute the return of a time series of stockdata
+     * Compute the return of a time series of stockdata.
      * @param stockData The stock data time series
      * @return The total return
      */
     public static double computeReturn(List<StockData> stockData) {
         // Enforce sorting
-        List<StockData> sortedStockData = stockData.stream().
-                sorted(Comparator.comparing(StockData::getTimestamp)).toList();
+        List<StockData> sortedStockData = stockData.stream()
+                .sorted(Comparator.comparing(StockData::getTimestamp)).toList();
         double latestPrice = sortedStockData.get(stockData.size() - 1).getPrice();
         double earliestPrice = sortedStockData.get(0).getPrice();
-        return (latestPrice - earliestPrice) / earliestPrice * 100;
+        return (latestPrice - earliestPrice) / earliestPrice * PERCENT;
     }
 
     /**
-     * Compute the Sharpe Ratio of a price time series
+     * Compute the Sharpe Ratio of a price time series.
      * @param prices The price time series
      * @return The Sharpe Ratio of the time series
      */
@@ -124,6 +132,6 @@ public class FinancialCalculator {
 
         double vol = computeVolatility(returns);
 
-        return avgReturn / (vol + 1e-8);
+        return avgReturn / (vol + TOLERANCE);
     }
 }

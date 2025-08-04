@@ -3,7 +3,7 @@ package view;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
-import view.components.UIFactory;
+import view.components.UiFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,10 +19,10 @@ public class LoginView extends BaseView implements PropertyChangeListener {
     private final LoginViewModel loginViewModel;
     private final LoginController loginController;
 
-    private final JTextField usernameField = UIFactory.createTextField();
-    private final JPasswordField passwordField = UIFactory.createPasswordField();
-    private final JButton loginButton = UIFactory.createStyledButton("Login");
-    private final JButton signUpButton = UIFactory.createStyledButton("Sign Up");
+    private final JTextField usernameField = UiFactory.createTextField();
+    private final JPasswordField passwordField = UiFactory.createPasswordField();
+    private final JButton loginButton = UiFactory.createStyledButton("Login");
+    private final JButton signUpButton = UiFactory.createStyledButton("Sign Up");
 
     public LoginView(LoginViewModel loginViewModel, LoginController loginController) {
         super("log in");
@@ -33,9 +33,9 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        JPanel titlePanel = UIFactory.createTitlePanel("Login Screen");
+        JPanel titlePanel = UiFactory.createTitlePanel("Login Screen");
         JPanel formPanel = createFormPanel();
-        JPanel buttonPanel = UIFactory.createButtonPanel(loginButton, signUpButton);
+        JPanel buttonPanel = UiFactory.createButtonPanel(loginButton, signUpButton);
 
         contentPanel.add(Box.createVerticalGlue());
         contentPanel.add(titlePanel);
@@ -55,8 +55,8 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         form.setOpaque(false);
         form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
 
-        JPanel usernameInfo = UIFactory.createFormPanel("Username", usernameField);
-        JPanel passwordInfo = UIFactory.createFormPanel("Password", passwordField);
+        JPanel usernameInfo = UiFactory.createFormPanel("Username", usernameField);
+        JPanel passwordInfo = UiFactory.createFormPanel("Password", passwordField);
 
         form.add(usernameInfo);
         form.add(Box.createVerticalStrut(10));

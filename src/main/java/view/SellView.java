@@ -10,7 +10,7 @@ import interface_adapter.navigation.NavigationController;
 import interface_adapter.sell.SellController;
 import interface_adapter.sell.SellState;
 import interface_adapter.sell.SellViewModel;
-import view.components.UIFactory;
+import view.components.UiFactory;
 
 /**
  * The View for the Sell Use Case
@@ -33,15 +33,15 @@ public class SellView extends BaseView implements PropertyChangeListener {
 
         // === 1. Top panel with plain text intro ===
 
-        JPanel titlePanel = UIFactory.createTitlePanel("Sell Stock");
+        JPanel titlePanel = UiFactory.createTitlePanel("Sell Stock");
         contentPanel.add(titlePanel, BorderLayout.NORTH);
         contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()), BorderLayout.NORTH);
 
-        JTextField tickerField = UIFactory.createTextField();
-        JPanel tickerPanel = UIFactory.createFormPanel("Ticker", tickerField);
+        JTextField tickerField = UiFactory.createTextField();
+        JPanel tickerPanel = UiFactory.createFormPanel("Ticker", tickerField);
 
-        JTextField amountField = UIFactory.createTextField();
-        JPanel amountPanel = UIFactory.createFormPanel("Amount", amountField);
+        JTextField amountField = UiFactory.createTextField();
+        JPanel amountPanel = UiFactory.createFormPanel("Amount", amountField);
 
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
@@ -53,7 +53,7 @@ public class SellView extends BaseView implements PropertyChangeListener {
         contentPanel.add(formPanel, BorderLayout.CENTER);
 
 
-        final JButton buy = UIFactory.createStyledButton("Sell");
+        final JButton buy = UiFactory.createStyledButton("Sell");
         buy.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(buy)) {
@@ -66,7 +66,7 @@ public class SellView extends BaseView implements PropertyChangeListener {
                     }
                 }
         );
-        contentPanel.add(UIFactory.createButtonPanel(buy), BorderLayout.SOUTH);
+        contentPanel.add(UiFactory.createButtonPanel(buy), BorderLayout.SOUTH);
         this.add(contentPanel, BorderLayout.CENTER);
     }
 

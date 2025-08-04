@@ -1,7 +1,7 @@
 package view;
 
 import interface_adapter.navigation.NavigationController;
-import view.components.UIFactory;
+import view.components.UiFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +19,7 @@ public class WatchlistView extends BaseView {
         this.add(contentPanel, BorderLayout.CENTER);
 
         // Title
-        contentPanel.add(UIFactory.createTitlePanel("Watchlist"));
+        contentPanel.add(UiFactory.createTitlePanel("Watchlist"));
         contentPanel.add(Box.createVerticalStrut(30));
 
         JLabel descriptionLabel = new JLabel("Track your favorite stocks and monitor their performance.");

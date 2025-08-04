@@ -13,7 +13,7 @@ import javax.swing.table.DefaultTableModel;
 import interface_adapter.history.HistoryState;
 import interface_adapter.history.HistoryViewModel;
 import interface_adapter.navigation.NavigationController;
-import view.components.UIFactory;
+import view.components.UiFactory;
 
 /**
  * The View for the History Use Case
@@ -40,7 +40,7 @@ public class HistoryView extends BaseView {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()));
         contentPanel.add(Box.createVerticalStrut(10));
-        contentPanel.add(UIFactory.createTitlePanel("Portfolio History"));
+        contentPanel.add(UiFactory.createTitlePanel("Portfolio History"));
         contentPanel.add(createCenterPanel());
         this.add(contentPanel);
 
@@ -50,7 +50,7 @@ public class HistoryView extends BaseView {
     private JPanel createCenterPanel() {
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
-        JScrollPane table = UIFactory.createStyledTable(tableModel);
+        JScrollPane table = UiFactory.createStyledTable(tableModel);
         centerPanel.add(table, BorderLayout.CENTER);
         return centerPanel;
     }

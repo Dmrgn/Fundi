@@ -10,7 +10,7 @@ import interface_adapter.buy.BuyController;
 import interface_adapter.buy.BuyState;
 import interface_adapter.buy.BuyViewModel;
 import interface_adapter.navigation.NavigationController;
-import view.components.UIFactory;
+import view.components.UiFactory;
 
 /**
  * The View for the Buy Use Case
@@ -33,7 +33,7 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         // Add back button (top left) using w/ NavigationController
         contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()), BorderLayout.NORTH);
 
-        JPanel welcomePanel = UIFactory.createTitlePanel("Buy Stock");
+        JPanel welcomePanel = UiFactory.createTitlePanel("Buy Stock");
         contentPanel.add(welcomePanel, BorderLayout.CENTER);
 
         JPanel formPanel = new JPanel();
@@ -41,18 +41,18 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.setOpaque(false);
 
-        JTextField tickerField = UIFactory.createTextField();
-        final JPanel tickerPanel = UIFactory.createFormPanel("Ticker Name", tickerField);
+        JTextField tickerField = UiFactory.createTextField();
+        final JPanel tickerPanel = UiFactory.createFormPanel("Ticker Name", tickerField);
 
-        JTextField amountField = UIFactory.createTextField();
-        final JPanel amountPanel = UIFactory.createFormPanel("Amount Name", amountField);
+        JTextField amountField = UiFactory.createTextField();
+        final JPanel amountPanel = UiFactory.createFormPanel("Amount Name", amountField);
 
         formPanel.add(tickerPanel);
         formPanel.add(Box.createVerticalStrut(5));
         formPanel.add(amountPanel);
         contentPanel.add(formPanel, BorderLayout.CENTER);
 
-        final JButton buy = UIFactory.createStyledButton("Buy");
+        final JButton buy = UiFactory.createStyledButton("Buy");
         buy.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(buy)) {
@@ -63,7 +63,7 @@ public class BuyView extends BaseView implements PropertyChangeListener {
                                 Integer.parseInt(amountField.getText()));
                     }
                 });
-        contentPanel.add(UIFactory.createButtonPanel(buy), BorderLayout.SOUTH);
+        contentPanel.add(UiFactory.createButtonPanel(buy), BorderLayout.SOUTH);
         add(contentPanel, BorderLayout.CENTER);
     }
 

@@ -5,7 +5,7 @@ import interface_adapter.portfolio_hub.PortfolioHubState;
 import interface_adapter.portfolio_hub.PortfolioHubViewModel;
 import interface_adapter.portfolio_hub.PortfolioHubController;
 import interface_adapter.navigation.NavigationController;
-import view.components.UIFactory;
+import view.components.UiFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,7 +20,7 @@ public class PortfolioHubView extends BaseView {
     private final PortfolioController portfolioController;
     private final NavigationController navigationController;
 
-    private final JPanel buttonPanel = UIFactory.createButtonPanel();
+    private final JPanel buttonPanel = UiFactory.createButtonPanel();
 
     public PortfolioHubView(PortfolioHubViewModel portfoliosViewModel, PortfolioHubController portfolioHubController,
                             PortfolioController portfolioController, NavigationController navigationController) {
@@ -35,11 +35,11 @@ public class PortfolioHubView extends BaseView {
 
         this.add(contentPanel, BorderLayout.CENTER);
 
-        contentPanel.add(UIFactory.createTitlePanel("Portfolios"));
+        contentPanel.add(UiFactory.createTitlePanel("Portfolios"));
         contentPanel.add(Box.createVerticalStrut(10));
         contentPanel.add(createCreateButtonPanel());
         contentPanel.add(Box.createVerticalStrut(20));
-        contentPanel.add(UIFactory.createLabel("Your Portfolios:"));
+        contentPanel.add(UiFactory.createLabel("Your Portfolios:"));
         contentPanel.add(Box.createVerticalStrut(10));
         contentPanel.add(buttonPanel);
         contentPanel.add(Box.createVerticalGlue());
@@ -48,14 +48,14 @@ public class PortfolioHubView extends BaseView {
     }
 
     private JPanel createCreateButtonPanel() {
-        JButton createButton = UIFactory.createStyledButton("Create New Portfolio");
+        JButton createButton = UiFactory.createStyledButton("Create New Portfolio");
         createButton.setAlignmentX((Component.CENTER_ALIGNMENT));
         createButton.addActionListener(e -> {
             PortfolioHubState portfoliosState = this.portfoliosViewModel.getState();
             this.portfolioHubController.routeToCreate(portfoliosState.getUsername());
         });
 
-        return UIFactory.createButtonPanel(createButton);
+        return UiFactory.createButtonPanel(createButton);
     }
 
     private void registerViewModelListener() {
@@ -65,7 +65,7 @@ public class PortfolioHubView extends BaseView {
             Map<String, String> portfolios = portfoliosState.getPortfolios();
 
             for (String portfolio : portfolios.keySet()) {
-                JButton button = UIFactory.createStyledButton(portfolio);
+                JButton button = UiFactory.createStyledButton(portfolio);
                 button.addActionListener(e -> portfolioController.execute(portfoliosState.getUsername(),
                         portfolios.get(portfolio), portfolio));
 

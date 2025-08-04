@@ -46,9 +46,11 @@ import use_case.search.GetMatches;
 import use_case.search.SearchDataAccessInterface;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchOutputBoundary;
-import data_access.APISearchDataAccessObject;
+import data_access.FinnhubSearchDataAccessObject;
 import interface_adapter.news.NewsViewModel;
 import interface_adapter.portfolio_hub.*;
+import interface_adapter.company_details.CompanyDetailsController;
+import interface_adapter.company_details.CompanyDetailsViewModel;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 import view.*;
@@ -166,6 +168,10 @@ public class AppBuilder {
         private final interface_adapter.dashboard.DashboardViewModel dashboardViewModel = new interface_adapter.dashboard.DashboardViewModel();
         private interface_adapter.dashboard.DashboardController dashboardController;
 
+        // Company Details components
+        private final CompanyDetailsViewModel companyDetailsViewModel = new CompanyDetailsViewModel();
+        private CompanyDetailsController companyDetailsController;
+
         private TabbedMainView tabbedMainView;
         private DashboardView dashboardView;
         private WatchlistView watchlistView;
@@ -181,16 +187,18 @@ public class AppBuilder {
         private HistoryView historyView;
         private AnalysisView analysisView;
         private RecommendView recommendView;
+        private CompanyDetailsView companyDetailsView;
 
         public AppBuilder() throws SQLException, IOException {
                 cardPanel.setLayout(cardLayout);
                 SearchOutputBoundary searchPresenter = new SearchPresenter(searchViewModel);
                 SearchDataAccessInterface searchDataAccessObject;
                 try {
-                        searchDataAccessObject = new APISearchDataAccessObject();
+                        searchDataAccessObject = new FinnhubSearchDataAccessObject();
                 } catch (IOException e) {
                         javax.swing.JOptionPane.showMessageDialog(null,
-                                        "Failed to initialize search API. Application exiting...\n" + e.getMessage(),
+                                        "Failed to initialize FinnHub search API. Application exiting...\n"
+                                                        + e.getMessage(),
                                         "Initialization Error",
                                         javax.swing.JOptionPane.ERROR_MESSAGE);
                         System.exit(1);
@@ -201,6 +209,12 @@ public class AppBuilder {
 
                 // Initialize dashboard controller
                 this.dashboardController = DashboardUseCaseFactory.createDashboardController(dashboardViewModel);
+
+                // Initialize company details controller
+                this.companyDetailsController = CompanyDetailsUseCaseFactory.create(
+                                viewManagerModel,
+                                companyDetailsViewModel,
+                                navigationController);
         }
 
         /**
@@ -211,7 +225,8 @@ public class AppBuilder {
         public AppBuilder addTabbedMainView() {
                 // Create dashboard view using the factory
                 dashboardView = DashboardViewFactory.create(mainViewModel, searchController, searchViewModel,
-                                dashboardViewModel, dashboardController);
+                                dashboardViewModel, dashboardController, navigationController,
+                                companyDetailsController);
 
                 // Create placeholder views
                 watchlistView = new WatchlistView(navigationController);
@@ -330,6 +345,20 @@ public class AppBuilder {
                                 recommendController,
                                 viewManagerModel);
                 cardPanel.add(recommendView, recommendView.getViewName());
+                return this;
+        }
+
+        /**
+         * Adds the Company Details View to the application.
+         * 
+         * @return this builder
+         */
+        public AppBuilder addCompanyDetailsView() {
+                companyDetailsView = CompanyDetailsViewFactory.create(
+                                companyDetailsViewModel,
+                                companyDetailsController,
+                                navigationController);
+                cardPanel.add(companyDetailsView, companyDetailsView.getViewName());
                 return this;
         }
 

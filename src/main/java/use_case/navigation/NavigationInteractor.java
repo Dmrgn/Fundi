@@ -30,6 +30,35 @@ public class NavigationInteractor implements NavigationInputBoundary {
         }
     }
 
+    @Override
+    public void navigateToCompany(NavigationInputData inputData, String companySymbol) {
+        // Push current view and company symbol to stacks
+        if (!isExcludedView(inputData.getTargetView())) {
+            navigationState.pushCompanyView(inputData.getCurrentView(), companySymbol);
+        }
+
+        NavigationOutputData outputData = new NavigationOutputData(
+                inputData.getTargetView(), navigationState.canGoBack());
+        presenter.presentCompanyNavigation(outputData, companySymbol);
+    }
+
+    @Override
+    public void goBackFromCompany() {
+        String previousView = navigationState.popView();
+        String previousCompanySymbol = navigationState.popCompanySymbol();
+
+        if (previousView != null) {
+            NavigationOutputData outputData = new NavigationOutputData(
+                    previousView, navigationState.canGoBack());
+
+            if (previousCompanySymbol != null && "company_details".equals(previousView)) {
+                presenter.presentCompanyNavigation(outputData, previousCompanySymbol);
+            } else {
+                presenter.presentBackNavigation(outputData);
+            }
+        }
+    }
+
     private boolean isExcludedView(String viewName) {
         return "login".equals(viewName) || "signup".equals(viewName) || "main".equals(viewName);
     }

@@ -16,4 +16,12 @@ public class NavigationPresenter implements NavigationOutputBoundary {
         viewManagerModel.setState(outputData.getTargetView());
         viewManagerModel.firePropertyChanged();
     }
+
+    @Override
+    public void presentCompanyNavigation(NavigationOutputData outputData, String companySymbol) {
+        // For now, just switch to the target view - the controller will handle the
+        // details
+        viewManagerModel.setState(outputData.getTargetView());
+        viewManagerModel.firePropertyChanged();
+    }
 }

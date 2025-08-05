@@ -1,13 +1,14 @@
 package view;
 
+import interface_adapter.navigation.NavigationController;
 import interface_adapter.portfolio.PortfolioController;
+import interface_adapter.portfolio_hub.PortfolioHubController;
 import interface_adapter.portfolio_hub.PortfolioHubState;
 import interface_adapter.portfolio_hub.PortfolioHubViewModel;
-import interface_adapter.portfolio_hub.PortfolioHubController;
-import interface_adapter.navigation.NavigationController;
-import view.components.ButtonFactory;
-import view.components.LabelFactory;
-import view.components.PanelFactory;
+import view.ui.ButtonFactory;
+import view.ui.LabelFactory;
+import view.ui.PanelFactory;
+import view.ui.UiConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -38,11 +39,11 @@ public class PortfolioHubView extends BaseView {
         this.add(contentPanel, BorderLayout.CENTER);
 
         contentPanel.add(PanelFactory.createTitlePanel("Portfolios"));
-        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(UiConstants.mediumVerticalGap());
         contentPanel.add(createCreateButtonPanel());
-        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(UiConstants.mediumVerticalGap());
         contentPanel.add(LabelFactory.createLabel("Your Portfolios:"));
-        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(UiConstants.bigVerticalGap());
         contentPanel.add(buttonPanel);
         contentPanel.add(Box.createVerticalGlue());
 
@@ -51,8 +52,8 @@ public class PortfolioHubView extends BaseView {
 
     private JPanel createCreateButtonPanel() {
         JButton createButton = ButtonFactory.createStyledButton("Create New Portfolio");
-        createButton.setAlignmentX((Component.CENTER_ALIGNMENT));
-        createButton.addActionListener(e -> {
+        createButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        createButton.addActionListener(evt -> {
             PortfolioHubState portfoliosState = this.portfoliosViewModel.getState();
             this.portfolioHubController.routeToCreate(portfoliosState.getUsername());
         });
@@ -68,7 +69,7 @@ public class PortfolioHubView extends BaseView {
 
             for (String portfolio : portfolios.keySet()) {
                 JButton button = ButtonFactory.createStyledButton(portfolio);
-                button.addActionListener(e -> portfolioController.execute(portfoliosState.getUsername(),
+                button.addActionListener(nxtEvt -> portfolioController.execute(portfoliosState.getUsername(),
                         portfolios.get(portfolio), portfolio));
 
                 buttonPanel.add(button);

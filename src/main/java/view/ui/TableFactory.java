@@ -1,4 +1,4 @@
-package view.components;
+package view.ui;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;

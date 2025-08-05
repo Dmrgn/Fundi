@@ -1,7 +1,7 @@
 package view;
 
 import interface_adapter.navigation.NavigationController;
-import view.components.PanelFactory;
+import view.ui.PanelFactory;
 
 import javax.swing.*;
 import java.awt.*;

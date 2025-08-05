@@ -1,20 +1,19 @@
 package view;
 
 import java.awt.*;
+import java.util.Map;
 
 import javax.swing.*;
 
-import java.util.Map;
-
 import interface_adapter.analysis.AnalysisViewModel;
 import interface_adapter.navigation.NavigationController;
-import view.components.LabelFactory;
-import view.components.PanelFactory;
-import view.components.TitledBorderFactory;
+import view.ui.LabelFactory;
+import view.ui.PanelFactory;
+import view.ui.TitledBorderFactory;
+import view.ui.UiConstants;
 
 public class AnalysisView extends BaseView {
     private static final double TOLERANCE = 0.01;
-    private static final Component VERTICAL_STRUT = Box.createVerticalStrut(10);
 
     private final AnalysisViewModel analysisViewModel;
     private final NavigationController navigationController;
@@ -39,24 +38,24 @@ public class AnalysisView extends BaseView {
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
         contentPanel.add(createBackButtonPanel(evt -> this.navigationController.goBack()));
-        contentPanel.add(VERTICAL_STRUT);
+        contentPanel.add(UiConstants.mediumVerticalGap());
 
         JPanel spreadPanel = createSection("Spread", numTickersLabel, topHoldingsPanel);
         contentPanel.add(spreadPanel);
-        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(UiConstants.mediumVerticalGap());
 
         JPanel volPanel = createSection("Volatility", volatilityLabel, topVolatilityPanel, lowVolatilityPanel);
         contentPanel.add(volPanel);
-        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(UiConstants.mediumVerticalGap());
 
         JPanel returnPanel = createSection("Return", returnLabel, topReturnPanel, lowReturnPanel);
         contentPanel.add(returnPanel);
-        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(UiConstants.mediumVerticalGap());
         contentPanel.add(Box.createVerticalGlue());
 
         JScrollPane scrollPane = new JScrollPane(contentPanel);
         scrollPane.setBorder(null);
-        scrollPane.getVerticalScrollBar().setUnitIncrement(16);
+        scrollPane.getVerticalScrollBar().setUnitIncrement(UiConstants.SCROLL_UNIT_INCREMENT);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         this.add(scrollPane);
@@ -74,10 +73,10 @@ public class AnalysisView extends BaseView {
         panel.add(summaryLabel);
         for (JPanel detailPanel : detailPanels) {
             detailPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            panel.add(Box.createVerticalStrut(5));
+            panel.add(UiConstants.smallVerticalGap());
             panel.add(detailPanel);
         }
-        panel.setMaximumSize(new Dimension(300, Integer.MAX_VALUE));
+        panel.setMaximumSize(UiConstants.DEFAULT_WINDOW_DIM);
         return panel;
     }
 
@@ -105,9 +104,7 @@ public class AnalysisView extends BaseView {
             updateListPanel(topReturnPanel, analysisViewModel.getState().getTopReturns());
             updateListPanel(lowReturnPanel, analysisViewModel.getState().getWorstReturns());
         });
-
     }
-
 
     /**
      * Format a number as a percent.

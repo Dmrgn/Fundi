@@ -10,9 +10,10 @@ import interface_adapter.buy.BuyController;
 import interface_adapter.buy.BuyState;
 import interface_adapter.buy.BuyViewModel;
 import interface_adapter.navigation.NavigationController;
-import view.components.ButtonFactory;
-import view.components.FieldFactory;
-import view.components.PanelFactory;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
+import view.ui.PanelFactory;
+import view.ui.UiConstants;
 
 /**
  * The View for the Buy Use Case
@@ -50,7 +51,7 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         final JPanel amountPanel = PanelFactory.createFormPanel("Amount Name", amountField);
 
         formPanel.add(tickerPanel);
-        formPanel.add(Box.createVerticalStrut(5));
+        formPanel.add(UiConstants.smallVerticalGap());
         formPanel.add(amountPanel);
         contentPanel.add(formPanel, BorderLayout.CENTER);
 

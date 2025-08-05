@@ -13,18 +13,18 @@ import javax.swing.table.DefaultTableModel;
 import interface_adapter.history.HistoryState;
 import interface_adapter.history.HistoryViewModel;
 import interface_adapter.navigation.NavigationController;
-import view.components.PanelFactory;
-import view.components.TableFactory;
+import view.ui.PanelFactory;
+import view.ui.TableFactory;
+import view.ui.UiConstants;
 
 /**
  * The View for the History Use Case
  */
 public class HistoryView extends BaseView {
-
+    private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Price", "Date"};
     private final HistoryViewModel historyViewModel;
     private final interface_adapter.navigation.NavigationController navigationController;
-    private static final String[] columnNames = { "Ticker", "Quantity", "Price", "Date" };
-    private final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
+    private final DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
@@ -39,8 +39,8 @@ public class HistoryView extends BaseView {
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()));
-        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(createBackButtonPanel(evt -> this.navigationController.goBack()));
+        contentPanel.add(UiConstants.mediumVerticalGap());
         contentPanel.add(PanelFactory.createTitlePanel("Portfolio History"));
         contentPanel.add(createCenterPanel());
         this.add(contentPanel);
@@ -67,7 +67,7 @@ public class HistoryView extends BaseView {
             tableModel.setRowCount(0);
 
             for (int i = 0; i < names.length; i++) {
-                tableModel.addRow(new Object[] { names[i], amounts[i], String.format("$%.2f", prices[i]), dates[i] });
+                tableModel.addRow(new Object[] {names[i], amounts[i], String.format("$%.2f", prices[i]), dates[i] });
             }
         });
     }

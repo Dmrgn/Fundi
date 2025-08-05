@@ -3,9 +3,10 @@ package view;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
-import view.components.ButtonFactory;
-import view.components.FieldFactory;
-import view.components.PanelFactory;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
+import view.ui.PanelFactory;
+import view.ui.UiConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,7 +15,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 /**
- * The View for the Login Use Case
+ * The View for the Login Use Case.
  */
 public class LoginView extends BaseView implements PropertyChangeListener {
 
@@ -61,18 +62,18 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         JPanel passwordInfo = PanelFactory.createFormPanel("Password", passwordField);
 
         form.add(usernameInfo);
-        form.add(Box.createVerticalStrut(10));
+        form.add(UiConstants.mediumVerticalGap());
         form.add(passwordInfo);
         return form;
     }
 
     private void wireListeners() {
-        loginButton.addActionListener(e -> {
+        loginButton.addActionListener(evt -> {
             LoginState loginState = loginViewModel.getState();
             loginController.execute(loginState.getUsername(), loginState.getPassword());
         });
 
-        signUpButton.addActionListener(e -> loginController.switchToSignupView());
+        signUpButton.addActionListener(evt -> loginController.switchToSignupView());
 
         usernameField.addKeyListener(new KeyAdapter() {
             @Override

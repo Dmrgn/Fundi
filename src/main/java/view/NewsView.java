@@ -6,8 +6,8 @@ import interface_adapter.news.NewsViewModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.news.NewsState;
 import interface_adapter.navigation.NavigationController;
-import view.components.ButtonFactory;
-import view.components.LabelFactory;
+import view.ui.ButtonFactory;
+import view.ui.LabelFactory;
 
 public class NewsView extends BaseView {
     private final NewsViewModel newsViewModel;

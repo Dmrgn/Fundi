@@ -26,21 +26,23 @@ public class TabbedMainView extends BaseView {
     private final NewsView newsView;
     private final WatchlistView watchlistView;
     private final LeaderboardView leaderboardView;
+    private final SettingsView settingsView;
+
 
     private final JTabbedPane tabbedPane;
 
     public TabbedMainView(MainViewModel mainViewModel,
-            PortfolioHubController portfolioHubController,
-            NewsController newsController,
-            PortfolioController portfolioController,
-            NavigationController navigationController,
-            SearchController searchController,
-            SearchViewModel searchViewModel,
-            DashboardView dashboardView,
-            PortfolioHubView portfoliosView,
-            NewsView newsView,
-            WatchlistView watchlistView,
-            LeaderboardView leaderboardView) {
+                          PortfolioHubController portfolioHubController,
+                          NewsController newsController,
+                          PortfolioController portfolioController,
+                          NavigationController navigationController,
+                          SearchController searchController,
+                          SearchViewModel searchViewModel,
+                          DashboardView dashboardView,
+                          PortfolioHubView portfoliosView,
+                          NewsView newsView,
+                          WatchlistView watchlistView,
+                          LeaderboardView leaderboardView, SettingsView settingsView) {
         super("tabbedmain");
         this.mainViewModel = mainViewModel;
         this.portfolioHubController = portfolioHubController;
@@ -54,6 +56,7 @@ public class TabbedMainView extends BaseView {
         this.newsView = newsView;
         this.watchlistView = watchlistView;
         this.leaderboardView = leaderboardView;
+        this.settingsView = settingsView;
 
         JPanel contentPanel = createGradientContentPanel();
         this.add(contentPanel, BorderLayout.CENTER);
@@ -85,6 +88,8 @@ public class TabbedMainView extends BaseView {
         tabbedPane.addTab("News", newsView);
         tabbedPane.addTab("Watchlist", watchlistView);
         tabbedPane.addTab("Leaderboard", leaderboardView);
+        tabbedPane.addTab("Settings", settingsView);
+
 
         // Add change listener to handle tab switching
         tabbedPane.addChangeListener(e -> {

@@ -13,7 +13,7 @@ import data_access.DBPortfoliosDataAccessObject;
 import data_access.DBStockDataAccessObject;
 import data_access.DBTransactionDataAccessObject;
 import data_access.DBUserDataAccessObject;
-import entity.NavigationState; // Breaking Clean Architecture??
+import entity.NavigationState;
 import interface_adapter.PortfolioViewModelUpdater;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analysis.AnalysisController;
@@ -54,20 +54,19 @@ import use_case.search.SearchDataAccessInterface;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchOutputBoundary;
 import data_access.FinnhubSearchDataAccessObject;
-import interface_adapter.news.NewsViewModel;
 import interface_adapter.portfolio_hub.*;
 import interface_adapter.company_details.CompanyDetailsController;
 import interface_adapter.company_details.CompanyDetailsViewModel;
-import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 import view.*;
 
-/**
- * The AppBuilder class is responsible for putting together the pieces of
- * our CA architecture; piece by piece.
- * <p/>
- * This is done by adding each View and then adding related Use Cases.
- */
+import interface_adapter.change_password.ChangePwdController;
+import interface_adapter.change_password.ChangePwdViewModel;
+import use_case.change_password.ChangePwdInputBoundary;
+import use_case.change_password.ChangePwdInteractor;
+import use_case.change_password.ChangePwdOutputBoundary;
+import use_case.change_password.ChangePwdPresenter;
+
 public class AppBuilder {
         private final JPanel cardPanel = new JPanel();
         private final CardLayout cardLayout = new CardLayout();
@@ -94,6 +93,7 @@ public class AppBuilder {
         private final PortfolioViewModelUpdater portfolioViewModelUpdater = new PortfolioViewModelUpdater();
         private final NavigationState navigationState = new NavigationState();
         private final NavigationOutputBoundary navigationPresenter = new NavigationPresenter(viewManagerModel);
+
         private final NavigationInteractor navigationInteractor = new NavigationInteractor(navigationState,
                         navigationPresenter);
         private final NavigationController navigationController = new NavigationController(navigationInteractor);
@@ -172,13 +172,17 @@ public class AppBuilder {
         private final SearchViewModel searchViewModel = new SearchViewModel();
         private SearchController searchController;
 
-        // Dashboard components
         private final interface_adapter.dashboard.DashboardViewModel dashboardViewModel = new interface_adapter.dashboard.DashboardViewModel();
         private interface_adapter.dashboard.DashboardController dashboardController;
 
-        // Company Details components
         private final CompanyDetailsViewModel companyDetailsViewModel = new CompanyDetailsViewModel();
         private CompanyDetailsController companyDetailsController;
+        private final ChangePwdViewModel changePwdViewModel = new ChangePwdViewModel();
+
+        private SettingsView settingsView;
+        private ChangePwdController changePwdController;
+        private ChangePwdInteractor changePwdInteractor;
+
 
         private TabbedMainView tabbedMainView;
         private DashboardView dashboardView;
@@ -205,25 +209,32 @@ public class AppBuilder {
                         searchDataAccessObject = new FinnhubSearchDataAccessObject();
                 } catch (IOException e) {
                         javax.swing.JOptionPane.showMessageDialog(null,
-                                        "Failed to initialize FinnHub search API. Application exiting...\n"
-                                                        + e.getMessage(),
-                                        "Initialization Error",
-                                        javax.swing.JOptionPane.ERROR_MESSAGE);
+                                "Failed to initialize FinnHub search API. Application exiting...\n" + e.getMessage(),
+                                "Initialization Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                         System.exit(1);
                         return;
                 }
                 SearchInputBoundary getMatches = new GetMatches(searchDataAccessObject, searchPresenter);
                 this.searchController = new SearchController(getMatches);
 
-                // Initialize dashboard controller
                 this.dashboardController = DashboardUseCaseFactory.createDashboardController(dashboardViewModel);
-
-                // Initialize company details controller
                 this.companyDetailsController = CompanyDetailsUseCaseFactory.create(
-                                viewManagerModel,
-                                companyDetailsViewModel,
-                                navigationController);
+                        viewManagerModel, companyDetailsViewModel, navigationController);
         }
+        public AppBuilder addChangePwdUseCase() {
+                ChangePwdOutputBoundary presenter = new ChangePwdPresenter(changePwdViewModel);
+                ChangePwdInputBoundary interactor = new ChangePwdInteractor(userDataAccessObject, presenter, mainViewModel);
+                changePwdController = new ChangePwdController(interactor, mainViewModel);
+                return this;
+        }
+
+        public AppBuilder addSettingsView() {
+                settingsView = new SettingsView(changePwdViewModel, viewManager, loginView);
+                settingsView.setController(changePwdController);
+                cardPanel.add(settingsView, settingsView.getViewName());
+                return this;
+        }
+
 
         /**
          * Adds the Tabbed Main View to the application.
@@ -231,20 +242,15 @@ public class AppBuilder {
          * @return this builder
          */
         public AppBuilder addTabbedMainView() {
-                // Create dashboard view using the factory
                 dashboardView = DashboardViewFactory.create(mainViewModel, searchController, searchViewModel,
-                                dashboardViewModel, dashboardController, navigationController,
-                                companyDetailsController);
-
-                // Create placeholder views
+                        dashboardViewModel, dashboardController, navigationController, companyDetailsController);
                 watchlistView = new WatchlistView(navigationController);
                 final LeaderboardController tempLeaderboardController = LeaderboardUseCaseFactory
                                 .createLeaderboardController(leaderboardViewModel);
                 leaderboardView = LeaderboardViewFactory.create(leaderboardViewModel, tempLeaderboardController);
-
                 tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfolioHubController, newsController,
-                                portfolioController, navigationController, searchController, searchViewModel,
-                                dashboardView, portfoliosView, newsView, watchlistView, leaderboardView);
+                        portfolioController, navigationController, searchController, searchViewModel,
+                        dashboardView, portfoliosView, newsView, watchlistView, leaderboardView, settingsView);
                 cardPanel.add(tabbedMainView, tabbedMainView.getViewName());
                 return this;
         }
@@ -260,6 +266,7 @@ public class AppBuilder {
                 cardPanel.add(signupView, signupView.getViewName());
                 return this;
         }
+
 
         /**
          * Adds the portfolios view to the application
@@ -290,6 +297,7 @@ public class AppBuilder {
                 return this;
         }
 
+
         /**
          * Adds the portfolio view to the application
          *
@@ -313,6 +321,7 @@ public class AppBuilder {
                 return this;
         }
 
+
         /**
          * Adds the buy view to the application
          *
@@ -334,14 +343,17 @@ public class AppBuilder {
         }
 
         public AppBuilder addHistoryView() {
+
                 historyView = HistoryViewFactory.create(
                                 historyViewModel,
                                 navigationController);
+
                 cardPanel.add(historyView, historyView.getViewName());
                 return this;
         }
 
         public AppBuilder addAnalysisView() {
+
                 analysisView = AnalysisViewFactory.create(
                                 analysisViewModel,
                                 navigationController);
@@ -350,6 +362,7 @@ public class AppBuilder {
         }
 
         public AppBuilder addRecommendView() {
+
                 recommendView = RecommendViewFactory.create(
                                 recommendViewModel,
                                 recommendController,
@@ -358,12 +371,7 @@ public class AppBuilder {
                 return this;
         }
 
-        /**
-         * Adds the Company Details View to the application.
-         * 
-         * @return this builder
-         */
-        public AppBuilder addCompanyDetailsView() {
+
                 companyDetailsView = CompanyDetailsViewFactory.create(
                                 companyDetailsViewModel,
                                 companyDetailsController,
@@ -405,15 +413,13 @@ public class AppBuilder {
                 return this;
         }
 
-        /**
-         * Adds the Settings View to the application.
-         *
-         * @return this builder
-         */
-        public AppBuilder addSettingsView() {
-                SettingsView settingsView = new SettingsView(viewManager, navigationController);
-                cardPanel.add(settingsView, "settings");
-                return this;
-        }
 
+        public JFrame build() {
+                final JFrame application = new JFrame("FUNDI");
+                application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                application.add(cardPanel);
+                viewManagerModel.setState(signupViewModel.getViewName());
+                viewManagerModel.firePropertyChanged();
+                return application;
+        } 
 }

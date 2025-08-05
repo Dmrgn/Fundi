@@ -101,4 +101,13 @@ public class LoginView extends BaseView implements PropertyChangeListener {
             JOptionPane.showMessageDialog(this, state.getUsernameError());
         }
     }
+
+    public void clearFields() {
+        usernameField.setText("");
+        passwordField.setText("");
+
+        LoginState newState = new LoginState();
+        loginViewModel.setState(newState);
+    }
+
 }

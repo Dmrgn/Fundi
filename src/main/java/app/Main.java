@@ -37,8 +37,9 @@ public class Main {
                 .addNewsView()
                 .addCompanyDetailsView()
                 .addLeaderboardView()
-                .addTabbedMainView()
+                .addChangePwdUseCase()
                 .addSettingsView()
+                .addTabbedMainView()
                 .build();
         application.pack();
         application.setSize(WIDTH, HEIGHT);

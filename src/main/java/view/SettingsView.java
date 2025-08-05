@@ -1,45 +1,111 @@
 package view;
 
-import view.BaseView;
+import data_access.ExchangeAPIDataAccessObject;
+import interface_adapter.change_password.ChangePwdController;
+import interface_adapter.change_password.ChangePwdViewModel;
 
 import javax.swing.*;
 import java.awt.*;
-import interface_adapter.navigation.NavigationController;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.List;
 
-public class SettingsView extends BaseView {
-    public SettingsView(ViewManager viewManager, NavigationController navigationController) {
-        super("settings");
-        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
+import static view.components.UiFactory.*;
 
-        // Back button at the top
-        this.add(createBackButtonPanel(e -> navigationController.goBack()));
-        this.add(Box.createVerticalStrut(10));
+public class SettingsView extends JPanel {
+    private final String viewName = "settings";
+
+    private final JComboBox<String> currencyDropdown;
+    private final JPasswordField passwordField;
+    private final JButton updatePasswordBtn;
+    private final JButton logoutBtn;
+
+    private ChangePwdController controller;
+
+    public SettingsView(ChangePwdViewModel changePwdViewModel, ViewManager viewManager, LoginView loginView) {
+        JPanel contentPanel = loginView.createGradientContentPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
+        this.setLayout(new BorderLayout());
+        this.add(contentPanel, BorderLayout.CENTER);
 
         JLabel title = new JLabel("Settings");
-        title.setFont(new Font("Arial", Font.BOLD, 24));
+        title.setFont(new Font("Sans Serif", Font.BOLD, 24));
+        title.setForeground(Color.WHITE);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Default currency dropdown
         JLabel currencyLabel = new JLabel("Default Currency:");
-        String[] currencies = { "USD", "EUR", "CAD", "GBP", "JPY" };
-        JComboBox<String> currencyDropdown = new JComboBox<>(currencies);
+        currencyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        currencyLabel.setForeground(Color.WHITE);
+        ExchangeAPIDataAccessObject currencyDAO = new ExchangeAPIDataAccessObject();
+        List<String> currencyList = currencyDAO.getSupportedCurrencies();
+        String[] currencies = currencyList.toArray(new String[0]);
+        currencyDropdown = new JComboBox<>(currencies);
 
-        // Change password (placeholder)
+//        String[] currencies = {"USD", "EUR", "CAD", "GBP", "JPY"};
+//        currencyDropdown = new JComboBox<>(currencies);
+        currencyDropdown.setAlignmentX(Component.CENTER_ALIGNMENT);
+        currencyDropdown.setMaximumSize(new Dimension(200, 30));
+
         JLabel passwordLabel = new JLabel("Change Password:");
-        JPasswordField passwordField = new JPasswordField(15);
-        JButton updatePassword = new JButton("Update");
+        passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        passwordLabel.setForeground(Color.WHITE);
 
-        this.add(Box.createVerticalStrut(30));
-        this.add(title);
-        this.add(Box.createVerticalStrut(20));
-        this.add(currencyLabel);
-        this.add(currencyDropdown);
-        this.add(Box.createVerticalStrut(20));
-        this.add(passwordLabel);
-        this.add(passwordField);
-        this.add(updatePassword);
-        this.add(Box.createVerticalStrut(20));
+        passwordField = createPasswordField();
+        passwordField.setMaximumSize(new Dimension(200, 30));
+        passwordField.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        updatePasswordBtn = createStyledButton("Update Password");
+        updatePasswordBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        logoutBtn = createStyledButton("Log Out");
+        logoutBtn.setForeground(Color.RED);
+        logoutBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        updatePasswordBtn.addActionListener(e -> {
+            String newPwd = getNewPassword();
+            if (controller != null) {
+                controller.execute(newPwd);
+            }
+        });
+
+        logoutBtn.addActionListener(e -> {
+            loginView.clearFields();
+            viewManager.switchTo("log in");
+        });
+
+        contentPanel.add(title);
+        contentPanel.add(Box.createVerticalStrut(30));
+        contentPanel.add(currencyLabel);
+        contentPanel.add(currencyDropdown);
+        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(passwordLabel);
+        contentPanel.add(passwordField);
+        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(updatePasswordBtn);
+        contentPanel.add(Box.createVerticalStrut(30));
+        contentPanel.add(logoutBtn);
+    }
+
+    public void setController(ChangePwdController controller) {
+        this.controller = controller;
+    }
+
+    public String getViewName() {
+        return viewName;
+    }
+
+    public String getSelectedCurrency() {
+        return (String) currencyDropdown.getSelectedItem();
+    }
+
+    public String getNewPassword() {
+        return new String(passwordField.getPassword());
+    }
+
+    public JButton getUpdatePasswordBtn() {
+        return updatePasswordBtn;
+    }
+
+    public JButton getLogoutBtn() {
+        return logoutBtn;
     }
 }

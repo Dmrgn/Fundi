@@ -13,6 +13,8 @@ import entity.User;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
+import javax.swing.*;
+
 /**
  * DAO for user data implemented using a Database to persist the data.
  */
@@ -23,7 +25,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     /**
      * Load the user data into memory.
-     * 
+     *
      * @throws SQLException If the SQL connection fails
      */
     public DBUserDataAccessObject() throws SQLException {
@@ -122,7 +124,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     /**
      * Save the user into the DAO.
-     * 
+     *
      * @param user the user to save
      */
     @Override
@@ -134,7 +136,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     /**
      * Get the user corresponding with the username.
-     * 
+     *
      * @param username the username to look up
      * @return The user object
      */
@@ -146,9 +148,31 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
         return accounts.get(nameToId.get(username));
     }
 
+    @Override
+    public void saveNewPassword(String username, String newPassword) {
+            String query = "UPDATE users SET password = ? WHERE username = ?;";
+            try (PreparedStatement stmt = connection.prepareStatement(query)) {
+                stmt.setString(1, newPassword);
+                stmt.setString(2, username);
+                stmt.executeUpdate();
+
+                if (nameToId.containsKey(username)) {
+                    String id = nameToId.get(username);
+                    User updatedUser = new User(username, newPassword);
+                    accounts.put(id, updatedUser);
+                }
+
+                System.out.println("Password updated successfully for: " + username);
+            } catch (SQLException e) {
+                System.out.println("Error updating password: " + e.getMessage());
+            }
+        }
+
+
+
     /**
      * Check if a user exists in the database.
-     * 
+     *
      * @param username the username to look for
      * @return True or false based on whether the username exists
      */
@@ -160,7 +184,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
     /**
      * Remove the user from the DAO.
      * (For testing only)
-     * 
+     *
      * @param username The username
      */
     public void remove(String username) {

@@ -4,8 +4,8 @@ import entity.LeaderboardEntry;
 import interface_adapter.leaderboard.LeaderboardController;
 import interface_adapter.leaderboard.LeaderboardState;
 import interface_adapter.leaderboard.LeaderboardViewModel;
-import view.components.PanelFactory;
-import view.components.TableFactory;
+import view.ui.PanelFactory;
+import view.ui.TableFactory;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;

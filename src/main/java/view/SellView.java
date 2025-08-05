@@ -10,12 +10,13 @@ import interface_adapter.navigation.NavigationController;
 import interface_adapter.sell.SellController;
 import interface_adapter.sell.SellState;
 import interface_adapter.sell.SellViewModel;
-import view.components.ButtonFactory;
-import view.components.FieldFactory;
-import view.components.PanelFactory;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
+import view.ui.PanelFactory;
+import view.ui.UiConstants;
 
 /**
- * The View for the Sell Use Case
+ * The View for the Sell Use Case.
  */
 public class SellView extends BaseView implements PropertyChangeListener {
 
@@ -32,12 +33,13 @@ public class SellView extends BaseView implements PropertyChangeListener {
 
         JPanel contentPanel = createGradientContentPanel();
 
-
         // === 1. Top panel with plain text intro ===
 
         JPanel titlePanel = PanelFactory.createTitlePanel("Sell Stock");
         contentPanel.add(titlePanel, BorderLayout.NORTH);
-        contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()), BorderLayout.NORTH);
+        contentPanel.add(createBackButtonPanel(evt -> {
+            this.navigationController.goBack();
+        }), BorderLayout.NORTH);
 
         JTextField tickerField = FieldFactory.createTextField();
         JPanel tickerPanel = PanelFactory.createFormPanel("Ticker", tickerField);
@@ -50,10 +52,9 @@ public class SellView extends BaseView implements PropertyChangeListener {
         formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.setOpaque(false);
         formPanel.add(tickerPanel);
-        formPanel.add(Box.createVerticalStrut(5));
+        formPanel.add(UiConstants.smallVerticalGap());
         formPanel.add(amountPanel);
         contentPanel.add(formPanel, BorderLayout.CENTER);
-
 
         final JButton buy = ButtonFactory.createStyledButton("Sell");
         buy.addActionListener(

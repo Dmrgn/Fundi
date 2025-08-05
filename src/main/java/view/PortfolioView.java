@@ -1,15 +1,16 @@
 package view;
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.analysis.AnalysisController;
 import interface_adapter.history.HistoryController;
 import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.recommend.RecommendController;
-import interface_adapter.ViewManagerModel;
-import view.components.ButtonFactory;
-import view.components.LabelFactory;
-import view.components.TableFactory;
+import view.ui.ButtonFactory;
+import view.ui.LabelFactory;
+import view.ui.TableFactory;
+import view.ui.UiConstants;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -19,6 +20,8 @@ import java.awt.*;
  * The View for the Portfolio Use Case
  */
 public class PortfolioView extends BaseView {
+    private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Amount"};
+    private static final String[] USE_CASES = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell"};
     private final PortfolioViewModel portfolioViewModel;
     private final PortfolioController portfolioController;
     private final HistoryController historyController;
@@ -27,11 +30,9 @@ public class PortfolioView extends BaseView {
     private final BackNavigationHelper backNavigationHelper;
     private final JLabel titleLabel = LabelFactory.createTitleLabel("");
     private final JLabel usernameLabel = LabelFactory.createLabel("");
-    private static final String[] columnNames = { "Ticker", "Quantity", "Amount" };
-    private static final String[] useCases = new String[] { "Analysis", "Recommendations", "History", "Buy", "Sell" };
     private final JButton backButton = ButtonFactory.createStyledButton("Back");
-    private final JButton[] useCaseButtons = new JButton[useCases.length];
-    private final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
+    private final JButton[] useCaseButtons = new JButton[USE_CASES.length];
+    private final DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {
             return false;
@@ -68,10 +69,10 @@ public class PortfolioView extends BaseView {
     private JPanel createTopPanel() {
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.add(createBackButtonPanel(e -> backNavigationHelper.goBackToPortfolios()));
+        topPanel.add(createBackButtonPanel(evt -> backNavigationHelper.goBackToPortfolios()));
         topPanel.setOpaque(false);
         topPanel.add(titleLabel);
-        topPanel.add(Box.createVerticalStrut(10));
+        topPanel.add(UiConstants.mediumVerticalGap());
         topPanel.add(usernameLabel);
         return topPanel;
     }
@@ -91,28 +92,28 @@ public class PortfolioView extends BaseView {
         JPanel buttonPanel = ButtonFactory.createButtonPanel(useCaseButtons);
         buttonPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = UiConstants.INSETS;
         gbc.fill = GridBagConstraints.NONE;
 
         for (int i = 0; i < useCaseButtons.length; i++) {
-            gbc.gridx = i % 3;
-            gbc.gridy = i / 3;
+            gbc.gridx = i % UiConstants.INSET_SCALING;
+            gbc.gridy = i / UiConstants.INSET_SCALING;
             buttonPanel.add(useCaseButtons[i], gbc);
         }
-        buttonPanel.setMaximumSize(new Dimension(600, 100));
+        buttonPanel.setMaximumSize(UiConstants.BUTTON_PANEL_DIM);
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         bottomPanel.add(buttonPanel);
-        bottomPanel.add(Box.createVerticalStrut(20));
+        bottomPanel.add(UiConstants.bigVerticalGap());
         // bottomPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
         return bottomPanel;
     }
 
     private void generateButtons() {
-        for (int i = 0; i < useCases.length; i++) {
-            this.useCaseButtons[i] = ButtonFactory.createStyledButton(useCases[i]);
-            this.useCaseButtons[i].setPreferredSize(new Dimension(180, 30));
-            this.useCaseButtons[i].setMaximumSize(new Dimension(180, 30));
-            this.useCaseButtons[i].setMinimumSize(new Dimension(180, 30));
+        for (int i = 0; i < USE_CASES.length; i++) {
+            this.useCaseButtons[i] = ButtonFactory.createStyledButton(USE_CASES[i]);
+            this.useCaseButtons[i].setPreferredSize(UiConstants.PREFERRED_BUTTON_SIZE);
+            this.useCaseButtons[i].setMaximumSize(UiConstants.PREFERRED_BUTTON_SIZE);
+            this.useCaseButtons[i].setMinimumSize(UiConstants.PREFERRED_BUTTON_SIZE);
         }
     }
 
@@ -128,23 +129,31 @@ public class PortfolioView extends BaseView {
             tableModel.setRowCount(0);
 
             for (int i = 0; i < names.length; i++) {
-                tableModel.addRow(new Object[] { names[i], amounts[i], String.format("$%.2f", prices[i]) });
+                tableModel.addRow(new Object[] {names[i], amounts[i], String.format("$%.2f", prices[i])});
             }
         });
 
-        for (int i = 0; i < useCases.length; i++) {
+        for (int i = 0; i < USE_CASES.length; i++) {
             PortfolioState state = this.portfolioViewModel.getState();
             JButton useCaseButton = useCaseButtons[i];
-            useCaseButton.addActionListener(e -> {
+            useCaseButton.addActionListener(evt -> {
                 if (useCaseButton.getText().equals("Buy")) {
                     this.portfolioController.routeToBuy(state.getPortfolioId());
-                } else if (useCaseButton.getText().equals("Sell")) {
+                }
+
+                else if (useCaseButton.getText().equals("Sell")) {
                     this.portfolioController.routeToSell(state.getPortfolioId());
-                } else if (useCaseButton.getText().equals("History")) {
+                }
+
+                else if (useCaseButton.getText().equals("History")) {
                     this.historyController.execute(state.getPortfolioId());
-                } else if (useCaseButton.getText().equals("Analysis")) {
+                }
+
+                else if (useCaseButton.getText().equals("Analysis")) {
                     this.analysisController.execute(state.getPortfolioId());
-                } else if (useCaseButton.getText().equals("Recommendations")) {
+                }
+
+                else if (useCaseButton.getText().equals("Recommendations")) {
                     this.recommendController.execute(state.getPortfolioId());
                 }
             });

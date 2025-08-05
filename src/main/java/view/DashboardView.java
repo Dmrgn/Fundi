@@ -16,9 +16,9 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
-import view.components.ButtonFactory;
-import view.components.FieldFactory;
-import view.components.PanelFactory;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
+import view.ui.PanelFactory;
 
 import javax.swing.*;
 import java.awt.*;

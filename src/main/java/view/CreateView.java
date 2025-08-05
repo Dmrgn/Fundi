@@ -10,7 +10,7 @@ import interface_adapter.create.CreateController;
 import interface_adapter.create.CreateState;
 import interface_adapter.create.CreateViewModel;
 import interface_adapter.ViewManagerModel;
-import view.components.UiFactory;
+import view.ui.*;
 
 /**
  * The View For the Create Use Case
@@ -28,12 +28,14 @@ public class CreateView extends BaseView implements PropertyChangeListener {
         this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
         this.createViewModel.addPropertyChangeListener(this);
         JPanel contentPanel = createGradientContentPanel();
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setLayout(UiConstants.BORDER_LAYOUT);
+        setBorder(UiConstants.EMPTY_BORDER);
         this.add(contentPanel, BorderLayout.CENTER);
 
         // Add back button
-        contentPanel.add(createBackButtonPanel(e -> backNavigationHelper.goBackToPortfolios()), BorderLayout.NORTH);
+        contentPanel.add(createBackButtonPanel(evt -> {
+            backNavigationHelper.goBackToPortfolios();
+        }), BorderLayout.NORTH);
 
         // === 1. Top panel with plain text intro ===
         JPanel centerPanel = new JPanel();
@@ -41,15 +43,15 @@ public class CreateView extends BaseView implements PropertyChangeListener {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel welcomeLabel = UiFactory.createTitleLabel("Create Portfolio");
+        JLabel welcomeLabel = LabelFactory.createTitleLabel("Create Portfolio");
 
         centerPanel.add(welcomeLabel);
-        centerPanel.add(Box.createVerticalStrut(5));
+        centerPanel.add(UiConstants.smallVerticalGap());
 
-        JTextField createNameField = UiFactory.createTextField();
-        final JPanel form = UiFactory.createFormPanel("Name: ", createNameField);
+        JTextField createNameField = FieldFactory.createTextField();
+        final JPanel form = PanelFactory.createFormPanel("Name: ", createNameField);
         centerPanel.add(form);
-        final JButton create = UiFactory.createStyledButton("create");
+        final JButton create = ButtonFactory.createStyledButton("create");
         create.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(create)) {

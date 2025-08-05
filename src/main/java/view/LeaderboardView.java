@@ -1,161 +1,119 @@
 package view;
 
+import entity.LeaderboardEntry;
 import interface_adapter.leaderboard.LeaderboardController;
 import interface_adapter.leaderboard.LeaderboardState;
 import interface_adapter.leaderboard.LeaderboardViewModel;
-import entity.LeaderboardEntry;
-import view.components.UiFactory;
+import view.ui.PanelFactory;
+import view.ui.TableFactory;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
-import java.beans.PropertyChangeListener;
-import java.text.DecimalFormat;
 import java.util.List;
 
-public class LeaderboardView extends BaseView implements ActionListener, PropertyChangeListener {
+public class LeaderboardView extends BaseView {
     private final LeaderboardViewModel leaderboardViewModel;
     private final LeaderboardController leaderboardController;
-
-    private final JButton refreshButton;
-    private final JTable leaderboardTable;
     private final DefaultTableModel tableModel;
-    private final JLabel errorLabel;
-    private final DecimalFormat currencyFormat;
+    private JScrollPane tableScrollPane;
 
-    public LeaderboardView(LeaderboardViewModel leaderboardViewModel, 
-                          LeaderboardController leaderboardController) {
+    public LeaderboardView(LeaderboardViewModel leaderboardViewModel,
+            LeaderboardController leaderboardController) {
         super("leaderboard");
         this.leaderboardViewModel = leaderboardViewModel;
         this.leaderboardController = leaderboardController;
-        this.leaderboardViewModel.addPropertyChangeListener(this);
 
-        this.currencyFormat = new DecimalFormat("$#,##0.00");
-        this.refreshButton = new JButton(LeaderboardViewModel.REFRESH_BUTTON_LABEL);
-        this.errorLabel = new JLabel();
-
-        // Set up table
-        String[] columnNames = {"Rank", "Portfolio", "User", "Portfolio Value"};
-        this.tableModel = new DefaultTableModel(columnNames, 0) {
+        // Initialize table model
+        String[] columnNames = { "Rank", "Username", "Portfolio", "Total Value" };
+        tableModel = new DefaultTableModel(columnNames, 0) {
             @Override
             public boolean isCellEditable(int row, int column) {
-                return false; // Make table non-editable
+                return false; // Make table read-only
             }
         };
-        this.leaderboardTable = new JTable(tableModel);
-        this.leaderboardTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 
-        setupLayout();
-        
-        // Add action listeners
-        refreshButton.addActionListener(this);
-        
-        // Load initial data
-        leaderboardController.execute();
-    }
-
-    private void setupLayout() {
         JPanel contentPanel = createGradientContentPanel();
-        contentPanel.setLayout(new BorderLayout());
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
         this.add(contentPanel, BorderLayout.CENTER);
 
-        // Top panel with title and refresh button
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setOpaque(false);
-        
-        JPanel titlePanel = UiFactory.createTitlePanel(LeaderboardViewModel.TITLE_LABEL);
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        buttonPanel.setOpaque(false);
-        buttonPanel.add(refreshButton);
-        
-        topPanel.add(titlePanel, BorderLayout.CENTER);
-        topPanel.add(buttonPanel, BorderLayout.EAST);
+        // Title
+        contentPanel.add(PanelFactory.createTitlePanel("Leaderboard"));
+        contentPanel.add(Box.createVerticalStrut(30));
 
-        // Center panel with table
-        JScrollPane scrollPane = new JScrollPane(leaderboardTable);
-        scrollPane.setPreferredSize(new Dimension(600, 400));
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
+        JLabel descriptionLabel = new JLabel("Compare your portfolio performance with other users.");
+        descriptionLabel.setFont(new Font("Sans Serif", Font.PLAIN, 14));
+        descriptionLabel.setForeground(new Color(200, 200, 200));
+        descriptionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        // Bottom panel for error messages
-        errorLabel.setForeground(Color.RED);
-        errorLabel.setHorizontalAlignment(JLabel.CENTER);
+        contentPanel.add(descriptionLabel);
+        contentPanel.add(Box.createVerticalStrut(20));
 
-        // Add to content panel
-        contentPanel.add(topPanel, BorderLayout.NORTH);
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
-        contentPanel.add(errorLabel, BorderLayout.SOUTH);
+        // Add Refresh Button
+        JButton refreshButton = new JButton("Refresh Leaderboard");
+        refreshButton.setFont(new Font("Sans Serif", Font.BOLD, 14));
+        refreshButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        refreshButton.setBackground(new Color(70, 130, 180));
+        refreshButton.setForeground(Color.WHITE);
+        refreshButton.setFocusPainted(false);
+        refreshButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        refreshButton.addActionListener(e -> leaderboardController.execute()); // Trigger refresh
+
+        contentPanel.add(refreshButton);
+        contentPanel.add(Box.createVerticalStrut(20));
+
+        // Create table using TableFactory
+        tableScrollPane = TableFactory.createStyledTable(tableModel);
+        tableScrollPane.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        // Customize table for dark theme
+        JTable table = (JTable) tableScrollPane.getViewport().getView();
+        table.setBackground(new Color(45, 45, 45));
+        table.setForeground(Color.WHITE);
+        table.setSelectionBackground(new Color(70, 70, 70));
+        table.setSelectionForeground(Color.WHITE);
+        table.getTableHeader().setBackground(new Color(30, 60, 120));
+        table.getTableHeader().setForeground(Color.WHITE);
+
+        // Set scroll pane background
+        tableScrollPane.getViewport().setBackground(new Color(45, 45, 45));
+        tableScrollPane.setBackground(new Color(45, 45, 45));
+
+        contentPanel.add(tableScrollPane);
+        contentPanel.add(Box.createVerticalGlue());
+
+        // Set up listeners
+        setupListeners();
+
+        // Load leaderboard data when view is created
+        leaderboardController.execute();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        if (e.getSource() == refreshButton) {
-            // Show loading state
+    private void setupListeners() {
+        leaderboardViewModel.addPropertyChangeListener(evt -> {
             LeaderboardState state = leaderboardViewModel.getState();
-            state.setLoading(true);
-            leaderboardViewModel.setState(state);
-            leaderboardViewModel.firePropertyChanged();
-            
-            // Execute refresh
-            leaderboardController.execute();
-        }
+            updateLeaderboard(state.getLeaderboardEntries());
+        });
     }
 
-    @Override
-    public void propertyChange(PropertyChangeEvent evt) {
-        if ("state".equals(evt.getPropertyName())) {
-            LeaderboardState state = (LeaderboardState) evt.getNewValue();
-            updateView(state);
-        }
-    }
-
-    private void updateView(LeaderboardState state) {
-        // Clear error message
-        errorLabel.setText("");
-
-        // Handle loading state
-        if (state.isLoading()) {
-            refreshButton.setEnabled(false);
-            refreshButton.setText("Loading...");
-            return;
-        } else {
-            refreshButton.setEnabled(true);
-            refreshButton.setText(LeaderboardViewModel.REFRESH_BUTTON_LABEL);
-        }
-
-        // Handle error state
-        if (state.getError() != null) {
-            errorLabel.setText(state.getError());
-            return;
-        }
-
-        // Update table with leaderboard data
-        List<LeaderboardEntry> entries = state.getLeaderboardEntries();
-        if (entries != null) {
-            updateTable(entries);
-        }
-    }
-
-    private void updateTable(List<LeaderboardEntry> entries) {
+    private void updateLeaderboard(List<LeaderboardEntry> entries) {
         // Clear existing data
         tableModel.setRowCount(0);
 
-        // Add new data
-        for (LeaderboardEntry entry : entries) {
-            Object[] row = {
-                entry.getRank(),
-                entry.getPortfolioName(),
-                entry.getUsername(),
-                currencyFormat.format(entry.getTotalValue())
-            };
-            tableModel.addRow(row);
+        if (entries != null && !entries.isEmpty()) {
+            // Add entries to table
+            for (LeaderboardEntry entry : entries) {
+                Object[] rowData = {
+                        entry.getRank(),
+                        entry.getUsername(),
+                        entry.getPortfolioName(),
+                        String.format("$%.2f", entry.getTotalValue())
+                };
+                tableModel.addRow(rowData);
+            }
         }
 
-        // Refresh the table
-        tableModel.fireTableDataChanged();
+        // Table automatically repaints when model changes
     }
 }

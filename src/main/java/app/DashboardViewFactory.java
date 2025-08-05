@@ -39,8 +39,12 @@ public class DashboardViewFactory {
             DashboardController dashboardController,
             NavigationController navigationController,
             CompanyDetailsController companyDetailsController) {
-        return new DashboardView(mainViewModel, searchController, searchViewModel,
-                dashboardViewModel, dashboardController, navigationController,
+        return new DashboardView(mainViewModel, 
+                searchController, 
+                searchViewModel,
+                dashboardViewModel,
+                dashboardController,
+                navigationController,
                 companyDetailsController);
     }
 }

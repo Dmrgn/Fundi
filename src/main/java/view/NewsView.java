@@ -6,15 +6,16 @@ import interface_adapter.news.NewsViewModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.news.NewsState;
 import interface_adapter.navigation.NavigationController;
-import view.components.UiFactory;
+import view.ui.ButtonFactory;
+import view.ui.LabelFactory;
 
 public class NewsView extends BaseView {
     private final NewsViewModel newsViewModel;
     private final JPanel newsPanel;
     private NewsController newsController;
     private final NavigationController navigationController;
-    private final JLabel titleLabel = UiFactory.createTitleLabel("Stock Market News");
-    private final JLabel usernameLabel = UiFactory.createLabel("");
+    private final JLabel titleLabel = LabelFactory.createTitleLabel("Stock Market News");
+    private final JLabel usernameLabel = LabelFactory.createLabel("");
     private final JTextField searchField;
     private final JButton searchButton;
 
@@ -49,7 +50,7 @@ public class NewsView extends BaseView {
                 BorderFactory.createEmptyBorder(8, 8, 8, 8)));
 
         // Create and style search button
-        searchButton = UiFactory.createStyledButton("Search News");
+        searchButton = ButtonFactory.createStyledButton("Search News");
 
         // Add search components to search panel
         searchPanel.add(searchField);

@@ -1,8 +1,13 @@
 package data_access;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
 import java.io.IOException;
 import java.net.HttpURLConnection;
 import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Scanner;
@@ -15,7 +20,7 @@ public class ExchangeAPIDataAccessObject {
         List<String> currencies = new ArrayList<>();
 
         try {
-            String apiKey = "f229c467bd5dcb2a9e1291c0";
+            String apiKey = Files.readString(Path.of("data/ExchangeRateAPI_key")).trim();
             URL url = new URL("https://v6.exchangerate-api.com/v6/" + apiKey + "/codes");
 
             HttpURLConnection conn = (HttpURLConnection) url.openConnection();
@@ -23,11 +28,15 @@ public class ExchangeAPIDataAccessObject {
             conn.connect();
 
             int responseCode = conn.getResponseCode();
-            if (responseCode != 200) throw new RuntimeException("HttpResponseCode: " + responseCode);
+            if (responseCode != 200) {
+                throw new RuntimeException("HttpResponseCode: " + responseCode);
+            }
 
             StringBuilder inline = new StringBuilder();
-            Scanner scanner = new Scanner(url.openStream());
-            while (scanner.hasNext()) inline.append(scanner.nextLine());
+            Scanner scanner = new Scanner(conn.getInputStream());
+            while (scanner.hasNext()) {
+                inline.append(scanner.nextLine());
+            }
             scanner.close();
 
             JSONObject json = new JSONObject(inline.toString());
@@ -35,8 +44,7 @@ public class ExchangeAPIDataAccessObject {
 
             for (int i = 0; i < supportedCodes.length(); i++) {
                 JSONArray codePair = supportedCodes.getJSONArray(i);
-                String currencyCode = codePair.getString(0);
-                currencies.add(currencyCode);
+                currencies.add(codePair.getString(0));
             }
 
         } catch (IOException e) {

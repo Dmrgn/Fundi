@@ -8,7 +8,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
-import static view.components.UiFactory.*;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
 
 public class SettingsView extends JPanel {
     private final String viewName = "settings";
@@ -40,8 +41,6 @@ public class SettingsView extends JPanel {
         String[] currencies = currencyList.toArray(new String[0]);
         currencyDropdown = new JComboBox<>(currencies);
 
-//        String[] currencies = {"USD", "EUR", "CAD", "GBP", "JPY"};
-//        currencyDropdown = new JComboBox<>(currencies);
         currencyDropdown.setAlignmentX(Component.CENTER_ALIGNMENT);
         currencyDropdown.setMaximumSize(new Dimension(200, 30));
 
@@ -49,14 +48,14 @@ public class SettingsView extends JPanel {
         passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         passwordLabel.setForeground(Color.WHITE);
 
-        passwordField = createPasswordField();
+        passwordField = FieldFactory.createPasswordField();
         passwordField.setMaximumSize(new Dimension(200, 30));
         passwordField.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        updatePasswordBtn = createStyledButton("Update Password");
+        updatePasswordBtn = ButtonFactory.createStyledButton("Update Password");
         updatePasswordBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        logoutBtn = createStyledButton("Log Out");
+        logoutBtn = ButtonFactory.createStyledButton("Log Out");
         logoutBtn.setForeground(Color.RED);
         logoutBtn.setAlignmentX(Component.CENTER_ALIGNMENT);
 

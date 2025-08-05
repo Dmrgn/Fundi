@@ -372,6 +372,7 @@ public class AppBuilder {
         }
 
 
+        public AppBuilder addCompanyDetailsView() {
                 companyDetailsView = CompanyDetailsViewFactory.create(
                                 companyDetailsViewModel,
                                 companyDetailsController,
@@ -412,14 +413,4 @@ public class AppBuilder {
                 cardPanel.add(leaderboardView, leaderboardView.getViewName());
                 return this;
         }
-
-
-        public JFrame build() {
-                final JFrame application = new JFrame("FUNDI");
-                application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-                application.add(cardPanel);
-                viewManagerModel.setState(signupViewModel.getViewName());
-                viewManagerModel.firePropertyChanged();
-                return application;
-        } 
 }

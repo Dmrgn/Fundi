@@ -23,6 +23,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     /**
      * Load the user data into memory.
+     * 
      * @throws SQLException If the SQL connection fails
      */
     public DBUserDataAccessObject() throws SQLException {
@@ -53,7 +54,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                     price REAL
                 );
                 """;
-        
+
         try (Statement statement = connection.createStatement()) {
             // Execute schema creation
             String[] statements = schema.split(";");
@@ -111,6 +112,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     /**
      * Save the user into the DAO.
+     * 
      * @param user the user to save
      */
     @Override
@@ -122,6 +124,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     /**
      * Get the user corresponding with the username.
+     * 
      * @param username the username to look up
      * @return The user object
      */
@@ -135,6 +138,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     /**
      * Check if a user exists in the database.
+     * 
      * @param username the username to look for
      * @return True or false based on whether the username exists
      */
@@ -146,6 +150,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
     /**
      * Remove the user from the DAO.
      * (For testing only)
+     * 
      * @param username The username
      */
     public void remove(String username) {

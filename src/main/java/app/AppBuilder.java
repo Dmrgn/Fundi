@@ -95,79 +95,79 @@ public class AppBuilder {
         private final NavigationState navigationState = new NavigationState();
         private final NavigationOutputBoundary navigationPresenter = new NavigationPresenter(viewManagerModel);
         private final NavigationInteractor navigationInteractor = new NavigationInteractor(navigationState,
-                navigationPresenter);
+                        navigationPresenter);
         private final NavigationController navigationController = new NavigationController(navigationInteractor);
 
         private final LoginController loginController = LoginUseCaseFactory.create(
-                viewManagerModel,
-                mainViewModel,
-                loginViewModel,
-                signupViewModel,
-                userDataAccessObject);
+                        viewManagerModel,
+                        mainViewModel,
+                        loginViewModel,
+                        signupViewModel,
+                        userDataAccessObject);
         private final SignupController signupController = SignupUseCaseFactory.create(
-                viewManagerModel,
-                signupViewModel,
-                loginViewModel,
-                (SignupUserDataAccessInterface) userDataAccessObject);
+                        viewManagerModel,
+                        signupViewModel,
+                        loginViewModel,
+                        (SignupUserDataAccessInterface) userDataAccessObject);
         private final PortfolioHubController portfolioHubController = PortfolioHubUseCaseFactory.create(
-                viewManagerModel,
-                portfoliosViewModel,
-                createViewModel,
-                portfoliosDataAccessObject);
+                        viewManagerModel,
+                        portfoliosViewModel,
+                        createViewModel,
+                        portfoliosDataAccessObject);
 
         private final CreateController createController = CreateUseCaseFactory.create(
-                viewManagerModel,
-                portfoliosViewModel,
-                createViewModel,
-                portfoliosDataAccessObject);
+                        viewManagerModel,
+                        portfoliosViewModel,
+                        createViewModel,
+                        portfoliosDataAccessObject);
 
         private final NewsController newsController = NewsUseCaseFactory.create(
-                viewManagerModel,
-                newsViewModel,
-                transactionDataAccessObject);
+                        viewManagerModel,
+                        newsViewModel,
+                        transactionDataAccessObject);
         private final PortfolioController portfolioController = PortfolioUseCaseFactory.create(
-                viewManagerModel,
-                portfolioViewModel,
-                buyViewModel,
-                sellViewModel,
-                transactionDataAccessObject,
-                stockDataAccessObject,
-                navigationController);
+                        viewManagerModel,
+                        portfolioViewModel,
+                        buyViewModel,
+                        sellViewModel,
+                        transactionDataAccessObject,
+                        stockDataAccessObject,
+                        navigationController);
 
         private final BuyController buyController = BuyUseCaseFactory.create(
-                viewManagerModel,
-                buyViewModel,
-                portfolioViewModelUpdater,
-                portfolioViewModel,
-                stockDataAccessObject,
-                transactionDataAccessObject);
+                        viewManagerModel,
+                        buyViewModel,
+                        portfolioViewModelUpdater,
+                        portfolioViewModel,
+                        stockDataAccessObject,
+                        transactionDataAccessObject);
 
         private final SellController sellController = SellUseCaseFactory.create(
-                viewManagerModel,
-                sellViewModel,
-                portfolioViewModel,
-                portfolioViewModelUpdater,
-                stockDataAccessObject,
-                transactionDataAccessObject);
+                        viewManagerModel,
+                        sellViewModel,
+                        portfolioViewModel,
+                        portfolioViewModelUpdater,
+                        stockDataAccessObject,
+                        transactionDataAccessObject);
 
         private final HistoryController historyController = HistoryUseCaseFactory.create(
-                viewManagerModel,
-                historyViewModel,
-                transactionDataAccessObject,
-                navigationController);
+                        viewManagerModel,
+                        historyViewModel,
+                        transactionDataAccessObject,
+                        navigationController);
 
         private final AnalysisController analysisController = AnalysisUseCaseFactory.create(
-                viewManagerModel,
-                analysisViewModel,
-                stockDataAccessObject,
-                transactionDataAccessObject,
-                navigationController);
+                        viewManagerModel,
+                        analysisViewModel,
+                        stockDataAccessObject,
+                        transactionDataAccessObject,
+                        navigationController);
 
         private final RecommendController recommendController = RecommendUseCaseFactory.create(
-                viewManagerModel,
-                recommendViewModel,
-                stockDataAccessObject,
-                transactionDataAccessObject);
+                        viewManagerModel,
+                        recommendViewModel,
+                        stockDataAccessObject,
+                        transactionDataAccessObject);
 
         private final SearchViewModel searchViewModel = new SearchViewModel();
         private SearchController searchController;
@@ -226,10 +226,10 @@ public class AppBuilder {
         }
 
         /**
-        * Adds the Tabbed Main View to the application.
-        *
-        * @return this builder
-        */
+         * Adds the Tabbed Main View to the application.
+         *
+         * @return this builder
+         */
         public AppBuilder addTabbedMainView() {
                 // Create dashboard view using the factory
                 dashboardView = DashboardViewFactory.create(mainViewModel, searchController, searchViewModel,
@@ -238,7 +238,8 @@ public class AppBuilder {
 
                 // Create placeholder views
                 watchlistView = new WatchlistView(navigationController);
-                final LeaderboardController tempLeaderboardController = LeaderboardUseCaseFactory.createLeaderboardController(leaderboardViewModel);
+                final LeaderboardController tempLeaderboardController = LeaderboardUseCaseFactory
+                                .createLeaderboardController(leaderboardViewModel);
                 leaderboardView = LeaderboardViewFactory.create(leaderboardViewModel, tempLeaderboardController);
 
                 tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfolioHubController, newsController,
@@ -249,112 +250,112 @@ public class AppBuilder {
         }
 
         public AppBuilder addLoginView() {
-        loginView = LoginViewFactory.create(loginViewModel, loginController);
-        cardPanel.add(loginView, loginView.getViewName());
-        return this;
+                loginView = LoginViewFactory.create(loginViewModel, loginController);
+                cardPanel.add(loginView, loginView.getViewName());
+                return this;
         }
 
         public AppBuilder addSignupView() {
-        signupView = SignupViewFactory.create(signupViewModel, signupController);
-        cardPanel.add(signupView, signupView.getViewName());
-        return this;
+                signupView = SignupViewFactory.create(signupViewModel, signupController);
+                cardPanel.add(signupView, signupView.getViewName());
+                return this;
         }
 
         /**
-        * Adds the portfolios view to the application
-        *
-        * @return this builder
-        */
+         * Adds the portfolios view to the application
+         *
+         * @return this builder
+         */
         public AppBuilder addPortfoliosView() {
-        portfoliosView = PortfolioHubViewFactory.create(
-                        portfoliosViewModel,
-                        portfolioHubController,
-                        portfolioController,
-                        navigationController);
-        cardPanel.add(portfoliosView, portfoliosView.getViewName());
-        return this;
+                portfoliosView = PortfolioHubViewFactory.create(
+                                portfoliosViewModel,
+                                portfolioHubController,
+                                portfolioController,
+                                navigationController);
+                cardPanel.add(portfoliosView, portfoliosView.getViewName());
+                return this;
         }
 
         /**
-        * Adds the create view to the application
-        *
-        * @return this builder
-        */
+         * Adds the create view to the application
+         *
+         * @return this builder
+         */
         public AppBuilder addCreateView() {
-        createView = CreateViewFactory.create(
-                        createViewModel,
-                        createController,
-                        viewManagerModel);
-        cardPanel.add(createView, createView.getViewName());
-        return this;
+                createView = CreateViewFactory.create(
+                                createViewModel,
+                                createController,
+                                viewManagerModel);
+                cardPanel.add(createView, createView.getViewName());
+                return this;
         }
 
         /**
-        * Adds the portfolio view to the application
-        *
-        * @return this builder
-        */
+         * Adds the portfolio view to the application
+         *
+         * @return this builder
+         */
         public AppBuilder addPortfolioView() {
-        portfolioView = PortfolioViewFactory.create(
-                        portfolioViewModel,
-                        portfolioController,
-                        historyController,
-                        analysisController,
-                        recommendController,
-                        viewManagerModel);
-        cardPanel.add(portfolioView, portfolioView.getViewName());
-        return this;
+                portfolioView = PortfolioViewFactory.create(
+                                portfolioViewModel,
+                                portfolioController,
+                                historyController,
+                                analysisController,
+                                recommendController,
+                                viewManagerModel);
+                cardPanel.add(portfolioView, portfolioView.getViewName());
+                return this;
         }
 
         public AppBuilder addNewsView() {
-        newsView = new NewsView(newsViewModel, navigationController);
-        cardPanel.add(newsView, newsView.getViewName());
-        return this;
+                newsView = new NewsView(newsViewModel, navigationController);
+                cardPanel.add(newsView, newsView.getViewName());
+                return this;
         }
 
         /**
-        * Adds the buy view to the application
-        *
-        * @return this builder
-        */
+         * Adds the buy view to the application
+         *
+         * @return this builder
+         */
         public AppBuilder addBuyView() {
-        buyView = BuyViewFactory.create(
-                        buyViewModel,
-                        buyController,
-                        navigationController);
-        cardPanel.add(buyView, buyView.getViewName());
-        return this;
+                buyView = BuyViewFactory.create(
+                                buyViewModel,
+                                buyController,
+                                navigationController);
+                cardPanel.add(buyView, buyView.getViewName());
+                return this;
         }
 
         public AppBuilder addSellView() {
-        sellView = SellViewFactory.create(sellViewModel, sellController, navigationController);
-        cardPanel.add(sellView, sellView.getViewName());
-        return this;
+                sellView = SellViewFactory.create(sellViewModel, sellController, navigationController);
+                cardPanel.add(sellView, sellView.getViewName());
+                return this;
         }
 
         public AppBuilder addHistoryView() {
-        historyView = HistoryViewFactory.create(
-                        historyViewModel,
-                        navigationController);
-        cardPanel.add(historyView, historyView.getViewName());
-        return this;
+                historyView = HistoryViewFactory.create(
+                                historyViewModel,
+                                navigationController);
+                cardPanel.add(historyView, historyView.getViewName());
+                return this;
         }
 
         public AppBuilder addAnalysisView() {
-        analysisView = AnalysisViewFactory.create(
-                        analysisViewModel,
-                        navigationController);
-        cardPanel.add(analysisView, analysisView.getViewName());
-        return this;
+                analysisView = AnalysisViewFactory.create(
+                                analysisViewModel,
+                                navigationController);
+                cardPanel.add(analysisView, analysisView.getViewName());
+                return this;
         }
 
         public AppBuilder addRecommendView() {
-        recommendView = RecommendViewFactory.create(
-                        recommendViewModel,
-                        recommendController,
-                        viewManagerModel);
-        cardPanel.add(recommendView, recommendView.getViewName());
-        return this;
+                recommendView = RecommendViewFactory.create(
+                                recommendViewModel,
+                                recommendController,
+                                viewManagerModel);
+                cardPanel.add(recommendView, recommendView.getViewName());
+                return this;
         }
 
         /**
@@ -366,7 +367,7 @@ public class AppBuilder {
                 companyDetailsView = CompanyDetailsViewFactory.create(
                                 companyDetailsViewModel,
                                 companyDetailsController,
-                                navigationController);
+                                viewManagerModel);
                 cardPanel.add(companyDetailsView, companyDetailsView.getViewName());
                 return this;
         }
@@ -378,15 +379,15 @@ public class AppBuilder {
          * @return the application
          */
         public JFrame build() {
-        final JFrame application = new JFrame("FUNDI");
-        application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+                final JFrame application = new JFrame("FUNDI");
+                application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
-        application.add(cardPanel);
+                application.add(cardPanel);
 
-        viewManagerModel.setState(signupViewModel.getViewName());
-        viewManagerModel.firePropertyChanged();
+                viewManagerModel.setState(signupViewModel.getViewName());
+                viewManagerModel.firePropertyChanged();
 
-        return application;
+                return application;
         }
 
         /**
@@ -395,7 +396,8 @@ public class AppBuilder {
          * @return this builder
          */
         public AppBuilder addLeaderboardView() {
-                final LeaderboardController leaderboardController = LeaderboardUseCaseFactory.createLeaderboardController(leaderboardViewModel);
+                final LeaderboardController leaderboardController = LeaderboardUseCaseFactory
+                                .createLeaderboardController(leaderboardViewModel);
                 leaderboardView = LeaderboardViewFactory.create(
                                 leaderboardViewModel,
                                 leaderboardController);
@@ -404,14 +406,14 @@ public class AppBuilder {
         }
 
         /**
-        * Adds the Settings View to the application.
-        *
-        * @return this builder
-        */
+         * Adds the Settings View to the application.
+         *
+         * @return this builder
+         */
         public AppBuilder addSettingsView() {
-        SettingsView settingsView = new SettingsView(viewManager, navigationController);
-        cardPanel.add(settingsView, "settings");
-        return this;
+                SettingsView settingsView = new SettingsView(viewManager, navigationController);
+                cardPanel.add(settingsView, "settings");
+                return this;
         }
 
-        }
+}

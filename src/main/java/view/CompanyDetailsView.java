@@ -4,12 +4,11 @@ import entity.CompanyDetails;
 import interface_adapter.company_details.CompanyDetailsController;
 import interface_adapter.company_details.CompanyDetailsState;
 import interface_adapter.company_details.CompanyDetailsViewModel;
-import interface_adapter.navigation.NavigationController;
+import interface_adapter.ViewManagerModel;
 
 import javax.swing.*;
 import java.awt.*;
 import java.text.NumberFormat;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
@@ -20,19 +19,18 @@ public class CompanyDetailsView extends BaseView {
 
     private final CompanyDetailsViewModel companyDetailsViewModel;
     private final CompanyDetailsController companyDetailsController;
-    private final NavigationController navigationController;
+    private final BackNavigationHelper backNavigationHelper;
 
     private JPanel contentPanel;
     private JScrollPane scrollPane;
-    private List<String> navigationBreadcrumbs = new ArrayList<>();
 
     public CompanyDetailsView(CompanyDetailsViewModel companyDetailsViewModel,
             CompanyDetailsController companyDetailsController,
-            NavigationController navigationController) {
+            ViewManagerModel viewManagerModel) {
         super("company_details");
         this.companyDetailsViewModel = companyDetailsViewModel;
         this.companyDetailsController = companyDetailsController;
-        this.navigationController = navigationController;
+        this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
 
         // Initialize UI
         initializeView();
@@ -69,93 +67,13 @@ public class CompanyDetailsView extends BaseView {
 
         // Create back button panel
         JPanel backButtonPanel = createBackButtonPanel(e -> {
-            // Use navigation controller to go back to previous view
-            navigationController.goBack();
+            // Use back navigation helper to go back to portfolios view
+            backNavigationHelper.goBackToPortfolios();
         });
-
-        // Create breadcrumb panel
-        JPanel breadcrumbPanel = createBreadcrumbPanel();
 
         topPanel.add(backButtonPanel, BorderLayout.WEST);
-        topPanel.add(breadcrumbPanel, BorderLayout.CENTER);
 
         return topPanel;
-    }
-
-    private JPanel createBreadcrumbPanel() {
-        JPanel breadcrumbPanel = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 5));
-        breadcrumbPanel.setOpaque(false);
-
-        if (!navigationBreadcrumbs.isEmpty()) {
-            JLabel homeLabel = new JLabel("🏠 Dashboard");
-            homeLabel.setFont(new Font("Sans Serif", Font.PLAIN, 12));
-            homeLabel.setForeground(Color.LIGHT_GRAY);
-            breadcrumbPanel.add(homeLabel);
-
-            for (int i = 0; i < navigationBreadcrumbs.size(); i++) {
-                String symbol = navigationBreadcrumbs.get(i);
-
-                // Add separator arrow
-                JLabel arrow = new JLabel(" → ");
-                arrow.setFont(new Font("Sans Serif", Font.BOLD, 12));
-                arrow.setForeground(Color.CYAN);
-                breadcrumbPanel.add(arrow);
-
-                // Create clickable breadcrumb for previous companies
-                if (i < navigationBreadcrumbs.size() - 1) {
-                    JLabel breadcrumbLabel = createClickableBreadcrumb(symbol, i);
-                    breadcrumbPanel.add(breadcrumbLabel);
-                } else {
-                    // Current company (not clickable)
-                    JLabel currentLabel = new JLabel(symbol);
-                    currentLabel.setFont(new Font("Sans Serif", Font.BOLD, 12));
-                    currentLabel.setForeground(Color.WHITE);
-                    breadcrumbPanel.add(currentLabel);
-                }
-            }
-        }
-
-        return breadcrumbPanel;
-    }
-
-    private JLabel createClickableBreadcrumb(String symbol, int breadcrumbIndex) {
-        JLabel breadcrumbLabel = new JLabel(symbol);
-        breadcrumbLabel.setFont(new Font("Sans Serif", Font.PLAIN, 12));
-        breadcrumbLabel.setForeground(new Color(173, 216, 230)); // Light blue
-        breadcrumbLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        breadcrumbLabel.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseClicked(java.awt.event.MouseEvent e) {
-                // Navigate back to this breadcrumb level
-                navigateToBreadcrumb(breadcrumbIndex);
-            }
-
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent e) {
-                breadcrumbLabel.setForeground(Color.YELLOW);
-            }
-
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent e) {
-                breadcrumbLabel.setForeground(new Color(173, 216, 230));
-            }
-        });
-
-        return breadcrumbLabel;
-    }
-
-    private void navigateToBreadcrumb(int targetIndex) {
-        // Remove breadcrumbs after the target index
-        if (targetIndex < navigationBreadcrumbs.size() - 1) {
-            String targetSymbol = navigationBreadcrumbs.get(targetIndex);
-
-            // Trim breadcrumbs to target level
-            navigationBreadcrumbs = navigationBreadcrumbs.subList(0, targetIndex + 1);
-
-            // Navigate to the target company
-            companyDetailsController.execute(targetSymbol, "company_details");
-        }
     }
 
     private void updateView() {
@@ -164,7 +82,9 @@ public class CompanyDetailsView extends BaseView {
         if (state.getErrorMessage() != null) {
             showErrorView(state.getErrorMessage());
         } else if (state.getCompanyDetails() != null) {
-            showCompanyDetails(state.getCompanyDetails());
+            CompanyDetails details = state.getCompanyDetails();
+
+            showCompanyDetails(details);
         } else {
             showLoadingView();
         }
@@ -207,9 +127,6 @@ public class CompanyDetailsView extends BaseView {
     }
 
     private void showCompanyDetails(CompanyDetails details) {
-        // Update breadcrumbs when showing new company details
-        updateBreadcrumbs(details.getSymbol());
-
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setOpaque(false);
@@ -236,41 +153,8 @@ public class CompanyDetailsView extends BaseView {
         }
 
         scrollPane.setViewportView(mainPanel);
-
-        // Update the top panel to refresh breadcrumbs
-        contentPanel.remove(0); // Remove old top panel
-        JPanel newTopPanel = createTopPanel();
-        contentPanel.add(newTopPanel, BorderLayout.NORTH, 0); // Add new top panel at index 0
-
         revalidate();
         repaint();
-    }
-
-    private void updateBreadcrumbs(String newSymbol) {
-        // If this is a new symbol, add it to breadcrumbs
-        if (navigationBreadcrumbs.isEmpty()
-                || !navigationBreadcrumbs.get(navigationBreadcrumbs.size() - 1).equals(newSymbol)) {
-            navigationBreadcrumbs.add(newSymbol);
-
-            // Limit breadcrumb depth to prevent UI overflow
-            if (navigationBreadcrumbs.size() > 5) {
-                navigationBreadcrumbs.remove(0);
-            }
-        }
-    }
-
-    /**
-     * Clears breadcrumbs when navigating from search or other non-company views
-     */
-    public void clearBreadcrumbs() {
-        navigationBreadcrumbs.clear();
-    }
-
-    /**
-     * Sets breadcrumbs when coming from navigation stack
-     */
-    public void setBreadcrumbs(List<String> breadcrumbs) {
-        this.navigationBreadcrumbs = breadcrumbs != null ? new ArrayList<>(breadcrumbs) : new ArrayList<>();
     }
 
     private JPanel createCompanyHeader(CompanyDetails details) {
@@ -309,7 +193,7 @@ public class CompanyDetailsView extends BaseView {
 
         headerPanel.add(infoPanel, BorderLayout.WEST);
 
-        // Center: Current Stock Price - Make it prominent
+        // Right side: Current Stock Price - Make it prominent and right-aligned
         JPanel pricePanel = new JPanel();
         pricePanel.setLayout(new BoxLayout(pricePanel, BoxLayout.Y_AXIS));
         pricePanel.setOpaque(false);
@@ -317,18 +201,18 @@ public class CompanyDetailsView extends BaseView {
         JLabel priceTitle = new JLabel("Current Price");
         priceTitle.setFont(new Font("Sans Serif", Font.BOLD, 14));
         priceTitle.setForeground(new Color(255, 215, 0)); // Gold color
-        priceTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
+        priceTitle.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
         String priceText = details.getCurrentPrice() > 0 ? String.format("$%.2f", details.getCurrentPrice()) : "N/A";
         JLabel priceLabel = new JLabel(priceText);
         priceLabel.setFont(new Font("Sans Serif", Font.BOLD, 32));
         priceLabel.setForeground(new Color(50, 205, 50)); // Lime green for price
-        priceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        priceLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
         JLabel currencyLabel = new JLabel(details.getCurrency());
         currencyLabel.setFont(new Font("Sans Serif", Font.ITALIC, 12));
         currencyLabel.setForeground(Color.LIGHT_GRAY);
-        currencyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        currencyLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
         pricePanel.add(priceTitle);
         pricePanel.add(Box.createVerticalStrut(5));
@@ -336,26 +220,7 @@ public class CompanyDetailsView extends BaseView {
         pricePanel.add(Box.createVerticalStrut(2));
         pricePanel.add(currencyLabel);
 
-        headerPanel.add(pricePanel, BorderLayout.CENTER);
-
-        // Right side: Logo placeholder with better styling
-        JPanel logoPanel = new JPanel();
-        logoPanel.setOpaque(false);
-        logoPanel.setLayout(new BoxLayout(logoPanel, BoxLayout.Y_AXIS));
-
-        JLabel logoLabel = new JLabel("💼");
-        logoLabel.setFont(new Font("Sans Serif", Font.PLAIN, 60));
-        logoLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel logoText = new JLabel("Company");
-        logoText.setFont(new Font("Sans Serif", Font.BOLD, 12));
-        logoText.setForeground(Color.LIGHT_GRAY);
-        logoText.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        logoPanel.add(logoLabel);
-        logoPanel.add(logoText);
-
-        headerPanel.add(logoPanel, BorderLayout.EAST);
+        headerPanel.add(pricePanel, BorderLayout.EAST);
 
         return headerPanel;
     }

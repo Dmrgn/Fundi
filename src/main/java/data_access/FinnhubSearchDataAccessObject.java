@@ -74,6 +74,11 @@ public class FinnhubSearchDataAccessObject implements SearchDataAccessInterface 
                 final String description = result.optString("description", "");
                 final String type = result.optString("type", "");
 
+                // Filter out any result with a period in symbol or description
+                if (symbol.contains(".") || description.contains(".")) {
+                    continue;
+                }
+
                 // FinnHub doesn't provide all the same fields as Alpha Vantage,
                 // so we'll use default values for missing fields
                 final SearchResult searchResult = new SearchResult(
@@ -88,6 +93,11 @@ public class FinnhubSearchDataAccessObject implements SearchDataAccessInterface 
                         1.0 // matchScore (default to perfect match)
                 );
                 results.add(searchResult);
+
+                // Stop once we have exactly 10 valid results
+                if (results.size() == 10) {
+                    break;
+                }
             }
         }
 

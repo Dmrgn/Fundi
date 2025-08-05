@@ -8,7 +8,9 @@ import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.search.SearchState;
 import interface_adapter.company_details.CompanyDetailsController;
+import entity.SearchResult;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -36,6 +38,7 @@ public class DashboardView extends BaseView {
     private final interface_adapter.navigation.NavigationController navigationController;
     private final CompanyDetailsController companyDetailsController;
     private ChartPanel chartPanel;
+    private JPanel searchResultsPanel;
 
     public DashboardView(MainViewModel mainViewModel, SearchController searchController,
             SearchViewModel searchViewModel, DashboardViewModel dashboardViewModel,
@@ -56,10 +59,17 @@ public class DashboardView extends BaseView {
 
         this.add(contentPanel, BorderLayout.CENTER);
 
+        // Create search results panel
+        searchResultsPanel = new JPanel();
+        searchResultsPanel.setLayout(new BoxLayout(searchResultsPanel, BoxLayout.Y_AXIS));
+        searchResultsPanel.setOpaque(false);
+
         // Create the dashboard content
         contentPanel.add(createWelcomePanel());
         contentPanel.add(Box.createVerticalStrut(20));
         contentPanel.add(createSearchPanel());
+        contentPanel.add(Box.createVerticalStrut(10));
+        contentPanel.add(searchResultsPanel);
         contentPanel.add(Box.createVerticalStrut(20));
         contentPanel.add(createPortfolioChart());
         contentPanel.add(Box.createVerticalStrut(20));
@@ -107,18 +117,34 @@ public class DashboardView extends BaseView {
         // Search components
         JButton searchButton = ButtonFactory.createStyledButton("Search");
         JTextField searchField = FieldFactory.createTextField();
-        JPanel searchPanel = PanelFactory.createSingleFieldForm(searchField, searchButton);
+
+        // Make search field more prominent
+        searchField.setFont(new Font("Sans Serif", Font.PLAIN, 14));
+        searchField.setPreferredSize(new Dimension(200, 30));
+        searchField.setMaximumSize(new Dimension(200, 30));
+
+        JPanel searchPanel = new JPanel();
+        searchPanel.setLayout(new BoxLayout(searchPanel, BoxLayout.X_AXIS));
+        searchPanel.setOpaque(false);
+        searchPanel.add(searchField);
+        searchPanel.add(Box.createHorizontalStrut(10)); // Add spacing between field and button
+        searchPanel.add(searchButton);
 
         // Wire up search functionality
         Runnable doSearch = () -> {
-            String query = searchField.getText();
+            String query = searchField.getText().trim();
             if (!query.isEmpty()) {
                 searchController.execute(query);
             } else {
                 JOptionPane.showMessageDialog(this, "Please enter a search query.");
             }
         };
-        searchButton.addActionListener(e -> doSearch.run());
+
+        // Ensure both button click and Enter key work
+        searchButton.addActionListener(e -> {
+            doSearch.run();
+            searchField.requestFocus(); // Keep focus on search field
+        });
         searchField.addActionListener(e -> doSearch.run());
 
         searchContainer.add(searchTitle);
@@ -185,6 +211,12 @@ public class DashboardView extends BaseView {
     }
 
     private void setupListeners() {
+        // Listen for search results updates
+        searchViewModel.addPropertyChangeListener(evt -> {
+            SearchState state = searchViewModel.getState();
+            updateSearchResults(state.getSearchResults());
+        });
+
         // Listen for dashboard data updates
         dashboardViewModel.addPropertyChangeListener(evt -> {
             DashboardState state = dashboardViewModel.getState();
@@ -204,6 +236,98 @@ public class DashboardView extends BaseView {
                 dashboardController.execute(mainState.getUsername());
             }
         });
+    }
+
+    private void updateSearchResults(List<SearchResult> results) {
+        searchResultsPanel.removeAll();
+
+        if (results != null && !results.isEmpty()) {
+            // Create a simple styled container for results
+            JPanel resultsContainer = new JPanel(new BorderLayout());
+            resultsContainer.setOpaque(false);
+            resultsContainer.setBorder(BorderFactory.createCompoundBorder(
+                    BorderFactory.createLineBorder(new Color(100, 100, 100), 1),
+                    BorderFactory.createEmptyBorder(15, 15, 15, 15)));
+            resultsContainer.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            // Header with title and clear button
+            JPanel headerPanel = new JPanel();
+            headerPanel.setLayout(new BoxLayout(headerPanel, BoxLayout.X_AXIS));
+            headerPanel.setOpaque(false);
+
+            JLabel resultsTitle = new JLabel("Search Results:");
+            resultsTitle.setFont(new Font("Sans Serif", Font.BOLD, 16));
+            resultsTitle.setForeground(Color.WHITE);
+
+            JButton clearButton = new JButton("✕");
+            clearButton.setFont(new Font("Sans Serif", Font.BOLD, 12));
+            clearButton.setForeground(Color.WHITE);
+            clearButton.setBackground(new Color(180, 50, 50));
+            clearButton.setPreferredSize(new Dimension(25, 25));
+            clearButton.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+            clearButton.setFocusPainted(false);
+            clearButton.setToolTipText("Clear search results");
+            clearButton.addActionListener(e -> clearSearchResults());
+
+            headerPanel.add(resultsTitle);
+            headerPanel.add(Box.createHorizontalGlue());
+            headerPanel.add(clearButton);
+
+            resultsContainer.add(headerPanel, BorderLayout.NORTH);
+
+            // Content panel for results
+            JPanel contentPanel = new JPanel();
+            contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+            contentPanel.setOpaque(false);
+            contentPanel.add(Box.createVerticalStrut(10));
+
+            // Filter and add valid results
+            List<SearchResult> validResults = results.stream()
+                    .filter(result -> result.getSymbol() != null && !result.getSymbol().isEmpty()
+                            && result.getName() != null && !result.getName().isEmpty())
+                    .limit(10)
+                    .toList();
+
+            for (SearchResult result : validResults) {
+                JButton resultButton = ButtonFactory.createStyledButton(result.getSymbol() + " - " + result.getName());
+                resultButton.setFont(new Font("Sans Serif", Font.PLAIN, 12));
+                resultButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+                resultButton.addActionListener(e -> {
+                    companyDetailsController.execute(result.getSymbol(), "dashboard");
+                });
+                contentPanel.add(resultButton);
+                contentPanel.add(Box.createVerticalStrut(8));
+            }
+
+            JScrollPane scrollPane = new JScrollPane(contentPanel);
+            scrollPane.setOpaque(false);
+            scrollPane.getViewport().setOpaque(false);
+            scrollPane.setBorder(null);
+            scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+            scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+            scrollPane.setPreferredSize(new Dimension(480, 400));
+
+            scrollPane.getVerticalScrollBar().setBackground(new Color(60, 60, 60));
+            scrollPane.getVerticalScrollBar().setUI(new javax.swing.plaf.basic.BasicScrollBarUI() {
+                @Override
+                protected void configureScrollBarColors() {
+                    this.thumbColor = new Color(100, 100, 100);
+                    this.trackColor = new Color(45, 45, 45);
+                }
+            });
+
+            resultsContainer.add(scrollPane, BorderLayout.CENTER);
+            searchResultsPanel.add(resultsContainer);
+        }
+
+        searchResultsPanel.revalidate();
+        searchResultsPanel.repaint();
+    }
+
+    private void clearSearchResults() {
+        searchResultsPanel.removeAll();
+        searchResultsPanel.revalidate();
+        searchResultsPanel.repaint();
     }
 
     private void updateChart(List<PortfolioValuePoint> valuePoints) {

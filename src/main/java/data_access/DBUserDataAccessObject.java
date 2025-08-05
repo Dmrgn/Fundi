@@ -26,6 +26,48 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
      * @throws SQLException If the SQL connection fails
      */
     public DBUserDataAccessObject() throws SQLException {
+        // Initialize database schema if tables don't exist
+        String schema = """
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT,
+                    password TEXT
+                );
+                CREATE TABLE IF NOT EXISTS portfolios (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT,
+                    user_id INTEGER REFERENCES users
+                );
+                CREATE TABLE IF NOT EXISTS stocks (
+                    name TEXT,
+                    price REAL,
+                    date DATE,
+                    CONSTRAINT key PRIMARY KEY (name, date)
+                );
+                CREATE TABLE IF NOT EXISTS transactions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    portfolio_id INTEGER REFERENCES portfolios,
+                    stock_name TEXT,
+                    amount INTEGER,
+                    date DATE,
+                    price REAL
+                );
+                """;
+        
+        try (Statement statement = connection.createStatement()) {
+            // Execute schema creation
+            String[] statements = schema.split(";");
+            for (String stmt : statements) {
+                String trimmed = stmt.trim();
+                if (!trimmed.isEmpty()) {
+                    statement.execute(trimmed);
+                }
+            }
+        } catch (SQLException exception) {
+            System.out.println("Schema initialization error: " + exception.getMessage());
+        }
+
+        // Load existing user data into memory
         String query = """
                 SELECT * FROM users
                 """;

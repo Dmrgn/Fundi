@@ -4,7 +4,9 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.recommend.RecommendController;
 import interface_adapter.recommend.RecommendState;
 import interface_adapter.recommend.RecommendViewModel;
-import view.components.UIFactory;
+import view.components.LabelFactory;
+import view.components.PanelFactory;
+import view.components.TitledBorderFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -18,9 +20,9 @@ public class RecommendView extends BaseView {
     private final RecommendController recommendController;
 
     private static final String LABEL = "Recs: ";
-    private final JPanel haveRecsPanel = UIFactory.createStatListPanel(LABEL);
-    private final JPanel notHaveRecsPanel = UIFactory.createStatListPanel(LABEL);
-    private final JPanel safeRecsPanel = UIFactory.createStatListPanel(LABEL);
+    private final JPanel haveRecsPanel = PanelFactory.createStatListPanel(LABEL);
+    private final JPanel notHaveRecsPanel = PanelFactory.createStatListPanel(LABEL);
+    private final JPanel safeRecsPanel = PanelFactory.createStatListPanel(LABEL);
 
     private final BackNavigationHelper backNavigationHelper;
 
@@ -66,7 +68,7 @@ public class RecommendView extends BaseView {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
-        panel.setBorder(UIFactory.createLightTitledBorder(title));
+        panel.setBorder(TitledBorderFactory.createLightTitledBorder(title));
         panel.setForeground(Color.WHITE);
 
         for (JPanel detailPanel : detailPanels) {
@@ -83,7 +85,7 @@ public class RecommendView extends BaseView {
         panel.removeAll();
         int i = 1;
         for (Map.Entry<String, Double> entry : recs.entrySet()) {
-            JLabel label = UIFactory
+            JLabel label = LabelFactory
                     .createListItemLabel(i + ". " + entry.getKey() + ": " + String.format("$%.2f", entry.getValue()));
             panel.add(label);
             i++;

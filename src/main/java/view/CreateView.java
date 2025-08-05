@@ -3,6 +3,7 @@ package view;
 import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.lang.reflect.Field;
 
 import javax.swing.*;
 
@@ -10,7 +11,7 @@ import interface_adapter.create.CreateController;
 import interface_adapter.create.CreateState;
 import interface_adapter.create.CreateViewModel;
 import interface_adapter.ViewManagerModel;
-import view.components.UIFactory;
+import view.components.*;
 
 /**
  * The View For the Create Use Case
@@ -41,15 +42,15 @@ public class CreateView extends BaseView implements PropertyChangeListener {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel welcomeLabel = UIFactory.createTitleLabel("Create Portfolio");
+        JLabel welcomeLabel = LabelFactory.createTitleLabel("Create Portfolio");
 
         centerPanel.add(welcomeLabel);
         centerPanel.add(Box.createVerticalStrut(5));
 
-        JTextField createNameField = UIFactory.createTextField();
-        final JPanel form = UIFactory.createFormPanel("Name: ", createNameField);
+        JTextField createNameField = FieldFactory.createTextField();
+        final JPanel form = PanelFactory.createFormPanel("Name: ", createNameField);
         centerPanel.add(form);
-        final JButton create = UIFactory.createStyledButton("create");
+        final JButton create = ButtonFactory.createStyledButton("create");
         create.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(create)) {

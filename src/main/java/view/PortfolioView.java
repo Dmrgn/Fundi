@@ -7,7 +7,9 @@ import interface_adapter.portfolio.PortfolioState;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.recommend.RecommendController;
 import interface_adapter.ViewManagerModel;
-import view.components.UIFactory;
+import view.components.ButtonFactory;
+import view.components.LabelFactory;
+import view.components.TableFactory;
 
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
@@ -23,11 +25,11 @@ public class PortfolioView extends BaseView {
     private final AnalysisController analysisController;
     private final RecommendController recommendController;
     private final BackNavigationHelper backNavigationHelper;
-    private final JLabel titleLabel = UIFactory.createTitleLabel("");
-    private final JLabel usernameLabel = UIFactory.createLabel("");
+    private final JLabel titleLabel = LabelFactory.createTitleLabel("");
+    private final JLabel usernameLabel = LabelFactory.createLabel("");
     private static final String[] columnNames = { "Ticker", "Quantity", "Amount" };
     private static final String[] useCases = new String[] { "Analysis", "Recommendations", "History", "Buy", "Sell" };
-    private final JButton backButton = UIFactory.createStyledButton("Back");
+    private final JButton backButton = ButtonFactory.createStyledButton("Back");
     private final JButton[] useCaseButtons = new JButton[useCases.length];
     private final DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0) {
         @Override
@@ -77,7 +79,7 @@ public class PortfolioView extends BaseView {
     private JPanel createCenterPanel() {
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
-        JScrollPane table = UIFactory.createStyledTable(tableModel);
+        JScrollPane table = TableFactory.createStyledTable(tableModel);
         centerPanel.add(table, BorderLayout.CENTER);
         return centerPanel;
     }
@@ -86,7 +88,7 @@ public class PortfolioView extends BaseView {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
-        JPanel buttonPanel = UIFactory.createButtonPanel(useCaseButtons);
+        JPanel buttonPanel = ButtonFactory.createButtonPanel(useCaseButtons);
         buttonPanel.setLayout(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.insets = new Insets(10, 10, 10, 10);
@@ -107,7 +109,7 @@ public class PortfolioView extends BaseView {
 
     private void generateButtons() {
         for (int i = 0; i < useCases.length; i++) {
-            this.useCaseButtons[i] = UIFactory.createStyledButton(useCases[i]);
+            this.useCaseButtons[i] = ButtonFactory.createStyledButton(useCases[i]);
             this.useCaseButtons[i].setPreferredSize(new Dimension(180, 30));
             this.useCaseButtons[i].setMaximumSize(new Dimension(180, 30));
             this.useCaseButtons[i].setMinimumSize(new Dimension(180, 30));

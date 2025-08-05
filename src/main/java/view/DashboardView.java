@@ -15,7 +15,9 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
-import view.components.UIFactory;
+import view.components.ButtonFactory;
+import view.components.FieldFactory;
+import view.components.PanelFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -62,7 +64,7 @@ public class DashboardView extends BaseView {
     }
 
     private JPanel createWelcomePanel() {
-        JPanel welcomePanel = UIFactory.createTitlePanel("Welcome to Fundi!");
+        JPanel welcomePanel = PanelFactory.createTitlePanel("Welcome to Fundi!");
 
         // Add settings button
         JButton settingsButton = new JButton();
@@ -96,9 +98,9 @@ public class DashboardView extends BaseView {
         searchTitle.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         // Search components
-        JButton searchButton = UIFactory.createStyledButton("Search");
-        JTextField searchField = UIFactory.createTextField();
-        JPanel searchPanel = UIFactory.createSingleFieldForm(searchField, searchButton);
+        JButton searchButton = ButtonFactory.createStyledButton("Search");
+        JTextField searchField = FieldFactory.createTextField();
+        JPanel searchPanel = PanelFactory.createSingleFieldForm(searchField, searchButton);
 
         // Wire up search functionality
         Runnable doSearch = () -> {

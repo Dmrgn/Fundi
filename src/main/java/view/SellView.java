@@ -10,7 +10,9 @@ import interface_adapter.navigation.NavigationController;
 import interface_adapter.sell.SellController;
 import interface_adapter.sell.SellState;
 import interface_adapter.sell.SellViewModel;
-import view.components.UIFactory;
+import view.components.ButtonFactory;
+import view.components.FieldFactory;
+import view.components.PanelFactory;
 
 /**
  * The View for the Sell Use Case
@@ -33,15 +35,15 @@ public class SellView extends BaseView implements PropertyChangeListener {
 
         // === 1. Top panel with plain text intro ===
 
-        JPanel titlePanel = UIFactory.createTitlePanel("Sell Stock");
+        JPanel titlePanel = PanelFactory.createTitlePanel("Sell Stock");
         contentPanel.add(titlePanel, BorderLayout.NORTH);
         contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()), BorderLayout.NORTH);
 
-        JTextField tickerField = UIFactory.createTextField();
-        JPanel tickerPanel = UIFactory.createFormPanel("Ticker", tickerField);
+        JTextField tickerField = FieldFactory.createTextField();
+        JPanel tickerPanel = PanelFactory.createFormPanel("Ticker", tickerField);
 
-        JTextField amountField = UIFactory.createTextField();
-        JPanel amountPanel = UIFactory.createFormPanel("Amount", amountField);
+        JTextField amountField = FieldFactory.createTextField();
+        JPanel amountPanel = PanelFactory.createFormPanel("Amount", amountField);
 
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
@@ -53,7 +55,7 @@ public class SellView extends BaseView implements PropertyChangeListener {
         contentPanel.add(formPanel, BorderLayout.CENTER);
 
 
-        final JButton buy = UIFactory.createStyledButton("Sell");
+        final JButton buy = ButtonFactory.createStyledButton("Sell");
         buy.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(buy)) {
@@ -66,7 +68,7 @@ public class SellView extends BaseView implements PropertyChangeListener {
                     }
                 }
         );
-        contentPanel.add(UIFactory.createButtonPanel(buy), BorderLayout.SOUTH);
+        contentPanel.add(ButtonFactory.createButtonPanel(buy), BorderLayout.SOUTH);
         this.add(contentPanel, BorderLayout.CENTER);
     }
 

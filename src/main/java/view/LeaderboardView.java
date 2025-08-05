@@ -1,7 +1,7 @@
 package view;
 
 import interface_adapter.navigation.NavigationController;
-import view.components.UIFactory;
+import view.components.PanelFactory;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,7 +19,7 @@ public class LeaderboardView extends BaseView {
         this.add(contentPanel, BorderLayout.CENTER);
 
         // Title
-        contentPanel.add(UIFactory.createTitlePanel("Leaderboard"));
+        contentPanel.add(PanelFactory.createTitlePanel("Leaderboard"));
         contentPanel.add(Box.createVerticalStrut(30));
 
         JLabel descriptionLabel = new JLabel("Compare your portfolio performance with other users.");

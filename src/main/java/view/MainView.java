@@ -4,7 +4,9 @@ import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.portfolio_hub.PortfolioHubController;
-import view.components.UIFactory;
+import view.components.ButtonFactory;
+import view.components.FieldFactory;
+import view.components.PanelFactory;
 import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
@@ -57,7 +59,7 @@ public class MainView extends BaseView {
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setOpaque(false);
         // Welcome
-        JPanel welcomePanel = UIFactory.createTitlePanel("Welcome to Fundi!");
+        JPanel welcomePanel = PanelFactory.createTitlePanel("Welcome to Fundi!");
         JButton settingsButton = new JButton();
         try {
             ImageIcon gearIcon = new ImageIcon("resources/gear.png");
@@ -75,9 +77,9 @@ public class MainView extends BaseView {
         welcomePanel.add(settingsButton);
 
         // Search and Username
-        JButton searchButton = UIFactory.createStyledButton("Search");
-        JTextField searchField = UIFactory.createTextField();
-        JPanel searchPanel = UIFactory.createSingleFieldForm(searchField, searchButton);
+        JButton searchButton = ButtonFactory.createStyledButton("Search");
+        JTextField searchField = FieldFactory.createTextField();
+        JPanel searchPanel = PanelFactory.createSingleFieldForm(searchField, searchButton);
 
         JLabel usernameLabel = new JLabel();
         usernameLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));

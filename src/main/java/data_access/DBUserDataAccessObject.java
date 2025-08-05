@@ -23,9 +23,62 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     /**
      * Load the user data into memory.
+     * 
      * @throws SQLException If the SQL connection fails
      */
     public DBUserDataAccessObject() throws SQLException {
+        // Initialize database schema if tables don't exist
+        String schema = """
+                CREATE TABLE IF NOT EXISTS users (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    username TEXT,
+                    password TEXT
+                );
+                CREATE TABLE IF NOT EXISTS portfolios (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    name TEXT,
+                    user_id INTEGER REFERENCES users
+                );
+                CREATE TABLE IF NOT EXISTS stocks (
+                    name TEXT,
+                    price REAL,
+                    date DATE,
+                    CONSTRAINT key PRIMARY KEY (name, date)
+                );
+                CREATE TABLE IF NOT EXISTS transactions (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    portfolio_id INTEGER REFERENCES portfolios,
+                    stock_name TEXT,
+                    amount INTEGER,
+                    date DATE,
+                    price REAL
+                );
+
+                CREATE TABLE IF NOT EXISTS "holdings" 
+                (
+                    portfolio_id INTEGER NOT NULL
+                        REFERENCES portfolios(id),
+                    ticker TEXT NOT NULL,
+                    quantity INTEGER NOT NULL DEFAULT 0,
+                    PRIMARY KEY (portfolio_id, ticker),
+                    CHECK (quantity >= 0)
+                );
+                """;
+
+        try (Statement statement = connection.createStatement()) {
+            // Execute schema creation
+            String[] statements = schema.split(";");
+            for (String stmt : statements) {
+                String trimmed = stmt.trim();
+                if (!trimmed.isEmpty()) {
+                    statement.execute(trimmed);
+                }
+            }
+        } catch (SQLException exception) {
+            System.out.println("Schema initialization error: " + exception.getMessage());
+        }
+
+        // Load existing user data into memory
         String query = """
                 SELECT * FROM users
                 """;
@@ -69,6 +122,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     /**
      * Save the user into the DAO.
+     * 
      * @param user the user to save
      */
     @Override
@@ -80,12 +134,13 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     /**
      * Get the user corresponding with the username.
+     * 
      * @param username the username to look up
      * @return The user object
      */
     @Override
     public User get(String username) {
-        if (!nameToId.containsKey(username) || accounts.containsKey(nameToId.get(username))) {
+        if (!nameToId.containsKey(username) || !accounts.containsKey(nameToId.get(username))) {
             return null;
         }
         return accounts.get(nameToId.get(username));
@@ -93,6 +148,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     /**
      * Check if a user exists in the database.
+     * 
      * @param username the username to look for
      * @return True or false based on whether the username exists
      */
@@ -104,6 +160,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
     /**
      * Remove the user from the DAO.
      * (For testing only)
+     * 
      * @param username The username
      */
     public void remove(String username) {

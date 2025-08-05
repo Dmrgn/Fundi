@@ -18,7 +18,9 @@ public final class FinancialCalculator {
     }
 
     /**
-     * Return a mapping from each ticker in the transaction list to its corresponding total amount.
+     * Return a mapping from each ticker in the transaction list to its
+     * corresponding total amount.
+     * 
      * @param transactions The list of transactions to parse
      * @return The mapping from ticker to amount
      */
@@ -30,6 +32,9 @@ public final class FinancialCalculator {
             if (transaction.getPrice() < 0) {
                 quantity = quantity * -1;
             }
+            System.out.println("Processing transaction: " + transaction);
+            System.out.println("Ticker: " + ticker + ", Quantity: " + quantity);
+            System.out.println("Current Ticker Amounts: " + tickerAmounts);
             if (!tickerAmounts.containsKey(ticker)) {
                 tickerAmounts.put(ticker, quantity);
             }
@@ -47,6 +52,7 @@ public final class FinancialCalculator {
 
     /**
      * The total amount of tickers in the ticker mapping.
+     * 
      * @param tickerAmounts A mapping from ticker to amount
      * @return The total number of tickers
      */
@@ -56,8 +62,9 @@ public final class FinancialCalculator {
 
     /**
      * Compute what percentage the given amount is of the total amount.
+     * 
      * @param totalAmount The total
-     * @param amount The part to compute the percentage for
+     * @param amount      The part to compute the percentage for
      * @return The percentage
      */
     public static double computePercentage(int totalAmount, int amount) {
@@ -66,6 +73,7 @@ public final class FinancialCalculator {
 
     /**
      * Compute the volatility of a price time series for a single ticker.
+     * 
      * @param prices The price time series
      * @return The volatility
      */
@@ -81,6 +89,7 @@ public final class FinancialCalculator {
 
     /**
      * Compute the return timeseries of price time series.
+     * 
      * @param prices The price time series
      * @return The return time series
      */
@@ -96,6 +105,7 @@ public final class FinancialCalculator {
 
     /**
      * Compute the mean of a list.
+     * 
      * @param values The list
      * @return The mean
      */
@@ -109,6 +119,7 @@ public final class FinancialCalculator {
 
     /**
      * Compute the return of a time series of stockdata.
+     * 
      * @param stockData The stock data time series
      * @return The total return
      */
@@ -123,6 +134,7 @@ public final class FinancialCalculator {
 
     /**
      * Compute the Sharpe Ratio of a price time series.
+     * 
      * @param prices The price time series
      * @return The Sharpe Ratio of the time series
      */

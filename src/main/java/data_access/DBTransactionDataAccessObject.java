@@ -36,6 +36,7 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
 
     /**
      * Load the transaction data into memory.
+     * 
      * @throws SQLException If SQL connection fails
      */
     public DBTransactionDataAccessObject() throws SQLException {
@@ -64,8 +65,7 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
                         ticker,
                         amount,
                         date,
-                        price
-                ));
+                        price));
             }
         }
 
@@ -77,6 +77,7 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
 
     /**
      * The past transactions for the given portfolio.
+     * 
      * @param portfolioId the id to search at
      * @return A list of previous transactions
      */
@@ -90,8 +91,9 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
 
     /**
      * The amount of a given ticker in the portfolio.
+     * 
      * @param portfolioId The portfolio to look at
-     * @param ticker The ticker to look for
+     * @param ticker      The ticker to look for
      * @return The amount of the given ticker in the portfolio
      */
     @Override
@@ -115,6 +117,7 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
 
     /**
      * Save a transaction into the DAO.
+     * 
      * @param transaction The transaction to save
      */
     @Override
@@ -127,27 +130,52 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
     }
 
     private void saveToDB(Transaction transaction) {
-        String query = """
+        String insertTransaction = """
                 INSERT INTO transactions(portfolio_id, stock_name, amount, date, price)
                 VALUES (?, ?, ?, ?, ?)
                 """;
 
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (PreparedStatement pstmt = connection.prepareStatement(insertTransaction)) {
             pstmt.setString(1, transaction.getPortfolioId());
             pstmt.setString(2, transaction.getStockTicker());
             pstmt.setInt(3, transaction.getQuantity());
             pstmt.setDate(4, java.sql.Date.valueOf(transaction.getTimestamp()));
             pstmt.setDouble(5, transaction.getPrice());
             pstmt.executeUpdate();
+        } catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
 
-        catch (SQLException exception) {
-            System.out.println(exception.getMessage());
+        // Update holdings table
+        int delta = transaction.getPrice() > 0 ? transaction.getQuantity() : -transaction.getQuantity();
+        String updateHoldings = """
+                INSERT INTO holdings (portfolio_id, ticker, quantity)
+                VALUES (?, ?, ?)
+                ON CONFLICT(portfolio_id, ticker) DO UPDATE SET quantity = MAX(0, quantity + excluded.quantity)
+                """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(updateHoldings)) {
+            pstmt.setString(1, transaction.getPortfolioId());
+            pstmt.setString(2, transaction.getStockTicker());
+            pstmt.setInt(3, delta);
+            pstmt.executeUpdate();
+
+        } catch (SQLException exception) {
+            System.out.println("Holdings update error: " + exception.getMessage());
+        }
+        
+        // Delete holdings with quantity <= 0
+        String cleanupHoldings = "DELETE FROM holdings WHERE quantity <= 0";
+        try (Statement stmt = connection.createStatement()) {
+            stmt.executeUpdate(cleanupHoldings);
+        } catch (SQLException exception) {
+            System.out.println("Holdings cleanup error: " + exception.getMessage());
         }
     }
 
     /**
      * Get all of the tickers in the portfolio.
+     * 
      * @param portfolioId The portfolio to look at
      * @return A set of tickers in the portfolio
      */
@@ -165,9 +193,10 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
     /**
      * Remove a transaction from the DAO.
      * (For testing only)
+     * 
      * @param portfolioId The portfolio Id
-     * @param ticker The ticker
-     * @param amount The amount
+     * @param ticker      The ticker
+     * @param amount      The amount
      */
     public void remove(String portfolioId, String ticker, int amount) {
         if (transactions.containsKey(portfolioId)) {
@@ -198,9 +227,10 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
     /**
      * Whether or not the transaction specified exists.
      * (For testing only)
+     * 
      * @param portfolioId The portfolio Id
-     * @param ticker The ticker to look for
-     * @param amount The amount of the ticker
+     * @param ticker      The ticker to look for
+     * @param amount      The amount of the ticker
      * @return Whether or not the transaction exists
      */
     public boolean hasTransaction(String portfolioId, String ticker, int amount) {

@@ -1,10 +1,12 @@
 package view;
 
+import data_access.ExchangeAPIDataAccessObject;
 import interface_adapter.change_password.ChangePwdController;
 import interface_adapter.change_password.ChangePwdViewModel;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 import static view.components.UiFactory.*;
 
@@ -33,9 +35,13 @@ public class SettingsView extends JPanel {
         JLabel currencyLabel = new JLabel("Default Currency:");
         currencyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         currencyLabel.setForeground(Color.WHITE);
-
-        String[] currencies = {"USD", "EUR", "CAD", "GBP", "JPY"};
+        ExchangeAPIDataAccessObject currencyDAO = new ExchangeAPIDataAccessObject();
+        List<String> currencyList = currencyDAO.getSupportedCurrencies();
+        String[] currencies = currencyList.toArray(new String[0]);
         currencyDropdown = new JComboBox<>(currencies);
+
+//        String[] currencies = {"USD", "EUR", "CAD", "GBP", "JPY"};
+//        currencyDropdown = new JComboBox<>(currencies);
         currencyDropdown.setAlignmentX(Component.CENTER_ALIGNMENT);
         currencyDropdown.setMaximumSize(new Dimension(200, 30));
 

@@ -53,6 +53,16 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                     date DATE,
                     price REAL
                 );
+
+                CREATE TABLE IF NOT EXISTS "holdings" 
+                (
+                    portfolio_id INTEGER NOT NULL
+                        REFERENCES portfolios(id),
+                    ticker TEXT NOT NULL,
+                    quantity INTEGER NOT NULL DEFAULT 0,
+                    PRIMARY KEY (portfolio_id, ticker),
+                    CHECK (quantity >= 0)
+                );
                 """;
 
         try (Statement statement = connection.createStatement()) {

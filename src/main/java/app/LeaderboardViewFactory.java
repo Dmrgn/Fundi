@@ -18,13 +18,13 @@ public class LeaderboardViewFactory {
     /**
      * Creates a LeaderboardView with all necessary dependencies.
      * 
-     * @param leaderboardViewModel the leaderboard view model
+     * @param leaderboardViewModel  the leaderboard view model
      * @param leaderboardController the leaderboard controller
-     * @param navigationController the navigation controller
+     * @param navigationController  the navigation controller
      * @return the leaderboard view
      */
     public static LeaderboardView create(LeaderboardViewModel leaderboardViewModel,
-                                       LeaderboardController leaderboardController) {
+            LeaderboardController leaderboardController) {
         return new LeaderboardView(leaderboardViewModel, leaderboardController);
     }
 }

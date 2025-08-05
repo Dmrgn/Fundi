@@ -8,6 +8,7 @@ import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
+import interface_adapter.company_details.CompanyDetailsController;
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
 import org.jfree.chart.JFreeChart;
@@ -32,17 +33,23 @@ public class DashboardView extends BaseView {
     private final SearchViewModel searchViewModel;
     private final DashboardViewModel dashboardViewModel;
     private final DashboardController dashboardController;
+    private final interface_adapter.navigation.NavigationController navigationController;
+    private final CompanyDetailsController companyDetailsController;
     private ChartPanel chartPanel;
 
     public DashboardView(MainViewModel mainViewModel, SearchController searchController,
             SearchViewModel searchViewModel, DashboardViewModel dashboardViewModel,
-            DashboardController dashboardController) {
+            DashboardController dashboardController,
+            interface_adapter.navigation.NavigationController navigationController,
+            CompanyDetailsController companyDetailsController) {
         super("dashboard");
         this.mainViewModel = mainViewModel;
         this.searchController = searchController;
         this.searchViewModel = searchViewModel;
         this.dashboardViewModel = dashboardViewModel;
         this.dashboardController = dashboardController;
+        this.navigationController = navigationController;
+        this.companyDetailsController = companyDetailsController;
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));

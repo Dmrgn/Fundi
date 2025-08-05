@@ -1,17 +1,16 @@
 package view;
 
-import interface_adapter.navigation.NavigationController;
+import interface_adapter.leaderboard.LeaderboardController;
+import interface_adapter.leaderboard.LeaderboardViewModel;
 import view.components.PanelFactory;
 
 import javax.swing.*;
 import java.awt.*;
 
 public class LeaderboardView extends BaseView {
-    private final NavigationController navigationController;
-
-    public LeaderboardView(NavigationController navigationController) {
+    public LeaderboardView(LeaderboardViewModel leaderboardViewModel,
+            LeaderboardController leaderboardController) {
         super("leaderboard");
-        this.navigationController = navigationController;
 
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));

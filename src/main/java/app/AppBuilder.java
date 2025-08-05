@@ -24,6 +24,8 @@ import interface_adapter.create.CreateController;
 import interface_adapter.create.CreateViewModel;
 import interface_adapter.history.HistoryController;
 import interface_adapter.history.HistoryViewModel;
+import interface_adapter.leaderboard.LeaderboardController;
+import interface_adapter.leaderboard.LeaderboardViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.main.MainViewModel;
@@ -88,6 +90,7 @@ public class AppBuilder {
         private final HistoryViewModel historyViewModel = new HistoryViewModel();
         private final AnalysisViewModel analysisViewModel = new AnalysisViewModel();
         private final RecommendViewModel recommendViewModel = new RecommendViewModel();
+        private final LeaderboardViewModel leaderboardViewModel = new LeaderboardViewModel();
         private final PortfolioViewModelUpdater portfolioViewModelUpdater = new PortfolioViewModelUpdater();
         private final NavigationState navigationState = new NavigationState();
         private final NavigationOutputBoundary navigationPresenter = new NavigationPresenter(viewManagerModel);
@@ -235,7 +238,8 @@ public class AppBuilder {
 
                 // Create placeholder views
                 watchlistView = new WatchlistView(navigationController);
-                leaderboardView = new LeaderboardView(navigationController);
+                final LeaderboardController tempLeaderboardController = LeaderboardUseCaseFactory.createLeaderboardController(leaderboardViewModel);
+                leaderboardView = LeaderboardViewFactory.create(leaderboardViewModel, tempLeaderboardController);
 
                 tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfolioHubController, newsController,
                                 portfolioController, navigationController, searchController, searchViewModel,
@@ -383,6 +387,20 @@ public class AppBuilder {
         viewManagerModel.firePropertyChanged();
 
         return application;
+        }
+
+        /**
+         * Adds the Leaderboard View to the application.
+         * 
+         * @return this builder
+         */
+        public AppBuilder addLeaderboardView() {
+                final LeaderboardController leaderboardController = LeaderboardUseCaseFactory.createLeaderboardController(leaderboardViewModel);
+                leaderboardView = LeaderboardViewFactory.create(
+                                leaderboardViewModel,
+                                leaderboardController);
+                cardPanel.add(leaderboardView, leaderboardView.getViewName());
+                return this;
         }
 
         /**

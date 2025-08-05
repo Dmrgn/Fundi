@@ -36,6 +36,7 @@ public class Main {
                 .addRecommendView()
                 .addNewsView()
                 .addCompanyDetailsView()
+                .addLeaderboardView()
                 .addTabbedMainView()
                 .addSettingsView()
                 .build();

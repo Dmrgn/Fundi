@@ -7,12 +7,7 @@ import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
-import view.TabbedMainView;
-import view.DashboardView;
-import view.PortfolioHubView;
-import view.NewsView;
-import view.WatchlistView;
-import view.LeaderboardView;
+import view.*;
 
 /**
  * Factory for the Tabbed Main View
@@ -34,7 +29,8 @@ public class TabbedMainViewFactory {
             PortfolioHubView portfoliosView,
             NewsView newsView,
             WatchlistView watchlistView,
-            LeaderboardView leaderboardView) {
+            LeaderboardView leaderboardView,
+            SettingsView settingsView) {
         return new TabbedMainView(
                 mainViewModel,
                 portfolioHubController,
@@ -47,6 +43,7 @@ public class TabbedMainViewFactory {
                 portfoliosView,
                 newsView,
                 watchlistView,
-                leaderboardView);
+                leaderboardView,
+                settingsView);
     }
 }

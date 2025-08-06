@@ -8,6 +8,7 @@ import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
+import use_case.notifications.*;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.List;
 
 public class TabbedMainView extends BaseView {
     private final MainViewModel mainViewModel;
@@ -67,6 +69,9 @@ public class TabbedMainView extends BaseView {
         // Initialize notification components
         this.notificationButton = createNotificationButton();
         this.notificationBadge = createNotificationBadge();
+
+        // Register this view with the notification manager
+        NotificationManager.getInstance().setMainView(this);
 
         JPanel contentPanel = createGradientContentPanel();
         this.add(contentPanel, BorderLayout.CENTER);
@@ -176,21 +181,122 @@ public class TabbedMainView extends BaseView {
     }
 
     private void showNotificationDialog() {
-        String message = notificationCount == 0 ? 
-            "No new notifications" : 
-            "You have " + notificationCount + " notification(s)";
-
-        String title = "Notifications";
-        int messageType = notificationCount == 0 ? 
-            JOptionPane.INFORMATION_MESSAGE : 
-            JOptionPane.INFORMATION_MESSAGE;
-
-        JOptionPane.showMessageDialog(this, message, title, messageType);
+        List<String> notifications = NotificationManager.getInstance().getNotifications();
         
-        // Clear notifications after viewing
-        if (notificationCount > 0) {
-            clearNotifications();
+        if (notifications.isEmpty()) {
+            JOptionPane.showMessageDialog(this, "No new notifications", "Notifications", 
+                JOptionPane.INFORMATION_MESSAGE);
+            return;
         }
+
+        // Create custom dialog to show notifications
+        JDialog dialog = new JDialog((JFrame) SwingUtilities.getWindowAncestor(this), "Notifications", true);
+        dialog.setSize(500, 300);
+        dialog.setLocationRelativeTo(this);
+        dialog.setLayout(new BorderLayout());
+
+        // Header
+        JPanel headerPanel = new JPanel(new BorderLayout());
+        headerPanel.setBackground(new Color(30, 60, 120));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+
+        JLabel titleLabel = new JLabel("📢 Notifications");
+        titleLabel.setFont(new Font("Sans Serif", Font.BOLD, 18));
+        titleLabel.setForeground(Color.WHITE);
+
+        JLabel countLabel = new JLabel(notifications.size() + " notification(s)");
+        countLabel.setFont(new Font("Sans Serif", Font.PLAIN, 14));
+        countLabel.setForeground(new Color(200, 200, 200));
+
+        headerPanel.add(titleLabel, BorderLayout.WEST);
+        headerPanel.add(countLabel, BorderLayout.EAST);
+
+        // Content
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setBackground(Color.WHITE);
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+        for (String notification : notifications) {
+            JPanel notifPanel = createNotificationItem(notification);
+            contentPanel.add(notifPanel);
+            contentPanel.add(Box.createVerticalStrut(10));
+        }
+
+        JScrollPane scrollPane = new JScrollPane(contentPanel);
+        scrollPane.setBorder(null);
+
+        // Buttons
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        buttonPanel.setBackground(Color.WHITE);
+        buttonPanel.setBorder(BorderFactory.createEmptyBorder(10, 20, 15, 20));
+
+        JButton newsButton = new JButton("Open News");
+        newsButton.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        newsButton.setForeground(Color.WHITE);
+        newsButton.setBackground(new Color(30, 60, 120));
+        newsButton.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        newsButton.setFocusPainted(false);
+        newsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        newsButton.addActionListener(e -> {
+            dialog.dispose();
+            setSelectedTab(2); // Switch to News tab
+        });
+
+        JButton clearButton = new JButton("Clear All");
+        clearButton.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        clearButton.setForeground(Color.WHITE);
+        clearButton.setBackground(new Color(220, 20, 60));
+        clearButton.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
+        clearButton.setFocusPainted(false);
+        clearButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        clearButton.addActionListener(e -> {
+            NotificationManager.getInstance().clearNotifications();
+            dialog.dispose();
+        });
+
+        JButton closeButton = new JButton("Close");
+        closeButton.setFont(new Font("Sans Serif", Font.PLAIN, 12));
+        closeButton.setForeground(new Color(100, 100, 100));
+        closeButton.setBackground(Color.WHITE);
+        closeButton.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+        closeButton.setFocusPainted(false);
+        closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        closeButton.addActionListener(e -> dialog.dispose());
+
+        buttonPanel.add(newsButton);
+        buttonPanel.add(Box.createHorizontalStrut(10));
+        buttonPanel.add(clearButton);
+        buttonPanel.add(Box.createHorizontalStrut(10));
+        buttonPanel.add(closeButton);
+
+        dialog.add(headerPanel, BorderLayout.NORTH);
+        dialog.add(scrollPane, BorderLayout.CENTER);
+        dialog.add(buttonPanel, BorderLayout.SOUTH);
+
+        dialog.setVisible(true);
+    }
+
+    private JPanel createNotificationItem(String message) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(new Color(248, 249, 250));
+        panel.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
+            BorderFactory.createEmptyBorder(12, 15, 12, 15)
+        ));
+
+        JLabel messageLabel = new JLabel("<html><div style='width:400px'>" + message + "</div></html>");
+        messageLabel.setFont(new Font("Sans Serif", Font.PLAIN, 13));
+        messageLabel.setForeground(new Color(60, 60, 60));
+
+        JLabel timeLabel = new JLabel("Just now");
+        timeLabel.setFont(new Font("Sans Serif", Font.ITALIC, 11));
+        timeLabel.setForeground(new Color(150, 150, 150));
+
+        panel.add(messageLabel, BorderLayout.CENTER);
+        panel.add(timeLabel, BorderLayout.EAST);
+
+        return panel;
     }
 
     private JTabbedPane createTabbedPane() {

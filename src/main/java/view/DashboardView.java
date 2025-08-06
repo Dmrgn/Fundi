@@ -86,9 +86,6 @@ public class DashboardView extends BaseView {
         // Add settings button
         JButton settingsButton = new JButton();
         try {
-            ImageIcon gearIcon = new ImageIcon("resources/gear.png");
-            Image gearImg = gearIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-            settingsButton.setIcon(new ImageIcon(gearImg));
         } catch (Exception e) {
             settingsButton.setText("Settings");
         }

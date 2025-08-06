@@ -1,3 +1,7 @@
+# Documentation for Developers
+
+Follow these conventions!!
+
 ## View Management
 
 The application uses a `CardLayout` to manage different views. A `ViewManager` is responsible for switching between views based on user actions and application state changes. Each view has a corresponding `ViewModel` that holds the data to be displayed.

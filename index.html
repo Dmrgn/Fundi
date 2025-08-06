@@ -1,0 +1,319 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <!-- 95CSS – Windows 95‑style framework -->
+    <link
+      rel="stylesheet"
+      href="https://cdn.jsdelivr.net/npm/95css@latest/css/95css.min.css"
+    />
+
+    <!-- Custom helpers for full‑screen slides -->
+    <style>
+      html,
+      body {
+        height: 100%;
+        margin: 0;
+      }
+
+      .slide {
+        display: none; /* toggled via JS */
+        justify-content: center;
+        align-items: center;
+        height: 100%;
+        padding: 1rem;
+      }
+      .slide.active {
+        display: flex;
+      }
+
+      /* Windows style dialog acts as the slide canvas */
+      .slide dialog,
+      .slide .dialog {
+        width: 80%;
+        max-width: 1280px;
+      }
+      .dialog-body {
+        padding: 1rem 2rem 2rem;
+      }
+
+      .grid-two {
+        display: grid;
+        gap: 1.2rem;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      }
+      img.diagram {
+        max-width: 100%;
+        border: 2px solid #7f7f7f;
+      }
+
+      .nav-hint {
+        position: fixed;
+        bottom: 6px;
+        right: 10px;
+        font-size: 0.8rem;
+        opacity: 0.65;
+      }
+    </style>
+
+    <title>Project Presentation – 95CSS Template</title>
+  </head>
+  <body>
+    <div class="nav-hint">← / → or Space bar</div>
+
+    <!-- 1️⃣ Title slide -->
+    <section class="slide" id="slide-1">
+      <div class="dialog is-lg">
+        <div class="dialog-body" style="text-align:center;">
+          <h1>Project Title</h1>
+          <p>Course • Term • Date</p>
+          <p>
+            Team:&nbsp;
+            <span title="Role">Member 1</span>, Member 2, Member 3…
+          </p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 2️⃣ Agenda -->
+    <section class="slide" id="slide-2">
+      <div class="dialog is-lg">
+        <div class="dialog-body">
+          <h2>Agenda</h2>
+          <ol>
+            <li>Project Overview</li>
+            <li>Specification &amp; Scope</li>
+            <li>Architecture &amp; Design</li>
+            <li>Functionality Demo</li>
+            <li>Quality Assurance &amp; Testing</li>
+            <li>Accessibility &amp; Future Work</li>
+            <li>Q &amp; A</li>
+          </ol>
+        </div>
+      </div>
+    </section>
+
+    <!-- ⭐ Each rubric criterion gets its own slide. Duplicate as needed. -->
+
+    <!-- 3️⃣ Project Overview -->
+    <section class="slide" id="slide-overview">
+      <div class="dialog is-lg">
+        <div class="dialog-body">
+          <div class="grid-two">
+            <div>
+              <h2>Problem & Solution</h2>
+              <ul>
+                <li>Describe the pain‑point being solved</li>
+                <li>Summarise your solution in one sentence</li>
+                <li>Key value proposition / USP</li>
+              </ul>
+            </div>
+            <div>
+              <h3>Demo Snapshot</h3>
+              <img
+                class="diagram"
+                src="assets/demo-placeholder.png"
+                alt="Screenshot of the running application"
+              />
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- 4️⃣ Specification -->
+    <section class="slide" id="slide-specification">
+      <div class="dialog is-lg">
+        <div class="dialog-body">
+          <h2>Specification</h2>
+          <ul>
+            <li>High‑level user stories (no implementation details)</li>
+            <li>Inputs &amp; outputs</li>
+            <li>Non‑functional requirements (performance, security…)</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 5️⃣ Scope -->
+    <section class="slide" id="slide-scope">
+      <div class="dialog is-lg">
+        <div class="dialog-body">
+          <h2>Project Scope</h2>
+          <ul>
+            <li><strong>Member 1:</strong> Story A, Story B</li>
+            <li><strong>Member 2:</strong> Story C</li>
+            <li><strong>Member 3:</strong> …</li>
+          </ul>
+          <progress value="75" max="100" style="width:100%"></progress>
+          <p><em>Ambition level mapped to rubric expectations</em></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 6️⃣ Architecture -->
+    <section class="slide" id="slide-architecture">
+      <div class="dialog is-lg">
+        <div class="dialog-body">
+          <div class="grid-two">
+            <div>
+              <h2>Clean Architecture Layers</h2>
+              <ul>
+                <li>Entities</li>
+                <li>Use‑Case Interactors</li>
+                <li>Interface Adapters</li>
+                <li>Frameworks &amp; Drivers</li>
+              </ul>
+            </div>
+            <div>
+              <img
+                class="diagram"
+                src="assets/architecture-diagram.png"
+                alt="Clean architecture diagram"
+              />
+            </div>
+          </div>
+          <p><em>Justify any intentional violations</em></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 7️⃣ Design -->
+    <section class="slide" id="slide-design">
+      <div class="dialog is-lg">
+        <div class="dialog-body">
+          <h2>SOLID Principles &amp; Patterns</h2>
+          <ul>
+            <li>SRP – Example</li>
+            <li>OCP – Example</li>
+            <li>Observer pattern for event bus</li>
+            <li>Factory pattern for entity creation</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 8️⃣ Functionality -->
+    <section class="slide" id="slide-functionality">
+      <div class="dialog is-lg">
+        <div class="dialog-body">
+          <h2>Functionality Demo</h2>
+          <p>Embed short GIF/video or plan to switch to live demo.</p>
+          <ul>
+            <li>Feature 1 works as specified</li>
+            <li>Feature 2 highlights edge‑case handling</li>
+          </ul>
+        </div>
+      </div>
+    </section>
+
+    <!-- 9️⃣ API Usage -->
+    <section class="slide" id="slide-api">
+      <div class="dialog is-lg">
+        <div class="dialog-body">
+          <h2>External APIs</h2>
+          <table style="width:100%">
+            <thead>
+              <tr><th>Endpoint</th><th>Purpose</th></tr>
+            </thead>
+            <tbody>
+              <tr><td>/v1/search</td><td>Fetch data</td></tr>
+              <tr><td>/v1/auth</td><td>User authentication</td></tr>
+            </tbody>
+          </table>
+          <p><em>Explain why each API is appropriate</em></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 🔟 Code Quality -->
+    <section class="slide" id="slide-quality">
+      <div class="dialog is-lg">
+        <div class="dialog-body">
+          <h2>Code Quality &amp; Organisation</h2>
+          <ul>
+            <li>Package structure aligns with architecture</li>
+            <li>CI pipeline with linters &amp; tests</li>
+            <li>Pull‑request reviews – see screenshot</li>
+          </ul>
+          <img
+            class="diagram"
+            src="assets/pr-screenshot.png"
+            alt="PR review screenshot"
+          />
+        </div>
+      </div>
+    </section>
+
+    <!-- 11️⃣ Testing -->
+    <section class="slide" id="slide-testing">
+      <div class="dialog is-lg">
+        <div class="dialog-body">
+          <div class="grid-two">
+            <div>
+              <h2>Coverage</h2>
+              <ul>
+                <li>Overall: 75% lines</li>
+                <li>Use‑case interactors: 85%</li>
+              </ul>
+            </div>
+            <div>
+              <img
+                class="diagram"
+                src="assets/coverage-report.png"
+                alt="Coverage report"
+              />
+            </div>
+          </div>
+          <p>Un‑tested areas &amp; justification documented.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 12️⃣ Accessibility -->
+    <section class="slide" id="slide-accessibility">
+      <div class="dialog is-lg">
+        <div class="dialog-body">
+          <h2>Accessibility &amp; Users</h2>
+          <ul>
+            <li>Equitable Use – Example</li>
+            <li>Perceptible Information – Example</li>
+          </ul>
+          <h3>Target Users</h3>
+          <p>Describe primary audience and potential challenges users may face.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- 13️⃣ Conclusion -->
+    <section class="slide" id="slide-conclusion">
+      <div class="dialog is-lg">
+        <div class="dialog-body" style="text-align:center;">
+          <h2>Thank You</h2>
+          <p>Questions &amp; Discussion</p>
+          <button onclick="window.location.hash='slide-1'">Restart</button>
+        </div>
+      </div>
+    </section>
+
+    <!-- Navigation script -->
+    <script>
+      const slides = Array.from(document.querySelectorAll('.slide'));
+      let idx = 0;
+      function go(n) {
+        slides[idx].classList.remove('active');
+        idx = (n + slides.length) % slides.length;
+        slides[idx].classList.add('active');
+        history.replaceState(null, '', '#' + slides[idx].id);
+      }
+      document.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowRight' || e.key === ' ') go(idx + 1);
+        if (e.key === 'ArrowLeft') go(idx - 1);
+      });
+      slides[0].classList.add('active');
+    </script>
+  </body>
+</html>

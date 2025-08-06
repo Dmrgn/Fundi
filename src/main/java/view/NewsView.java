@@ -107,9 +107,9 @@ public class NewsView extends BaseView {
     private void performSearch() {
         String query = searchField.getText().trim();
         if (!query.isEmpty() && newsController != null) {
-            System.out.println("Searching news for: " + query); // Debug line
-            newsController.executeSearch(query);
-            searchField.setText(""); // Clear the search field
+            // Convert query to uppercase for consistency with stock symbols
+            newsController.executeSearch(query.toUpperCase());
+            searchField.setText(""); // Clear the search field after searching
         }
     }
 

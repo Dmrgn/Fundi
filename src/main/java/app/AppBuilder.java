@@ -121,10 +121,8 @@ public class AppBuilder {
                         createViewModel,
                         portfoliosDataAccessObject);
 
-        private final NewsController newsController = NewsUseCaseFactory.create(
-                        viewManagerModel,
-                        newsViewModel,
-                        transactionDataAccessObject);
+        private SearchDataAccessInterface searchDataAccessObject;
+        private NewsController newsController;
         private final PortfolioController portfolioController = PortfolioUseCaseFactory.create(
                         viewManagerModel,
                         portfolioViewModel,
@@ -197,12 +195,13 @@ public class AppBuilder {
         private RecommendView recommendView;
         private CompanyDetailsView companyDetailsView;
 
+
         public AppBuilder() throws SQLException, IOException {
                 cardPanel.setLayout(cardLayout);
                 SearchOutputBoundary searchPresenter = new SearchPresenter(searchViewModel);
-                SearchDataAccessInterface searchDataAccessObject;
+                SearchDataAccessInterface tempSearchDataAccessObject;
                 try {
-                        searchDataAccessObject = new FinnhubSearchDataAccessObject();
+                        tempSearchDataAccessObject = new FinnhubSearchDataAccessObject();
                 } catch (IOException e) {
                         javax.swing.JOptionPane.showMessageDialog(null,
                                         "Failed to initialize FinnHub search API. Application exiting...\n"
@@ -212,8 +211,15 @@ public class AppBuilder {
                         System.exit(1);
                         return;
                 }
+                this.searchDataAccessObject = tempSearchDataAccessObject;
                 SearchInputBoundary getMatches = new GetMatches(searchDataAccessObject, searchPresenter);
                 this.searchController = new SearchController(getMatches);
+
+                this.newsController = NewsUseCaseFactory.create(
+                        viewManagerModel,
+                        newsViewModel,
+                        transactionDataAccessObject,
+                        searchDataAccessObject);
 
                 // Initialize dashboard controller
                 this.dashboardController = DashboardUseCaseFactory.createDashboardController(dashboardViewModel);
@@ -308,7 +314,16 @@ public class AppBuilder {
         }
 
         public AppBuilder addNewsView() {
-                newsView = new NewsView(newsViewModel, navigationController);
+                // You already have a searchDAO instance, reuse it.
+                // If not, create one: SearchDataAccessInterface searchDAO = new FinnhubSearchDataAccessObject();
+                newsController = NewsUseCaseFactory.create(
+                                viewManagerModel,
+                                newsViewModel,
+                                transactionDataAccessObject,
+                                searchDataAccessObject // Pass the existing search DAO
+                );
+                newsView = NewsViewFactory.create(newsViewModel, navigationController);
+                newsView.setNewsController(newsController);
                 cardPanel.add(newsView, newsView.getViewName());
                 return this;
         }

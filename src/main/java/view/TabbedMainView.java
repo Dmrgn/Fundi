@@ -97,7 +97,7 @@ public class TabbedMainView extends BaseView {
         JButton button = new JButton("🔔");
         button.setFont(new Font("Sans Serif", Font.PLAIN, 20));
         button.setForeground(Color.WHITE);
-        button.setBackground(new Color(30, 60, 120));
+        button.setBackground(new Color(30, 60, 120)); // Default blue color
         button.setPreferredSize(new Dimension(50, 50));
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createCompoundBorder(
@@ -110,17 +110,31 @@ public class TabbedMainView extends BaseView {
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
-                button.setBackground(new Color(40, 70, 130));
+                // Change hover color based on notification state
+                if (notificationCount > 0) {
+                    button.setBackground(new Color(200, 50, 50)); // Darker red on hover
+                } else {
+                    button.setBackground(new Color(40, 70, 130)); // Blue on hover
+                }
             }
 
             @Override
             public void mouseExited(MouseEvent e) {
-                button.setBackground(new Color(30, 60, 120));
+                // Restore color based on notification state
+                if (notificationCount > 0) {
+                    button.setBackground(new Color(220, 20, 60)); // Red when notifications exist
+                } else {
+                    button.setBackground(new Color(30, 60, 120)); // Default blue
+                }
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
-                button.setBackground(new Color(25, 50, 100));
+                if (notificationCount > 0) {
+                    button.setBackground(new Color(180, 30, 30)); // Darker red on press
+                } else {
+                    button.setBackground(new Color(25, 50, 100)); // Darker blue on press
+                }
             }
         });
 
@@ -367,9 +381,26 @@ public class TabbedMainView extends BaseView {
         if (notificationCount > 0) {
             notificationBadge.setText(String.valueOf(notificationCount));
             notificationBadge.setVisible(true);
+            
+            // Change button color to red when notifications are available
+            notificationButton.setBackground(new Color(220, 20, 60)); // Red color
+            notificationButton.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(200, 50, 50), 2),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)
+            ));
         } else {
             notificationBadge.setVisible(false);
+            
+            // Restore default blue color when no notifications
+            notificationButton.setBackground(new Color(30, 60, 120)); // Default blue
+            notificationButton.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(new Color(40, 70, 130), 2),
+                BorderFactory.createEmptyBorder(5, 5, 5, 5)
+            ));
         }
+        
+        // Repaint to ensure visual update
+        notificationButton.repaint();
     }
 
     public int getNotificationCount() {

@@ -18,7 +18,7 @@ import view.ui.TableFactory;
 import view.ui.UiConstants;
 
 /**
- * The View for the History Use Case
+ * The View for the History Use Case.
  */
 public class HistoryView extends BaseView {
     private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Price", "Date"};

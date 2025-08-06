@@ -27,7 +27,7 @@ public final class TableFactory {
         JTable table = new JTable(model);
         table.setFillsViewportHeight(true);
         table.setRowHeight(ROW_HEIGHT);
-        table.setFont(new Font(LabelFactory.FONT, Font.PLAIN, LabelFactory.FORM_SIZE));
+        table.setFont(UiConstants.FORM_FONT);
         table.setGridColor(Color.GRAY);
         table.setShowGrid(true);
         table.setSelectionBackground(Color.WHITE);
@@ -35,7 +35,7 @@ public final class TableFactory {
         table.setRowMargin(ROW_MARGIN);
         table.setIntercellSpacing(INTERCELL_SPACING);
 
-        table.getTableHeader().setFont(new Font(LabelFactory.FONT, Font.BOLD, LabelFactory.FORM_SIZE));
+        table.getTableHeader().setFont(UiConstants.FORM_FONT);
         table.getTableHeader().setBackground(Color.WHITE);
         table.getTableHeader().setBorder(MATTE_BORDER);
 

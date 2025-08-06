@@ -90,16 +90,6 @@ public class PortfolioView extends BaseView {
         bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
         JPanel buttonPanel = ButtonFactory.createButtonPanel(useCaseButtons);
-        buttonPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = UiConstants.INSETS;
-        gbc.fill = GridBagConstraints.NONE;
-
-        for (int i = 0; i < useCaseButtons.length; i++) {
-            gbc.gridx = i % UiConstants.INSET_SCALING;
-            gbc.gridy = i / UiConstants.INSET_SCALING;
-            buttonPanel.add(useCaseButtons[i], gbc);
-        }
         buttonPanel.setMaximumSize(UiConstants.BUTTON_PANEL_DIM);
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         bottomPanel.add(buttonPanel);
@@ -111,9 +101,9 @@ public class PortfolioView extends BaseView {
     private void generateButtons() {
         for (int i = 0; i < USE_CASES.length; i++) {
             this.useCaseButtons[i] = ButtonFactory.createStyledButton(USE_CASES[i]);
-            this.useCaseButtons[i].setPreferredSize(UiConstants.PREFERRED_BUTTON_SIZE);
-            this.useCaseButtons[i].setMaximumSize(UiConstants.PREFERRED_BUTTON_SIZE);
-            this.useCaseButtons[i].setMinimumSize(UiConstants.PREFERRED_BUTTON_SIZE);
+            this.useCaseButtons[i].setPreferredSize(UiConstants.PREFERRED_COMPONENT_DIM);
+            this.useCaseButtons[i].setMaximumSize(UiConstants.PREFERRED_COMPONENT_DIM);
+            this.useCaseButtons[i].setMinimumSize(UiConstants.PREFERRED_COMPONENT_DIM);
         }
     }
 

@@ -6,14 +6,6 @@ import javax.swing.*;
 import javax.swing.border.TitledBorder;
 
 public final class PanelFactory {
-    static final int HEIGHT = 30;
-    static final int FORM_WIDTH = 100;
-    static final int SINGLE_WIDTH = 180;
-    static final int SINGLE_PANEL_WIDTH = 300;
-    static final Dimension FORM_SIZE = new Dimension(FORM_WIDTH, HEIGHT);
-    static final Dimension SINGLE_SIZE = new Dimension(SINGLE_WIDTH, HEIGHT);
-    static final Dimension SINGLE_PANEL_SIZE = new Dimension(SINGLE_PANEL_WIDTH, HEIGHT);
-    static final Component FORM_GAP = Box.createHorizontalStrut(5);
 
     private PanelFactory() {
 
@@ -30,9 +22,8 @@ public final class PanelFactory {
         JPanel panel = new JPanel();
         panel.setOpaque(false);
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
-        panel.add(Box.createHorizontalGlue());
+        panel.setBorder(UiConstants.PANEL_BORDER);
         panel.add(title);
-        panel.add(Box.createHorizontalGlue());
         return panel;
     }
 
@@ -44,20 +35,22 @@ public final class PanelFactory {
      */
     public static JPanel createFormPanel(String text, JTextField textField) {
         JPanel panel = new JPanel();
+        panel.setMaximumSize(UiConstants.PREFERRED_CONTAINER_DIM);
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
         JLabel label = LabelFactory.createFormLabel(text);
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         panel.setOpaque(false);
 
         label.setForeground(Color.WHITE);
-        label.setPreferredSize(FORM_SIZE);
-        label.setMaximumSize(FORM_SIZE);
-        label.setMinimumSize(FORM_SIZE);
+        label.setPreferredSize(UiConstants.PREFERRED_LABEL_DIM);
+        label.setMaximumSize(UiConstants.PREFERRED_LABEL_DIM);
+        label.setMinimumSize(UiConstants.PREFERRED_LABEL_DIM);
         label.setAlignmentY(Component.CENTER_ALIGNMENT);
         panel.add(label);
-        panel.add(FORM_GAP);
-        textField.setPreferredSize(FORM_SIZE);
-        textField.setMaximumSize(FORM_SIZE);
-        textField.setMinimumSize(FORM_SIZE);
+        panel.add(UiConstants.formGap());
+        textField.setPreferredSize(UiConstants.PREFERRED_COMPONENT_DIM);
+        textField.setMaximumSize(UiConstants.PREFERRED_COMPONENT_DIM);
+        textField.setMinimumSize(UiConstants.PREFERRED_COMPONENT_DIM);
         textField.setAlignmentY(Component.CENTER_ALIGNMENT);
         panel.add(textField);
         return panel;
@@ -73,19 +66,19 @@ public final class PanelFactory {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         panel.setOpaque(false);
-        panel.setMaximumSize(SINGLE_SIZE);
+        panel.setMaximumSize(UiConstants.SINGLE_DIM);
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        textField.setPreferredSize(SINGLE_SIZE);
-        textField.setMaximumSize(SINGLE_SIZE);
-        textField.setMinimumSize(SINGLE_SIZE);
+        textField.setPreferredSize(UiConstants.SINGLE_DIM);
+        textField.setMaximumSize(UiConstants.SINGLE_DIM);
+        textField.setMinimumSize(UiConstants.SINGLE_DIM);
 
-        button.setPreferredSize(FORM_SIZE);
-        button.setMaximumSize(FORM_SIZE);
-        button.setMinimumSize(FORM_SIZE);
+        button.setPreferredSize(UiConstants.FORM_DIM);
+        button.setMaximumSize(UiConstants.FORM_DIM);
+        button.setMinimumSize(UiConstants.FORM_DIM);
 
         button.add(Box.createHorizontalGlue());
         panel.add(textField);
-        panel.add(FORM_GAP);
+        panel.add(UiConstants.formGap());
         panel.add(button);
 
         return panel;
@@ -102,11 +95,67 @@ public final class PanelFactory {
         panel.setOpaque(false);
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
         TitledBorder border = TitledBorderFactory.createLightTitledBorder(title);
-        border.setTitleFont(new Font(LabelFactory.FONT, Font.PLAIN, LabelFactory.LABEL_SIZE));
+        border.setTitleFont(UiConstants.FORM_FONT);
         panel.setBorder(border);
-        panel.setMinimumSize(SINGLE_SIZE);
+        panel.setMinimumSize(UiConstants.SINGLE_DIM);
 
         panel.setForeground(Color.WHITE);
+        return panel;
+    }
+
+    /**
+     * Create panel with two side by side.
+     * @param left Left panel
+     * @param right Right panel
+     * @return The combined panel
+     */
+    public static JPanel createSideBySide(JPanel left, JPanel right) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
+        panel.setOpaque(false);
+        panel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        left.setAlignmentY(Component.TOP_ALIGNMENT);
+        right.setAlignmentY(Component.TOP_ALIGNMENT);
+
+        panel.add(left);
+        panel.add(UiConstants.bigHorizontalGap());
+        panel.add(right);
+
+        return panel;
+    }
+
+    /**
+     * Create a summary section.
+     * @param title Title
+     * @param summaryLabel Label
+     * @param detailPanels Details
+     * @return The summary panel
+     */
+    public static JPanel createSection(String title, JLabel summaryLabel, JPanel... detailPanels) {
+        JPanel panel = new JPanel();
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+        panel.setBackground(UiConstants.TRANSLUCENT_BACKGROUND);
+        panel.setOpaque(true);
+        panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(
+                UiConstants.TRANSLUCENT_BORDER, 1, true),
+                UiConstants.EMPTY_BORDER));
+        panel.setForeground(Color.WHITE);
+
+        summaryLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(LabelFactory.createStatTitleLabel(title));
+        panel.add(summaryLabel);
+        panel.add(UiConstants.mediumVerticalGap());
+
+        if (detailPanels.length == 1) {
+            panel.add(detailPanels[0]);
+        }
+
+        else if (detailPanels.length == 2) {
+            panel.add(createSideBySide(detailPanels[0], detailPanels[1]));
+        }
+
+        panel.setMaximumSize(UiConstants.PREFERRED_BIG_CONTAINER_DIM);
         return panel;
     }
 }

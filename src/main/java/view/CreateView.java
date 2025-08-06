@@ -13,7 +13,7 @@ import interface_adapter.ViewManagerModel;
 import view.ui.*;
 
 /**
- * The View For the Create Use Case
+ * The View For the Create Use Case.
  */
 public class CreateView extends BaseView implements PropertyChangeListener {
     private final CreateViewModel createViewModel;

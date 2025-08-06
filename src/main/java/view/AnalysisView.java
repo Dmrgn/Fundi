@@ -9,7 +9,6 @@ import interface_adapter.analysis.AnalysisViewModel;
 import interface_adapter.navigation.NavigationController;
 import view.ui.LabelFactory;
 import view.ui.PanelFactory;
-import view.ui.TitledBorderFactory;
 import view.ui.UiConstants;
 
 public class AnalysisView extends BaseView {
@@ -37,18 +36,19 @@ public class AnalysisView extends BaseView {
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        contentPanel.add(createBackButtonPanel(evt -> this.navigationController.goBack()));
+        contentPanel.add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.NORTH);
         contentPanel.add(UiConstants.mediumVerticalGap());
 
-        JPanel spreadPanel = createSection("Spread", numTickersLabel, topHoldingsPanel);
+        JPanel spreadPanel = PanelFactory.createSection("Spread", numTickersLabel, topHoldingsPanel);
         contentPanel.add(spreadPanel);
         contentPanel.add(UiConstants.mediumVerticalGap());
 
-        JPanel volPanel = createSection("Volatility", volatilityLabel, topVolatilityPanel, lowVolatilityPanel);
+        JPanel volPanel = PanelFactory.createSection("Volatility", volatilityLabel, topVolatilityPanel,
+                lowVolatilityPanel);
         contentPanel.add(volPanel);
         contentPanel.add(UiConstants.mediumVerticalGap());
 
-        JPanel returnPanel = createSection("Return", returnLabel, topReturnPanel, lowReturnPanel);
+        JPanel returnPanel = PanelFactory.createSection("Return", returnLabel, topReturnPanel, lowReturnPanel);
         contentPanel.add(returnPanel);
         contentPanel.add(UiConstants.mediumVerticalGap());
         contentPanel.add(Box.createVerticalGlue());
@@ -58,26 +58,8 @@ public class AnalysisView extends BaseView {
         scrollPane.getVerticalScrollBar().setUnitIncrement(UiConstants.SCROLL_UNIT_INCREMENT);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
-        this.add(scrollPane);
+        this.add(scrollPane, BorderLayout.CENTER);
         wireListeners();
-    }
-
-    private JPanel createSection(String title, JLabel summaryLabel, JPanel... detailPanels) {
-        JPanel panel = new JPanel();
-        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setOpaque(false);
-        panel.setBorder(TitledBorderFactory.createLightTitledBorder(title));
-        panel.setForeground(Color.WHITE);
-
-        summaryLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        panel.add(summaryLabel);
-        for (JPanel detailPanel : detailPanels) {
-            detailPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            panel.add(UiConstants.smallVerticalGap());
-            panel.add(detailPanel);
-        }
-        panel.setMaximumSize(UiConstants.DEFAULT_WINDOW_DIM);
-        return panel;
     }
 
     private void updateListPanel(JPanel panel, Map<String, Double> data) {
@@ -113,7 +95,7 @@ public class AnalysisView extends BaseView {
      */
     private static String format(double value) {
         if (value < TOLERANCE) {
-            return String.format("%.1E%%", value);
+            return "<" + TOLERANCE + "%";
         }
 
         else {

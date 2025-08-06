@@ -13,7 +13,7 @@ public class FieldFactory {
      */
     public static JTextField createTextField() {
         JTextField textField = new JTextField("", NUM_COLUMNS);
-        textField.setFont(new Font(LabelFactory.FONT, Font.PLAIN, LabelFactory.FORM_SIZE));
+        textField.setFont(UiConstants.FORM_FONT);
         textField.setForeground(Color.BLACK);
         textField.setBackground(Color.WHITE);
         return textField;
@@ -25,7 +25,7 @@ public class FieldFactory {
      */
     public static JPasswordField createPasswordField() {
         JPasswordField passwordField = new JPasswordField("", NUM_COLUMNS);
-        passwordField.setFont(new Font(LabelFactory.FONT, Font.PLAIN, LabelFactory.FORM_SIZE));
+        passwordField.setFont(UiConstants.FORM_FONT);
         passwordField.setForeground(Color.BLACK);
         passwordField.setBackground(Color.WHITE);
         return passwordField;

@@ -93,9 +93,6 @@ public class NewsInteractor implements NewsInputBoundary {
                             article.optString("summary", "No Summary Available.")
                         });
                     }
-                    if (articles.length() > 0) {
-                        allNews.add(new String[]{"", ""}); // Add spacing
-                    }
                 }
             }
 

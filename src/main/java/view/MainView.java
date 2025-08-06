@@ -61,10 +61,6 @@ public class MainView extends BaseView {
         topPanel.setOpaque(false);
         // Welcome
         JButton settingsButton = new JButton();
-        ImageIcon gearIcon = new ImageIcon("resources/gear.png");
-        Image gearImg = gearIcon.getImage().getScaledInstance(UiConstants.ICON_DIM, UiConstants.ICON_DIM,
-                Image.SCALE_SMOOTH);
-        settingsButton.setIcon(new ImageIcon(gearImg));
         settingsButton.setToolTipText("Settings");
         settingsButton.setContentAreaFilled(false);
         settingsButton.setBorderPainted(false);

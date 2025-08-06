@@ -183,7 +183,6 @@ public class AppBuilder {
         private ChangePwdController changePwdController;
         private ChangePwdInteractor changePwdInteractor;
 
-
         private TabbedMainView tabbedMainView;
         private DashboardView dashboardView;
         private WatchlistView watchlistView;
@@ -209,8 +208,9 @@ public class AppBuilder {
                         searchDataAccessObject = new FinnhubSearchDataAccessObject();
                 } catch (IOException e) {
                         javax.swing.JOptionPane.showMessageDialog(null,
-                                "Failed to initialize FinnHub search API. Application exiting...\n" + e.getMessage(),
-                                "Initialization Error", javax.swing.JOptionPane.ERROR_MESSAGE);
+                                        "Failed to initialize FinnHub search API. Application exiting...\n"
+                                                        + e.getMessage(),
+                                        "Initialization Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                         System.exit(1);
                         return;
                 }
@@ -219,11 +219,13 @@ public class AppBuilder {
 
                 this.dashboardController = DashboardUseCaseFactory.createDashboardController(dashboardViewModel);
                 this.companyDetailsController = CompanyDetailsUseCaseFactory.create(
-                        viewManagerModel, companyDetailsViewModel, navigationController);
+                                viewManagerModel, companyDetailsViewModel, navigationController);
         }
+
         public AppBuilder addChangePwdUseCase() {
                 ChangePwdOutputBoundary presenter = new ChangePwdPresenter(changePwdViewModel);
-                ChangePwdInputBoundary interactor = new ChangePwdInteractor(userDataAccessObject, presenter, mainViewModel);
+                ChangePwdInputBoundary interactor = new ChangePwdInteractor(userDataAccessObject, presenter,
+                                mainViewModel);
                 changePwdController = new ChangePwdController(interactor, mainViewModel);
                 return this;
         }
@@ -235,7 +237,6 @@ public class AppBuilder {
                 return this;
         }
 
-
         /**
          * Adds the Tabbed Main View to the application.
          *
@@ -243,14 +244,16 @@ public class AppBuilder {
          */
         public AppBuilder addTabbedMainView() {
                 dashboardView = DashboardViewFactory.create(mainViewModel, searchController, searchViewModel,
-                        dashboardViewModel, dashboardController, navigationController, companyDetailsController);
-                watchlistView = new WatchlistView(navigationController);
+                                dashboardViewModel, dashboardController, navigationController,
+                                companyDetailsController);
                 final LeaderboardController tempLeaderboardController = LeaderboardUseCaseFactory
                                 .createLeaderboardController(leaderboardViewModel);
                 leaderboardView = LeaderboardViewFactory.create(leaderboardViewModel, tempLeaderboardController);
+                watchlistView = WatchlistViewFactory.create(mainViewModel,
+                                (DBUserDataAccessObject) userDataAccessObject);
                 tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfolioHubController, newsController,
-                        portfolioController, navigationController, searchController, searchViewModel,
-                        dashboardView, portfoliosView, newsView, watchlistView, leaderboardView, settingsView);
+                                portfolioController, navigationController, searchController, searchViewModel,
+                                dashboardView, portfoliosView, newsView, watchlistView, leaderboardView, settingsView);
                 cardPanel.add(tabbedMainView, tabbedMainView.getViewName());
                 return this;
         }
@@ -266,7 +269,6 @@ public class AppBuilder {
                 cardPanel.add(signupView, signupView.getViewName());
                 return this;
         }
-
 
         /**
          * Adds the portfolios view to the application
@@ -297,7 +299,6 @@ public class AppBuilder {
                 return this;
         }
 
-
         /**
          * Adds the portfolio view to the application
          *
@@ -320,7 +321,6 @@ public class AppBuilder {
                 cardPanel.add(newsView, newsView.getViewName());
                 return this;
         }
-
 
         /**
          * Adds the buy view to the application
@@ -370,7 +370,6 @@ public class AppBuilder {
                 cardPanel.add(recommendView, recommendView.getViewName());
                 return this;
         }
-
 
         public AppBuilder addCompanyDetailsView() {
                 companyDetailsView = CompanyDetailsViewFactory.create(

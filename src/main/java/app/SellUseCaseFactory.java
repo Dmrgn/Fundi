@@ -1,6 +1,6 @@
 package app;
 
-import interface_adapter.PortfolioViewModelUpdater;
+import interface_adapter.PortfolioUpdateCommand;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.sell.SellController;
@@ -25,7 +25,6 @@ public final class SellUseCaseFactory {
      * @param viewManagerModel The View Manager Model
      * @param sellViewModel The Sell View Model
      * @param portfolioViewModel The Portfolio View Model
-     * @param portfolioViewModelUpdater The Portfolio View Model Updater
      * @param stockDataAccessObject The Stock DAO
      * @param transactionDataAccessObject The Transaction DAO
      * @return The Sell Controller
@@ -34,14 +33,12 @@ public final class SellUseCaseFactory {
             ViewManagerModel viewManagerModel,
             SellViewModel sellViewModel,
             PortfolioViewModel portfolioViewModel,
-            PortfolioViewModelUpdater portfolioViewModelUpdater,
             SellStockDataAccessInterface stockDataAccessObject,
             SellTransactionDataAccessInterface transactionDataAccessObject
     ) {
         SellOutputBoundary sellPresenter = new SellPresenter(
                 viewManagerModel,
                 portfolioViewModel,
-                portfolioViewModelUpdater,
                 sellViewModel
         );
         SellInputBoundary sellInteractor = new SellInteractor(

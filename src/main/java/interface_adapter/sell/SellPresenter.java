@@ -1,6 +1,7 @@
 package interface_adapter.sell;
 
-import interface_adapter.PortfolioViewModelUpdater;
+import interface_adapter.PortfolioCommand;
+import interface_adapter.PortfolioUpdateCommand;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.portfolio.PortfolioViewModel;
 import use_case.sell.SellOutputBoundary;
@@ -12,14 +13,12 @@ import use_case.sell.SellOutputData;
 public class SellPresenter implements SellOutputBoundary {
     private final ViewManagerModel viewManagerModel;
     private final PortfolioViewModel portfolioViewModel;
-    private final PortfolioViewModelUpdater updater;
     private final SellViewModel sellViewModel;
 
     public SellPresenter(ViewManagerModel viewManagerModel, PortfolioViewModel portfolioViewModel,
-                         PortfolioViewModelUpdater updater, SellViewModel sellViewModel) {
+                         SellViewModel sellViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.portfolioViewModel = portfolioViewModel;
-        this.updater = updater;
         this.sellViewModel = sellViewModel;
     }
 
@@ -31,8 +30,9 @@ public class SellPresenter implements SellOutputBoundary {
      */
     @Override
     public void prepareSuccessView(SellOutputData outputData) {
-        updater.update(portfolioViewModel,
-                outputData.getTicker(), outputData.getPrice(), outputData.getQuantity());
+        final PortfolioCommand cmd = new PortfolioUpdateCommand(outputData.getTicker(), outputData.getPrice(),
+                outputData.getQuantity());
+        cmd.execute(portfolioViewModel);
         portfolioViewModel.firePropertyChanged();
         viewManagerModel.setState(portfolioViewModel.getViewName());
         viewManagerModel.firePropertyChanged();

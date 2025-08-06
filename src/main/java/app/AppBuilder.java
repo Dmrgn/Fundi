@@ -8,13 +8,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
-import data_access.APISearchDataAccessObject;
 import data_access.DBPortfoliosDataAccessObject;
 import data_access.DBStockDataAccessObject;
 import data_access.DBTransactionDataAccessObject;
 import data_access.DBUserDataAccessObject;
 import entity.NavigationState;
-import interface_adapter.PortfolioViewModelUpdater;
+import interface_adapter.PortfolioUpdateCommand;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analysis.AnalysisController;
 import interface_adapter.analysis.AnalysisViewModel;
@@ -54,7 +53,6 @@ import use_case.search.SearchDataAccessInterface;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchOutputBoundary;
 import data_access.FinnhubSearchDataAccessObject;
-import interface_adapter.portfolio_hub.*;
 import interface_adapter.company_details.CompanyDetailsController;
 import interface_adapter.company_details.CompanyDetailsViewModel;
 import use_case.signup.SignupUserDataAccessInterface;
@@ -90,7 +88,6 @@ public class AppBuilder {
         private final AnalysisViewModel analysisViewModel = new AnalysisViewModel();
         private final RecommendViewModel recommendViewModel = new RecommendViewModel();
         private final LeaderboardViewModel leaderboardViewModel = new LeaderboardViewModel();
-        private final PortfolioViewModelUpdater portfolioViewModelUpdater = new PortfolioViewModelUpdater();
         private final NavigationState navigationState = new NavigationState();
         private final NavigationOutputBoundary navigationPresenter = new NavigationPresenter(viewManagerModel);
 
@@ -135,7 +132,6 @@ public class AppBuilder {
         private final BuyController buyController = BuyUseCaseFactory.create(
                         viewManagerModel,
                         buyViewModel,
-                        portfolioViewModelUpdater,
                         portfolioViewModel,
                         stockDataAccessObject,
                         transactionDataAccessObject);
@@ -144,7 +140,6 @@ public class AppBuilder {
                         viewManagerModel,
                         sellViewModel,
                         portfolioViewModel,
-                        portfolioViewModelUpdater,
                         stockDataAccessObject,
                         transactionDataAccessObject);
 

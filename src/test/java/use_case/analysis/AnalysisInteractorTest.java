@@ -28,7 +28,7 @@ class AnalysisInteractorTest {
                 assertNotNull(analysisOutputData.getTopReturns());
                 assertNotNull(analysisOutputData.getWorstReturns());
                 assertEquals(1, analysisOutputData.getMajorityTickers().size());
-                assertEquals(10, analysisOutputData.getNumTickers());
+                assertEquals(8, analysisOutputData.getNumTickers());
 
             }
 

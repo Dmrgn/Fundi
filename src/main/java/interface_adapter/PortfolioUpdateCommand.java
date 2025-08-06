@@ -8,16 +8,22 @@ import interface_adapter.portfolio.PortfolioViewModel;
 /**
  * The updater for the Portfolio View Model.
  */
-public class PortfolioViewModelUpdater {
+public class PortfolioUpdateCommand implements PortfolioCommand {
+    private final String ticker;
+    private final double price;
+    private final int quantity;
+
+    public PortfolioUpdateCommand(String ticker, double price, int quantity) {
+        this.ticker = ticker;
+        this.price = price;
+        this.quantity = quantity;
+    }
 
     /**
      * Update the Portfolio View Model.
      * @param portfolioViewModel The view model
-     * @param ticker The ticker of the new transaction
-     * @param price The price of the ticker
-     * @param quantity The quantity in the trade
      */
-    public void update(PortfolioViewModel portfolioViewModel, String ticker, double price, int quantity) {
+    public void execute(PortfolioViewModel portfolioViewModel) {
         PortfolioState portfolioState = portfolioViewModel.getState();
         ArrayList<String> outTickers = new ArrayList<>();
         ArrayList<Double> outPrice = new ArrayList<>();

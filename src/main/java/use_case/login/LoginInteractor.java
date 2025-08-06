@@ -1,19 +1,25 @@
 package use_case.login;
 
 import entity.User;
-import use_case.UserDataAccessInterface;
 
+/**
+ * Interactor for the Login Use Case.
+ */
 public class LoginInteractor implements LoginInputBoundary {
 
-    final UserDataAccessInterface userDataAccessObject;
-    final LoginOutputBoundary loginPresenter;
+    private final LoginUserDataAccessInterface userDataAccessObject;
+    private final LoginOutputBoundary loginPresenter;
 
-    public LoginInteractor(UserDataAccessInterface userDataAccessInterface,
+    public LoginInteractor(LoginUserDataAccessInterface userDataAccessInterface,
             LoginOutputBoundary loginOutputBoundary) {
         this.userDataAccessObject = userDataAccessInterface;
         this.loginPresenter = loginOutputBoundary;
     }
 
+    /**
+     * Execute the Login Use Case.
+     * @param loginInputData the input data.
+     */
     @Override
     public void execute(LoginInputData loginInputData) {
         String username = loginInputData.getUsername();
@@ -32,6 +38,9 @@ public class LoginInteractor implements LoginInputBoundary {
         }
     }
 
+    /**
+     * Switch to the Signup View.
+     */
     public void switchToSignupView() {
         loginPresenter.switchToSignupView();
     }

@@ -3,7 +3,10 @@ package view;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
-import view.components.UIFactory;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
+import view.ui.PanelFactory;
+import view.ui.UiConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,15 +14,18 @@ import java.awt.event.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * The View for the Login Use Case.
+ */
 public class LoginView extends BaseView implements PropertyChangeListener {
 
     private final LoginViewModel loginViewModel;
     private final LoginController loginController;
 
-    private final JTextField usernameField = UIFactory.createTextField();
-    private final JPasswordField passwordField = UIFactory.createPasswordField();
-    private final JButton loginButton = UIFactory.createStyledButton("Login");
-    private final JButton signUpButton = UIFactory.createStyledButton("Sign Up");
+    private final JTextField usernameField = FieldFactory.createTextField();
+    private final JPasswordField passwordField = FieldFactory.createPasswordField();
+    private final JButton loginButton = ButtonFactory.createStyledButton("Login");
+    private final JButton signUpButton = ButtonFactory.createStyledButton("Sign Up");
 
     public LoginView(LoginViewModel loginViewModel, LoginController loginController) {
         super("log in");
@@ -30,9 +36,9 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        JPanel titlePanel = UIFactory.createTitlePanel("Login Screen");
+        JPanel titlePanel = PanelFactory.createTitlePanel("Login Screen");
         JPanel formPanel = createFormPanel();
-        JPanel buttonPanel = UIFactory.createButtonPanel(loginButton, signUpButton);
+        JPanel buttonPanel = ButtonFactory.createButtonPanel(loginButton, signUpButton);
 
         contentPanel.add(Box.createVerticalGlue());
         contentPanel.add(titlePanel);
@@ -52,22 +58,22 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         form.setOpaque(false);
         form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
 
-        JPanel usernameInfo = UIFactory.createFormPanel("Username", usernameField);
-        JPanel passwordInfo = UIFactory.createFormPanel("Password", passwordField);
+        JPanel usernameInfo = PanelFactory.createFormPanel("Username", usernameField);
+        JPanel passwordInfo = PanelFactory.createFormPanel("Password", passwordField);
 
         form.add(usernameInfo);
-        form.add(Box.createVerticalStrut(10));
+        form.add(UiConstants.mediumVerticalGap());
         form.add(passwordInfo);
         return form;
     }
 
     private void wireListeners() {
-        loginButton.addActionListener(e -> {
+        loginButton.addActionListener(evt -> {
             LoginState loginState = loginViewModel.getState();
             loginController.execute(loginState.getUsername(), loginState.getPassword());
         });
 
-        signUpButton.addActionListener(e -> loginController.switchToSignupView());
+        signUpButton.addActionListener(evt -> loginController.switchToSignupView());
 
         usernameField.addKeyListener(new KeyAdapter() {
             @Override
@@ -95,4 +101,13 @@ public class LoginView extends BaseView implements PropertyChangeListener {
             JOptionPane.showMessageDialog(this, state.getUsernameError());
         }
     }
+
+    public void clearFields() {
+        usernameField.setText("");
+        passwordField.setText("");
+
+        LoginState newState = new LoginState();
+        loginViewModel.setState(newState);
+    }
+
 }

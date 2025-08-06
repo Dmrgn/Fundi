@@ -1,15 +1,19 @@
 package use_case.history;
 
-import entity.Transaction;
-
 import java.time.LocalDate;
 import java.util.List;
 
-public class HistoryInteractor implements HistoryInputBoundary {
-    private HistoryDataAccessInterface dataAccessInterface;
-    private HistoryOutputBoundary historyOutputBoundary;
+import entity.Transaction;
 
-    public HistoryInteractor(HistoryDataAccessInterface dataAccessInterface, HistoryOutputBoundary historyOutputBoundary) {
+/**
+ * Interactor for the History Use Case.
+ */
+public class HistoryInteractor implements HistoryInputBoundary {
+    private final HistoryDataAccessInterface dataAccessInterface;
+    private final HistoryOutputBoundary historyOutputBoundary;
+
+    public HistoryInteractor(HistoryDataAccessInterface dataAccessInterface,
+                             HistoryOutputBoundary historyOutputBoundary) {
         this.dataAccessInterface = dataAccessInterface;
         this.historyOutputBoundary = historyOutputBoundary;
     }

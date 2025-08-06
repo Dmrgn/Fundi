@@ -3,7 +3,7 @@ package entity;
 import java.time.LocalDate;
 
 /**
- * The representation of a stock.
+ * An entity representing a transaction.
  */
 public class Transaction {
     private final String portfolioId;
@@ -20,22 +20,42 @@ public class Transaction {
         this.price = price;
     }
 
+    /**
+     * Getter.
+     * @return Portfolio Id
+     */
     public String getPortfolioId() {
         return portfolioId;
     }
 
+    /**
+     * Getter.
+     * @return Ticker
+     */
     public String getStockTicker() {
         return stockTicker;
     }
 
+    /**
+     * Getter.
+     * @return Quantity
+     */
     public int getQuantity() {
         return quantity;
     }
 
+    /**
+     * Getter.
+     * @return Timestamp
+     */
     public LocalDate getTimestamp() {
         return timestamp;
     }
 
+    /**
+     * Getter.
+     * @return Price
+     */
     public double getPrice() {
         return price;
     }

@@ -5,7 +5,10 @@ import java.beans.PropertyChangeSupport;
 
 import interface_adapter.ViewModel;
 
-public class SignupViewModel extends ViewModel {
+/**
+ * The View Model for the Signup View
+ */
+public class SignupViewModel extends ViewModel<SignupState> {
     public static final String TITLE_LABEL = "Sign Up View";
     public static final String USERNAME_LABEL = "Username";
     public static final String PASSWORD_LABEL = "Password";
@@ -20,20 +23,24 @@ public class SignupViewModel extends ViewModel {
         super("signup");
     }
 
+    @Override
     public void setState(SignupState state) {
         this.state = state;
     }
 
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
+    @Override
     public void firePropertyChanged() {
         support.firePropertyChange("state", null, this.state);
     }
 
+    @Override
     public void addPropertyChangeListener(PropertyChangeListener listener) {
         support.addPropertyChangeListener(listener);
     }
 
+    @Override
     public SignupState getState() {
         return state;
     }

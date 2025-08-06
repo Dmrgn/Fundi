@@ -26,15 +26,19 @@ public class PortfolioController {
         portfolioUseCaseInteractor.execute(portfolioInputData);
     }
 
+    /**
+     * Switch to the Buy View.
+     * @param portfolioId Set the state information for the Buy View Model
+     */
     public void routeToBuy(String portfolioId) {
         portfolioUseCaseInteractor.routeToBuy(portfolioId);
     }
 
+    /**
+     * Switch to the Sell View.
+     * @param portfolioId Set the state information for the Sell View Model
+     */
     public void routeToSell(String portfolioId) {
         portfolioUseCaseInteractor.routeToSell(portfolioId);
-    }
-
-    public void routeToPortfolios() {
-        portfolioUseCaseInteractor.routeToPortfolios();
     }
 }

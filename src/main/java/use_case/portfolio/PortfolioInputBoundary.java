@@ -11,9 +11,15 @@ public interface PortfolioInputBoundary {
      */
     void execute(PortfolioInputData portfolioInputData);
 
+    /**
+     * Switch to the Buy Use Case.
+     * @param portfolioId Portfolio Id used to update the Buy View Model State.
+     */
     void routeToBuy(String portfolioId);
 
+    /**
+     * Switch to the Sell Use Case.
+     * @param portfolioId Portfolio Id used to update the Sell View Model State.
+     */
     void routeToSell(String portfolioId);
-
-    void routeToPortfolios();
 }

@@ -1,13 +1,16 @@
 package use_case.sell;
 
-import entity.Transaction;
-
 import java.time.LocalDate;
 
+import entity.Transaction;
+
+/**
+ * Interactor for the Sell Use Case.
+ */
 public class SellInteractor implements SellInputBoundary {
-    SellStockDataAccessInterface stockDataAccessInterface;
-    SellTransactionDataAccessInterface transactionDataAccessInterface;
-    SellOutputBoundary sellOutputBoundary;
+    private final SellStockDataAccessInterface stockDataAccessInterface;
+    private final SellTransactionDataAccessInterface transactionDataAccessInterface;
+    private final SellOutputBoundary sellOutputBoundary;
 
     public SellInteractor(SellStockDataAccessInterface stockDataAccessInterface,
                           SellTransactionDataAccessInterface transactionDataAccessInterface,
@@ -17,10 +20,8 @@ public class SellInteractor implements SellInputBoundary {
         this.sellOutputBoundary = sellOutputBoundary;
     }
 
-
     /**
-     * Executes the sell usecase.
-     *
+     * Executes the Sell Use Case.
      * @param sellInputData the input data.
      */
     @Override
@@ -31,23 +32,30 @@ public class SellInteractor implements SellInputBoundary {
 
         if (!stockDataAccessInterface.hasTicker(ticker)) {
             sellOutputBoundary.prepareFailView("Invalid ticker");
-            return;
         }
-        final double price = stockDataAccessInterface.getPrice(ticker);
-        if (amount < 0) {
-            sellOutputBoundary.prepareFailView("Invalid amount");
-        } else if (transactionDataAccessInterface.amountOfTicker(portfolioId, ticker) < amount) {
-            sellOutputBoundary.prepareFailView("You do not have enough of this ticker");
-        } else {
-            final LocalDate date = LocalDate.now();
-            transactionDataAccessInterface.save(new Transaction(
-                    portfolioId,
-                    ticker,
-                    amount,
-                    date,
-                    -1 * price // Negative denotes sell
-            ));
-            sellOutputBoundary.prepareSuccessView(new SellOutputData(ticker, -1 * price, amount));
+
+        else {
+            final double price = stockDataAccessInterface.getPrice(ticker);
+            if (amount < 0) {
+                sellOutputBoundary.prepareFailView("Invalid amount");
+            }
+
+            else if (transactionDataAccessInterface.amountOfTicker(portfolioId, ticker) < amount) {
+                sellOutputBoundary.prepareFailView("You do not have enough of this ticker");
+            }
+
+            else {
+                final LocalDate date = LocalDate.now();
+                transactionDataAccessInterface.save(new Transaction(
+                        portfolioId,
+                        ticker,
+                        amount,
+                        date,
+                        // Negative denotes sell
+                        -1 * price
+                ));
+                sellOutputBoundary.prepareSuccessView(new SellOutputData(ticker, -1 * price, amount));
+            }
         }
     }
 }

@@ -4,20 +4,25 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.recommend.RecommendController;
 import interface_adapter.recommend.RecommendState;
 import interface_adapter.recommend.RecommendViewModel;
-import view.components.UIFactory;
+import view.ui.LabelFactory;
+import view.ui.PanelFactory;
+import view.ui.TitledBorderFactory;
+import view.ui.UiConstants;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
+/**
+ * The View for the Recommend Use Case.
+ */
 public class RecommendView extends BaseView {
+    private static final String LABEL = "Recs: ";
     private final RecommendViewModel recommendViewModel;
     private final RecommendController recommendController;
-
-    private static final String LABEL = "Recs: ";
-    private final JPanel haveRecsPanel = UIFactory.createStatListPanel(LABEL);
-    private final JPanel notHaveRecsPanel = UIFactory.createStatListPanel(LABEL);
-    private final JPanel safeRecsPanel = UIFactory.createStatListPanel(LABEL);
+    private final JPanel haveRecsPanel = PanelFactory.createStatListPanel(LABEL);
+    private final JPanel notHaveRecsPanel = PanelFactory.createStatListPanel(LABEL);
+    private final JPanel safeRecsPanel = PanelFactory.createStatListPanel(LABEL);
 
     private final BackNavigationHelper backNavigationHelper;
 
@@ -63,16 +68,16 @@ public class RecommendView extends BaseView {
         JPanel panel = new JPanel();
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setOpaque(false);
-        panel.setBorder(UIFactory.createLightTitledBorder(title));
+        panel.setBorder(TitledBorderFactory.createLightTitledBorder(title));
         panel.setForeground(Color.WHITE);
 
         for (JPanel detailPanel : detailPanels) {
             detailPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            detailPanel.setMinimumSize(new Dimension(200, 30));
-            panel.add(Box.createVerticalStrut(5));
+            detailPanel.setMinimumSize(UiConstants.SINGLE_PANEL_DIM);
+            panel.add(UiConstants.smallVerticalGap());
             panel.add(detailPanel);
         }
-        panel.setMaximumSize(new Dimension(300, Integer.MAX_VALUE));
+        panel.setMaximumSize(UiConstants.DEFAULT_WINDOW_DIM);
         return panel;
     }
 
@@ -80,7 +85,7 @@ public class RecommendView extends BaseView {
         panel.removeAll();
         int i = 1;
         for (Map.Entry<String, Double> entry : recs.entrySet()) {
-            JLabel label = UIFactory
+            JLabel label = LabelFactory
                     .createListItemLabel(i + ". " + entry.getKey() + ": " + String.format("$%.2f", entry.getValue()));
             panel.add(label);
             i++;
@@ -90,7 +95,7 @@ public class RecommendView extends BaseView {
     }
 
     private void wireListeners() {
-        recommendViewModel.addPropertyChangeListener(e -> {
+        recommendViewModel.addPropertyChangeListener(evt -> {
             RecommendState recommendState = recommendViewModel.getState();
             updateListPanel(haveRecsPanel, recommendState.getHaveRecs());
             updateListPanel(notHaveRecsPanel, recommendState.getNotHaveRecs());

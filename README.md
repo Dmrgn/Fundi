@@ -3,6 +3,8 @@
 CSC207 final Project.
 By Aaron Avram, Daniel Morgan, Krish Patel, Abdallah Arham Wajid Mohammed, and Varak Tanashian
 
+![Logo](resources/logo.png)
+
 ## Setup
 
 ### Requirements

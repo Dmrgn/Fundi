@@ -13,10 +13,18 @@ public class LoginInputData {
         this.password = password;
     }
 
+    /**
+     * Getter.
+     * @return Username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Getter.
+     * @return Password
+     */
     public String getPassword() {
         return password;
     }

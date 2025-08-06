@@ -3,18 +3,28 @@ package interface_adapter.history;
 import use_case.history.HistoryInputBoundary;
 import use_case.history.HistoryInputData;
 
+/**
+ * The controller for the History Use Case.
+ */
 public class HistoryController {
-        private HistoryInputBoundary historyInputBoundary;
+    private final HistoryInputBoundary historyInputBoundary;
 
-        public HistoryController(HistoryInputBoundary historyInputBoundary) {
-            this.historyInputBoundary = historyInputBoundary;
-        }
+    public HistoryController(HistoryInputBoundary historyInputBoundary) {
+        this.historyInputBoundary = historyInputBoundary;
+    }
 
-        public void execute(String portfolioId) {
-            historyInputBoundary.execute(new HistoryInputData(portfolioId));
-        }
+    /**
+     * Execute the History Use Case.
+     * @param portfolioId The id of the portfolio to view the history of
+     */
+    public void execute(String portfolioId) {
+        historyInputBoundary.execute(new HistoryInputData(portfolioId));
+    }
 
-        public void routeToPortfolio() {
-            historyInputBoundary.routeToPortfolio();
-        }
+    /**
+     * Switch to the Portfolio View.
+     */
+    public void routeToPortfolio() {
+        historyInputBoundary.routeToPortfolio();
+    }
 }

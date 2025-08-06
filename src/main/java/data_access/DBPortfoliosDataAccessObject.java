@@ -1,20 +1,29 @@
 package data_access;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
 import use_case.create.CreateDataAccessInterface;
-import use_case.portfolios.PortfoliosDataAccessInterface;
+import use_case.portfolio_hub.PortfolioHubDataAccessInterface;
 
 /**
- * DAO for user data implemented using a Database to persist the data.
+ * DAO for portfolios data implemented using a Database to persist the data.
  */
-public class DBPortfoliosDataAccessObject implements PortfoliosDataAccessInterface, CreateDataAccessInterface {
+public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInterface, CreateDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, Map<String, String>> portfolios = new HashMap<>();
     private final Map<String, String> userToId = new HashMap<>();
 
+    /**
+     * Load the portfolio data into memory from SQL database.
+     * @throws SQLException If database connection fails
+     */
     public DBPortfoliosDataAccessObject() throws SQLException {
         String query = """
                 SELECT p.id, p.name, u.id, u.username FROM portfolios p
@@ -32,19 +41,22 @@ public class DBPortfoliosDataAccessObject implements PortfoliosDataAccessInterfa
                 if (!portfolios.containsKey(userId)) {
                     portfolios.put(userId, new HashMap<>());
                     portfolios.get(userId).put(name, id);
-                } else {
+                }
+
+                else {
                     portfolios.get(userId).put(name, id);
                 }
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
 
     }
 
     /**
-     * Get the portfolio data
-     *
+     * Get the portfolio data.
      * @param username the name to search at
      * @return A list of portfolio names
      */
@@ -56,7 +68,6 @@ public class DBPortfoliosDataAccessObject implements PortfoliosDataAccessInterfa
         return portfolios.get(userToId.get(username));
     }
 
-    // Way too big --> TODO REFACTOR!!
     private String saveDB(String portfolioName, String username) {
         String query = """ 
                 SELECT id FROM users WHERE username = ?
@@ -72,8 +83,10 @@ public class DBPortfoliosDataAccessObject implements PortfoliosDataAccessInterfa
                     userToId.put(username, userId);
                 }
             }
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
 
         query = """
@@ -93,39 +106,51 @@ public class DBPortfoliosDataAccessObject implements PortfoliosDataAccessInterfa
                 }
             }
 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
         return portfolioId;
     }
 
     /**
-     * Update the portfolio map
-     *
+     * Update the portfolio map.
      * @param portfolioName the Name
      */
     @Override
     public void save(String portfolioName, String username) {
         String id = saveDB(portfolioName, username);
         String userId = userToId.get(username);
-        portfolios.put(userId, new HashMap<>());
+        if (!portfolios.containsKey(userId)) {
+            portfolios.put(userId, new HashMap<>());
+        }
         portfolios.get(userId).put(portfolioName, id);
     }
 
+    /**
+     * Return whether a portfolio exists for a user.
+     * @param portfolioName the portfolioName to look for
+     * @param username the users name
+     * @return A boolean value
+     */
     @Override
     public boolean existsByName(String portfolioName, String username) {
         String userId = userToId.get(username);
-        if (!portfolios.containsKey(userId)) return false;
+        if (!portfolios.containsKey(userId)) {
+            return false;
+        }
 
         Map<String, String> userPortfolios = portfolios.get(userId);
         return userPortfolios.containsKey(portfolioName);
     }
 
-    @Override
-    public String getId(String username) {
-        return userToId.get(username);
-    }
-
+    /**
+     * Delete the portfolio for the given user from the DAO.
+     * (For Testing Only)
+     * @param portfolioName The portfolio name to delete
+     * @param username The username to delete the portfolio at
+     */
     public void remove(String portfolioName, String username) {
         portfolios.get(userToId.get(username)).remove(portfolioName);
         String userId = userToId.get(username);
@@ -138,8 +163,10 @@ public class DBPortfoliosDataAccessObject implements PortfoliosDataAccessInterfa
             pstmt.setString(2, portfolioName);
             pstmt.executeUpdate();
 
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+        }
+
+        catch (SQLException exception) {
+            System.out.println(exception.getMessage());
         }
     }
 }

@@ -1,0 +1,20 @@
+package interface_adapter.leaderboard;
+
+import use_case.leaderboard.LeaderboardInputBoundary;
+import use_case.leaderboard.LeaderboardInputData;
+
+/**
+ * Controller for the leaderboard use case.
+ */
+public class LeaderboardController {
+    private final LeaderboardInputBoundary leaderboardInteractor;
+
+    public LeaderboardController(LeaderboardInputBoundary leaderboardInteractor) {
+        this.leaderboardInteractor = leaderboardInteractor;
+    }
+
+    public void execute() {
+        LeaderboardInputData inputData = new LeaderboardInputData();
+        leaderboardInteractor.execute(inputData);
+    }
+}

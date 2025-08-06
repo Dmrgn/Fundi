@@ -4,15 +4,22 @@ import interface_adapter.ViewManagerModel;
 import use_case.recommend.RecommendOutputBoundary;
 import use_case.recommend.RecommendOutputData;
 
+/**
+ * The Presenter for the Recommend Use Case.
+ */
 public class RecommendPresenter implements RecommendOutputBoundary {
-    RecommendViewModel recommendViewModel;
-    ViewManagerModel viewManagerModel;
+    private final RecommendViewModel recommendViewModel;
+    private final ViewManagerModel viewManagerModel;
 
     public RecommendPresenter(RecommendViewModel recommendViewModel, ViewManagerModel viewManagerModel) {
         this.recommendViewModel = recommendViewModel;
         this.viewManagerModel = viewManagerModel;
     }
 
+    /**
+     * Prepare the view.
+     * @param recommendOutputData The output data
+     */
     @Override
     public void prepareView(RecommendOutputData recommendOutputData) {
         RecommendState recommendState = recommendViewModel.getState();
@@ -25,6 +32,9 @@ public class RecommendPresenter implements RecommendOutputBoundary {
         viewManagerModel.firePropertyChanged();
     }
 
+    /**
+     * Switch to the Portfolio View.
+     */
     @Override
     public void routeToPortfolio() {
         viewManagerModel.setState("portfolio");

@@ -11,11 +11,16 @@ public class NavigationController {
     }
 
     public void goBack() {
-        navigationInteractor.goBack();
+        navigationInteractor.goBackFromCompany();
     }
 
     public void navigateTo(String currentView, String targetView) {
         NavigationInputData inputData = new NavigationInputData(currentView, targetView);
         navigationInteractor.navigateTo(inputData);
+    }
+
+    public void navigateToCompany(String currentView, String targetView, String companySymbol) {
+        NavigationInputData inputData = new NavigationInputData(currentView, targetView);
+        navigationInteractor.navigateToCompany(inputData, companySymbol);
     }
 }

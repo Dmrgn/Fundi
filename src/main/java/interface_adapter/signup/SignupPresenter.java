@@ -23,6 +23,10 @@ public class SignupPresenter implements SignupOutputBoundary {
         this.loginViewModel = loginViewModel;
     }
 
+    /**
+     * Prepare the success view
+     * @param response the output data
+     */
     @Override
     public void prepareSuccessView(SignupOutputData response) {
         // On success, switch to the login view.
@@ -34,6 +38,10 @@ public class SignupPresenter implements SignupOutputBoundary {
         viewManagerModel.firePropertyChanged();
     }
 
+    /**
+     * Prepare the fail view
+     * @param error the explanation of the failure
+     */
     @Override
     public void prepareFailView(String error) {
         final SignupState signupState = signupViewModel.getState();
@@ -41,6 +49,9 @@ public class SignupPresenter implements SignupOutputBoundary {
         signupViewModel.firePropertyChanged();
     }
 
+    /**
+     * Switch to the Login View
+     */
     @Override
     public void switchToLoginView() {
         viewManagerModel.setState(loginViewModel.getViewName());

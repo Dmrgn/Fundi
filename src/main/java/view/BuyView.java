@@ -1,33 +1,22 @@
 package view;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import interface_adapter.buy.BuyController;
 import interface_adapter.buy.BuyState;
 import interface_adapter.buy.BuyViewModel;
-import interface_adapter.create.CreateController;
-import interface_adapter.create.CreateState;
-import interface_adapter.create.CreateViewModel;
-import interface_adapter.login.LoginState;
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.portfolios.PortfoliosState;
-import interface_adapter.portfolios.PortfoliosViewModel;
 import interface_adapter.navigation.NavigationController;
-import view.components.UIFactory;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
+import view.ui.PanelFactory;
+import view.ui.UiConstants;
 
 /**
- * The View for when the user is trying to create a portfolio.
+ * The View for the Buy Use Case
  */
 public class BuyView extends BaseView implements PropertyChangeListener {
 
@@ -45,9 +34,9 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         JPanel contentPanel = createGradientContentPanel();
 
         // Add back button (top left) using w/ NavigationController
-        contentPanel.add(createBackButtonPanel(e -> navigationController.goBack()), BorderLayout.NORTH);
+        contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()), BorderLayout.NORTH);
 
-        JPanel welcomePanel = UIFactory.createTitlePanel("Buy Stock");
+        JPanel welcomePanel = PanelFactory.createTitlePanel("Buy Stock");
         contentPanel.add(welcomePanel, BorderLayout.CENTER);
 
         JPanel formPanel = new JPanel();
@@ -55,18 +44,18 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.setOpaque(false);
 
-        JTextField tickerField = UIFactory.createTextField();
-        final JPanel tickerPanel = UIFactory.createFormPanel("Ticker Name", tickerField);
+        JTextField tickerField = FieldFactory.createTextField();
+        final JPanel tickerPanel = PanelFactory.createFormPanel("Ticker Name", tickerField);
 
-        JTextField amountField = UIFactory.createTextField();
-        final JPanel amountPanel = UIFactory.createFormPanel("Amount Name", amountField);
+        JTextField amountField = FieldFactory.createTextField();
+        final JPanel amountPanel = PanelFactory.createFormPanel("Amount Name", amountField);
 
         formPanel.add(tickerPanel);
-        formPanel.add(Box.createVerticalStrut(5));
+        formPanel.add(UiConstants.smallVerticalGap());
         formPanel.add(amountPanel);
         contentPanel.add(formPanel, BorderLayout.CENTER);
 
-        final JButton buy = UIFactory.createStyledButton("Buy");
+        final JButton buy = ButtonFactory.createStyledButton("Buy");
         buy.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(buy)) {
@@ -77,7 +66,7 @@ public class BuyView extends BaseView implements PropertyChangeListener {
                                 Integer.parseInt(amountField.getText()));
                     }
                 });
-        contentPanel.add(UIFactory.createButtonPanel(buy), BorderLayout.SOUTH);
+        contentPanel.add(ButtonFactory.createButtonPanel(buy), BorderLayout.SOUTH);
         add(contentPanel, BorderLayout.CENTER);
     }
 

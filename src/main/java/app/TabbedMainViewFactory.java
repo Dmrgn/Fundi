@@ -2,18 +2,16 @@ package app;
 
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
-import interface_adapter.portfolios.PortfoliosController;
+import interface_adapter.portfolio_hub.PortfolioHubController;
 import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
-import view.TabbedMainView;
-import view.DashboardView;
-import view.PortfoliosView;
-import view.NewsView;
-import view.WatchlistView;
-import view.LeaderboardView;
+import view.*;
 
+/**
+ * Factory for the Tabbed Main View
+ */
 public class TabbedMainViewFactory {
     private TabbedMainViewFactory() {
 
@@ -21,20 +19,21 @@ public class TabbedMainViewFactory {
 
     public static TabbedMainView create(
             MainViewModel mainViewModel,
-            PortfoliosController portfoliosController,
+            PortfolioHubController portfolioHubController,
             NewsController newsController,
             PortfolioController portfolioController,
             NavigationController navigationController,
             SearchController searchController,
             SearchViewModel searchViewModel,
             DashboardView dashboardView,
-            PortfoliosView portfoliosView,
+            PortfolioHubView portfoliosView,
             NewsView newsView,
             WatchlistView watchlistView,
-            LeaderboardView leaderboardView) {
+            LeaderboardView leaderboardView,
+            SettingsView settingsView) {
         return new TabbedMainView(
                 mainViewModel,
-                portfoliosController,
+                portfolioHubController,
                 newsController,
                 portfolioController,
                 navigationController,
@@ -44,6 +43,7 @@ public class TabbedMainViewFactory {
                 portfoliosView,
                 newsView,
                 watchlistView,
-                leaderboardView);
+                leaderboardView,
+                settingsView);
     }
 }

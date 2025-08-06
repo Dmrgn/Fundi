@@ -1,34 +1,44 @@
 package use_case.signup;
 
 import entity.User;
-import entity.UserFactory;
-import use_case.signup.SignupUserDataAccessInterface;
 
+/**
+ * Interactor for the Signup Use Case.
+ */
 public class SignupInteractor implements SignupInputBoundary {
-    final SignupUserDataAccessInterface userDataAccessObject;
-    final SignupOutputBoundary userPresenter;
-    final UserFactory userFactory;
+    private final SignupUserDataAccessInterface userDataAccessObject;
+    private final SignupOutputBoundary userPresenter;
 
     public SignupInteractor(SignupUserDataAccessInterface signupDataAccessInterface,
-            SignupOutputBoundary signupOutputBoundary,
-            UserFactory userFactory) {
+            SignupOutputBoundary signupOutputBoundary) {
         this.userDataAccessObject = signupDataAccessInterface;
         this.userPresenter = signupOutputBoundary;
-        this.userFactory = userFactory;
     }
 
+    /**
+     * Interactor for the Signup Use Case.
+     * @param signupInputData the input data
+     */
     @Override
     public void execute(SignupInputData signupInputData) {
         if (userDataAccessObject.existsByName(signupInputData.getUsername())) {
             userPresenter.prepareFailView("User already exists.");
-        } else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
+        }
+
+        else if (!signupInputData.getPassword().equals(signupInputData.getRepeatPassword())) {
             userPresenter.prepareFailView("Passwords don't match.");
-        } else if (signupInputData.getUsername().trim().length() == 0) {
+        }
+
+        else if (signupInputData.getUsername().trim().isEmpty()) {
             userPresenter.prepareFailView("Enter a valid username.");
-        } else if (signupInputData.getPassword().trim().length() < 3) {
+        }
+
+        else if (signupInputData.getPassword().trim().length() < 3) {
             userPresenter.prepareFailView("Enter a valid password at least 3 characters long.");
-        } else {
-            final User user = userFactory.create(signupInputData.getUsername(), signupInputData.getPassword());
+        }
+
+        else {
+            final User user = new User(signupInputData.getUsername(), signupInputData.getPassword());
             userDataAccessObject.save(user);
 
             final SignupOutputData signupOutputData = new SignupOutputData(user.getName(), false);
@@ -36,6 +46,9 @@ public class SignupInteractor implements SignupInputBoundary {
         }
     }
 
+    /**
+     * Switch to the Login View.
+     */
     public void switchToLoginView() {
         userPresenter.switchToLoginView();
     }

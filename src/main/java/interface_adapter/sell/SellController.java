@@ -1,10 +1,11 @@
 package interface_adapter.sell;
 
-import use_case.buy.BuyInputBoundary;
-import use_case.buy.BuyInputData;
 import use_case.sell.SellInputBoundary;
 import use_case.sell.SellInputData;
 
+/**
+ * The Controller for the Sell Use Case.
+ */
 public class SellController {
     private final SellInputBoundary sellUseCaseInteractor;
 

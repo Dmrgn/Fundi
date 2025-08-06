@@ -1,31 +1,19 @@
 package view;
 
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.swing.*;
-import javax.swing.event.DocumentEvent;
-import javax.swing.event.DocumentListener;
 
 import interface_adapter.create.CreateController;
 import interface_adapter.create.CreateState;
 import interface_adapter.create.CreateViewModel;
-import interface_adapter.login.LoginState;
-import interface_adapter.login.LoginViewModel;
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.portfolios.PortfoliosState;
-import interface_adapter.portfolios.PortfoliosViewModel;
 import interface_adapter.ViewManagerModel;
-import view.components.UIFactory;
+import view.ui.*;
 
 /**
- * The View for when the user is trying to create a portfolio.
+ * The View For the Create Use Case
  */
 public class CreateView extends BaseView implements PropertyChangeListener {
     private final CreateViewModel createViewModel;
@@ -40,12 +28,14 @@ public class CreateView extends BaseView implements PropertyChangeListener {
         this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
         this.createViewModel.addPropertyChangeListener(this);
         JPanel contentPanel = createGradientContentPanel();
-        setLayout(new BorderLayout(10, 10));
-        setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        setLayout(UiConstants.BORDER_LAYOUT);
+        setBorder(UiConstants.EMPTY_BORDER);
         this.add(contentPanel, BorderLayout.CENTER);
 
         // Add back button
-        contentPanel.add(createBackButtonPanel(e -> backNavigationHelper.goBackToPortfolios()), BorderLayout.NORTH);
+        contentPanel.add(createBackButtonPanel(evt -> {
+            backNavigationHelper.goBackToPortfolios();
+        }), BorderLayout.NORTH);
 
         // === 1. Top panel with plain text intro ===
         JPanel centerPanel = new JPanel();
@@ -53,15 +43,15 @@ public class CreateView extends BaseView implements PropertyChangeListener {
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel welcomeLabel = UIFactory.createTitleLabel("Create Portfolio");
+        JLabel welcomeLabel = LabelFactory.createTitleLabel("Create Portfolio");
 
         centerPanel.add(welcomeLabel);
-        centerPanel.add(Box.createVerticalStrut(5));
+        centerPanel.add(UiConstants.smallVerticalGap());
 
-        JTextField createNameField = UIFactory.createTextField();
-        final JPanel form = UIFactory.createFormPanel("Name: ", createNameField);
+        JTextField createNameField = FieldFactory.createTextField();
+        final JPanel form = PanelFactory.createFormPanel("Name: ", createNameField);
         centerPanel.add(form);
-        final JButton create = UIFactory.createStyledButton("create");
+        final JButton create = ButtonFactory.createStyledButton("create");
         create.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(create)) {

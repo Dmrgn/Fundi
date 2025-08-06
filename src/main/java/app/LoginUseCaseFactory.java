@@ -1,28 +1,41 @@
 package app;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.main.MainViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginPresenter;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.main.MainViewModel;
 import interface_adapter.signup.SignupViewModel;
-import use_case.UserDataAccessInterface;
 import use_case.login.LoginInputBoundary;
 import use_case.login.LoginInteractor;
 import use_case.login.LoginOutputBoundary;
+import use_case.login.LoginUserDataAccessInterface;
 
-public class LoginUseCaseFactory {
+/**
+ * Factory for the Login Use Case.
+ */
+public final class LoginUseCaseFactory {
 
     /** Prevent instantiation. */
     private LoginUseCaseFactory() {
+
     }
 
+    /**
+     * Create the Login Controller.
+     * @param viewManagerModel The View Manager Model
+     * @param mainViewModel The Main View Model
+     * @param loginViewModel The Login View Model
+     * @param signupViewModel The Signup View Model
+     * @param dataAccessObject The DAO
+     * @return The Login Controller
+     */
     public static LoginController create(
             ViewManagerModel viewManagerModel,
-            MainViewModel  mainViewModel,
+            MainViewModel mainViewModel,
             LoginViewModel loginViewModel,
             SignupViewModel signupViewModel,
-            UserDataAccessInterface dataAccessObject
+            LoginUserDataAccessInterface dataAccessObject
     ) {
         LoginOutputBoundary loginPresenter = new LoginPresenter(
                 viewManagerModel,

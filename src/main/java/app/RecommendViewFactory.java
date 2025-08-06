@@ -1,15 +1,25 @@
 package app;
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.recommend.RecommendController;
 import interface_adapter.recommend.RecommendViewModel;
-import interface_adapter.ViewManagerModel;
 import view.RecommendView;
 
-public class RecommendViewFactory {
+/**
+ * Factory for the Recommend View.
+ */
+public final class RecommendViewFactory {
     private RecommendViewFactory() {
 
     }
 
+    /**
+     * Create the Recommend View.
+     * @param recommendViewModel The Recommend View Model
+     * @param recommendController The Recommend Controller
+     * @param viewManagerModel The View Manager Model
+     * @return The Recommend View
+     */
     public static RecommendView create(
             RecommendViewModel recommendViewModel,
             RecommendController recommendController,

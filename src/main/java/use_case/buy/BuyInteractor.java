@@ -5,7 +5,7 @@ import entity.Transaction;
 import java.time.LocalDate;
 
 /**
- * The Login Interactor.
+ * Interactor for the Buy Use Case.
  */
 public class BuyInteractor implements BuyInputBoundary {
     private final BuyStockDataAccessInterface stockDataAccessInterface;
@@ -20,6 +20,10 @@ public class BuyInteractor implements BuyInputBoundary {
         this.buyOutputBoundary = buyOutputBoundary;
     }
 
+    /**
+     * Executes the Buy Use Case.
+     * @param buyInputData the input data.
+     */
     @Override
     public void execute(BuyInputData buyInputData) {
         final String portfolioId = buyInputData.getPortfolioId();
@@ -28,9 +32,13 @@ public class BuyInteractor implements BuyInputBoundary {
 
         if (!stockDataAccessInterface.hasTicker(ticker)) {
             buyOutputBoundary.prepareFailView("Ticker is not available");
-        } else if (amount <= 0) {
+        }
+
+        else if (amount <= 0) {
             buyOutputBoundary.prepareFailView("Amount must be greater than 0");
-        } else {
+        }
+
+        else {
             final double price = stockDataAccessInterface.getPrice(ticker);
             final LocalDate date = LocalDate.now();
 

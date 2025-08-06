@@ -3,20 +3,26 @@ package view;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
-import interface_adapter.portfolios.PortfoliosController;
-import view.components.UIFactory;
+import interface_adapter.portfolio_hub.PortfolioHubController;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
+import view.ui.PanelFactory;
 import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
+import view.ui.UiConstants;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
+/**
+ * The Main View
+ */
 public class MainView extends BaseView {
     private final MainViewModel mainViewModel;
-    private final PortfoliosController portfoliosController;
+    private final PortfolioHubController portfolioHubController;
     private final NewsController newsController;
     private final NavigationController navigationController;
     private final SearchController searchController;
@@ -26,10 +32,10 @@ public class MainView extends BaseView {
     private int notificationCount = 0;
 
 
-    public MainView(MainViewModel mainViewModel, PortfoliosController portfoliosController, NewsController newsController, NavigationController navigationController, SearchController searchController, SearchViewModel searchViewModel) {
+    public MainView(MainViewModel mainViewModel, PortfolioHubController portfolioHubController, NewsController newsController, NavigationController navigationController, SearchController searchController, SearchViewModel searchViewModel) {
         super("main");
         this.mainViewModel = mainViewModel;
-        this.portfoliosController = portfoliosController;
+        this.portfolioHubController = portfolioHubController;
         this.newsController = newsController;
         this.navigationController = navigationController;
         this.searchController = searchController;
@@ -54,43 +60,36 @@ public class MainView extends BaseView {
         topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
         topPanel.setOpaque(false);
         // Welcome
-        JPanel welcomePanel = UIFactory.createTitlePanel("Welcome to Fundi!");
         JButton settingsButton = new JButton();
-        try {
-            ImageIcon gearIcon = new ImageIcon("resources/gear.png");
-            Image gearImg = gearIcon.getImage().getScaledInstance(32, 32, Image.SCALE_SMOOTH);
-            settingsButton.setIcon(new ImageIcon(gearImg));
-        } catch (Exception e) {
-            settingsButton.setText("Settings");
-        }
         settingsButton.setToolTipText("Settings");
         settingsButton.setContentAreaFilled(false);
         settingsButton.setBorderPainted(false);
         settingsButton.setFocusPainted(false);
-        settingsButton.setPreferredSize(new Dimension(40, 40));
-
+        settingsButton.setPreferredSize(UiConstants.PREFERRED_MINI_BUTTON_DIM);
+        JPanel welcomePanel = PanelFactory.createTitlePanel("Welcome to Fundi!");
         welcomePanel.add(settingsButton);
 
         // Search and Username
-        JButton searchButton = UIFactory.createStyledButton("Search");
-        JTextField searchField = UIFactory.createTextField();
-        JPanel searchPanel = UIFactory.createSingleFieldForm(searchField, searchButton);
 
         JLabel usernameLabel = new JLabel();
-        usernameLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));
+        usernameLabel.setFont(UiConstants.NORMAL_FONT);
         usernameLabel.setForeground(Color.WHITE);
-        mainViewModel.addPropertyChangeListener(evt -> {
-                MainState mainState = mainViewModel.getState();
-                usernameLabel.setText("Logged in as: " + mainState.getUsername());
+        this.mainViewModel.addPropertyChangeListener(evt -> {
+            MainState mainState = mainViewModel.getState();
+            usernameLabel.setText("Logged in as: " + mainState.getUsername());
         });
         usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+        JButton searchButton = ButtonFactory.createStyledButton("Search");
+        JTextField searchField = FieldFactory.createTextField();
+        JPanel searchPanel = PanelFactory.createSingleFieldForm(searchField, searchButton);
 
         JPanel centerStack = new JPanel();
         centerStack.setLayout(new BoxLayout(centerStack, BoxLayout.Y_AXIS));
         centerStack.setAlignmentX(Component.CENTER_ALIGNMENT);
         centerStack.setOpaque(false);
         centerStack.add(searchPanel);
-        centerStack.add(Box.createVerticalStrut(5));
+        centerStack.add(UiConstants.smallVerticalGap());
         centerStack.add(usernameLabel);
 
         JPanel centerRow = new JPanel();
@@ -102,19 +101,21 @@ public class MainView extends BaseView {
         centerRow.add(Box.createHorizontalGlue());
 
         topPanel.add(welcomePanel);
-        topPanel.add(Box.createVerticalStrut(10));
+        topPanel.add(UiConstants.mediumVerticalGap());
         topPanel.add(centerRow);
 
         Runnable doSearch = () -> {
             String query = searchField.getText();
             if (!query.isEmpty()) {
-                searchController.execute(query); // <-- Call the use case
-            } else {
+                this.searchController.execute(query); // <-- Call the use case
+            }
+
+            else {
                 JOptionPane.showMessageDialog(this, "Please enter a search query.");
             }
         };
-        searchButton.addActionListener(e -> doSearch.run());
-        searchField.addActionListener(e -> doSearch.run());
+        searchButton.addActionListener(evt -> doSearch.run());
+        searchField.addActionListener(evt -> doSearch.run());
         searchButton.addActionListener(evt -> doSearch.run());
         searchField.addActionListener(evt -> doSearch.run());
 
@@ -127,31 +128,31 @@ public class MainView extends BaseView {
         centerPanel.setOpaque(false);
 
         JLabel promptLabel = new JLabel("What would you like to look at?");
-        promptLabel.setFont(new Font("Sans Serif", Font.PLAIN, 18));
+        promptLabel.setFont(UiConstants.NORMAL_FONT);
         promptLabel.setForeground(Color.WHITE);
         promptLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JPanel buttonPanel = new JPanel(new GridLayout(2, 2, 10, 10));
-        buttonPanel.setMaximumSize(new Dimension(400, 100));
+        JPanel buttonPanel = new JPanel(UiConstants.BUTTON_LAYOUT);
+        buttonPanel.setMaximumSize(UiConstants.BUTTON_PANEL_DIM);
         buttonPanel.setOpaque(false);
 
         String[] useCases = { "Portfolios", "News", "Watchlist", "Leaderboard" };
         for (String useCase : useCases) {
             JButton useCaseButton = new JButton(useCase);
-            useCaseButton.setFont(new Font("Sans Serif", Font.BOLD, 16));
-            useCaseButton.setBackground(new Color(30, 60, 120));
+            useCaseButton.setFont(UiConstants.NORMAL_FONT);
+            useCaseButton.setBackground(UiConstants.PRIMARY_COLOUR);
             useCaseButton.setForeground(Color.WHITE);
             useCaseButton.setFocusPainted(false);
-            useCaseButton.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+            useCaseButton.setBorder(UiConstants.EMPTY_BORDER);
 
             useCaseButton.addActionListener(evt -> {
                 MainState mainState = mainViewModel.getState();
                 mainState.setUseCase(useCase);
                 mainViewModel.setState(mainState);
-                navigationController.navigateTo(mainViewModel.getViewName(), useCase.toLowerCase());
+                this.navigationController.navigateTo(mainViewModel.getViewName(), useCase.toLowerCase());
                 switch (useCase) {
-                    case "Portfolios" -> portfoliosController.execute(mainState.getUsername());
-                    case "News" -> newsController.execute(mainState.getUsername());
+                    case "Portfolios" -> this.portfolioHubController.execute(mainState.getUsername());
+                    case "News" -> this.newsController.execute(mainState.getUsername());
 
                 }
             });
@@ -173,16 +174,16 @@ public class MainView extends BaseView {
 
         // Create the main button
         JLabel iconLabel = new JLabel("🔔"); // Bell emoji as icon
-        iconLabel.setFont(new Font("Sans Serif", Font.PLAIN, 20));
+        iconLabel.setFont(UiConstants.NORMAL_FONT);
         button.add(iconLabel, BorderLayout.CENTER);
 
         // Create notification badge
         JLabel badge = new JLabel("0");
-        badge.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        badge.setFont(UiConstants.LABEL_FONT);
         badge.setForeground(Color.WHITE);
-        badge.setBackground(new Color(255, 59, 48)); // Red color
+        badge.setBackground(Color.RED); // Red color
         badge.setOpaque(true);
-        badge.setBorder(BorderFactory.createEmptyBorder(2, 6, 2, 6));
+        badge.setBorder(UiConstants.BUTTON_BORDER);
         badge.setVisible(false); // Hidden by default
         button.add(badge, BorderLayout.EAST);
 

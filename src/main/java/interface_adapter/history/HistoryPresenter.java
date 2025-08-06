@@ -1,15 +1,17 @@
 package interface_adapter.history;
 
 import interface_adapter.ViewManagerModel;
-import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.navigation.NavigationController;
 import use_case.history.HistoryOutputBoundary;
 import use_case.history.HistoryOutputData;
 
+/**
+ * The presenter for the History Use Case.
+ */
 public class HistoryPresenter implements HistoryOutputBoundary {
-    ViewManagerModel viewManagerModel;
-    HistoryViewModel historyViewModel;
-    NavigationController navigationController;
+    private final ViewManagerModel viewManagerModel;
+    private final HistoryViewModel historyViewModel;
+    private final NavigationController navigationController;
 
     public HistoryPresenter(ViewManagerModel viewManagerModel, HistoryViewModel historyViewModel, NavigationController navigationController) {
         this.viewManagerModel = viewManagerModel;
@@ -17,6 +19,10 @@ public class HistoryPresenter implements HistoryOutputBoundary {
         this.navigationController = navigationController;
     }
 
+    /**
+     * Prepare the view.
+     * @param historyOutputData The portfolio history
+     */
     @Override
     public void prepareView(HistoryOutputData historyOutputData) {
         HistoryState historyState = historyViewModel.getState();
@@ -31,6 +37,9 @@ public class HistoryPresenter implements HistoryOutputBoundary {
         viewManagerModel.firePropertyChanged();
     }
 
+    /**
+     * Switch to the portfolio view.
+     */
     @Override
     public void routeToPortfolio() {
         viewManagerModel.setState("portfolio");

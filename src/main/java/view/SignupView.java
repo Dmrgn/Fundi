@@ -3,7 +3,10 @@ package view;
 import interface_adapter.signup.SignupViewModel;
 import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupController;
-import view.components.UIFactory;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
+import view.ui.PanelFactory;
+import view.ui.UiConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,15 +15,17 @@ import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+/**
+ * View for the Signup Use Case
+ */
 public class SignupView extends BaseView implements PropertyChangeListener {
     private final SignupViewModel signupViewModel;
     private final SignupController signupController;
-    private final JTextField usernameField = UIFactory.createTextField();
-    private final JPasswordField passwordField = UIFactory.createPasswordField();
-    private final JPasswordField confirmPasswordField = UIFactory.createPasswordField();
-    private final JButton loginButton = UIFactory.createStyledButton("Login");
-    private final JButton signUpButton = UIFactory.createStyledButton("Sign Up");
-
+    private final JTextField usernameField = FieldFactory.createTextField();
+    private final JPasswordField passwordField = FieldFactory.createPasswordField();
+    private final JPasswordField confirmPasswordField = FieldFactory.createPasswordField();
+    private final JButton loginButton = ButtonFactory.createStyledButton("Login");
+    private final JButton signUpButton = ButtonFactory.createStyledButton("Sign Up");
 
     public SignupView(SignupViewModel signupViewModel, SignupController signupController) {
         super("signup");
@@ -31,15 +36,15 @@ public class SignupView extends BaseView implements PropertyChangeListener {
         JPanel contentPanel = createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
 
-        JPanel titlePanel = UIFactory.createTitlePanel("Signup Screen");
+        JPanel titlePanel = PanelFactory.createTitlePanel("Signup Screen");
         JPanel formPanel = createFormPanel();
-        JPanel buttonPanel = UIFactory.createButtonPanel(signUpButton, loginButton);
+        JPanel buttonPanel = ButtonFactory.createButtonPanel(signUpButton, loginButton);
 
         contentPanel.add(Box.createVerticalGlue());
         contentPanel.add(titlePanel);
-        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(UiConstants.bigVerticalGap());
         contentPanel.add(formPanel);
-        contentPanel.add(Box.createVerticalStrut(15));
+        contentPanel.add(UiConstants.mediumVerticalGap());
         contentPanel.add(buttonPanel);
         contentPanel.add(Box.createVerticalGlue());
 
@@ -54,26 +59,27 @@ public class SignupView extends BaseView implements PropertyChangeListener {
         form.setOpaque(false);
         form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
 
-        JPanel usernameInfo = UIFactory.createFormPanel("Username", usernameField);
-        JPanel passwordInfo = UIFactory.createFormPanel("Password", passwordField);
-        JPanel confirmPasswordInfo = UIFactory.createFormPanel("Confirm", confirmPasswordField);
+        JPanel usernameInfo = PanelFactory.createFormPanel("Username", usernameField);
+        JPanel passwordInfo = PanelFactory.createFormPanel("Password", passwordField);
+        JPanel confirmPasswordInfo = PanelFactory.createFormPanel("Confirm", confirmPasswordField);
 
         form.add(usernameInfo);
-        form.add(Box.createVerticalStrut(10));
+        form.add(UiConstants.mediumVerticalGap());
         form.add(passwordInfo);
-        form.add(Box.createVerticalStrut(10));
+        form.add(UiConstants.mediumVerticalGap());
         form.add(confirmPasswordInfo);
 
         return form;
     }
 
     private void wireListeners() {
-        signUpButton.addActionListener(e -> {
+        signUpButton.addActionListener(evt -> {
             SignupState signupState = signupViewModel.getState();
-            signupController.execute(signupState.getUsername(), signupState.getPassword(), signupState.getRepeatPassword());
+            signupController.execute(signupState.getUsername(), signupState.getPassword(),
+                    signupState.getRepeatPassword());
         });
 
-        loginButton.addActionListener(e -> signupController.switchToLoginView());
+        loginButton.addActionListener(evt -> signupController.switchToLoginView());
 
         usernameField.addKeyListener(new KeyAdapter() {
             @Override
@@ -108,7 +114,9 @@ public class SignupView extends BaseView implements PropertyChangeListener {
         SignupState state = (SignupState) evt.getNewValue();
         if (state.getUsernameError() != null) {
             JOptionPane.showMessageDialog(this, state.getUsernameError());
-        } else if (state.getPasswordError() != null) {
+        }
+
+        else if (state.getPasswordError() != null) {
             JOptionPane.showMessageDialog(this, state.getPasswordError());
         }
     }

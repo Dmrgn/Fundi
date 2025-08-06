@@ -1,16 +1,26 @@
 package app;
 
-import interface_adapter.history.HistoryController;
 import interface_adapter.history.HistoryViewModel;
 import interface_adapter.navigation.NavigationController;
 import view.HistoryView;
 
-public class HistoryViewFactory {
-    private HistoryViewFactory() {}
+/**
+ * Factory for the History View.
+ */
+public final class HistoryViewFactory {
+    private HistoryViewFactory() {
 
+    }
+
+    /**
+     * Create the History View.
+     * @param historyViewModel The History View Model
+     * @param navigationController The Navigation Controller
+     * @return The History View
+     */
     public static HistoryView create(
-        HistoryViewModel historyViewModel, HistoryController historyController, NavigationController navigationController
+        HistoryViewModel historyViewModel, NavigationController navigationController
     ) {
-        return new HistoryView(historyViewModel, historyController, navigationController);
+        return new HistoryView(historyViewModel, navigationController);
     }
 }

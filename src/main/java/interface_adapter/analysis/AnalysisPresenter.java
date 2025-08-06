@@ -2,10 +2,12 @@ package interface_adapter.analysis;
 
 import interface_adapter.ViewManagerModel;
 import interface_adapter.navigation.NavigationController;
-import interface_adapter.sell.SellState;
 import use_case.analysis.AnalysisOutputBoundary;
 import use_case.analysis.AnalysisOutputData;
 
+/**
+ * The presenter for the analysis use .
+ */
 public class AnalysisPresenter implements AnalysisOutputBoundary {
     private final ViewManagerModel viewManagerModel;
     private final AnalysisViewModel analysisViewModel;
@@ -19,6 +21,10 @@ public class AnalysisPresenter implements AnalysisOutputBoundary {
         this.navigationController = navigationController;
     }
 
+    /**
+     * Prepare the analysis view.
+     * @param analysisOutputData The analysis of the portfolio
+     */
     @Override
     public void prepareView(AnalysisOutputData analysisOutputData) {
         AnalysisState analysisState = analysisViewModel.getState();
@@ -38,6 +44,9 @@ public class AnalysisPresenter implements AnalysisOutputBoundary {
 
     }
 
+    /**
+     * Switch to the portfolio view.
+     */
     @Override
     public void routeToPortfolio() {
         viewManagerModel.setState("portfolio");

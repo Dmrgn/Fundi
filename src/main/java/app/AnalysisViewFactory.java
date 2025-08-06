@@ -1,21 +1,28 @@
 package app;
 
-import interface_adapter.analysis.AnalysisController;
 import interface_adapter.analysis.AnalysisViewModel;
 import interface_adapter.navigation.NavigationController;
 import view.AnalysisView;
 
-public class AnalysisViewFactory {
+/**
+ * Factory for the Analysis View.
+ */
+public final class AnalysisViewFactory {
     private AnalysisViewFactory() {
 
     }
 
+    /**
+     * Create the Analysis View.
+     * @param analysisViewModel The Analysis View Model
+     * @param navigationController The Navigation Controller
+     * @return The Analysis View
+     */
     public static AnalysisView create(
             AnalysisViewModel analysisViewModel,
-            AnalysisController analysisController,
             NavigationController navigationController
     ) {
-        return new AnalysisView(analysisViewModel, analysisController, navigationController);
+        return new AnalysisView(analysisViewModel, navigationController);
     }
 }
 

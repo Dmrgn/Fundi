@@ -1,7 +1,7 @@
 package use_case.login;
 
 /**
- * Input boundary for login functionality
+ * Input boundary for login functionality.
  */
 public interface LoginInputBoundary {
     /**
@@ -11,5 +11,8 @@ public interface LoginInputBoundary {
      */
     void execute(LoginInputData loginInputData);
 
+    /**
+     * Switch to the Signup View.
+     */
     void switchToSignupView();
 }

@@ -1,5 +1,8 @@
 package interface_adapter.signup;
 
+/**
+ * The state for the Signup View Model
+ */
 public class SignupState {
     private String username = "";
     private String usernameError = null;

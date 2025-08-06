@@ -3,9 +3,8 @@ package view;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
-import interface_adapter.portfolios.PortfoliosController;
+import interface_adapter.portfolio_hub.PortfolioHubController;
 import interface_adapter.portfolio.PortfolioController;
-import view.components.UIFactory;
 import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
@@ -15,7 +14,7 @@ import java.awt.*;
 
 public class TabbedMainView extends BaseView {
     private final MainViewModel mainViewModel;
-    private final PortfoliosController portfoliosController;
+    private final PortfolioHubController portfolioHubController;
     private final NewsController newsController;
     private final PortfolioController portfolioController;
     private final NavigationController navigationController;
@@ -23,28 +22,30 @@ public class TabbedMainView extends BaseView {
     private final SearchViewModel searchViewModel;
 
     private final DashboardView dashboardView;
-    private final PortfoliosView portfoliosView;
+    private final PortfolioHubView portfoliosView;
     private final NewsView newsView;
     private final WatchlistView watchlistView;
     private final LeaderboardView leaderboardView;
+    private final SettingsView settingsView;
+
 
     private final JTabbedPane tabbedPane;
 
     public TabbedMainView(MainViewModel mainViewModel,
-            PortfoliosController portfoliosController,
-            NewsController newsController,
-            PortfolioController portfolioController,
-            NavigationController navigationController,
-            SearchController searchController,
-            SearchViewModel searchViewModel,
-            DashboardView dashboardView,
-            PortfoliosView portfoliosView,
-            NewsView newsView,
-            WatchlistView watchlistView,
-            LeaderboardView leaderboardView) {
+                          PortfolioHubController portfolioHubController,
+                          NewsController newsController,
+                          PortfolioController portfolioController,
+                          NavigationController navigationController,
+                          SearchController searchController,
+                          SearchViewModel searchViewModel,
+                          DashboardView dashboardView,
+                          PortfolioHubView portfoliosView,
+                          NewsView newsView,
+                          WatchlistView watchlistView,
+                          LeaderboardView leaderboardView, SettingsView settingsView) {
         super("tabbedmain");
         this.mainViewModel = mainViewModel;
-        this.portfoliosController = portfoliosController;
+        this.portfolioHubController = portfolioHubController;
         this.newsController = newsController;
         this.portfolioController = portfolioController;
         this.navigationController = navigationController;
@@ -55,6 +56,7 @@ public class TabbedMainView extends BaseView {
         this.newsView = newsView;
         this.watchlistView = watchlistView;
         this.leaderboardView = leaderboardView;
+        this.settingsView = settingsView;
 
         JPanel contentPanel = createGradientContentPanel();
         this.add(contentPanel, BorderLayout.CENTER);
@@ -67,7 +69,7 @@ public class TabbedMainView extends BaseView {
         mainViewModel.addPropertyChangeListener(evt -> {
             MainState mainState = mainViewModel.getState();
             if (mainState.getUsername() != null && !mainState.getUsername().isEmpty()) {
-                portfoliosController.execute(mainState.getUsername());
+                portfolioHubController.execute(mainState.getUsername());
             }
         });
     }
@@ -86,6 +88,8 @@ public class TabbedMainView extends BaseView {
         tabbedPane.addTab("News", newsView);
         tabbedPane.addTab("Watchlist", watchlistView);
         tabbedPane.addTab("Leaderboard", leaderboardView);
+        tabbedPane.addTab("Settings", settingsView);
+
 
         // Add change listener to handle tab switching
         tabbedPane.addChangeListener(e -> {
@@ -98,7 +102,7 @@ public class TabbedMainView extends BaseView {
                     break;
                 case 1: // Portfolios
                     if (mainState.getUsername() != null) {
-                        portfoliosController.execute(mainState.getUsername());
+                        portfolioHubController.execute(mainState.getUsername());
                     }
                     break;
                 case 2: // News

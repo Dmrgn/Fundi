@@ -1,7 +1,7 @@
 package use_case.create;
 
 /**
- * The Input Data for the create portfolio Use Case.
+ * The Input Data for the Create Use Case.
  */
 public class CreateInputData {
 
@@ -13,10 +13,18 @@ public class CreateInputData {
         this.portfolioName = portfolioName;
     }
 
+    /**
+     * Getter.
+     * @return Username
+     */
     public String getUsername() {
         return username;
     }
 
+    /**
+     * Getter.
+     * @return Portfolio Name
+     */
     public String getPortfolioName() {
         return portfolioName;
     }

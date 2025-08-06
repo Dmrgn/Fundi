@@ -1,6 +1,5 @@
 package app;
 
-import entity.CommonUserFactory;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.login.LoginViewModel;
 import interface_adapter.signup.SignupController;
@@ -11,12 +10,23 @@ import use_case.signup.SignupInteractor;
 import use_case.signup.SignupOutputBoundary;
 import use_case.signup.SignupUserDataAccessInterface;
 
-public class SignupUseCaseFactory {
+/**
+ * Factory for the Signup Use Case.
+ */
+public final class SignupUseCaseFactory {
 
     /** Prevent instantiation. */
     private SignupUseCaseFactory() {
     }
 
+    /**
+     * Create the Signup Controller.
+     * @param viewManagerModel The View Manager Model
+     * @param signupViewModel The Signup View Model
+     * @param loginViewModel The Login View Model
+     * @param dataAccessObject The DAO
+     * @return The Signup Controller
+     */
     public static SignupController create(
             ViewManagerModel viewManagerModel,
             SignupViewModel signupViewModel,
@@ -30,8 +40,7 @@ public class SignupUseCaseFactory {
         );
         SignupInputBoundary signupInteractor = new SignupInteractor(
                 dataAccessObject,
-                signupPresenter,
-                new CommonUserFactory()
+                signupPresenter
         );
         return new SignupController(signupInteractor);
     }

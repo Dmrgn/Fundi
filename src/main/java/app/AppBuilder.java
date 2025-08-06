@@ -8,13 +8,12 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.WindowConstants;
 
+import data_access.APISearchDataAccessObject;
 import data_access.DBPortfoliosDataAccessObject;
 import data_access.DBStockDataAccessObject;
 import data_access.DBTransactionDataAccessObject;
-import entity.CommonUserFactory;
-import entity.NavigationState;
-import entity.UserFactory;
 import data_access.DBUserDataAccessObject;
+import entity.NavigationState;
 import interface_adapter.PortfolioViewModelUpdater;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analysis.AnalysisController;
@@ -25,54 +24,55 @@ import interface_adapter.create.CreateController;
 import interface_adapter.create.CreateViewModel;
 import interface_adapter.history.HistoryController;
 import interface_adapter.history.HistoryViewModel;
+import interface_adapter.leaderboard.LeaderboardController;
+import interface_adapter.leaderboard.LeaderboardViewModel;
 import interface_adapter.login.LoginController;
 import interface_adapter.login.LoginViewModel;
+import interface_adapter.main.MainViewModel;
+import interface_adapter.navigation.NavigationController;
+import interface_adapter.navigation.NavigationPresenter;
+import interface_adapter.news.NewsController;
+import interface_adapter.news.NewsViewModel;
 import interface_adapter.portfolio.PortfolioController;
 import interface_adapter.portfolio.PortfolioViewModel;
+import interface_adapter.portfolio_hub.PortfolioHubController;
+import interface_adapter.portfolio_hub.PortfolioHubViewModel;
 import interface_adapter.recommend.RecommendController;
 import interface_adapter.recommend.RecommendViewModel;
+import interface_adapter.search.SearchController;
+import interface_adapter.search.SearchPresenter;
+import interface_adapter.search.SearchViewModel;
 import interface_adapter.sell.SellController;
 import interface_adapter.sell.SellViewModel;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupViewModel;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.news.NewsController;
-import interface_adapter.navigation.NavigationController;
-import interface_adapter.navigation.NavigationPresenter;
+import use_case.login.LoginUserDataAccessInterface;
 import use_case.navigation.NavigationInteractor;
 import use_case.navigation.NavigationOutputBoundary;
-import interface_adapter.search.SearchController;
-import interface_adapter.search.SearchPresenter;
-import interface_adapter.search.SearchViewModel;
 import use_case.search.GetMatches;
 import use_case.search.SearchDataAccessInterface;
 import use_case.search.SearchInputBoundary;
 import use_case.search.SearchOutputBoundary;
-import data_access.APISearchDataAccessObject;
-import use_case.news.NewsInteractor;
-import interface_adapter.news.NewsPresenter;
-import interface_adapter.news.NewsViewModel;
-import interface_adapter.portfolios.*;
-import use_case.login.LoginUserDataAccessInterface;
-import use_case.news.NewsInputBoundary;
-import use_case.news.NewsOutputBoundary;
-import use_case.recommend.RecommendTransactionDataAccessInterface;
+import data_access.FinnhubSearchDataAccessObject;
+import interface_adapter.portfolio_hub.*;
+import interface_adapter.company_details.CompanyDetailsController;
+import interface_adapter.company_details.CompanyDetailsViewModel;
 import use_case.signup.SignupUserDataAccessInterface;
 import view.*;
 
-/**
- * The AppBuilder class is responsible for putting together the pieces of
- * our CA architecture; piece by piece.
- * <p/>
- * This is done by adding each View and then adding related Use Cases.
- */
+import interface_adapter.change_password.ChangePwdController;
+import interface_adapter.change_password.ChangePwdViewModel;
+import use_case.change_password.ChangePwdInputBoundary;
+import use_case.change_password.ChangePwdInteractor;
+import use_case.change_password.ChangePwdOutputBoundary;
+import use_case.change_password.ChangePwdPresenter;
+
 public class AppBuilder {
         private final JPanel cardPanel = new JPanel();
         private final CardLayout cardLayout = new CardLayout();
-        private final UserFactory userFactory = new CommonUserFactory();
         private final ViewManagerModel viewManagerModel = new ViewManagerModel();
         private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-        private final LoginUserDataAccessInterface userDataAccessObject = new DBUserDataAccessObject(userFactory);
+        private final LoginUserDataAccessInterface userDataAccessObject = new DBUserDataAccessObject();
         private final DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
         private final DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
         private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
@@ -80,7 +80,7 @@ public class AppBuilder {
         private final MainViewModel mainViewModel = new MainViewModel();
         private final LoginViewModel loginViewModel = new LoginViewModel();
         private final SignupViewModel signupViewModel = new SignupViewModel();
-        private final PortfoliosViewModel portfoliosViewModel = new PortfoliosViewModel();
+        private final PortfolioHubViewModel portfoliosViewModel = new PortfolioHubViewModel();
         private final NewsViewModel newsViewModel = new NewsViewModel();
         private final CreateViewModel createViewModel = new CreateViewModel();
         private final PortfolioViewModel portfolioViewModel = new PortfolioViewModel();
@@ -89,9 +89,11 @@ public class AppBuilder {
         private final HistoryViewModel historyViewModel = new HistoryViewModel();
         private final AnalysisViewModel analysisViewModel = new AnalysisViewModel();
         private final RecommendViewModel recommendViewModel = new RecommendViewModel();
+        private final LeaderboardViewModel leaderboardViewModel = new LeaderboardViewModel();
         private final PortfolioViewModelUpdater portfolioViewModelUpdater = new PortfolioViewModelUpdater();
         private final NavigationState navigationState = new NavigationState();
         private final NavigationOutputBoundary navigationPresenter = new NavigationPresenter(viewManagerModel);
+
         private final NavigationInteractor navigationInteractor = new NavigationInteractor(navigationState,
                         navigationPresenter);
         private final NavigationController navigationController = new NavigationController(navigationInteractor);
@@ -107,7 +109,7 @@ public class AppBuilder {
                         signupViewModel,
                         loginViewModel,
                         (SignupUserDataAccessInterface) userDataAccessObject);
-        private final PortfoliosController portfoliosController = PortfoliosUseCaseFactory.create(
+        private final PortfolioHubController portfolioHubController = PortfolioHubUseCaseFactory.create(
                         viewManagerModel,
                         portfoliosViewModel,
                         createViewModel,
@@ -170,9 +172,17 @@ public class AppBuilder {
         private final SearchViewModel searchViewModel = new SearchViewModel();
         private SearchController searchController;
 
-        // Dashboard components
         private final interface_adapter.dashboard.DashboardViewModel dashboardViewModel = new interface_adapter.dashboard.DashboardViewModel();
         private interface_adapter.dashboard.DashboardController dashboardController;
+
+        private final CompanyDetailsViewModel companyDetailsViewModel = new CompanyDetailsViewModel();
+        private CompanyDetailsController companyDetailsController;
+        private final ChangePwdViewModel changePwdViewModel = new ChangePwdViewModel();
+
+        private SettingsView settingsView;
+        private ChangePwdController changePwdController;
+        private ChangePwdInteractor changePwdInteractor;
+
 
         private TabbedMainView tabbedMainView;
         private DashboardView dashboardView;
@@ -180,7 +190,7 @@ public class AppBuilder {
         private LeaderboardView leaderboardView;
         private LoginView loginView;
         private SignupView signupView;
-        private PortfoliosView portfoliosView;
+        private PortfolioHubView portfoliosView;
         private CreateView createView;
         private PortfolioView portfolioView;
         private NewsView newsView;
@@ -189,45 +199,58 @@ public class AppBuilder {
         private HistoryView historyView;
         private AnalysisView analysisView;
         private RecommendView recommendView;
+        private CompanyDetailsView companyDetailsView;
 
         public AppBuilder() throws SQLException, IOException {
                 cardPanel.setLayout(cardLayout);
                 SearchOutputBoundary searchPresenter = new SearchPresenter(searchViewModel);
                 SearchDataAccessInterface searchDataAccessObject;
                 try {
-                        searchDataAccessObject = new APISearchDataAccessObject();
+                        searchDataAccessObject = new FinnhubSearchDataAccessObject();
                 } catch (IOException e) {
                         javax.swing.JOptionPane.showMessageDialog(null,
-                                        "Failed to initialize search API. Application exiting...\n" + e.getMessage(),
-                                        "Initialization Error",
-                                        javax.swing.JOptionPane.ERROR_MESSAGE);
+                                "Failed to initialize FinnHub search API. Application exiting...\n" + e.getMessage(),
+                                "Initialization Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                         System.exit(1);
                         return;
                 }
                 SearchInputBoundary getMatches = new GetMatches(searchDataAccessObject, searchPresenter);
                 this.searchController = new SearchController(getMatches);
 
-                // Initialize dashboard controller
                 this.dashboardController = DashboardUseCaseFactory.createDashboardController(dashboardViewModel);
+                this.companyDetailsController = CompanyDetailsUseCaseFactory.create(
+                        viewManagerModel, companyDetailsViewModel, navigationController);
         }
+        public AppBuilder addChangePwdUseCase() {
+                ChangePwdOutputBoundary presenter = new ChangePwdPresenter(changePwdViewModel);
+                ChangePwdInputBoundary interactor = new ChangePwdInteractor(userDataAccessObject, presenter, mainViewModel);
+                changePwdController = new ChangePwdController(interactor, mainViewModel);
+                return this;
+        }
+
+        public AppBuilder addSettingsView() {
+                settingsView = new SettingsView(changePwdViewModel, viewManager, loginView);
+                settingsView.setController(changePwdController);
+                cardPanel.add(settingsView, settingsView.getViewName());
+                return this;
+        }
+
 
         /**
          * Adds the Tabbed Main View to the application.
-         * 
+         *
          * @return this builder
          */
         public AppBuilder addTabbedMainView() {
-                // Create dashboard view using the factory
                 dashboardView = DashboardViewFactory.create(mainViewModel, searchController, searchViewModel,
-                                dashboardViewModel, dashboardController);
-
-                // Create placeholder views
+                        dashboardViewModel, dashboardController, navigationController, companyDetailsController);
                 watchlistView = new WatchlistView(navigationController);
-                leaderboardView = new LeaderboardView(navigationController);
-
-                tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfoliosController, newsController,
-                                portfolioController, navigationController, searchController, searchViewModel,
-                                dashboardView, portfoliosView, newsView, watchlistView, leaderboardView);
+                final LeaderboardController tempLeaderboardController = LeaderboardUseCaseFactory
+                                .createLeaderboardController(leaderboardViewModel);
+                leaderboardView = LeaderboardViewFactory.create(leaderboardViewModel, tempLeaderboardController);
+                tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfolioHubController, newsController,
+                        portfolioController, navigationController, searchController, searchViewModel,
+                        dashboardView, portfoliosView, newsView, watchlistView, leaderboardView, settingsView);
                 cardPanel.add(tabbedMainView, tabbedMainView.getViewName());
                 return this;
         }
@@ -244,15 +267,16 @@ public class AppBuilder {
                 return this;
         }
 
+
         /**
          * Adds the portfolios view to the application
-         * 
+         *
          * @return this builder
          */
         public AppBuilder addPortfoliosView() {
-                portfoliosView = PortfoliosViewFactory.create(
+                portfoliosView = PortfolioHubViewFactory.create(
                                 portfoliosViewModel,
-                                portfoliosController,
+                                portfolioHubController,
                                 portfolioController,
                                 navigationController);
                 cardPanel.add(portfoliosView, portfoliosView.getViewName());
@@ -261,7 +285,7 @@ public class AppBuilder {
 
         /**
          * Adds the create view to the application
-         * 
+         *
          * @return this builder
          */
         public AppBuilder addCreateView() {
@@ -273,9 +297,10 @@ public class AppBuilder {
                 return this;
         }
 
+
         /**
          * Adds the portfolio view to the application
-         * 
+         *
          * @return this builder
          */
         public AppBuilder addPortfolioView() {
@@ -296,9 +321,10 @@ public class AppBuilder {
                 return this;
         }
 
+
         /**
          * Adds the buy view to the application
-         * 
+         *
          * @return this builder
          */
         public AppBuilder addBuyView() {
@@ -317,29 +343,41 @@ public class AppBuilder {
         }
 
         public AppBuilder addHistoryView() {
+
                 historyView = HistoryViewFactory.create(
                                 historyViewModel,
-                                historyController,
                                 navigationController);
+
                 cardPanel.add(historyView, historyView.getViewName());
                 return this;
         }
 
         public AppBuilder addAnalysisView() {
+
                 analysisView = AnalysisViewFactory.create(
                                 analysisViewModel,
-                                analysisController,
                                 navigationController);
                 cardPanel.add(analysisView, analysisView.getViewName());
                 return this;
         }
 
         public AppBuilder addRecommendView() {
+
                 recommendView = RecommendViewFactory.create(
                                 recommendViewModel,
                                 recommendController,
                                 viewManagerModel);
                 cardPanel.add(recommendView, recommendView.getViewName());
+                return this;
+        }
+
+
+        public AppBuilder addCompanyDetailsView() {
+                companyDetailsView = CompanyDetailsViewFactory.create(
+                                companyDetailsViewModel,
+                                companyDetailsController,
+                                viewManagerModel);
+                cardPanel.add(companyDetailsView, companyDetailsView.getViewName());
                 return this;
         }
 
@@ -362,14 +400,17 @@ public class AppBuilder {
         }
 
         /**
-         * Adds the Settings View to the application.
+         * Adds the Leaderboard View to the application.
          * 
          * @return this builder
          */
-        public AppBuilder addSettingsView() {
-                SettingsView settingsView = new SettingsView(viewManager, navigationController);
-                cardPanel.add(settingsView, "settings");
+        public AppBuilder addLeaderboardView() {
+                final LeaderboardController leaderboardController = LeaderboardUseCaseFactory
+                                .createLeaderboardController(leaderboardViewModel);
+                leaderboardView = LeaderboardViewFactory.create(
+                                leaderboardViewModel,
+                                leaderboardController);
+                cardPanel.add(leaderboardView, leaderboardView.getViewName());
                 return this;
         }
-
 }

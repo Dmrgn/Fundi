@@ -8,6 +8,7 @@ import interface_adapter.news.NewsState;
 import interface_adapter.navigation.NavigationController;
 import view.ui.ButtonFactory;
 import view.ui.LabelFactory;
+import view.ui.FieldFactory;
 
 public class NewsView extends BaseView {
     private final NewsViewModel newsViewModel;
@@ -23,6 +24,30 @@ public class NewsView extends BaseView {
         super("news");
         this.newsViewModel = newsViewModel;
         this.navigationController = navigationController;
+
+        // Create search field with placeholder
+        this.searchField = FieldFactory.createTextField();
+        this.searchField.setText("Enter stock ticker (e.g., AAPL, GOOGL)");
+        this.searchField.setForeground(Color.GRAY);
+        
+        // Add focus listeners for placeholder behavior
+        this.searchField.addFocusListener(new java.awt.event.FocusAdapter() {
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (searchField.getText().equals("Enter stock ticker (e.g., AAPL, GOOGL)")) {
+                    searchField.setText("");
+                    searchField.setForeground(Color.BLACK);
+                }
+            }
+
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (searchField.getText().isEmpty()) {
+                    searchField.setText("Enter stock ticker (e.g., AAPL, GOOGL)");
+                    searchField.setForeground(Color.GRAY);
+                }
+            }
+        });
+
+        this.searchButton = ButtonFactory.createStyledButton("Search");
 
         // Create main content panel with gradient
         JPanel contentPanel = createGradientContentPanel();
@@ -41,16 +66,6 @@ public class NewsView extends BaseView {
         // Create search panel
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         searchPanel.setOpaque(false);
-
-        // Create and style search field
-        searchField = new JTextField(25);
-        searchField.setFont(new Font("Sans Serif", Font.PLAIN, 14));
-        searchField.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(30, 60, 120), 1),
-                BorderFactory.createEmptyBorder(8, 8, 8, 8)));
-
-        // Create and style search button
-        searchButton = ButtonFactory.createStyledButton("Search News");
 
         // Add search components to search panel
         searchPanel.add(searchField);
@@ -106,10 +121,11 @@ public class NewsView extends BaseView {
 
     private void performSearch() {
         String query = searchField.getText().trim();
-        if (!query.isEmpty() && newsController != null) {
-            // Convert query to uppercase for consistency with stock symbols
+        if (!query.isEmpty() && !query.equals("Enter stock ticker (e.g., AAPL, GOOGL)") && newsController != null) {
             newsController.executeSearch(query.toUpperCase());
-            searchField.setText(""); // Clear the search field after searching
+            // Reset placeholder after search
+            searchField.setText("Enter stock ticker (e.g., AAPL, GOOGL)");
+            searchField.setForeground(Color.GRAY);
         }
     }
 

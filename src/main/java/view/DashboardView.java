@@ -1,6 +1,8 @@
 package view;
 
+import entity.CurrencyConverter;
 import entity.PortfolioValuePoint;
+import entity.PreferredCurrencyManager;
 import interface_adapter.dashboard.DashboardController;
 import interface_adapter.dashboard.DashboardState;
 import interface_adapter.dashboard.DashboardViewModel;
@@ -29,6 +31,8 @@ import java.time.ZoneId;
 import java.util.*;
 import java.util.List;
 
+import static entity.PreferredCurrencyManager.*;
+
 public class DashboardView extends BaseView {
     private final MainViewModel mainViewModel;
     private final SearchController searchController;
@@ -39,6 +43,8 @@ public class DashboardView extends BaseView {
     private final CompanyDetailsController companyDetailsController;
     private ChartPanel chartPanel;
     private JPanel searchResultsPanel;
+
+
 
     public DashboardView(MainViewModel mainViewModel, SearchController searchController,
             SearchViewModel searchViewModel, DashboardViewModel dashboardViewModel,
@@ -185,7 +191,7 @@ public class DashboardView extends BaseView {
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
                 "Portfolio Value Over Time (Last 30 Days)",
                 "Date",
-                "Value ($)",
+                "Value",
                 dataset,
                 true,
                 true,
@@ -330,7 +336,6 @@ public class DashboardView extends BaseView {
     private void updateChart(List<PortfolioValuePoint> valuePoints) {
         if (chartPanel == null)
             return;
-
         // Group data by portfolio
         Map<String, TimeSeries> portfolioSeries = new HashMap<>();
 
@@ -346,8 +351,20 @@ public class DashboardView extends BaseView {
             Date javaDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
             Day day = new Day(javaDate);
 
+            double usdValue = point.getValue();
+            String preferredCurrency = getPreferredCurrency();
+            CurrencyConverter converter = PreferredCurrencyManager.getConverter();
+
+            double convertedValue;
+            if (converter != null) {
+                convertedValue = converter.convert(usdValue, "USD", preferredCurrency);
+            } else {
+                convertedValue = usdValue;
+                preferredCurrency = "USD";
+            }
+
             try {
-                series.addOrUpdate(day, point.getValue());
+                series.addOrUpdate(day, convertedValue);
             } catch (Exception e) {
                 // Handle duplicate dates by updating the value
                 series.update(day, point.getValue());

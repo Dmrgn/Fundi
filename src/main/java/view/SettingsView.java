@@ -1,6 +1,8 @@
 package view;
 
 import data_access.ExchangeAPIDataAccessObject;
+import entity.CurrencyConverter;
+import entity.PreferredCurrencyManager;
 import interface_adapter.change_password.ChangePwdController;
 import interface_adapter.change_password.ChangePwdViewModel;
 
@@ -8,6 +10,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+import interface_adapter.dashboard.DashboardController;
+import interface_adapter.main.MainViewModel;
 import view.ui.ButtonFactory;
 import view.ui.FieldFactory;
 
@@ -18,10 +22,13 @@ public class SettingsView extends JPanel {
     private final JPasswordField passwordField;
     private final JButton updatePasswordBtn;
     private final JButton logoutBtn;
+    private final ExchangeAPIDataAccessObject exchangeAPI = new ExchangeAPIDataAccessObject();
+
 
     private ChangePwdController controller;
 
-    public SettingsView(ChangePwdViewModel changePwdViewModel, ViewManager viewManager, LoginView loginView) {
+    public SettingsView(ChangePwdViewModel changePwdViewModel, ViewManager viewManager, LoginView loginView, DashboardController dashboardController,
+                        MainViewModel mainViewModel) {
         JPanel contentPanel = loginView.createGradientContentPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBorder(BorderFactory.createEmptyBorder(30, 50, 30, 50));
@@ -39,10 +46,30 @@ public class SettingsView extends JPanel {
         ExchangeAPIDataAccessObject currencyDAO = new ExchangeAPIDataAccessObject();
         List<String> currencyList = currencyDAO.getSupportedCurrencies();
         String[] currencies = currencyList.toArray(new String[0]);
-        currencyDropdown = new JComboBox<>(currencies);
 
+        currencyDropdown = new JComboBox<>(currencies);
         currencyDropdown.setAlignmentX(Component.CENTER_ALIGNMENT);
         currencyDropdown.setMaximumSize(new Dimension(200, 30));
+
+        String current = PreferredCurrencyManager.getPreferredCurrency();
+        currencyDropdown.setSelectedItem(current);
+
+        currencyDropdown.addActionListener(e -> {
+            String selectedCurrency = (String) currencyDropdown.getSelectedItem();
+            if (selectedCurrency != null) {
+                CurrencyConverter converter = exchangeAPI.getConverter("USD");
+                if (converter != null) {
+                    PreferredCurrencyManager.setPreferredCurrency(selectedCurrency, converter);
+                    System.out.println("Currency changed to " + selectedCurrency);
+                } else {
+                    System.out.println("Failed to fetch currency data");
+                }
+            }
+            String username = mainViewModel.getState().getUsername();
+            if (username != null && !username.isEmpty()) {
+                dashboardController.execute(username);
+            }
+        });
 
         JLabel passwordLabel = new JLabel("Change Password:");
         passwordLabel.setAlignmentX(Component.CENTER_ALIGNMENT);

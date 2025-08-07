@@ -1,6 +1,6 @@
 package app;
 
-import interface_adapter.PortfolioViewModelUpdater;
+import interface_adapter.PortfolioUpdateCommand;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.buy.BuyController;
 import interface_adapter.buy.BuyPresenter;
@@ -24,7 +24,6 @@ public final class BuyUseCaseFactory {
      * Create the Buy Controller.
      * @param viewManagerModel The View Manager Model
      * @param buyViewModel The Buy View Model
-     * @param portfolioViewModelUpdater The Portfolio View Model Updater
      * @param portfolioViewModel The Portfolio View Model
      * @param stockDataAccessObject The Stock DAO
      * @param transactionDataAccessObject The Transaction DAO
@@ -33,7 +32,6 @@ public final class BuyUseCaseFactory {
     public static BuyController create(
             ViewManagerModel viewManagerModel,
             BuyViewModel buyViewModel,
-            PortfolioViewModelUpdater portfolioViewModelUpdater,
             PortfolioViewModel portfolioViewModel,
             BuyStockDataAccessInterface stockDataAccessObject,
             BuyTransactionDataAccessInterface transactionDataAccessObject
@@ -41,7 +39,6 @@ public final class BuyUseCaseFactory {
         BuyOutputBoundary buyPresenter = new BuyPresenter(
             viewManagerModel,
             buyViewModel,
-            portfolioViewModelUpdater,
             portfolioViewModel
         );
         BuyInputBoundary buyInteractor = new BuyInteractor(

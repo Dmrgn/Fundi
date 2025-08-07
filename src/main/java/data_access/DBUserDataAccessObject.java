@@ -8,6 +8,8 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.List;
+import java.util.ArrayList;
 
 import entity.User;
 import use_case.login.LoginUserDataAccessInterface;
@@ -36,17 +38,20 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                     username TEXT,
                     password TEXT
                 );
+
                 CREATE TABLE IF NOT EXISTS portfolios (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT,
                     user_id INTEGER REFERENCES users
                 );
+
                 CREATE TABLE IF NOT EXISTS stocks (
                     name TEXT,
                     price REAL,
                     date DATE,
                     CONSTRAINT key PRIMARY KEY (name, date)
                 );
+
                 CREATE TABLE IF NOT EXISTS transactions (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     portfolio_id INTEGER REFERENCES portfolios,
@@ -56,14 +61,20 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                     price REAL
                 );
 
-                CREATE TABLE IF NOT EXISTS "holdings" 
-                (
+                CREATE TABLE IF NOT EXISTS "holdings" (
                     portfolio_id INTEGER NOT NULL
                         REFERENCES portfolios(id),
                     ticker TEXT NOT NULL,
                     quantity INTEGER NOT NULL DEFAULT 0,
                     PRIMARY KEY (portfolio_id, ticker),
                     CHECK (quantity >= 0)
+                );
+
+                CREATE TABLE IF NOT EXISTS watchlist (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id INTEGER NOT NULL REFERENCES users(id),
+                    ticker TEXT NOT NULL,
+                    UNIQUE(user_id, ticker)
                 );
                 """;
 
@@ -150,25 +161,25 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     @Override
     public void saveNewPassword(String username, String newPassword) {
-            String query = "UPDATE users SET password = ? WHERE username = ?;";
-            try (PreparedStatement stmt = connection.prepareStatement(query)) {
-                stmt.setString(1, newPassword);
-                stmt.setString(2, username);
-                stmt.executeUpdate();
+        String query = "UPDATE users SET password = ? WHERE username = ?;";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, newPassword);
+            stmt.setString(2, username);
+            stmt.executeUpdate();
 
-                if (nameToId.containsKey(username)) {
-                    String id = nameToId.get(username);
-                    User updatedUser = new User(username, newPassword);
-                    accounts.put(id, updatedUser);
-                }
-
-                System.out.println("Password updated successfully for: " + username);
-            } catch (SQLException e) {
-                System.out.println("Error updating password: " + e.getMessage());
+            if (nameToId.containsKey(username)) {
+                String id = nameToId.get(username);
+                User updatedUser = new User(username, newPassword);
+                accounts.put(id, updatedUser);
             }
+
+            System.out.println("Password updated successfully for: " + username);
         }
 
-
+        catch (SQLException exception) {
+            System.out.println("Error updating password: " + exception.getMessage());
+        }
+    }
 
     /**
      * Check if a user exists in the database.
@@ -202,5 +213,64 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
         catch (SQLException exception) {
             System.out.println(exception.getMessage());
         }
+    }
+
+public void addToWatchlist(String username, String ticker) {
+    String userId = nameToId.get(username);
+    if (userId == null) {
+        throw new IllegalArgumentException("User not found: " + username);
+    }
+
+    String query = """
+        INSERT OR IGNORE INTO watchlist (user_id, ticker)
+        VALUES (?, ?);
+    """;
+    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        stmt.setString(1, userId);
+        stmt.setString(2, ticker);
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        System.out.println("Error adding to watchlist: " + e.getMessage());
+    }
+}
+
+public void removeFromWatchlist(String username, String ticker) {
+    String userId = nameToId.get(username);
+    if (userId == null) {
+        throw new IllegalArgumentException("User not found: " + username);
+    }
+
+    String query = """
+        DELETE FROM watchlist WHERE user_id = ? AND ticker = ?;
+    """;
+    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        stmt.setString(1, userId);
+        stmt.setString(2, ticker);
+        stmt.executeUpdate();
+    } catch (SQLException e) {
+        System.out.println("Error removing from watchlist: " + e.getMessage());
+    }
+}
+
+public List<String> getWatchlist(String username) {
+    String userId = nameToId.get(username);
+    if (userId == null) {
+        throw new IllegalArgumentException("User not found: " + username);
+    }
+
+    String query = """
+        SELECT ticker FROM watchlist WHERE user_id = ?;
+    """;
+    List<String> watchlist = new ArrayList<>();
+    try (PreparedStatement stmt = connection.prepareStatement(query)) {
+        stmt.setString(1, userId);
+        ResultSet rs = stmt.executeQuery();
+        while (rs.next()) {
+            watchlist.add(rs.getString("ticker"));
+        }
+    } catch (SQLException e) {
+        System.out.println("Error fetching watchlist: " + e.getMessage());
+    }
+    return watchlist;
     }
 }

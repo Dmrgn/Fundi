@@ -15,4 +15,11 @@ public interface PortfolioTransactionDataAccessInterface {
      * @return A list of transactions
      */
     List<Transaction> pastTransactions(String portfolioId);
+
+    /**
+     * Gets a list of unique stock symbols for a given user.
+     * @param username The user's username.
+     * @return A list of stock symbols (e.g., ["AAPL", "GOOGL"]).
+     */
+    List<String> getUserSymbols(String username);
 }

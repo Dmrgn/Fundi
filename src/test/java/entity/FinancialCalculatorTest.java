@@ -24,7 +24,7 @@ class FinancialCalculatorTest {
     @Test
     void testVolatility() {
         Double[] prices = {100.0, 102.0, 104.0, 106.0, 108.0};
-        double result = FinancialCalculator.computeVolatility(List.of(prices));
+        double result = FinancialCalculator.computeVolatility(List.of(prices), false);
         assertTrue(result >= 0, "Volatility should be non-negative");
     }
 

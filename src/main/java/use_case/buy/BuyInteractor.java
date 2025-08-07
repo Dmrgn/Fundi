@@ -1,23 +1,23 @@
 package use_case.buy;
 
 import entity.Transaction;
-
+import use_case.notifications.NotificationManager;
 import java.time.LocalDate;
 
 /**
  * Interactor for the Buy Use Case.
  */
 public class BuyInteractor implements BuyInputBoundary {
-    private final BuyStockDataAccessInterface stockDataAccessInterface;
-    private final BuyTransactionDataAccessInterface buyTransactionDataAccessInterface;
-    private final BuyOutputBoundary buyOutputBoundary;
+    private final BuyStockDataAccessInterface stockDataAccessObject;
+    private final BuyTransactionDataAccessInterface transactionDataAccessObject;
+    private final BuyOutputBoundary buyPresenter;
 
     public BuyInteractor(BuyStockDataAccessInterface stockDataAccessInterface,
-                         BuyTransactionDataAccessInterface buyTransactionDataAccessInterface,
+                         BuyTransactionDataAccessInterface transactionDataAccessInterface,
                          BuyOutputBoundary buyOutputBoundary) {
-        this.stockDataAccessInterface = stockDataAccessInterface;
-        this.buyTransactionDataAccessInterface = buyTransactionDataAccessInterface;
-        this.buyOutputBoundary = buyOutputBoundary;
+        this.stockDataAccessObject = stockDataAccessInterface;
+        this.transactionDataAccessObject = transactionDataAccessInterface;
+        this.buyPresenter = buyOutputBoundary;
     }
 
     /**
@@ -30,24 +30,36 @@ public class BuyInteractor implements BuyInputBoundary {
         final String ticker = buyInputData.getTicker();
         final int amount = buyInputData.getAmount();
 
-        if (!stockDataAccessInterface.hasTicker(ticker)) {
-            buyOutputBoundary.prepareFailView("Ticker is not available");
+        if (!stockDataAccessObject.hasTicker(ticker)) {
+            buyPresenter.prepareFailView("Ticker is not available");
         }
-
         else if (amount <= 0) {
-            buyOutputBoundary.prepareFailView("Amount must be greater than 0");
+            buyPresenter.prepareFailView("Amount must be greater than 0");
         }
-
         else {
-            final double price = stockDataAccessInterface.getPrice(ticker);
+            final double price = stockDataAccessObject.getPrice(ticker);
             final LocalDate date = LocalDate.now();
+            
+            // Create and save transaction
+            final Transaction transaction = new Transaction(
+                portfolioId,
+                ticker,
+                amount,
+                date,
+                price
+            );
+            
+            transactionDataAccessObject.save(transaction);
 
-            Transaction transaction = new Transaction(portfolioId, ticker, amount, date, price);
-            buyTransactionDataAccessInterface.save(transaction);
-            buyOutputBoundary.prepareSuccessView(new BuyOutputData(
-                ticker, price, amount
-            ));
+            final BuyOutputData buyOutputData = new BuyOutputData(ticker, price, amount);
+            buyPresenter.prepareSuccessView(buyOutputData);
+
+            // Check for news notifications after successful purchase
+            try {
+                NotificationManager.getInstance().checkNewsAfterPurchase(ticker, amount);
+            } catch (Exception e) {
+                System.err.println("Failed to check news notifications: " + e.getMessage());
+            }
         }
-
     }
 }

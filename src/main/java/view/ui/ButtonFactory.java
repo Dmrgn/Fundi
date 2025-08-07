@@ -6,10 +6,6 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 
 public final class ButtonFactory {
-    static final Color BACKGROUND = new Color(30, 60, 120);
-    static final Border BUTTON_BORDER = new EmptyBorder(10, 20, 10, 20);
-    static final Border PANEL_BORDER = new EmptyBorder(10, 0, 10, 0);
-    static final FlowLayout PANEL_FLOW_LAYOUT = new FlowLayout(FlowLayout.CENTER, 5, 0);
 
     private ButtonFactory() {
 
@@ -22,11 +18,11 @@ public final class ButtonFactory {
      */
     public static JButton createStyledButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(new Font(LabelFactory.FONT, Font.BOLD, LabelFactory.FORM_SIZE));
-        button.setBackground(BACKGROUND);
+        button.setFont(UiConstants.BUTTON_FONT);
+        button.setBackground(UiConstants.PRIMARY_COLOUR);
         button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
-        button.setBorder(BUTTON_BORDER);
+        button.setBorder(UiConstants.BUTTON_BORDER);
         return button;
     }
 
@@ -36,15 +32,43 @@ public final class ButtonFactory {
      * @return The panel
      */
     public static JPanel createButtonPanel(JButton... buttons) {
-        JPanel buttonPanel = new JPanel();
-        buttonPanel.setOpaque(false);
-        buttonPanel.setLayout(PANEL_FLOW_LAYOUT);
-        for (JButton button : buttons) {
-            buttonPanel.add(Box.createHorizontalGlue());
-            buttonPanel.add(button);
-            buttonPanel.add(Box.createHorizontalGlue());
-        }
-        buttonPanel.setBorder(PANEL_BORDER);
+        JPanel buttonPanel = new JPanel(new GridBagLayout());
+        populateButtonPanel(buttonPanel, buttons);
         return buttonPanel;
+    }
+
+    /**
+     * Populate a button panel with buttons.
+     * @param panel The panel
+     * @param buttons The buttons
+     */
+    public static void populateButtonPanel(JPanel panel, JButton... buttons) {
+        panel.removeAll();
+        panel.setLayout(new GridBagLayout());
+        panel.setOpaque(false);
+        panel.setMaximumSize(UiConstants.BUTTON_PANEL_DIM);
+        panel.setBorder(UiConstants.PANEL_BORDER);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = UiConstants.INSETS;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        int cols = UiConstants.INSET_SCALING;
+        for (int i = 0; i < buttons.length; i++) {
+            JButton button = buttons[i];
+
+            Dimension size = UiConstants.PREFERRED_COMPONENT_DIM;
+            button.setPreferredSize(size);
+            button.setMaximumSize(size);
+            button.setMinimumSize(size);
+
+            gbc.gridx = i / cols;
+            gbc.gridy = i % cols;
+            panel.add(button, gbc);
+        }
+
+        panel.revalidate();
+        panel.repaint();
     }
 }

@@ -1,6 +1,7 @@
 package interface_adapter.buy;
 
-import interface_adapter.PortfolioViewModelUpdater;
+import interface_adapter.PortfolioCommand;
+import interface_adapter.PortfolioUpdateCommand;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.portfolio.PortfolioViewModel;
 import use_case.buy.BuyOutputBoundary;
@@ -13,13 +14,11 @@ public class BuyPresenter implements BuyOutputBoundary {
 
     private final ViewManagerModel viewManagerModel;
     private final PortfolioViewModel portfolioViewModel;
-    private final PortfolioViewModelUpdater updater;
     private final BuyViewModel buyViewModel;
 
-    public BuyPresenter(ViewManagerModel viewManagerModel, BuyViewModel buyViewModel, PortfolioViewModelUpdater updater, PortfolioViewModel portfolioViewModel) {
+    public BuyPresenter(ViewManagerModel viewManagerModel, BuyViewModel buyViewModel, PortfolioViewModel portfolioViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.buyViewModel = buyViewModel;
-        this.updater = updater;
         this.portfolioViewModel = portfolioViewModel;
     }
 
@@ -29,7 +28,9 @@ public class BuyPresenter implements BuyOutputBoundary {
      */
     @Override
     public void prepareSuccessView(BuyOutputData outputData) {
-        updater.update(portfolioViewModel, outputData.getTicker(), outputData.getPrice(), outputData.getQuantity());
+        final PortfolioCommand cmd = new PortfolioUpdateCommand(outputData.getTicker(), outputData.getPrice(),
+                outputData.getQuantity());
+        cmd.execute(portfolioViewModel);
         portfolioViewModel.firePropertyChanged();
         viewManagerModel.setState(portfolioViewModel.getViewName());
         viewManagerModel.firePropertyChanged();

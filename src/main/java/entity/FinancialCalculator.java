@@ -32,9 +32,6 @@ public final class FinancialCalculator {
             if (transaction.getPrice() < 0) {
                 quantity = quantity * -1;
             }
-            System.out.println("Processing transaction: " + transaction);
-            System.out.println("Ticker: " + ticker + ", Quantity: " + quantity);
-            System.out.println("Current Ticker Amounts: " + tickerAmounts);
             if (!tickerAmounts.containsKey(ticker)) {
                 tickerAmounts.put(ticker, quantity);
             }
@@ -75,16 +72,24 @@ public final class FinancialCalculator {
      * Compute the volatility of a price time series for a single ticker.
      * 
      * @param prices The price time series
+     * @param percent whether to make it a percent
      * @return The volatility
      */
-    public static double computeVolatility(List<Double> prices) {
+    public static double computeVolatility(List<Double> prices, boolean percent) {
         List<Double> returns = computeReturns(prices);
         double mean = computeMean(returns);
         double vol = 0;
         for (double retr : returns) {
             vol += Math.pow(retr - mean, 2);
         }
-        return vol / returns.size();
+        vol = Math.sqrt(vol / returns.size());
+        if (percent) {
+            return vol * PERCENT;
+        }
+
+        else {
+            return vol;
+        }
     }
 
     /**
@@ -129,7 +134,7 @@ public final class FinancialCalculator {
                 .sorted(Comparator.comparing(StockData::getTimestamp)).toList();
         double latestPrice = sortedStockData.get(stockData.size() - 1).getPrice();
         double earliestPrice = sortedStockData.get(0).getPrice();
-        return (latestPrice - earliestPrice) / earliestPrice * PERCENT;
+        return ((latestPrice - earliestPrice) / earliestPrice) * PERCENT;
     }
 
     /**
@@ -142,7 +147,7 @@ public final class FinancialCalculator {
         List<Double> returns = FinancialCalculator.computeReturns(prices);
         double avgReturn = computeMean(returns);
 
-        double vol = computeVolatility(returns);
+        double vol = computeVolatility(returns, false);
 
         return avgReturn / (vol + TOLERANCE);
     }

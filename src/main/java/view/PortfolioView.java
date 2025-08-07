@@ -1,5 +1,6 @@
 package view;
 
+import entity.CurrencyConverter;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analysis.AnalysisController;
 import interface_adapter.history.HistoryController;
@@ -16,11 +17,14 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+import static entity.PreferredCurrencyManager.getConverter;
+import static entity.PreferredCurrencyManager.getPreferredCurrency;
+
 /**
  * The View for the Portfolio Use Case
  */
 public class PortfolioView extends BaseView {
-    private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Amount"};
+    private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Amount" };
     private static final String[] USE_CASES = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell"};
     private final PortfolioViewModel portfolioViewModel;
     private final PortfolioController portfolioController;
@@ -90,16 +94,6 @@ public class PortfolioView extends BaseView {
         bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
         JPanel buttonPanel = ButtonFactory.createButtonPanel(useCaseButtons);
-        buttonPanel.setLayout(new GridBagLayout());
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = UiConstants.INSETS;
-        gbc.fill = GridBagConstraints.NONE;
-
-        for (int i = 0; i < useCaseButtons.length; i++) {
-            gbc.gridx = i % UiConstants.INSET_SCALING;
-            gbc.gridy = i / UiConstants.INSET_SCALING;
-            buttonPanel.add(useCaseButtons[i], gbc);
-        }
         buttonPanel.setMaximumSize(UiConstants.BUTTON_PANEL_DIM);
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         bottomPanel.add(buttonPanel);
@@ -111,9 +105,9 @@ public class PortfolioView extends BaseView {
     private void generateButtons() {
         for (int i = 0; i < USE_CASES.length; i++) {
             this.useCaseButtons[i] = ButtonFactory.createStyledButton(USE_CASES[i]);
-            this.useCaseButtons[i].setPreferredSize(UiConstants.PREFERRED_BUTTON_SIZE);
-            this.useCaseButtons[i].setMaximumSize(UiConstants.PREFERRED_BUTTON_SIZE);
-            this.useCaseButtons[i].setMinimumSize(UiConstants.PREFERRED_BUTTON_SIZE);
+            this.useCaseButtons[i].setPreferredSize(UiConstants.PREFERRED_COMPONENT_DIM);
+            this.useCaseButtons[i].setMaximumSize(UiConstants.PREFERRED_COMPONENT_DIM);
+            this.useCaseButtons[i].setMinimumSize(UiConstants.PREFERRED_COMPONENT_DIM);
         }
     }
 
@@ -128,10 +122,33 @@ public class PortfolioView extends BaseView {
             double[] prices = state.getStockPrices();
             tableModel.setRowCount(0);
 
+
+
+            CurrencyConverter converter = getConverter();
+            String preferredCurrency = getPreferredCurrency();
+
             for (int i = 0; i < names.length; i++) {
-                tableModel.addRow(new Object[] {names[i], amounts[i], String.format("$%.2f", prices[i])});
+                double originalPrice = prices[i];
+                double convertedPrice = originalPrice;
+
+                if (converter != null && !preferredCurrency.equals("USD")) {
+                    try {
+                        convertedPrice = converter.convert(originalPrice, "USD", preferredCurrency);
+                    }
+                    catch (Exception e) {
+                        System.err.println("Currency conversion failed: " + e.getMessage());
+                    }
+
+                }
+
+                tableModel.addRow(new Object[] {
+                        names[i], amounts[i], String.format("%.2f %s", convertedPrice, preferredCurrency)});
             }
         });
+
+
+
+
 
         for (int i = 0; i < USE_CASES.length; i++) {
             PortfolioState state = this.portfolioViewModel.getState();

@@ -40,13 +40,13 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         JPanel formPanel = createFormPanel();
         JPanel buttonPanel = ButtonFactory.createButtonPanel(loginButton, signUpButton);
 
-        contentPanel.add(Box.createVerticalGlue());
+        contentPanel.add(UiConstants.bigVerticalGap());
         contentPanel.add(titlePanel);
-        contentPanel.add(Box.createVerticalStrut(20));
+        contentPanel.add(UiConstants.bigVerticalGap());
         contentPanel.add(formPanel);
-        contentPanel.add(Box.createVerticalStrut(15));
+        contentPanel.add(UiConstants.mediumVerticalGap());
         contentPanel.add(buttonPanel);
-        contentPanel.add(Box.createVerticalGlue());
+        contentPanel.add(UiConstants.bigVerticalGap());
 
         this.add(contentPanel, BorderLayout.CENTER);
 

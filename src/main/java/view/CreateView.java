@@ -6,14 +6,14 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 
+import interface_adapter.ViewManagerModel;
 import interface_adapter.create.CreateController;
 import interface_adapter.create.CreateState;
 import interface_adapter.create.CreateViewModel;
-import interface_adapter.ViewManagerModel;
 import view.ui.*;
 
 /**
- * The View For the Create Use Case
+ * The View For the Create Use Case.
  */
 public class CreateView extends BaseView implements PropertyChangeListener {
     private final CreateViewModel createViewModel;
@@ -37,20 +37,23 @@ public class CreateView extends BaseView implements PropertyChangeListener {
             backNavigationHelper.goBackToPortfolios();
         }), BorderLayout.NORTH);
 
-        // === 1. Top panel with plain text intro ===
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setOpaque(false);
+
+        JPanel welcomePanel = PanelFactory.createTitlePanel("Create Portfolio");
+        mainPanel.add(welcomePanel, BorderLayout.NORTH);
+
         JPanel centerPanel = new JPanel();
-        centerPanel.setOpaque(false);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
+        centerPanel.setMaximumSize(UiConstants.BUTTON_PANEL_DIM);
         centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-
-        JLabel welcomeLabel = LabelFactory.createTitleLabel("Create Portfolio");
-
-        centerPanel.add(welcomeLabel);
-        centerPanel.add(UiConstants.smallVerticalGap());
+        centerPanel.setOpaque(false);
 
         JTextField createNameField = FieldFactory.createTextField();
         final JPanel form = PanelFactory.createFormPanel("Name: ", createNameField);
-        centerPanel.add(form);
+        centerPanel.add(form, BorderLayout.CENTER);
+        mainPanel.add(centerPanel, BorderLayout.CENTER);
         final JButton create = ButtonFactory.createStyledButton("create");
         create.addActionListener(
                 evt -> {
@@ -59,11 +62,9 @@ public class CreateView extends BaseView implements PropertyChangeListener {
                         this.createController.execute(currentState.getUsername(), createNameField.getText());
                     }
                 });
-        create.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.add(create);
-
-        // Add to main layout
-        contentPanel.add(centerPanel, BorderLayout.CENTER);
+        mainPanel.add(ButtonFactory.createButtonPanel(create), BorderLayout.SOUTH);
+        contentPanel.add(mainPanel, BorderLayout.CENTER);
+        add(contentPanel, BorderLayout.CENTER);
     }
 
     @Override

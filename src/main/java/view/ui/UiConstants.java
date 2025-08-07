@@ -15,6 +15,8 @@ public final class UiConstants {
     public static final Color SECONDARY_COLOUR = new Color(10, 30, 60);
     public static final Color PRESSED_COLOUR = new Color(40, 70, 130);
     public static final Color PRESSED_BACKGROUND_COLOUR = new Color(25, 50, 100);
+    public static final Color TRANSLUCENT_BACKGROUND = new Color(255, 255, 255, 30);
+    public static final Color TRANSLUCENT_BORDER = new Color(255, 255, 255, 100);
 
     // ------------------ BORDERS ------------------
     public static final Border EMPTY_BORDER = BorderFactory.createEmptyBorder(20, 20, 20, 20);
@@ -44,6 +46,7 @@ public final class UiConstants {
     public static final Dimension DEFAULT_WINDOW_DIM = new Dimension(900, 600);
     public static final Dimension PREFERRED_TABLE_DIM = new Dimension(600, 300);
     public static final Dimension INTERCELL_SPACING_DIM = new Dimension(8, 4);
+    public static final Dimension PREFERRED_BIG_CONTAINER_DIM = new Dimension(400, 200);
     public static final Dimension BUTTON_PANEL_DIM = new Dimension(400, 100);
     public static final Dimension PREFERRED_MINI_BUTTON_DIM = new Dimension(40, 40);
     public static final int ICON_DIM = 32;
@@ -54,11 +57,12 @@ public final class UiConstants {
 
     // ------------------ FONTS ------------------
     private static final String FONT_FAMILY = "Sans Serif";
-    private static final int TITLE_SIZE = 36;
-    private static final int NORMAL_SIZE = 18;
-    private static final int LABEL_SIZE = 12;
+    private static final int SMALL_SIZE = 12;
     private static final int FORM_SIZE = 14;
-    private static final int STAT_SIZE = 16;
+    private static final int BUTTON_SIZE = 14;
+    private static final int NORMAL_SIZE = 18;
+    private static final int HEADING_SIZE = 22;
+    private static final int TITLE_SIZE = 36;
 
     // ------------------ DIM VALS ------------------
     private static final int HEIGHT = 30;
@@ -69,21 +73,26 @@ public final class UiConstants {
     // ------------------ FONT TYPES ------------------
     public static final Font TITLE_FONT = new Font(FONT_FAMILY, Font.BOLD, TITLE_SIZE);
     public static final Font NORMAL_FONT = new Font(FONT_FAMILY, Font.PLAIN, NORMAL_SIZE);
-    public static final Font LABEL_FONT = new Font(FONT_FAMILY, Font.PLAIN, LABEL_SIZE);
+    public static final Font SMALL_FONT = new Font(FONT_FAMILY, Font.PLAIN, SMALL_SIZE);
     public static final Font FORM_FONT = new Font(FONT_FAMILY, Font.PLAIN, FORM_SIZE);
-    public static final Font STAT_FONT = new Font(FONT_FAMILY, Font.BOLD, STAT_SIZE);
+    public static final Font BUTTON_FONT = new Font(FONT_FAMILY, Font.BOLD, BUTTON_SIZE);
+    public static final Font LABEL_FONT = new Font(FONT_FAMILY, Font.PLAIN, NORMAL_SIZE);
+    public static final Font HEADING_FONT = new Font(FONT_FAMILY, Font.BOLD, HEADING_SIZE);
 
     // ------------------ DIMENSIONS ------------------
     public static final Dimension FORM_DIM = new Dimension(FORM_WIDTH, HEIGHT);
     public static final Dimension SINGLE_DIM = new Dimension(SINGLE_WIDTH, HEIGHT);
     public static final Dimension SINGLE_PANEL_DIM = new Dimension(SINGLE_PANEL_WIDTH, HEIGHT);
+    public static final Dimension PREFERRED_COMPONENT_DIM = new Dimension(SINGLE_WIDTH, HEIGHT);
+    public static final Dimension PREFERRED_LABEL_DIM = new Dimension(100, HEIGHT);
+    public static final Dimension PREFERRED_CONTAINER_DIM = new Dimension(300, HEIGHT);
 
     // ------------------ COMPONENT SPACING ------------------
     private static final int FORM_GAP = 5;
+    private static final int BIG_HORIZONTAL_GAP = 15;
     private static final int SMALL_VERTICAL_GAP = 5;
     private static final int MEDIUM_VERTICAL_GAP = 10;
     private static final int BIG_VERTICAL_GAP = 20;
-    public static final Dimension PREFERRED_BUTTON_SIZE = new Dimension(180, 30);
 
     private UiConstants() {
 
@@ -95,6 +104,14 @@ public final class UiConstants {
      */
     public static Component formGap() {
         return Box.createHorizontalStrut(FORM_GAP);
+    }
+
+    /**
+     * Create big horizontal gap.
+     * @return Component
+     */
+    public static Component bigHorizontalGap() {
+        return Box.createHorizontalStrut(BIG_HORIZONTAL_GAP);
     }
 
     /**

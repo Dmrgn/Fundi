@@ -32,11 +32,14 @@ public class SellView extends BaseView implements PropertyChangeListener {
         this.sellViewModel.addPropertyChangeListener(this);
 
         JPanel contentPanel = createGradientContentPanel();
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setOpaque(false);
 
         // === 1. Top panel with plain text intro ===
 
         JPanel titlePanel = PanelFactory.createTitlePanel("Sell Stock");
-        contentPanel.add(titlePanel, BorderLayout.NORTH);
+        mainPanel.add(titlePanel, BorderLayout.NORTH);
         contentPanel.add(createBackButtonPanel(evt -> {
             this.navigationController.goBack();
         }), BorderLayout.NORTH);
@@ -49,12 +52,13 @@ public class SellView extends BaseView implements PropertyChangeListener {
 
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        formPanel.setMaximumSize(UiConstants.BUTTON_PANEL_DIM);
         formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.setOpaque(false);
         formPanel.add(tickerPanel);
         formPanel.add(UiConstants.smallVerticalGap());
         formPanel.add(amountPanel);
-        contentPanel.add(formPanel, BorderLayout.CENTER);
+        mainPanel.add(formPanel, BorderLayout.CENTER);
 
         final JButton buy = ButtonFactory.createStyledButton("Sell");
         buy.addActionListener(
@@ -69,7 +73,8 @@ public class SellView extends BaseView implements PropertyChangeListener {
                     }
                 }
         );
-        contentPanel.add(ButtonFactory.createButtonPanel(buy), BorderLayout.SOUTH);
+        mainPanel.add(ButtonFactory.createButtonPanel(buy), BorderLayout.SOUTH);
+        contentPanel.add(mainPanel, BorderLayout.CENTER);
         this.add(contentPanel, BorderLayout.CENTER);
     }
 

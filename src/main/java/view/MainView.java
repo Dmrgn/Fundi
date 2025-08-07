@@ -179,7 +179,7 @@ public class MainView extends BaseView {
 
         // Create notification badge
         JLabel badge = new JLabel("0");
-        badge.setFont(UiConstants.LABEL_FONT);
+        badge.setFont(UiConstants.SMALL_FONT);
         badge.setForeground(Color.WHITE);
         badge.setBackground(Color.RED); // Red color
         badge.setOpaque(true);

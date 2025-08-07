@@ -42,7 +42,7 @@ public class AnalysisInteractor implements AnalysisInputBoundary {
         for (String ticker : tickerAmounts.keySet()) {
             percentages.put(ticker, FinancialCalculator.computePercentage(totalStocks, tickerAmounts.get(ticker)));
             List<StockData> stockData = stockDataAccessInterface.pastStockData(ticker);
-            double vol = FinancialCalculator.computeVolatility(stockData.stream().map(StockData::getPrice).collect(Collectors.toList()));
+            double vol = FinancialCalculator.computeVolatility(stockData.stream().map(StockData::getPrice).collect(Collectors.toList()), true);
             totalVol += vol;
             vols.put(ticker, vol);
             double retr = FinancialCalculator.computeReturn(stockData);

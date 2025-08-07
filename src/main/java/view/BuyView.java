@@ -16,7 +16,7 @@ import view.ui.PanelFactory;
 import view.ui.UiConstants;
 
 /**
- * The View for the Buy Use Case
+ * The View for the Buy Use Case.
  */
 public class BuyView extends BaseView implements PropertyChangeListener {
 
@@ -32,15 +32,19 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         this.buyViewModel.addPropertyChangeListener(this);
 
         JPanel contentPanel = createGradientContentPanel();
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setOpaque(false);
 
         // Add back button (top left) using w/ NavigationController
-        contentPanel.add(createBackButtonPanel(e -> this.navigationController.goBack()), BorderLayout.NORTH);
+        contentPanel.add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.NORTH);
 
         JPanel welcomePanel = PanelFactory.createTitlePanel("Buy Stock");
-        contentPanel.add(welcomePanel, BorderLayout.CENTER);
+        mainPanel.add(welcomePanel, BorderLayout.NORTH);
 
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
+        formPanel.setMaximumSize(UiConstants.BUTTON_PANEL_DIM);
         formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.setOpaque(false);
 
@@ -53,7 +57,7 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         formPanel.add(tickerPanel);
         formPanel.add(UiConstants.smallVerticalGap());
         formPanel.add(amountPanel);
-        contentPanel.add(formPanel, BorderLayout.CENTER);
+        mainPanel.add(formPanel, BorderLayout.CENTER);
 
         final JButton buy = ButtonFactory.createStyledButton("Buy");
         buy.addActionListener(
@@ -66,7 +70,8 @@ public class BuyView extends BaseView implements PropertyChangeListener {
                                 Integer.parseInt(amountField.getText()));
                     }
                 });
-        contentPanel.add(ButtonFactory.createButtonPanel(buy), BorderLayout.SOUTH);
+        mainPanel.add(ButtonFactory.createButtonPanel(buy), BorderLayout.SOUTH);
+        contentPanel.add(mainPanel, BorderLayout.CENTER);
         add(contentPanel, BorderLayout.CENTER);
     }
 

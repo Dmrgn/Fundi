@@ -243,4 +243,29 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
         }
         return false;
     }
+
+	@Override
+	public List<String> getUserSymbols(String username) {
+        Set<String> symbols = new HashSet<>();
+
+        String sql = """
+                SELECT DISTINCT t.stock_name
+                FROM transactions t
+                JOIN portfolios p ON t.portfolio_id = p.id
+                JOIN users u ON p.user_id = u.id
+                WHERE u.username = ?
+                """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                symbols.add(rs.getString("stock_name"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching user symbols: " + e.getMessage());
+        }
+
+        return new ArrayList<>(symbols);
+    }
 }

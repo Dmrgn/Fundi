@@ -12,10 +12,11 @@ import view.ui.UiConstants;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 import java.util.Map;
 
 /**
- * The View for the Portfolio Hub Use Case
+ * The View for the Portfolio Hub Use Case.
  */
 public class PortfolioHubView extends BaseView {
     private final PortfolioHubViewModel portfoliosViewModel;
@@ -23,7 +24,7 @@ public class PortfolioHubView extends BaseView {
     private final PortfolioController portfolioController;
     private final NavigationController navigationController;
 
-    private final JPanel buttonPanel = ButtonFactory.createButtonPanel();
+    private JPanel buttonPanel = ButtonFactory.createButtonPanel();
 
     public PortfolioHubView(PortfolioHubViewModel portfoliosViewModel, PortfolioHubController portfolioHubController,
                             PortfolioController portfolioController, NavigationController navigationController) {
@@ -51,7 +52,7 @@ public class PortfolioHubView extends BaseView {
     }
 
     private JPanel createCreateButtonPanel() {
-        JButton createButton = ButtonFactory.createStyledButton("Create New Portfolio");
+        JButton createButton = ButtonFactory.createStyledButton("New Portfolio");
         createButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         createButton.addActionListener(evt -> {
             PortfolioHubState portfoliosState = this.portfoliosViewModel.getState();
@@ -67,16 +68,17 @@ public class PortfolioHubView extends BaseView {
             PortfolioHubState portfoliosState = portfoliosViewModel.getState();
             Map<String, String> portfolios = portfoliosState.getPortfolios();
 
+            ArrayList<JButton> portfolioButtons = new ArrayList<>();
             for (String portfolio : portfolios.keySet()) {
                 JButton button = ButtonFactory.createStyledButton(portfolio);
-                button.addActionListener(nxtEvt -> portfolioController.execute(portfoliosState.getUsername(),
-                        portfolios.get(portfolio), portfolio));
+                button.addActionListener(nxtEvt -> {
+                    portfolioController.execute(portfoliosState.getUsername(),
+                            portfolios.get(portfolio), portfolio);
+                });
 
-                buttonPanel.add(button);
+                portfolioButtons.add(button);
             }
-
-            buttonPanel.revalidate();
-            buttonPanel.repaint();
+            ButtonFactory.populateButtonPanel(buttonPanel, portfolioButtons.toArray(new JButton[0]));
         });
     }
 }

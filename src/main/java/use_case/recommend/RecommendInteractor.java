@@ -44,7 +44,7 @@ public class RecommendInteractor implements RecommendInputBoundary {
             List<StockData> stockData = stockDataAccessInterface.pastStockData(ticker);
             List<Double> prices = stockData.stream().map(StockData::getPrice).collect(Collectors.toList());
             sharpeRatios.put(ticker, FinancialCalculator.sharpeRatio(prices));
-            volatility.put(ticker, FinancialCalculator.computeVolatility(prices));
+            volatility.put(ticker, FinancialCalculator.computeVolatility(prices, true));
             pricesMap.put(ticker, prices.get(0));
         }
         Map<String, Double> haveRecs = SortingUtil.getTopnByValue(

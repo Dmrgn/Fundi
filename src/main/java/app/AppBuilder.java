@@ -66,61 +66,61 @@ import use_case.change_password.ChangePwdOutputBoundary;
 import use_case.change_password.ChangePwdPresenter;
 
 public class AppBuilder {
-        private final JPanel cardPanel = new JPanel();
-        private final CardLayout cardLayout = new CardLayout();
-        private final ViewManagerModel viewManagerModel = new ViewManagerModel();
-        private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
-        private final LoginUserDataAccessInterface userDataAccessObject = new DBUserDataAccessObject();
-        private final DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
-        private final DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
-        private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
+    private final JPanel cardPanel = new JPanel();
+    private final CardLayout cardLayout = new CardLayout();
+    private final ViewManagerModel viewManagerModel = new ViewManagerModel();
+    private final ViewManager viewManager = new ViewManager(cardPanel, cardLayout, viewManagerModel);
+    private final LoginUserDataAccessInterface userDataAccessObject = new DBUserDataAccessObject();
+    private final DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
+    private final DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
+    private final DBStockDataAccessObject stockDataAccessObject = new DBStockDataAccessObject();
 
-        private final MainViewModel mainViewModel = new MainViewModel();
-        private final LoginViewModel loginViewModel = new LoginViewModel();
-        private final SignupViewModel signupViewModel = new SignupViewModel();
-        private final PortfolioHubViewModel portfoliosViewModel = new PortfolioHubViewModel();
-        private final NewsViewModel newsViewModel = new NewsViewModel();
-        private final CreateViewModel createViewModel = new CreateViewModel();
-        private final PortfolioViewModel portfolioViewModel = new PortfolioViewModel();
-        private final BuyViewModel buyViewModel = new BuyViewModel();
-        private final SellViewModel sellViewModel = new SellViewModel();
-        private final HistoryViewModel historyViewModel = new HistoryViewModel();
-        private final AnalysisViewModel analysisViewModel = new AnalysisViewModel();
-        private final RecommendViewModel recommendViewModel = new RecommendViewModel();
-        private final LeaderboardViewModel leaderboardViewModel = new LeaderboardViewModel();
-        private final NavigationState navigationState = new NavigationState();
-        private final NavigationOutputBoundary navigationPresenter = new NavigationPresenter(viewManagerModel);
+    private final MainViewModel mainViewModel = new MainViewModel();
+    private final LoginViewModel loginViewModel = new LoginViewModel();
+    private final SignupViewModel signupViewModel = new SignupViewModel();
+    private final PortfolioHubViewModel portfoliosViewModel = new PortfolioHubViewModel();
+    private final NewsViewModel newsViewModel = new NewsViewModel();
+    private final CreateViewModel createViewModel = new CreateViewModel();
+    private final PortfolioViewModel portfolioViewModel = new PortfolioViewModel();
+    private final BuyViewModel buyViewModel = new BuyViewModel();
+    private final SellViewModel sellViewModel = new SellViewModel();
+    private final HistoryViewModel historyViewModel = new HistoryViewModel();
+    private final AnalysisViewModel analysisViewModel = new AnalysisViewModel();
+    private final RecommendViewModel recommendViewModel = new RecommendViewModel();
+    private final LeaderboardViewModel leaderboardViewModel = new LeaderboardViewModel();
+    private final NavigationState navigationState = new NavigationState();
+    private final NavigationOutputBoundary navigationPresenter = new NavigationPresenter(viewManagerModel);
 
-        private final NavigationInteractor navigationInteractor = new NavigationInteractor(navigationState,
+    private final NavigationInteractor navigationInteractor = new NavigationInteractor(navigationState,
                         navigationPresenter);
-        private final NavigationController navigationController = new NavigationController(navigationInteractor);
+    private final NavigationController navigationController = new NavigationController(navigationInteractor);
 
-        private final LoginController loginController = LoginUseCaseFactory.create(
+    private final LoginController loginController = LoginUseCaseFactory.create(
                         viewManagerModel,
                         mainViewModel,
                         loginViewModel,
                         signupViewModel,
                         userDataAccessObject);
-        private final SignupController signupController = SignupUseCaseFactory.create(
+    private final SignupController signupController = SignupUseCaseFactory.create(
                         viewManagerModel,
                         signupViewModel,
                         loginViewModel,
                         (SignupUserDataAccessInterface) userDataAccessObject);
-        private final PortfolioHubController portfolioHubController = PortfolioHubUseCaseFactory.create(
+    private final PortfolioHubController portfolioHubController = PortfolioHubUseCaseFactory.create(
                         viewManagerModel,
                         portfoliosViewModel,
                         createViewModel,
                         portfoliosDataAccessObject);
 
-        private final CreateController createController = CreateUseCaseFactory.create(
+    private final CreateController createController = CreateUseCaseFactory.create(
                         viewManagerModel,
                         portfoliosViewModel,
                         createViewModel,
                         portfoliosDataAccessObject);
 
-        private SearchDataAccessInterface searchDataAccessObject;
-        private NewsController newsController;
-        private final PortfolioController portfolioController = PortfolioUseCaseFactory.create(
+    private SearchDataAccessInterface searchDataAccessObject;
+    private NewsController newsController;
+    private final PortfolioController portfolioController = PortfolioUseCaseFactory.create(
                         viewManagerModel,
                         portfolioViewModel,
                         buyViewModel,
@@ -129,73 +129,73 @@ public class AppBuilder {
                         stockDataAccessObject,
                         navigationController);
 
-        private final BuyController buyController = BuyUseCaseFactory.create(
+    private final BuyController buyController = BuyUseCaseFactory.create(
                         viewManagerModel,
                         buyViewModel,
                         portfolioViewModel,
                         stockDataAccessObject,
                         transactionDataAccessObject);
 
-        private final SellController sellController = SellUseCaseFactory.create(
+    private final SellController sellController = SellUseCaseFactory.create(
                         viewManagerModel,
                         sellViewModel,
                         portfolioViewModel,
                         stockDataAccessObject,
                         transactionDataAccessObject);
 
-        private final HistoryController historyController = HistoryUseCaseFactory.create(
+    private final HistoryController historyController = HistoryUseCaseFactory.create(
                         viewManagerModel,
                         historyViewModel,
                         transactionDataAccessObject,
                         navigationController);
 
-        private final AnalysisController analysisController = AnalysisUseCaseFactory.create(
+    private final AnalysisController analysisController = AnalysisUseCaseFactory.create(
                         viewManagerModel,
                         analysisViewModel,
                         stockDataAccessObject,
                         transactionDataAccessObject,
                         navigationController);
 
-        private final RecommendController recommendController = RecommendUseCaseFactory.create(
+    private final RecommendController recommendController = RecommendUseCaseFactory.create(
                         viewManagerModel,
                         recommendViewModel,
                         stockDataAccessObject,
                         transactionDataAccessObject);
 
-        private final SearchViewModel searchViewModel = new SearchViewModel();
-        private SearchController searchController;
+    private final SearchViewModel searchViewModel = new SearchViewModel();
+    private SearchController searchController;
 
-        private final interface_adapter.dashboard.DashboardViewModel dashboardViewModel = new interface_adapter.dashboard.DashboardViewModel();
-        private interface_adapter.dashboard.DashboardController dashboardController;
+    private final interface_adapter.dashboard.DashboardViewModel dashboardViewModel = new interface_adapter.dashboard.DashboardViewModel();
+    private interface_adapter.dashboard.DashboardController dashboardController;
 
-        private final CompanyDetailsViewModel companyDetailsViewModel = new CompanyDetailsViewModel();
-        private CompanyDetailsController companyDetailsController;
-        private final ChangePwdViewModel changePwdViewModel = new ChangePwdViewModel();
+    private final CompanyDetailsViewModel companyDetailsViewModel = new CompanyDetailsViewModel();
+    private CompanyDetailsController companyDetailsController;
+    private final ChangePwdViewModel changePwdViewModel = new ChangePwdViewModel();
 
-        private SettingsView settingsView;
-        private ChangePwdController changePwdController;
-        private ChangePwdInteractor changePwdInteractor;
+    private SettingsView settingsView;
+    private ChangePwdController changePwdController;
+    private ChangePwdInteractor changePwdInteractor;
 
-        private TabbedMainView tabbedMainView;
-        private DashboardView dashboardView;
-        private WatchlistView watchlistView;
-        private LeaderboardView leaderboardView;
-        private LoginView loginView;
-        private SignupView signupView;
-        private PortfolioHubView portfoliosView;
-        private CreateView createView;
-        private PortfolioView portfolioView;
-        private NewsView newsView;
-        private BuyView buyView;
-        private SellView sellView;
-        private HistoryView historyView;
-        private AnalysisView analysisView;
-        private RecommendView recommendView;
-        private CompanyDetailsView companyDetailsView;
+    private TabbedMainView tabbedMainView;
+    private DashboardView dashboardView;
+    private WatchlistView watchlistView;
+    private LeaderboardView leaderboardView;
+    private LoginView loginView;
+    private SignupView signupView;
+    private PortfolioHubView portfoliosView;
+    private CreateView createView;
+    private PortfolioView portfolioView;
+    private NewsView newsView;
+    private BuyView buyView;
+    private SellView sellView;
+    private HistoryView historyView;
+    private AnalysisView analysisView;
+    private RecommendView recommendView;
+    private CompanyDetailsView companyDetailsView;
 
 
-        public AppBuilder() throws SQLException, IOException {
-                cardPanel.setLayout(cardLayout);
+    public AppBuilder() throws SQLException, IOException {
+            cardPanel.setLayout(cardLayout);
                 SearchOutputBoundary searchPresenter = new SearchPresenter(searchViewModel);
                 SearchDataAccessInterface tempSearchDataAccessObject;
                 try {
@@ -206,7 +206,7 @@ public class AppBuilder {
                                                         + e.getMessage(),
                                         "Initialization Error", javax.swing.JOptionPane.ERROR_MESSAGE);
                         System.exit(1);
-                        return;
+                        tempSearchDataAccessObject = null;
                 }
                 this.searchDataAccessObject = tempSearchDataAccessObject;
                 SearchInputBoundary getMatches = new GetMatches(searchDataAccessObject, searchPresenter);
@@ -396,7 +396,7 @@ public class AppBuilder {
         /**
          * Creates the JFrame for the application and initially sets the SignupView to
          * be displayed.
-         * 
+         *
          * @return the application
          */
         public JFrame build() {
@@ -413,7 +413,7 @@ public class AppBuilder {
 
         /**
          * Adds the Leaderboard View to the application.
-         * 
+         *
          * @return this builder
          */
         public AppBuilder addLeaderboardView() {

@@ -101,7 +101,7 @@ class SignupInteractorTest {
     }
 
     @AfterAll
-    static void removeUser() throws SQLException {
+    static void tearDown() throws SQLException {
         DBUserDataAccessObject userRepository = new DBUserDataAccessObject();
         userRepository.remove("Bob");
     }

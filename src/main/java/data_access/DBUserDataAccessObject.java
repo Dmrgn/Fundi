@@ -161,25 +161,25 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
 
     @Override
     public void saveNewPassword(String username, String newPassword) {
-            String query = "UPDATE users SET password = ? WHERE username = ?;";
-            try (PreparedStatement stmt = connection.prepareStatement(query)) {
-                stmt.setString(1, newPassword);
-                stmt.setString(2, username);
-                stmt.executeUpdate();
+        String query = "UPDATE users SET password = ? WHERE username = ?;";
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setString(1, newPassword);
+            stmt.setString(2, username);
+            stmt.executeUpdate();
 
-                if (nameToId.containsKey(username)) {
-                    String id = nameToId.get(username);
-                    User updatedUser = new User(username, newPassword);
-                    accounts.put(id, updatedUser);
-                }
-
-                System.out.println("Password updated successfully for: " + username);
-            } catch (SQLException e) {
-                System.out.println("Error updating password: " + e.getMessage());
+            if (nameToId.containsKey(username)) {
+                String id = nameToId.get(username);
+                User updatedUser = new User(username, newPassword);
+                accounts.put(id, updatedUser);
             }
+
+            System.out.println("Password updated successfully for: " + username);
         }
 
-
+        catch (SQLException exception) {
+            System.out.println("Error updating password: " + exception.getMessage());
+        }
+    }
 
     /**
      * Check if a user exists in the database.

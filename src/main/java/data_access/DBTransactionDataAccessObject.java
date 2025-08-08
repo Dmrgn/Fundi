@@ -23,6 +23,7 @@ import use_case.history.HistoryDataAccessInterface;
 import use_case.portfolio.PortfolioTransactionDataAccessInterface;
 import use_case.recommend.RecommendTransactionDataAccessInterface;
 import use_case.sell.SellTransactionDataAccessInterface;
+import use_case.shortsell.ShortTransactionDataAccessInterface;
 
 /**
  * DAO for transaction data implemented using a Database to persist the data.
@@ -30,7 +31,7 @@ import use_case.sell.SellTransactionDataAccessInterface;
 public class DBTransactionDataAccessObject implements AnalysisTransactionDataAccessInterface,
         BuyTransactionDataAccessInterface, SellTransactionDataAccessInterface,
         HistoryDataAccessInterface, PortfolioTransactionDataAccessInterface,
-        RecommendTransactionDataAccessInterface {
+        RecommendTransactionDataAccessInterface, ShortTransactionDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, List<Transaction>> transactions = new HashMap<>();
 
@@ -246,21 +247,26 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
 
 	@Override
 	public List<String> getUserSymbols(String username) {
-		Set<String> symbols = new HashSet<>();
-		// This query should get all unique stock tickers from a user's portfolios
-		String sql = "SELECT DISTINCT stock_ticker FROM portfolio_transactions pt " +
-					 "JOIN portfolios p ON pt.portfolio_id = p.id " +
-					 "WHERE p.username = ?";
-		try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
-			pstmt.setString(1, username);
-			ResultSet rs = pstmt.executeQuery();
-			while (rs.next()) {
-				symbols.add(rs.getString("stock_ticker"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-			// Return an empty list in case of an error
-		}
-		return new ArrayList<>(symbols);
-	}
+        Set<String> symbols = new HashSet<>();
+
+        String sql = """
+                SELECT DISTINCT t.stock_name
+                FROM transactions t
+                JOIN portfolios p ON t.portfolio_id = p.id
+                JOIN users u ON p.user_id = u.id
+                WHERE u.username = ?
+                """;
+
+        try (PreparedStatement pstmt = connection.prepareStatement(sql)) {
+            pstmt.setString(1, username);
+            ResultSet rs = pstmt.executeQuery();
+            while (rs.next()) {
+                symbols.add(rs.getString("stock_name"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching user symbols: " + e.getMessage());
+        }
+
+        return new ArrayList<>(symbols);
+    }
 }

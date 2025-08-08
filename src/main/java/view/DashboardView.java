@@ -1,6 +1,8 @@
 package view;
 
+import entity.CurrencyConverter;
 import entity.PortfolioValuePoint;
+import entity.PreferredCurrencyManager;
 import interface_adapter.dashboard.DashboardController;
 import interface_adapter.dashboard.DashboardState;
 import interface_adapter.dashboard.DashboardViewModel;
@@ -21,6 +23,10 @@ import org.jfree.data.time.TimeSeriesCollection;
 import view.ui.ButtonFactory;
 import view.ui.FieldFactory;
 import view.ui.PanelFactory;
+import org.jfree.chart.ChartUtils;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -28,6 +34,8 @@ import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.*;
 import java.util.List;
+
+import static entity.PreferredCurrencyManager.*;
 
 public class DashboardView extends BaseView {
     private final MainViewModel mainViewModel;
@@ -185,22 +193,61 @@ public class DashboardView extends BaseView {
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
                 "Portfolio Value Over Time (Last 30 Days)",
                 "Date",
-                "Value ($)",
+                "Value",
                 dataset,
                 true,
                 true,
                 false);
 
-        // Customize chart appearance
-        chart.setBackgroundPaint(new Color(45, 45, 45));
+        // Customize chart appearance (light mode)
+        chart.setBackgroundPaint(Color.WHITE);
         XYPlot plot = chart.getXYPlot();
-        plot.setBackgroundPaint(new Color(60, 60, 60));
-        plot.setDomainGridlinePaint(Color.LIGHT_GRAY);
-        plot.setRangeGridlinePaint(Color.LIGHT_GRAY);
+        plot.setBackgroundPaint(Color.WHITE);
+        plot.setDomainGridlinePaint(new Color(220, 220, 220));
+        plot.setRangeGridlinePaint(new Color(220, 220, 220));
+        // Ensure title and axis labels are dark for readability in light mode
+        if (chart.getTitle() != null)
+            chart.getTitle().setPaint(Color.DARK_GRAY);
+        if (plot.getDomainAxis() != null)
+            plot.getDomainAxis().setLabelPaint(Color.DARK_GRAY);
+        if (plot.getRangeAxis() != null)
+            plot.getRangeAxis().setLabelPaint(Color.DARK_GRAY);
+
+        // Create toolbar with export button
+        JPanel toolbar = new JPanel();
+        toolbar.setOpaque(true);
+        toolbar.setBackground(Color.WHITE);
+        toolbar.setLayout(new FlowLayout(FlowLayout.RIGHT, 5, 5));
+        JButton exportButton = ButtonFactory.createStyledButton("Export");
+        exportButton.setToolTipText("Export chart as PNG");
+        exportButton.addActionListener(e -> {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Save chart as PNG");
+            chooser.setSelectedFile(new File("portfolio-chart.png"));
+            chooser.setFileFilter(new FileNameExtensionFilter("PNG Image", "png"));
+            int result = chooser.showSaveDialog(this);
+            if (result == JFileChooser.APPROVE_OPTION) {
+                File file = chooser.getSelectedFile();
+                if (!file.getName().toLowerCase().endsWith(".png")) {
+                    file = new File(file.getAbsolutePath() + ".png");
+                }
+                int width = chartPanel.getWidth() > 0 ? chartPanel.getWidth() : 800;
+                int height = chartPanel.getHeight() > 0 ? chartPanel.getHeight() : 400;
+                try {
+                    ChartUtils.saveChartAsPNG(file, chartPanel.getChart(), width, height);
+                    JOptionPane.showMessageDialog(this, "Chart exported to " + file.getAbsolutePath());
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Failed to export chart: " + ex.getMessage());
+                }
+            }
+        });
+
+        toolbar.add(exportButton);
+        chartContainer.add(toolbar, BorderLayout.NORTH);
 
         chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(800, 400));
-        chartPanel.setBackground(new Color(45, 45, 45));
+        chartPanel.setBackground(Color.WHITE);
 
         chartContainer.add(chartPanel, BorderLayout.CENTER);
 
@@ -330,7 +377,6 @@ public class DashboardView extends BaseView {
     private void updateChart(List<PortfolioValuePoint> valuePoints) {
         if (chartPanel == null)
             return;
-
         // Group data by portfolio
         Map<String, TimeSeries> portfolioSeries = new HashMap<>();
 
@@ -346,8 +392,20 @@ public class DashboardView extends BaseView {
             Date javaDate = Date.from(date.atStartOfDay(ZoneId.systemDefault()).toInstant());
             Day day = new Day(javaDate);
 
+            double usdValue = point.getValue();
+            String preferredCurrency = getPreferredCurrency();
+            CurrencyConverter converter = PreferredCurrencyManager.getConverter();
+
+            double convertedValue;
+            if (converter != null) {
+                convertedValue = converter.convert(usdValue, "USD", preferredCurrency);
+            } else {
+                convertedValue = usdValue;
+                preferredCurrency = "USD";
+            }
+
             try {
-                series.addOrUpdate(day, point.getValue());
+                series.addOrUpdate(day, convertedValue);
             } catch (Exception e) {
                 // Handle duplicate dates by updating the value
                 series.update(day, point.getValue());

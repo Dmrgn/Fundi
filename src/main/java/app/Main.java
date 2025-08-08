@@ -44,8 +44,8 @@ public class Main {
                 .addNewsView()
                 .addCompanyDetailsView()
                 .addLeaderboardView()
-                .addChangePwdUseCase()
                 .addSettingsView()
+                .addShortView()              // <<< REGISTER SHORT VIEW
                 .addTabbedMainView()
                 .build();
         application.pack();

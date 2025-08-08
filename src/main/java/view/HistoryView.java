@@ -10,12 +10,16 @@ import javax.swing.table.DefaultTableModel;
 //import interface_adapter.change_password.LoggedInState;
 //import interface_adapter.change_password.LoggedInViewModel;
 //import interface_adapter.logout.LogoutController;
+import entity.CurrencyConverter;
 import interface_adapter.history.HistoryState;
 import interface_adapter.history.HistoryViewModel;
 import interface_adapter.navigation.NavigationController;
 import view.ui.PanelFactory;
 import view.ui.TableFactory;
 import view.ui.UiConstants;
+
+import static entity.PreferredCurrencyManager.getConverter;
+import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
 /**
  * The View for the History Use Case.
@@ -66,8 +70,23 @@ public class HistoryView extends BaseView {
             LocalDate[] dates = state.getDates();
             tableModel.setRowCount(0);
 
+            CurrencyConverter converter = getConverter();
+            String preferredCurrency = getPreferredCurrency();
+
             for (int i = 0; i < names.length; i++) {
-                tableModel.addRow(new Object[] {names[i], amounts[i], String.format("$%.2f", prices[i]), dates[i] });
+
+                double originalPrice = prices[i];
+                double convertedPrice = originalPrice;
+
+                if (converter != null && !preferredCurrency.equals("USD")) {
+                    try {
+                        convertedPrice = converter.convert(originalPrice, "USD", preferredCurrency);
+                    } catch (Exception e) {
+                        System.err.println("Currency conversion failed: " + e.getMessage());
+                    }
+
+                }
+                tableModel.addRow(new Object[] {names[i], amounts[i], String.format("%.2f %s", convertedPrice, preferredCurrency), dates[i]});
             }
         });
     }

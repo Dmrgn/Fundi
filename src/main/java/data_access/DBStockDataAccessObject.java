@@ -22,12 +22,15 @@ import use_case.buy.BuyStockDataAccessInterface;
 import use_case.portfolio.PortfolioStockDataAccessInterface;
 import use_case.recommend.RecommendStockDataAccessInterface;
 import use_case.sell.SellStockDataAccessInterface;
+import use_case.shortsell.ShortStockDataAccessInterface;
+import use_case.shortsell.ShortTransactionDataAccessInterface;
 
 /**
  * DAO for stock data implemented using a Database to persist data.
  */
 public class DBStockDataAccessObject implements RecommendStockDataAccessInterface, BuyStockDataAccessInterface,
-        SellStockDataAccessInterface, AnalysisStockDataAccessInterface, PortfolioStockDataAccessInterface {
+        SellStockDataAccessInterface, AnalysisStockDataAccessInterface, PortfolioStockDataAccessInterface,
+        ShortStockDataAccessInterface {
     private static final Set<String> TICKERS = Set.of("AAPL", "MSFT", "AMZN", "NVDA", "GOOGL", "META",
             "BRK-B", "TSLA", "LLY", "UNH", "JPM", "V");
     private static final int NUM_DAYS = 10;

@@ -2,17 +2,22 @@ package use_case.analysis;
 
 import data_access.DBTransactionDataAccessObject;
 import data_access.DBStockDataAccessObject;
+import entity.Transaction;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class AnalysisInteractorTest {
     @BeforeAll
-    static void setUp() {
-        // Assuming portfolio hub test was already run
+    static void setUp() throws SQLException {
+        DBTransactionDataAccessObject dbTransactionDataAccessObject = new DBTransactionDataAccessObject();
+        dbTransactionDataAccessObject.save(new Transaction("51", "NVDA", 10,
+                LocalDate.now(), 10.0));
     }
 
     @Test
@@ -28,7 +33,7 @@ class AnalysisInteractorTest {
                 assertNotNull(analysisOutputData.getTopReturns());
                 assertNotNull(analysisOutputData.getWorstReturns());
                 assertEquals(1, analysisOutputData.getMajorityTickers().size());
-                assertEquals(8, analysisOutputData.getNumTickers());
+                assertEquals(10, analysisOutputData.getNumTickers());
 
             }
 
@@ -39,6 +44,13 @@ class AnalysisInteractorTest {
         };
         AnalysisInteractor interactor = new AnalysisInteractor(dbStockDataAccessObject, dbTransactionDataAccessObject, analysisOutputBoundary);
         interactor.execute(analysisInputData);
+    }
+
+    @AfterAll
+    static void tearDown() throws SQLException {
+        DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
+        transactionDataAccessObject.remove("51", "NVDA", 10); // Update portfolio id accordingly
+
     }
 
 }

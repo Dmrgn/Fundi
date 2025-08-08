@@ -2,6 +2,9 @@ package use_case.login;
 
 import data_access.DBUserDataAccessObject;
 import entity.User;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -9,16 +12,16 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class LoginInteractorTest {
+    @BeforeAll
+    static void setUp() throws SQLException {
+        DBUserDataAccessObject userRepository = new DBUserDataAccessObject();
+        userRepository.save(new User("Paul", "password"));
+    }
 
     @Test
     void successTest() throws SQLException {
-        LoginInputData inputData = new LoginInputData("Paul", "password");
         DBUserDataAccessObject userRepository = new DBUserDataAccessObject();
-
-        // For the success test, we need to add Paul to the data access repository before we log in.
-        userRepository.save(new User("Paul", "password"));
-
-        // This creates a successPresenter that tests whether the test case is as we expect.
+        LoginInputData inputData = new LoginInputData("Paul", "password");
         LoginOutputBoundary successPresenter = new LoginOutputBoundary() {
             @Override
             public void prepareSuccessView(LoginOutputData user) {
@@ -99,5 +102,11 @@ class LoginInteractorTest {
 
         LoginInputBoundary interactor = new LoginInteractor(userRepository, failurePresenter);
         interactor.execute(inputData);
+    }
+
+    @AfterAll
+    static void tearDown() throws SQLException {
+        DBUserDataAccessObject userRepository = new DBUserDataAccessObject();
+        userRepository.remove("Paul");
     }
 }

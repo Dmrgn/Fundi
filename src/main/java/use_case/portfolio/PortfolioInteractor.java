@@ -65,7 +65,11 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
                 tickers.add(ticker);
                 values.put(ticker, stockDataAccessObject.getPrice(ticker) *
                                    Math.signum(transaction.getPrice()) * transaction.getQuantity());
-                amounts.put(ticker, transaction.getQuantity());
+                // If first transaction is a short (negative price), store negative quantity
+                int signedQty = transaction.getPrice() < 0
+                        ? -transaction.getQuantity()
+                        : transaction.getQuantity();
+                amounts.put(ticker, signedQty);
             }
         }
         PortfolioOutputData outputData = new PortfolioOutputData(
@@ -95,5 +99,14 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
     @Override
     public void routeToSell(String portfolioId) {
         portfolioPresenter.routeToSell(portfolioId);
+    }
+
+    /**
+     * Switch to the Short Sell View
+     * @param portfolioId The portfolio id to update the state of the Short Sell View Model
+     */
+    @Override
+    public void routeToShort(String portfolioId) {
+        portfolioPresenter.routeToShort(portfolioId);
     }
 }

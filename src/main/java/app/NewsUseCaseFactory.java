@@ -25,7 +25,7 @@ public class NewsUseCaseFactory {
             ViewManagerModel viewManagerModel,
             NewsViewModel newsViewModel,
             PortfolioTransactionDataAccessInterface transactionDataAccessInterface,
-            SearchDataAccessInterface searchDataAccess // Added
+            SearchDataAccessInterface searchDataAccess
     ) {
         NewsOutputBoundary newsPresenter = new NewsPresenter(viewManagerModel, newsViewModel);
         NewsInputBoundary newsInteractor;

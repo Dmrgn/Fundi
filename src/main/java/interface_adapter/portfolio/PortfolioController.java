@@ -41,4 +41,12 @@ public class PortfolioController {
     public void routeToSell(String portfolioId) {
         portfolioUseCaseInteractor.routeToSell(portfolioId);
     }
+
+    /**
+     * Switch to the Short Sell View.
+     * @param portfolioId Set the state information for the Short Sell View Model
+     */
+    public void routeToShort(String portfolioId) {
+        portfolioUseCaseInteractor.routeToShort(portfolioId);
+    }
 }

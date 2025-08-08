@@ -21,4 +21,10 @@ public interface PortfolioOutputBoundary {
      * @param portfolioId The portfolio id to update the state of the Sell View Model
      */
     void routeToSell(String portfolioId);
+
+    /**
+     * Switch to the Short Sell View.
+     * @param portfolioId The portfolio id to update the state of the Short Sell View Model
+     */
+    void routeToShort(String portfolioId);
 }

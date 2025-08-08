@@ -5,17 +5,13 @@ import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.portfolio_hub.PortfolioHubController;
 import view.ui.ButtonFactory;
-import view.ui.FieldFactory;
-import view.ui.PanelFactory;
+import view.ui.UiConstants;
 import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
-import view.ui.UiConstants;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 
 /**
  * The Main View
@@ -26,9 +22,7 @@ public class MainView extends BaseView {
     private final NewsController newsController;
     private final NavigationController navigationController;
     private final SearchController searchController;
-    private final SearchViewModel searchViewModel;
-    private final JPanel searchResultsPanel = new JPanel();
-    private final JButton notificationButton = createNotificationButton();
+    private JButton notificationButton; // Will be initialized in constructor
     private int notificationCount = 0;
 
 
@@ -39,189 +33,300 @@ public class MainView extends BaseView {
         this.newsController = newsController;
         this.navigationController = navigationController;
         this.searchController = searchController;
-        this.searchViewModel = searchViewModel;
+        // Note: searchViewModel parameter is kept for API compatibility but not stored
 
-        JPanel contentPanel = createGradientContentPanel();
-        this.add(contentPanel, BorderLayout.CENTER);
-
-        JPanel topPanel = createTopPanel();
-        contentPanel.add(topPanel, BorderLayout.NORTH);
-
-        JPanel centerPanel = createCenterPanel();
-        contentPanel.add(centerPanel, BorderLayout.CENTER);
-
-        // Add bottom panel with notification button
-        JPanel bottomPanel = createBottomPanel();
-        contentPanel.add(bottomPanel, BorderLayout.SOUTH);
+        // Use modern layout similar to Login/Signup views
+        setLayout(new GridBagLayout());
+        setBackground(UiConstants.PRIMARY_COLOUR);
+        
+        // Create main light gray panel
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(new Color(245, 245, 245)); // Light gray instead of white
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        
+        GridBagConstraints mainGbc = new GridBagConstraints();
+        mainGbc.insets = new Insets(10, 10, 10, 10);
+        mainGbc.fill = GridBagConstraints.BOTH;
+        mainGbc.anchor = GridBagConstraints.CENTER;
+        mainGbc.weightx = 1.0;
+        
+        // Add components to main panel
+        JPanel topSection = createTopSection();
+        mainGbc.gridx = 0;
+        mainGbc.gridy = 0;
+        mainGbc.gridwidth = 1;
+        mainPanel.add(topSection, mainGbc);
+        
+        mainGbc.gridy++;
+        mainPanel.add(Box.createVerticalStrut(30), mainGbc);
+        
+        JPanel centerSection = createCenterSection();
+        mainGbc.gridy++;
+        mainPanel.add(centerSection, mainGbc);
+        
+        mainGbc.gridy++;
+        mainPanel.add(Box.createVerticalStrut(20), mainGbc);
+        
+        // Add notification bell directly to bottom left
+        JButton notificationBell = createModernNotificationButton();
+        GridBagConstraints bellGbc = new GridBagConstraints();
+        bellGbc.gridx = 0;
+        bellGbc.gridy = mainGbc.gridy + 1;
+        bellGbc.anchor = GridBagConstraints.SOUTHWEST;
+        bellGbc.insets = new Insets(10, 10, 10, 10);
+        bellGbc.weightx = 1.0;
+        bellGbc.weighty = 1.0;
+        mainPanel.add(notificationBell, bellGbc);
+        
+        // Add main panel to a scroll pane for overflow handling
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setBackground(UiConstants.PRIMARY_COLOUR);
+        scrollPane.getViewport().setBackground(UiConstants.PRIMARY_COLOUR);
+        scrollPane.setBorder(null);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        
+        // Add scroll pane to view with proper resizing
+        GridBagConstraints viewGbc = new GridBagConstraints();
+        viewGbc.fill = GridBagConstraints.BOTH;
+        viewGbc.weightx = 1.0;
+        viewGbc.weighty = 1.0;
+        this.add(scrollPane, viewGbc);
     }
 
-    private JPanel createTopPanel() {
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setOpaque(false);
-        // Welcome
-        JButton settingsButton = new JButton();
-        settingsButton.setToolTipText("Settings");
-        settingsButton.setContentAreaFilled(false);
-        settingsButton.setBorderPainted(false);
-        settingsButton.setFocusPainted(false);
-        settingsButton.setPreferredSize(UiConstants.PREFERRED_MINI_BUTTON_DIM);
-        JPanel welcomePanel = PanelFactory.createTitlePanel("Welcome to Fundi!");
-        welcomePanel.add(settingsButton);
+    private JPanel createTopSection() {
+        JPanel topSection = new JPanel(new GridBagLayout());
+        topSection.setBackground(new Color(245, 245, 245)); // Light gray instead of white
+        topSection.setOpaque(true);
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.CENTER;
 
-        // Search and Username
+        // Welcome title with modern styling
+        JLabel welcomeTitle = new JLabel("Welcome to Fundi!");
+        welcomeTitle.setFont(new Font("SansSerif", Font.BOLD, 28));
+        welcomeTitle.setForeground(UiConstants.PRIMARY_COLOUR);
+        welcomeTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        topSection.add(welcomeTitle, gbc);
 
+        gbc.gridy++;
+        topSection.add(Box.createVerticalStrut(20), gbc);
+
+        // Username display with modern styling
         JLabel usernameLabel = new JLabel();
-        usernameLabel.setFont(UiConstants.NORMAL_FONT);
-        usernameLabel.setForeground(Color.WHITE);
+        usernameLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        usernameLabel.setForeground(Color.DARK_GRAY);
+        usernameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.mainViewModel.addPropertyChangeListener(evt -> {
             MainState mainState = mainViewModel.getState();
             usernameLabel.setText("Logged in as: " + mainState.getUsername());
         });
-        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        gbc.gridy++;
+        topSection.add(usernameLabel, gbc);
 
-        JButton searchButton = ButtonFactory.createStyledButton("Search");
-        JTextField searchField = FieldFactory.createTextField();
-        JPanel searchPanel = PanelFactory.createSingleFieldForm(searchField, searchButton);
+        gbc.gridy++;
+        topSection.add(Box.createVerticalStrut(15), gbc);
 
-        JPanel centerStack = new JPanel();
-        centerStack.setLayout(new BoxLayout(centerStack, BoxLayout.Y_AXIS));
-        centerStack.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerStack.setOpaque(false);
-        centerStack.add(searchPanel);
-        centerStack.add(UiConstants.smallVerticalGap());
-        centerStack.add(usernameLabel);
+        // Search section with modern styling
+        JPanel searchPanel = createModernSearchPanel();
+        gbc.gridy++;
+        topSection.add(searchPanel, gbc);
 
-        JPanel centerRow = new JPanel();
-        centerRow.setLayout(new BoxLayout(centerRow, BoxLayout.X_AXIS));
-        centerRow.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerRow.setOpaque(false);
-        centerRow.add(Box.createHorizontalGlue());
-        centerRow.add(centerStack);
-        centerRow.add(Box.createHorizontalGlue());
+        return topSection;
+    }
 
-        topPanel.add(welcomePanel);
-        topPanel.add(UiConstants.mediumVerticalGap());
-        topPanel.add(centerRow);
+    private JPanel createModernSearchPanel() {
+        JPanel searchPanel = new JPanel(new GridBagLayout());
+        searchPanel.setBackground(new Color(245, 245, 245)); // Light gray instead of white
+        searchPanel.setOpaque(true);
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
+        // Search field with modern styling
+        JTextField searchField = new JTextField();
+        searchField.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        searchField.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+            BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+        searchField.setBackground(Color.WHITE);
+        searchField.setMinimumSize(new Dimension(200, 36));
+        searchField.setPreferredSize(new Dimension(250, 36));
+        
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        searchPanel.add(searchField, gbc);
+
+        // Search button with modern styling
+        JButton searchButton = ButtonFactory.createPrimaryButton("Search");
+        searchButton.setPreferredSize(new Dimension(80, 36));
+        gbc.gridx = 1;
+        gbc.weightx = 0.0;
+        gbc.insets = new Insets(5, 10, 5, 5);
+        searchPanel.add(searchButton, gbc);
+
+        // Wire up search functionality
         Runnable doSearch = () -> {
             String query = searchField.getText();
             if (!query.isEmpty()) {
-                this.searchController.execute(query); // <-- Call the use case
-            }
-
-            else {
+                this.searchController.execute(query);
+            } else {
                 JOptionPane.showMessageDialog(this, "Please enter a search query.");
             }
         };
         searchButton.addActionListener(evt -> doSearch.run());
         searchField.addActionListener(evt -> doSearch.run());
-        searchButton.addActionListener(evt -> doSearch.run());
-        searchField.addActionListener(evt -> doSearch.run());
 
-        return topPanel;
+        return searchPanel;
     }
 
-    private JPanel createCenterPanel() {
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setOpaque(false);
+    private JPanel createCenterSection() {
+        JPanel centerSection = new JPanel(new GridBagLayout());
+        centerSection.setBackground(new Color(245, 245, 245)); // Light gray instead of white
+        centerSection.setOpaque(true);
+        
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.CENTER;
 
+        // Prompt label with modern styling
         JLabel promptLabel = new JLabel("What would you like to look at?");
-        promptLabel.setFont(UiConstants.NORMAL_FONT);
-        promptLabel.setForeground(Color.WHITE);
-        promptLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        promptLabel.setFont(new Font("SansSerif", Font.PLAIN, 18));
+        promptLabel.setForeground(Color.DARK_GRAY);
+        promptLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        centerSection.add(promptLabel, gbc);
 
-        JPanel buttonPanel = new JPanel(UiConstants.BUTTON_LAYOUT);
-        buttonPanel.setMaximumSize(UiConstants.BUTTON_PANEL_DIM);
-        buttonPanel.setOpaque(false);
+        gbc.gridy++;
+        centerSection.add(Box.createVerticalStrut(20), gbc);
 
+        // Create modern button grid
         String[] useCases = { "Portfolios", "News", "Watchlist", "Leaderboard" };
+        
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+        
+        int col = 0;
+        int row = 2; // Start after prompt and spacing
+        
         for (String useCase : useCases) {
-            JButton useCaseButton = new JButton(useCase);
-            useCaseButton.setFont(UiConstants.NORMAL_FONT);
-            useCaseButton.setBackground(UiConstants.PRIMARY_COLOUR);
-            useCaseButton.setForeground(Color.WHITE);
-            useCaseButton.setFocusPainted(false);
-            useCaseButton.setBorder(UiConstants.EMPTY_BORDER);
-
-            useCaseButton.addActionListener(evt -> {
-                MainState mainState = mainViewModel.getState();
-                mainState.setUseCase(useCase);
-                mainViewModel.setState(mainState);
-                this.navigationController.navigateTo(mainViewModel.getViewName(), useCase.toLowerCase());
-                switch (useCase) {
-                    case "Portfolios" -> this.portfolioHubController.execute(mainState.getUsername());
-                    case "News" -> this.newsController.execute(mainState.getUsername());
-
-                }
-            });
-
-            buttonPanel.add(useCaseButton);
+            JButton useCaseButton = createModernUseCaseButton(useCase);
+            
+            gbc.gridx = col;
+            gbc.gridy = row;
+            centerSection.add(useCaseButton, gbc);
+            
+            col++;
+            if (col >= 2) { // Two buttons per row
+                col = 0;
+                row++;
+            }
         }
 
-        centerPanel.add(promptLabel);
-        centerPanel.add(Box.createVerticalStrut(10));
-        centerPanel.add(buttonPanel);
-
-        return centerPanel;
+        return centerSection;
     }
 
-    // Add this method to create the notification button
-    private JButton createNotificationButton() {
-        JButton button = new JButton();
-        button.setLayout(new BorderLayout());
-
-        // Create the main button
-        JLabel iconLabel = new JLabel("🔔"); // Bell emoji as icon
-        iconLabel.setFont(UiConstants.NORMAL_FONT);
-        button.add(iconLabel, BorderLayout.CENTER);
-
-        // Create notification badge
-        JLabel badge = new JLabel("0");
-        badge.setFont(UiConstants.SMALL_FONT);
-        badge.setForeground(Color.WHITE);
-        badge.setBackground(Color.RED); // Red color
-        badge.setOpaque(true);
-        badge.setBorder(UiConstants.BUTTON_BORDER);
-        badge.setVisible(false); // Hidden by default
-        button.add(badge, BorderLayout.EAST);
-
-        // Style the button
-        button.setContentAreaFilled(false);
-        button.setBorderPainted(false);
+    private JButton createModernUseCaseButton(String useCase) {
+        JButton button = new JButton(useCase);
+        button.setFont(new Font("SansSerif", Font.BOLD, 16));
+        button.setBackground(UiConstants.PRIMARY_COLOUR);
+        button.setForeground(Color.WHITE);
         button.setFocusPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        // Add hover effect
-        button.addMouseListener(new MouseAdapter() {
+        button.setBorder(BorderFactory.createEmptyBorder(15, 25, 15, 25));
+        button.setPreferredSize(new Dimension(140, 50));
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        
+        // Add hover effects
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
-            public void mouseEntered(MouseEvent e) {
-                button.setContentAreaFilled(true);
-                button.setBackground(new Color(40, 70, 130, 50));
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                button.setBackground(UiConstants.PRESSED_COLOUR);
             }
 
             @Override
-            public void mouseExited(MouseEvent e) {
-                button.setContentAreaFilled(false);
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                button.setBackground(UiConstants.PRIMARY_COLOUR);
+            }
+        });
+
+        // Wire up navigation logic (keeping original functionality)
+        button.addActionListener(evt -> {
+            MainState mainState = mainViewModel.getState();
+            mainState.setUseCase(useCase);
+            mainViewModel.setState(mainState);
+            this.navigationController.navigateTo(mainViewModel.getViewName(), useCase.toLowerCase());
+            switch (useCase) {
+                case "Portfolios" -> this.portfolioHubController.execute(mainState.getUsername());
+                case "News" -> this.newsController.execute(mainState.getUsername());
+                case "Watchlist" -> {
+                    // Defer data fetching until Watchlist is clicked
+                    // No-op here; Watchlist view will load data on show
+                }
             }
         });
 
         return button;
     }
 
-    // Modify the existing createBottomPanel method or add it if it doesn't exist
-    private JPanel createBottomPanel() {
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setOpaque(false);
+    // Removed createBottomSection; notification bell is now added directly to mainPanel
 
-        // Create notification button panel
-        JPanel notificationPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        notificationPanel.setOpaque(false);
-        notificationPanel.add(notificationButton);
+    private JButton createModernNotificationButton() {
+        JButton button = new JButton();
+        button.setLayout(new BorderLayout());
+        button.setBackground(Color.WHITE);
+        button.setBorder(BorderFactory.createCompoundBorder(
+            BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+            BorderFactory.createEmptyBorder(8, 12, 8, 12)
+        ));
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
+        
+        // Create the main button content
+        JLabel iconLabel = new JLabel("🔔"); // Bell emoji as icon
+        iconLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
+        iconLabel.setForeground(UiConstants.PRIMARY_COLOUR);
+        button.add(iconLabel, BorderLayout.CENTER);
 
-        bottomPanel.add(notificationPanel, BorderLayout.EAST);
-        return bottomPanel;
+        // Create notification badge (modern styling)
+        JLabel badge = new JLabel("0");
+        badge.setFont(new Font("SansSerif", Font.BOLD, 11));
+        badge.setForeground(Color.WHITE);
+        badge.setBackground(Color.RED);
+        badge.setOpaque(true);
+        badge.setBorder(BorderFactory.createEmptyBorder(2, 6, 2, 6));
+        badge.setVisible(false); // Hidden by default
+        button.add(badge, BorderLayout.EAST);
+
+        // Add modern hover effect
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                button.setBackground(new Color(245, 245, 245));
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                button.setBackground(Color.WHITE);
+            }
+        });
+        
+        // Update the instance variable to point to this modern button
+        // so the increment/clear methods still work
+        this.notificationButton = button;
+
+        return button;
     }
 
     // Add methods to control notifications

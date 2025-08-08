@@ -24,8 +24,9 @@ public class SignupView extends BaseView implements PropertyChangeListener {
     private final JTextField usernameField = FieldFactory.createTextField();
     private final JPasswordField passwordField = FieldFactory.createPasswordField();
     private final JPasswordField confirmPasswordField = FieldFactory.createPasswordField();
-    private final JButton loginButton = ButtonFactory.createStyledButton("Login");
-    private final JButton signUpButton = ButtonFactory.createStyledButton("Sign Up");
+    private final JButton signUpButton = ButtonFactory.createPrimaryButton("Sign up");
+    private final JButton loginButton = ButtonFactory.createLinkButton("Already have an account?");
+    private final JLabel errorLabel = new JLabel();
 
     public SignupView(SignupViewModel signupViewModel, SignupController signupController) {
         super("signup");
@@ -33,77 +34,93 @@ public class SignupView extends BaseView implements PropertyChangeListener {
         this.signupController = signupController;
         signupViewModel.addPropertyChangeListener(this);
 
-        JPanel contentPanel = createGradientContentPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        setLayout(new GridBagLayout());
+        setBackground(UiConstants.PRIMARY_COLOUR);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        JPanel titlePanel = PanelFactory.createTitlePanel("Signup Screen");
-        JPanel formPanel = createFormPanel();
-        JPanel buttonPanel = ButtonFactory.createButtonPanel(signUpButton, loginButton);
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(Color.WHITE);
+        panel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
 
-        contentPanel.add(Box.createVerticalGlue());
-        contentPanel.add(titlePanel);
-        contentPanel.add(UiConstants.bigVerticalGap());
-        contentPanel.add(formPanel);
-        contentPanel.add(UiConstants.mediumVerticalGap());
-        contentPanel.add(buttonPanel);
-        contentPanel.add(Box.createVerticalGlue());
+        JLabel titleLabel = new JLabel("Sign up");
+        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
+        titleLabel.setForeground(UiConstants.PRIMARY_COLOUR);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        panel.add(titleLabel, gbc);
 
-        this.add(contentPanel, BorderLayout.CENTER);
+        gbc.gridy++;
+        panel.add(Box.createVerticalStrut(20), gbc);
 
+        gbc.gridy++;
+        panel.add(createFieldPanel("Username", usernameField), gbc);
+
+        gbc.gridy++;
+        panel.add(createFieldPanel("Password", passwordField), gbc);
+
+        gbc.gridy++;
+        panel.add(createFieldPanel("Confirm Password", confirmPasswordField), gbc);
+
+        gbc.gridy++;
+        errorLabel.setForeground(Color.RED);
+        errorLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        errorLabel.setVisible(false);
+        panel.add(errorLabel, gbc);
+
+        gbc.gridy++;
+        signUpButton.setPreferredSize(new Dimension(0, 40));
+        signUpButton.setBackground(UiConstants.PRIMARY_COLOUR);
+        signUpButton.setForeground(Color.WHITE);
+        signUpButton.setFont(new Font("SansSerif", Font.BOLD, 16));
+        panel.add(signUpButton, gbc);
+
+        gbc.gridy++;
+        panel.add(loginButton, gbc);
+
+        add(panel);
         wireListeners();
     }
 
-
     private JPanel createFormPanel() {
-        JPanel form = new JPanel();
-        form.setOpaque(false);
-        form.setLayout(new BoxLayout(form, BoxLayout.Y_AXIS));
-
-        JPanel usernameInfo = PanelFactory.createFormPanel("Username", usernameField);
-        JPanel passwordInfo = PanelFactory.createFormPanel("Password", passwordField);
-        JPanel confirmPasswordInfo = PanelFactory.createFormPanel("Confirm", confirmPasswordField);
-
-        form.add(usernameInfo);
-        form.add(UiConstants.mediumVerticalGap());
-        form.add(passwordInfo);
-        form.add(UiConstants.mediumVerticalGap());
-        form.add(confirmPasswordInfo);
-
-        return form;
+        // No longer used; replaced by createFieldPanel for modern layout
+        return null;
     }
 
     private void wireListeners() {
         signUpButton.addActionListener(evt -> {
             SignupState signupState = signupViewModel.getState();
-            signupController.execute(signupState.getUsername(), signupState.getPassword(),
-                    signupState.getRepeatPassword());
+            signupController.execute(usernameField.getText(), new String(passwordField.getPassword()),
+                    new String(confirmPasswordField.getPassword()));
         });
 
         loginButton.addActionListener(evt -> signupController.switchToLoginView());
 
         usernameField.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyTyped(KeyEvent e) {
+            public void keyReleased(KeyEvent e) {
                 SignupState signupState = signupViewModel.getState();
-                signupState.setUsername(usernameField.getText() + e.getKeyChar());
+                signupState.setUsername(usernameField.getText());
                 signupViewModel.setState(signupState);
             }
         });
 
         passwordField.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyTyped(KeyEvent e) {
+            public void keyReleased(KeyEvent e) {
                 SignupState signupState = signupViewModel.getState();
-                signupState.setPassword(new String(passwordField.getPassword()) + e.getKeyChar());
+                signupState.setPassword(new String(passwordField.getPassword()));
                 signupViewModel.setState(signupState);
             }
         });
 
         confirmPasswordField.addKeyListener(new KeyAdapter() {
             @Override
-            public void keyTyped(KeyEvent e) {
+            public void keyReleased(KeyEvent e) {
                 SignupState signupState = signupViewModel.getState();
-                signupState.setRepeatPassword(new String(confirmPasswordField.getPassword()) + e.getKeyChar());
+                signupState.setRepeatPassword(new String(confirmPasswordField.getPassword()));
                 signupViewModel.setState(signupState);
             }
         });
@@ -113,11 +130,30 @@ public class SignupView extends BaseView implements PropertyChangeListener {
     public void propertyChange(PropertyChangeEvent evt) {
         SignupState state = (SignupState) evt.getNewValue();
         if (state.getUsernameError() != null) {
-            JOptionPane.showMessageDialog(this, state.getUsernameError());
+            errorLabel.setText(state.getUsernameError());
+            errorLabel.setVisible(true);
+        } else if (state.getPasswordError() != null) {
+            errorLabel.setText(state.getPasswordError());
+            errorLabel.setVisible(true);
+        } else {
+            errorLabel.setVisible(false);
         }
 
-        else if (state.getPasswordError() != null) {
-            JOptionPane.showMessageDialog(this, state.getPasswordError());
-        }
+    }
+
+    private JPanel createFieldPanel(String label, JComponent field) {
+        JPanel panel = new JPanel(new BorderLayout());
+        panel.setBackground(Color.WHITE);
+        JLabel lbl = new JLabel(label);
+        lbl.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        lbl.setForeground(Color.DARK_GRAY);
+        panel.add(lbl, BorderLayout.NORTH);
+        field.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        field.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+                new javax.swing.border.EmptyBorder(0, 8, 0, 0)));
+        field.setBackground(Color.WHITE);
+        field.setPreferredSize(new Dimension(0, 36));
+        panel.add(field, BorderLayout.CENTER);
+        return panel;
     }
 }

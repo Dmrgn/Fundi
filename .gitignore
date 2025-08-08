@@ -34,4 +34,5 @@ com/fundi/news_key.txt
 notes.txt
 data/fundi.sqlite
 *cache*
+mystyle.xml
 

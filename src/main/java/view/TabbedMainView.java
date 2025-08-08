@@ -12,8 +12,6 @@ import use_case.notifications.*;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -76,13 +74,21 @@ public class TabbedMainView extends BaseView {
         JPanel contentPanel = createGradientContentPanel();
         this.add(contentPanel, BorderLayout.CENTER);
 
+        // Ensure the content panel spans the full width and height of the Base View
+        contentPanel.setLayout(new BorderLayout());
+
         // Create tabbed pane
         tabbedPane = createTabbedPane();
         contentPanel.add(tabbedPane, BorderLayout.CENTER);
 
-        // Add notification UI to bottom-right
-        JPanel bottomPanel = createBottomPanel();
-        contentPanel.add(bottomPanel, BorderLayout.SOUTH);
+        // Add notification button to the top panel
+        JPanel rightPanel = new JPanel(new BorderLayout());
+        rightPanel.setOpaque(true);
+        rightPanel.setBackground(new Color(240, 240, 240)); // Light gray color
+
+        rightPanel.add(notificationButton, BorderLayout.NORTH);
+
+        contentPanel.add(rightPanel, BorderLayout.EAST);
 
         // Initialize with portfolios data when view is created
         mainViewModel.addPropertyChangeListener(evt -> {
@@ -95,10 +101,10 @@ public class TabbedMainView extends BaseView {
 
     private JButton createNotificationButton() {
         JButton button = new JButton("🔔");
-        button.setFont(new Font("Sans Serif", Font.PLAIN, 20));
+        button.setFont(new Font("Sans Serif", Font.PLAIN, 16));
         button.setForeground(Color.WHITE);
         button.setBackground(new Color(30, 60, 120)); // Default blue color
-        button.setPreferredSize(new Dimension(50, 50));
+        button.setPreferredSize(new Dimension(30, 32));
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(new Color(40, 70, 130), 2),
@@ -157,41 +163,6 @@ public class TabbedMainView extends BaseView {
         badge.setVisible(false); // Hidden by default
 
         return badge;
-    }
-
-    private JPanel createBottomPanel() {
-        JPanel bottomPanel = new JPanel();
-        bottomPanel.setLayout(new OverlayLayout(bottomPanel));
-        bottomPanel.setOpaque(false);
-        bottomPanel.setBorder(BorderFactory.createEmptyBorder(0, 0, 20, 20));
-
-        // Container for notification button positioned in bottom-right
-        JPanel notificationContainer = new JPanel();
-        notificationContainer.setLayout(new OverlayLayout(notificationContainer));
-        notificationContainer.setOpaque(false);
-        notificationContainer.setAlignmentX(1.0f); // Right align
-        notificationContainer.setAlignmentY(1.0f); // Bottom align
-
-        // Add button to container
-        notificationButton.setAlignmentX(0.5f);
-        notificationButton.setAlignmentY(0.5f);
-        notificationContainer.add(notificationButton);
-
-        // Position badge in top-right corner of button
-        notificationBadge.setAlignmentX(0.85f);
-        notificationBadge.setAlignmentY(0.15f);
-        notificationContainer.add(notificationBadge);
-
-        // Panel to push notification to bottom-right
-        JPanel spacerPanel = new JPanel();
-        spacerPanel.setOpaque(false);
-        spacerPanel.setAlignmentX(0.0f);
-        spacerPanel.setAlignmentY(0.0f);
-
-        bottomPanel.add(spacerPanel);
-        bottomPanel.add(notificationContainer);
-
-        return bottomPanel;
     }
 
     private void showNotificationDialog() {

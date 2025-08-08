@@ -44,7 +44,6 @@ public class Main {
                 .addNewsView()
                 .addCompanyDetailsView()
                 .addLeaderboardView()
-                .addChangePwdUseCase()
                 .addSettingsView()
                 .addTabbedMainView()
                 .build();

@@ -5,11 +5,15 @@ import java.net.HttpURLConnection;
 import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.util.*;
-
-import entity.CurrencyConverter;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
 import org.json.JSONArray;
 import org.json.JSONObject;
+
+import entity.CurrencyConverter;
 
 public class ExchangeAPIDataAccessObject {
 
@@ -50,7 +54,6 @@ public class ExchangeAPIDataAccessObject {
 
         return currencies;
     }
-
     public CurrencyConverter getConverter(String baseCurrency) {
         try {
 

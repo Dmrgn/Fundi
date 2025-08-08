@@ -1,12 +1,10 @@
 package view;
 
-import view.ui.PanelFactory;
-import view.ui.ButtonFactory;
-import view.ui.FieldFactory;
 import data_access.DBUserDataAccessObject;
 import data_access.TickerCache;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.main.MainState;
+import view.ui.UiConstants;
 
 import javax.swing.*;
 import java.awt.*;
@@ -15,6 +13,26 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.List;
+
+import org.jfree.chart.ChartFactory;
+import org.jfree.chart.ChartPanel;
+import org.jfree.chart.JFreeChart;
+import org.jfree.chart.plot.XYPlot;
+import org.jfree.data.time.Day;
+import org.jfree.data.time.TimeSeries;
+import org.jfree.data.time.TimeSeriesCollection;
+import java.awt.BasicStroke;
+
+// New imports for TwelveData clean architecture
+import interface_adapter.watchlist.TimeSeriesController;
+import interface_adapter.watchlist.TimeSeriesPresenter;
+import interface_adapter.watchlist.TimeSeriesViewModel;
+import use_case.watchlist.TimeSeriesInteractor;
+import data_access.TwelveDataAccess;
+import entity.TimeSeriesPoint;
+import org.jfree.data.time.Hour;
+import org.jfree.chart.renderer.xy.XYSplineRenderer;
+import org.jfree.chart.ui.RectangleInsets;
 
 public class WatchlistView extends BaseView implements PropertyChangeListener {
     private final DBUserDataAccessObject userDao;
@@ -26,76 +44,135 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         super("watchlist");
         this.userDao = userDao;
         this.mainViewModel = mainViewModel;
-
         this.mainViewModel.addPropertyChangeListener(this);
 
-        JPanel contentPanel = createGradientContentPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        // Header
+        JLabel titleLabel = new JLabel("Watchlist");
+        titleLabel.setFont(UiConstants.Fonts.TITLE);
+        titleLabel.setForeground(UiConstants.Colors.ON_PRIMARY);
+        JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
+        headerLeft.setOpaque(false);
+        headerLeft.add(titleLabel);
+        header.add(headerLeft, BorderLayout.WEST);
 
-        this.add(contentPanel, BorderLayout.CENTER);
+        // Main content panel
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setBackground(UiConstants.Colors.CANVAS_BG);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL));
 
-        // Title
-        contentPanel.add(PanelFactory.createTitlePanel("Watchlist"));
-        contentPanel.add(Box.createVerticalStrut(30));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
+        gbc.fill = GridBagConstraints.BOTH;
+        gbc.anchor = GridBagConstraints.CENTER;
+        gbc.weightx = 1.0;
 
+        // Description
         JLabel descriptionLabel = new JLabel("Track your favorite stocks and monitor their performance.");
-        descriptionLabel.setFont(new Font("Sans Serif", Font.PLAIN, 14));
-        descriptionLabel.setForeground(new Color(200, 200, 200));
-        descriptionLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        descriptionLabel.setFont(UiConstants.Fonts.BODY);
+        descriptionLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+        descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
-        contentPanel.add(Box.createVerticalStrut(10));
-        contentPanel.add(descriptionLabel);
-        contentPanel.add(Box.createVerticalStrut(20));
+        // Add ticker section
+        JPanel addTickerSection = createModernAddTickerPanel();
 
-        // Add ticker input section
-        JPanel addTickerPanel = createAddTickerPanel();
-        contentPanel.add(addTickerPanel);
-        contentPanel.add(Box.createVerticalStrut(20));
+        // Watchlist display section
+        JPanel watchlistSection = createModernWatchlistPanel();
 
-        // Watchlist display panel
-        watchlistPanel = new JPanel();
-        watchlistPanel.setLayout(new BoxLayout(watchlistPanel, BoxLayout.Y_AXIS));
-        watchlistPanel.setOpaque(false);
+        // Layout rows
+        int row = 0;
+        gbc.gridx = 0;
+        gbc.gridy = row++;
+        gbc.gridwidth = 1;
+        gbc.weighty = 0;
+        mainPanel.add(descriptionLabel, gbc);
+        gbc.gridy = row++;
+        mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.XL), gbc);
+        gbc.gridy = row++;
+        mainPanel.add(addTickerSection, gbc);
+        gbc.gridy = row++;
+        mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.LG), gbc);
+        gbc.gridy = row++;
+        gbc.weighty = 1.0;
+        mainPanel.add(watchlistSection, gbc);
 
-        JScrollPane scrollPane = new JScrollPane(watchlistPanel);
-        scrollPane.setOpaque(false);
-        scrollPane.getViewport().setOpaque(false);
+        // Add to BaseView content area
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setBackground(UiConstants.Colors.CANVAS_BG);
+        scrollPane.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
         scrollPane.setBorder(null);
-        contentPanel.add(scrollPane);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        content.add(scrollPane, BorderLayout.CENTER);
 
-        contentPanel.add(Box.createVerticalGlue());
-
-        // Load initial watchlist
-        refreshWatchlist();
+        // Fetch when the view becomes visible (most up-to-date and avoids rate limit on
+        // app start)
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                refreshWatchlist();
+            }
+        });
     }
 
-    private JPanel createAddTickerPanel() {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        panel.setOpaque(false);
+    private JPanel createModernAddTickerPanel() {
+        JPanel panel = new JPanel(new GridBagLayout());
+        panel.setBackground(UiConstants.Colors.CANVAS_BG);
+        panel.setOpaque(true);
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+                BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG,
+                        UiConstants.Spacing.LG)));
 
-        tickerField = FieldFactory.createTextField();
-        tickerField.setPreferredSize(new Dimension(200, 30));
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
 
-        // Set placeholder text behavior
+        // Input field
+        tickerField = new JTextField();
+        tickerField.setFont(UiConstants.Fonts.FORM);
+        tickerField.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)));
+        tickerField.setPreferredSize(new Dimension(200, 36));
+
+        // Placeholder text behavior
         tickerField.setText("Enter ticker symbol (e.g., AAPL)");
-        tickerField.setForeground(Color.GRAY);
+        tickerField.setForeground(UiConstants.Colors.TEXT_MUTED);
         tickerField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 if (tickerField.getText().equals("Enter ticker symbol (e.g., AAPL)")) {
                     tickerField.setText("");
-                    tickerField.setForeground(Color.BLACK);
+                    tickerField.setForeground(UiConstants.Colors.TEXT_PRIMARY);
                 }
             }
 
             public void focusLost(java.awt.event.FocusEvent evt) {
                 if (tickerField.getText().isEmpty()) {
                     tickerField.setText("Enter ticker symbol (e.g., AAPL)");
-                    tickerField.setForeground(Color.GRAY);
+                    tickerField.setForeground(UiConstants.Colors.TEXT_MUTED);
                 }
             }
         });
 
-        JButton addButton = ButtonFactory.createStyledButton("Add to Watchlist");
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        panel.add(tickerField, gbc);
+
+        // Add button
+        JButton addButton = new JButton("Add to Watchlist");
+        addButton.setFont(UiConstants.Fonts.BUTTON);
+        addButton.setBackground(UiConstants.Colors.PRIMARY);
+        addButton.setForeground(UiConstants.Colors.ON_PRIMARY);
+        addButton.setFocusPainted(false);
+        addButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        addButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         addButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -103,11 +180,36 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
             }
         });
 
-        panel.add(tickerField);
-        panel.add(Box.createHorizontalStrut(10));
-        panel.add(addButton);
+        gbc.gridx = 1;
+        gbc.weightx = 0.0;
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.LG, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
+        panel.add(addButton, gbc);
 
         return panel;
+    }
+
+    private JPanel createModernWatchlistPanel() {
+        JPanel container = new JPanel(new BorderLayout());
+        container.setBackground(UiConstants.Colors.CANVAS_BG);
+        container.setOpaque(true);
+
+        // Initialize watchlist panel
+        watchlistPanel = new JPanel();
+        watchlistPanel.setLayout(new BoxLayout(watchlistPanel, BoxLayout.Y_AXIS));
+        watchlistPanel.setBackground(UiConstants.Colors.CANVAS_BG);
+        watchlistPanel.setOpaque(true);
+
+        JScrollPane scrollPane = new JScrollPane(watchlistPanel);
+        scrollPane.setBackground(UiConstants.Colors.CANVAS_BG);
+        scrollPane.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
+        scrollPane.setBorder(BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1));
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+
+        container.add(scrollPane, BorderLayout.CENTER);
+
+        return container;
     }
 
     private void addTicker() {
@@ -140,7 +242,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         try {
             userDao.addToWatchlist(username, ticker);
             tickerField.setText("Enter ticker symbol (e.g., AAPL)");
-            tickerField.setForeground(Color.GRAY);
+            tickerField.setForeground(UiConstants.Colors.TEXT_MUTED);
             refreshWatchlist();
             JOptionPane.showMessageDialog(this, ticker + " added to watchlist", "Success",
                     JOptionPane.INFORMATION_MESSAGE);
@@ -177,7 +279,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         if (mainState == null || mainState.getUsername() == null || mainState.getUsername().isEmpty()) {
             JLabel noUserLabel = new JLabel("Please log in to view your watchlist.");
             noUserLabel.setFont(new Font("Sans Serif", Font.ITALIC, 14));
-            noUserLabel.setForeground(new Color(150, 150, 150));
+            noUserLabel.setForeground(UiConstants.Colors.TEXT_MUTED);
             noUserLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             watchlistPanel.add(noUserLabel);
             watchlistPanel.revalidate();
@@ -193,7 +295,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
             if (watchlist.isEmpty()) {
                 JLabel emptyLabel = new JLabel("Your watchlist is empty. Add some tickers above!");
                 emptyLabel.setFont(new Font("Sans Serif", Font.ITALIC, 14));
-                emptyLabel.setForeground(new Color(150, 150, 150));
+                emptyLabel.setForeground(UiConstants.Colors.TEXT_MUTED);
                 emptyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 watchlistPanel.add(emptyLabel);
             } else {
@@ -206,7 +308,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         } catch (Exception e) {
             JLabel errorLabel = new JLabel("Error loading watchlist: " + e.getMessage());
             errorLabel.setFont(new Font("Sans Serif", Font.PLAIN, 14));
-            errorLabel.setForeground(Color.RED);
+            errorLabel.setForeground(UiConstants.Colors.DANGER);
             errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             watchlistPanel.add(errorLabel);
         }
@@ -216,31 +318,249 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
     }
 
     private JPanel createTickerPanel(String ticker) {
+        String apiTicker = ticker == null ? "" : ticker.trim().toUpperCase();
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setOpaque(false);
-        panel.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
+        panel.setBackground(UiConstants.Colors.CANVAS_BG);
+        panel.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+                BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.XL, UiConstants.Spacing.LG,
+                        UiConstants.Spacing.XL)));
 
-        JLabel tickerLabel = new JLabel(ticker);
-        tickerLabel.setFont(new Font("Sans Serif", Font.BOLD, 16));
-        tickerLabel.setForeground(Color.WHITE);
+        // Left: Ticker label and range selector
+        JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
+        left.setOpaque(false);
+        JLabel tickerLabel = new JLabel(apiTicker);
+        tickerLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
+        tickerLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+        JComboBox<String> range = new JComboBox<>(new String[] { "1W", "1M", "3M", "6M", "1Y" });
+        range.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        JLabel changeLabel = new JLabel("");
+        changeLabel.setFont(new Font("SansSerif", Font.BOLD, 12));
+        left.add(tickerLabel);
+        left.add(range);
+        left.add(changeLabel);
 
-        JButton removeButton = ButtonFactory.createStyledButton("Remove");
+        // Center: chart holder + error label
+        JPanel chartHolder = new JPanel(new BorderLayout());
+        chartHolder.setOpaque(false);
+        chartHolder.setPreferredSize(UiConstants.Sizes.CHART_PANEL_WIDE);
+        chartHolder.setMinimumSize(new Dimension(360, 160));
+        chartHolder.setMaximumSize(new Dimension(Integer.MAX_VALUE, 220));
+        JLabel errorLabel = new JLabel("");
+        errorLabel.setFont(new Font("SansSerif", Font.ITALIC, 13));
+        errorLabel.setForeground(UiConstants.Colors.DANGER);
+        errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        chartHolder.add(errorLabel, BorderLayout.SOUTH);
+
+        // Store labels for updates
+        chartHolder.putClientProperty("ts_tickerLabel", tickerLabel);
+        chartHolder.putClientProperty("ts_changeLabel", changeLabel);
+
+        // Wire per-ticker MVC for TwelveData
+        ensureTickerController(apiTicker, chartHolder, errorLabel);
+        // Initial load async (1W)
+        loadTickerChart(apiTicker, "1W", chartHolder, errorLabel);
+
+        // Right: Remove
+        JButton removeButton = new JButton("Remove");
+        removeButton.setFont(new Font("SansSerif", Font.PLAIN, 12));
+        removeButton.setBackground(UiConstants.Colors.DANGER);
+        removeButton.setForeground(UiConstants.Colors.ON_PRIMARY);
+        removeButton.setFocusPainted(false);
+        removeButton.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
+        removeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         removeButton.addActionListener(e -> removeTicker(ticker));
+        removeButton.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent evt) {
+                removeButton.setBackground(UiConstants.Colors.DANGER.darker());
+            }
 
-        panel.add(tickerLabel, BorderLayout.WEST);
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent evt) {
+                removeButton.setBackground(UiConstants.Colors.DANGER);
+            }
+        });
+
+        panel.add(left, BorderLayout.WEST);
+        panel.add(chartHolder, BorderLayout.CENTER);
         panel.add(removeButton, BorderLayout.EAST);
 
-        // Add a subtle border
-        panel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(100, 100, 100), 1),
-                BorderFactory.createEmptyBorder(10, 20, 10, 20)));
+        // Range change -> async reload
+        range.addActionListener(ev -> {
+            String sel = (String) range.getSelectedItem();
+            loadTickerChart(apiTicker, sel, chartHolder, errorLabel);
+        });
 
+        return panel;
+    }
+
+    // Build/ensure one controller+vm per chart holder; presenter updates VM; view
+    // listens to VM
+    private TimeSeriesController ensureTickerController(String ticker, JPanel chartHolder, JLabel errorLabel) {
+        Object existing = chartHolder.getClientProperty("ts_controller");
+        if (existing instanceof TimeSeriesController) {
+            return (TimeSeriesController) existing;
+        }
+        TimeSeriesViewModel vm = new TimeSeriesViewModel();
+        TimeSeriesPresenter presenter = new TimeSeriesPresenter(vm);
+        TimeSeriesInteractor interactor = new TimeSeriesInteractor(new TwelveDataAccess(), presenter);
+        TimeSeriesController controller = new TimeSeriesController(interactor);
+
+        vm.addPropertyChangeListener(evt -> {
+            if (!TimeSeriesViewModel.PROP_UPDATE.equals(evt.getPropertyName()))
+                return;
+            String sym = vm.getSymbol();
+            List<TimeSeriesPoint> pts = vm.getPoints();
+            String err = vm.getError();
+            String range = vm.getRange();
+            SwingUtilities.invokeLater(() -> {
+                chartHolder.removeAll();
+                JLabel tLabel = (JLabel) chartHolder.getClientProperty("ts_tickerLabel");
+                JLabel cLabel = (JLabel) chartHolder.getClientProperty("ts_changeLabel");
+                if (err != null && !err.isBlank()) {
+                    if (tLabel != null)
+                        tLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+                    if (cLabel != null) {
+                        cLabel.setText("");
+                        cLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+                    }
+                    errorLabel.setText(err);
+                    chartHolder.add(buildEmptyChartPanel(), BorderLayout.CENTER);
+                    chartHolder.add(errorLabel, BorderLayout.SOUTH);
+                } else if (pts == null || pts.isEmpty()) {
+                    if (tLabel != null)
+                        tLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+                    if (cLabel != null) {
+                        cLabel.setText("No data");
+                        cLabel.setForeground(UiConstants.Colors.TEXT_MUTED);
+                    }
+                    errorLabel.setText("No data for this range");
+                    chartHolder.add(buildEmptyChartPanel(), BorderLayout.CENTER);
+                    chartHolder.add(errorLabel, BorderLayout.SOUTH);
+                } else {
+                    double first = pts.get(0).getClose();
+                    double last = pts.get(pts.size() - 1).getClose();
+                    double change = last - first;
+                    double pct = first != 0.0 ? (change / first) * 100.0 : 0.0;
+                    boolean up = last >= first;
+                    Color upColor = UiConstants.Colors.SUCCESS;
+                    Color downColor = UiConstants.Colors.DANGER;
+                    if (tLabel != null)
+                        tLabel.setForeground(up ? upColor : downColor);
+                    if (cLabel != null) {
+                        cLabel.setText(String.format((up ? "+%.2f%%" : "%.2f%%"), pct));
+                        cLabel.setForeground(up ? upColor : downColor);
+                        cLabel.setToolTipText(String.format("Change: %s%.2f (%.2f%%)", up ? "+" : "-", Math.abs(change),
+                                Math.abs(pct)));
+                    }
+                    errorLabel.setText("");
+                    ChartPanel panel = buildChartPanelFromPoints(sym, pts, range);
+                    chartHolder.add(panel, BorderLayout.CENTER);
+                    chartHolder.add(errorLabel, BorderLayout.SOUTH);
+                }
+                chartHolder.revalidate();
+                chartHolder.repaint();
+            });
+        });
+
+        chartHolder.putClientProperty("ts_vm", vm);
+        chartHolder.putClientProperty("ts_controller", controller);
+        return controller;
+    }
+
+    private void loadTickerChart(String ticker, String range, JPanel chartHolder, JLabel errorLabel) {
+        // Show loading state
+        errorLabel.setText("");
+        chartHolder.removeAll();
+        JLabel loading = new JLabel("Loading...", SwingConstants.CENTER);
+        loading.setForeground(UiConstants.Colors.TEXT_MUTED);
+        chartHolder.add(loading, BorderLayout.CENTER);
+        chartHolder.add(errorLabel, BorderLayout.SOUTH);
+        chartHolder.revalidate();
+        chartHolder.repaint();
+
+        TimeSeriesController controller = ensureTickerController(ticker, chartHolder, errorLabel);
+        controller.fetch(ticker, range);
+    }
+
+    private ChartPanel buildChartPanelFromPoints(String ticker, List<TimeSeriesPoint> points, String range) {
+        TimeSeries series = new TimeSeries(ticker);
+        if (points != null) {
+            boolean hourly = "1W".equalsIgnoreCase(range);
+            for (TimeSeriesPoint p : points) {
+                java.util.Date d = new java.util.Date(p.getEpochMillis());
+                if (hourly) {
+                    series.addOrUpdate(new Hour(d), p.getClose());
+                } else {
+                    series.addOrUpdate(new Day(d), p.getClose());
+                }
+            }
+        }
+        return buildChartPanelFromSeries(series);
+    }
+
+    private ChartPanel buildChartPanelFromSeries(TimeSeries series) {
+        TimeSeriesCollection dataset = new TimeSeriesCollection();
+        if (series != null)
+            dataset.addSeries(series);
+        JFreeChart chart = ChartFactory.createTimeSeriesChart("", "", "", dataset, false, false, false);
+        chart.setBackgroundPaint(Color.WHITE);
+        chart.setAntiAlias(true);
+        XYPlot plot = chart.getXYPlot();
+        plot.setBackgroundPaint(UiConstants.Colors.SURFACE_BG);
+        plot.setDomainGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHT);
+        plot.setRangeGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHT);
+        plot.setAxisOffset(new RectangleInsets(2, 2, 2, 2));
+
+        // Smooth spline renderer
+        XYSplineRenderer renderer = new XYSplineRenderer();
+        renderer.setPrecision(5);
+        renderer.setSeriesStroke(0, new BasicStroke(2.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
+
+        // Color green/red based on trend
+        Color lineColor = new Color(30, 120, 180);
+        if (series != null && series.getItemCount() >= 2) {
+            double first = series.getValue(0).doubleValue();
+            double last = series.getValue(series.getItemCount() - 1).doubleValue();
+            if (Double.isFinite(first) && Double.isFinite(last)) {
+                if (last >= first)
+                    lineColor = UiConstants.Colors.SUCCESS;
+                else
+                    lineColor = UiConstants.Colors.DANGER;
+            }
+        }
+        renderer.setSeriesPaint(0, lineColor);
+        plot.setRenderer(renderer);
+
+        ChartPanel panel = new ChartPanel(chart);
+        panel.setPreferredSize(UiConstants.Sizes.CHART_PANEL);
+        panel.setBackground(UiConstants.Colors.CANVAS_BG);
+        panel.setDomainZoomable(false);
+        panel.setRangeZoomable(false);
+        return panel;
+    }
+
+    private ChartPanel buildEmptyChartPanel() {
+        TimeSeriesCollection dataset = new TimeSeriesCollection();
+        JFreeChart chart = ChartFactory.createTimeSeriesChart("", "", "", dataset, false, false, false);
+        chart.setBackgroundPaint(Color.WHITE);
+        chart.setAntiAlias(true);
+        XYPlot plot = chart.getXYPlot();
+        plot.setBackgroundPaint(UiConstants.Colors.SURFACE_BG);
+        plot.setDomainGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHTER);
+        plot.setRangeGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHTER);
+        ChartPanel panel = new ChartPanel(chart);
+        panel.setPreferredSize(new Dimension(480, 160));
+        panel.setBackground(UiConstants.Colors.CANVAS_BG);
         return panel;
     }
 
     @Override
     public void propertyChange(PropertyChangeEvent evt) {
-        // Refresh watchlist when main state changes (e.g., user logs in/out)
-        refreshWatchlist();
+        // Only refresh if already visible, otherwise defer to componentShown
+        if (this.isShowing()) {
+            refreshWatchlist();
+        }
     }
 }

@@ -27,34 +27,26 @@ public class CreateView extends BaseView implements PropertyChangeListener {
         this.createController = createController;
         this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
         this.createViewModel.addPropertyChangeListener(this);
-        JPanel contentPanel = createGradientContentPanel();
-        setLayout(UiConstants.BORDER_LAYOUT);
-        setBorder(UiConstants.EMPTY_BORDER);
-        this.add(contentPanel, BorderLayout.CENTER);
 
-        // Add back button
-        contentPanel.add(createBackButtonPanel(evt -> {
-            backNavigationHelper.goBackToPortfolios();
-        }), BorderLayout.NORTH);
+        // Header
+        header.add(createBackButtonPanel(evt -> backNavigationHelper.goBackToPortfolios()), BorderLayout.WEST);
+        JLabel title = LabelFactory.createTitleLabel("Create Portfolio");
+        JPanel titleWrap = new JPanel();
+        titleWrap.setOpaque(false);
+        titleWrap.setLayout(new BoxLayout(titleWrap, BoxLayout.Y_AXIS));
+        titleWrap.add(title);
+        header.add(titleWrap, BorderLayout.CENTER);
 
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setOpaque(false);
-
-        JPanel welcomePanel = PanelFactory.createTitlePanel("Create Portfolio");
-        mainPanel.add(welcomePanel, BorderLayout.NORTH);
-
+        // Content
         JPanel centerPanel = new JPanel();
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setMaximumSize(UiConstants.BUTTON_PANEL_DIM);
         centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerPanel.setOpaque(false);
 
         JTextField createNameField = FieldFactory.createTextField();
         final JPanel form = PanelFactory.createFormPanel("Name: ", createNameField);
-        centerPanel.add(form, BorderLayout.CENTER);
-        mainPanel.add(centerPanel, BorderLayout.CENTER);
-        final JButton create = ButtonFactory.createStyledButton("create");
+        centerPanel.add(form);
+        final JButton create = ButtonFactory.createPrimaryButton("Create");
         create.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(create)) {
@@ -62,9 +54,11 @@ public class CreateView extends BaseView implements PropertyChangeListener {
                         this.createController.execute(currentState.getUsername(), createNameField.getText());
                     }
                 });
-        mainPanel.add(ButtonFactory.createButtonPanel(create), BorderLayout.SOUTH);
-        contentPanel.add(mainPanel, BorderLayout.CENTER);
-        add(contentPanel, BorderLayout.CENTER);
+        create.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(Box.createVerticalStrut(UiConstants.Spacing.MD));
+        centerPanel.add(create);
+
+        content.add(centerPanel, BorderLayout.NORTH);
     }
 
     @Override

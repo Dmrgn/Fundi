@@ -9,10 +9,11 @@ import interface_adapter.navigation.NavigationController;
 import view.ui.ButtonFactory;
 import view.ui.LabelFactory;
 import view.ui.FieldFactory;
-import java.awt.Desktop;
-import java.net.URI;
+import view.ui.UiConstants;
 
 public class NewsView extends BaseView {
+    private static final String SEARCH_PLACEHOLDER = "Enter stock ticker (e.g., AAPL, GOOGL)";
+
     private final NewsViewModel newsViewModel;
     private final JPanel newsPanel;
     private NewsController newsController;
@@ -27,107 +28,60 @@ public class NewsView extends BaseView {
         this.newsViewModel = newsViewModel;
         this.navigationController = navigationController;
 
-        // Create search field with placeholder
-        this.searchField = FieldFactory.createTextField();
-        this.searchField.setText("Enter stock ticker (e.g., AAPL, GOOGL)");
-        this.searchField.setForeground(Color.GRAY);
-        
-        // Add focus listeners for placeholder behavior
-        this.searchField.addFocusListener(new java.awt.event.FocusAdapter() {
-            public void focusGained(java.awt.event.FocusEvent evt) {
-                if (searchField.getText().equals("Enter stock ticker (e.g., AAPL, GOOGL)")) {
-                    searchField.setText("");
-                    searchField.setForeground(Color.BLACK);
-                }
-            }
+        // Header
+        header.add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.WEST);
+        JPanel titleWrap = new JPanel();
+        titleWrap.setOpaque(false);
+        titleWrap.setLayout(new BoxLayout(titleWrap, BoxLayout.Y_AXIS));
+        titleWrap.add(titleLabel);
+        titleWrap.add(Box.createVerticalStrut(UiConstants.Spacing.SM));
+        titleWrap.add(usernameLabel);
+        header.add(titleWrap, BorderLayout.CENTER);
 
-            public void focusLost(java.awt.event.FocusEvent evt) {
-                if (searchField.getText().isEmpty()) {
-                    searchField.setText("Enter stock ticker (e.g., AAPL, GOOGL)");
-                    searchField.setForeground(Color.GRAY);
-                }
-            }
-        });
+        // Create search field with placeholder (centralized)
+        this.searchField = FieldFactory.createSearchField(SEARCH_PLACEHOLDER);
+        this.searchButton = ButtonFactory.createPrimaryButton("Search");
 
-        this.searchButton = ButtonFactory.createStyledButton("Search");
-
-        // Create main content panel with gradient
-        JPanel contentPanel = createGradientContentPanel();
-        contentPanel.setLayout(new BorderLayout(10, 10));
-
-        // Create top container for title and search
-        JPanel topContainer = new JPanel();
-        topContainer.setLayout(new BoxLayout(topContainer, BoxLayout.Y_AXIS));
-        topContainer.setOpaque(false);
-
-        // Add title
-        topContainer.add(titleLabel);
-        topContainer.add(Box.createVerticalStrut(10));
-        topContainer.add(usernameLabel);
-
-        // Create search panel
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         searchPanel.setOpaque(false);
-
-        // Add search components to search panel
         searchPanel.add(searchField);
+        searchPanel.add(Box.createHorizontalStrut(UiConstants.Spacing.SM));
         searchPanel.add(searchButton);
 
-        // Add search panel to top container
-        topContainer.add(Box.createVerticalStrut(10));
-        topContainer.add(searchPanel);
-        topContainer.add(Box.createVerticalStrut(15));
-
-        // News content panel with styling
         newsPanel = new JPanel();
         newsPanel.setLayout(new BoxLayout(newsPanel, BoxLayout.Y_AXIS));
         newsPanel.setOpaque(false);
 
-        // Create scroll pane
         JScrollPane scrollPane = new JScrollPane(newsPanel);
         scrollPane.setBorder(BorderFactory.createEmptyBorder());
-        scrollPane.setBackground(new Color(15, 25, 55));
-        scrollPane.getViewport().setBackground(new Color(15, 25, 55));
-        scrollPane.getViewport().setOpaque(false);
-        scrollPane.setOpaque(false);
+        scrollPane.setBackground(UiConstants.Colors.CANVAS_BG);
+        scrollPane.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
 
-        // Style scroll bar
-        JScrollBar verticalBar = scrollPane.getVerticalScrollBar();
-        verticalBar.setUnitIncrement(16);
-        verticalBar.setBackground(new Color(30, 40, 80));
-        verticalBar.setForeground(new Color(60, 90, 150));
-
-        // Add components to main layout
-        contentPanel.add(topContainer, BorderLayout.NORTH);
+        JPanel contentPanel = new JPanel(new BorderLayout(10, 10));
+        contentPanel.setOpaque(false);
+        contentPanel.add(searchPanel, BorderLayout.NORTH);
         contentPanel.add(scrollPane, BorderLayout.CENTER);
+        content.add(contentPanel, BorderLayout.CENTER);
 
-        this.add(contentPanel);
-
-        // Wire up search functionality
         setupSearchListeners();
 
-        // Listen for news updates
-        newsViewModel.addPropertyChangeListener(evt -> {
-            NewsState state = newsViewModel.getState();
+        this.newsViewModel.addPropertyChangeListener(evt -> {
+            NewsState state = this.newsViewModel.getState();
             updateNewsPanel(state);
         });
     }
 
     private void setupSearchListeners() {
-        // Handle search button click
         searchButton.addActionListener(e -> performSearch());
-
-        // Handle Enter key in search field
         searchField.addActionListener(e -> performSearch());
     }
 
     private void performSearch() {
         String query = searchField.getText().trim();
-        if (!query.isEmpty() && !query.equals("Enter stock ticker (e.g., AAPL, GOOGL)") && newsController != null) {
+        if (!query.isEmpty() && !query.equals(SEARCH_PLACEHOLDER) && newsController != null) {
             newsController.executeSearch(query.toUpperCase());
-            // Reset placeholder after search
-            searchField.setText("Enter stock ticker (e.g., AAPL, GOOGL)");
-            searchField.setForeground(Color.GRAY);
+            searchField.setText(SEARCH_PLACEHOLDER);
+            searchField.setForeground(UiConstants.Colors.TEXT_MUTED);
         }
     }
 
@@ -142,25 +96,25 @@ public class NewsView extends BaseView {
             JPanel itemPanel = new JPanel();
             itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
             itemPanel.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(new Color(30, 60, 120), 1),
+                    BorderFactory.createLineBorder(UiConstants.Colors.PRIMARY, 1),
                     BorderFactory.createEmptyBorder(15, 15, 15, 15)));
-            itemPanel.setBackground(new Color(20, 30, 70));
+            itemPanel.setBackground(UiConstants.Colors.SURFACE_BG);
             itemPanel.setMaximumSize(new Dimension(800, 150));
             itemPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            JLabel titleLabel = new JLabel(title);
-            titleLabel.setForeground(Color.WHITE);
-            titleLabel.setFont(new Font("Sans Serif", Font.BOLD, 14));
+            JLabel titleLabel = new JLabel(newsItem[0]);
+            titleLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+            titleLabel.setFont(UiConstants.Fonts.HEADING);
             titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-            JTextArea descArea = new JTextArea(summary);
+            JTextArea descArea = new JTextArea(newsItem[1]);
             descArea.setWrapStyleWord(true);
             descArea.setLineWrap(true);
             descArea.setEditable(false);
-            descArea.setForeground(new Color(200, 200, 200));
-            descArea.setBackground(new Color(20, 30, 70));
+            descArea.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+            descArea.setBackground(UiConstants.Colors.SURFACE_BG);
             descArea.setBorder(BorderFactory.createEmptyBorder(5, 0, 5, 0));
-            descArea.setFont(new Font("Sans Serif", Font.PLAIN, 12));
+            descArea.setFont(UiConstants.Fonts.BODY);
             descArea.setAlignmentX(Component.LEFT_ALIGNMENT);
 
             if (url != null && !url.isBlank()) {

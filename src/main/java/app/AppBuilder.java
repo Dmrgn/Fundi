@@ -220,190 +220,205 @@ public class AppBuilder {
             System.exit(1);
             tempSearchDataAccessObject = null;
         }
-        this.searchDataAccessObject = tempSearchDataAccessObject;
-        SearchInputBoundary getMatches = new GetMatches(searchDataAccessObject, searchPresenter);
-        this.searchController = new SearchController(getMatches);
 
-        this.newsController = NewsUseCaseFactory.create(
-                viewManagerModel,
-                newsViewModel,
-                transactionDataAccessObject,
-                searchDataAccessObject);
+        public AppBuilder addChangePwdUseCase() {
+                ChangePwdOutputBoundary presenter = new ChangePwdPresenter(changePwdViewModel);
+                ChangePwdInputBoundary interactor = new ChangePwdInteractor(userDataAccessObject, presenter,
+                                mainViewModel);
+                changePwdController = new ChangePwdController(interactor, mainViewModel);
+                return this;
+        }
 
-        // Initialize dashboard controller
-        this.dashboardController = DashboardUseCaseFactory.createDashboardController(dashboardViewModel);
-        this.companyDetailsController = CompanyDetailsUseCaseFactory.create(
-                viewManagerModel, companyDetailsViewModel, navigationController);
-    }
+        public AppBuilder addSettingsView() {
+                settingsView = new SettingsView(changePwdViewModel, viewManager, loginView, dashboardController, mainViewModel);
+                settingsView.setController(changePwdController);
+                cardPanel.add(settingsView, settingsView.getViewName());
+                return this;
+        }
 
-    /**
-     * Adds the settings view to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addSettingsView() {
-        settingsView = new SettingsView(changePwdViewModel, viewManager, loginView, dashboardController,
-                mainViewModel);
-        settingsView.setController(changePwdController);
-        cardPanel.add(settingsView, settingsView.getViewName());
-        return this;
-    }
+        /**
+         * Adds the Tabbed Main View to the application.
+         *
+         * @return this builder
+         */
+        public AppBuilder addTabbedMainView() {
+                dashboardView = DashboardViewFactory.create(mainViewModel, searchController, searchViewModel,
+                                dashboardViewModel, dashboardController, navigationController,
+                                companyDetailsController);
+                final LeaderboardController tempLeaderboardController = LeaderboardUseCaseFactory
+                                .createLeaderboardController(leaderboardViewModel);
+                leaderboardView = LeaderboardViewFactory.create(leaderboardViewModel, tempLeaderboardController);
+                watchlistView = WatchlistViewFactory.create(mainViewModel,
+                                (DBUserDataAccessObject) userDataAccessObject);
+                tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfolioHubController, newsController,
+                                portfolioController, navigationController, searchController, searchViewModel,
+                                dashboardView, portfoliosView, newsView, watchlistView, leaderboardView, settingsView);
+                cardPanel.add(tabbedMainView, tabbedMainView.getViewName());
+                return this;
+        }
 
-    /**
-     * Adds the Tabbed Main View to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addTabbedMainView() throws IOException {
-        dashboardView = DashboardViewFactory.create(mainViewModel, searchController, searchViewModel,
-                dashboardViewModel, dashboardController, navigationController,
-                companyDetailsController);
-        final LeaderboardController tempLeaderboardController = LeaderboardUseCaseFactory
-                .createLeaderboardController(leaderboardViewModel);
-        this.companyDetailsController = CompanyDetailsUseCaseFactory.create(
-                viewManagerModel, companyDetailsViewModel, navigationController);
+        public AppBuilder addLoginView() {
+                loginView = LoginViewFactory.create(loginViewModel, loginController);
+                cardPanel.add(loginView, loginView.getViewName());
+                return this;
+        }
 
-        // Initialize short sell use case
-        ShortOutputBoundary shortPresenter = new ShortPresenter(viewManagerModel, shortViewModel, portfolioViewModel);
-        ShortInputBoundary shortInteractor = new ShortInteractor(
-                (ShortStockDataAccessInterface) stockDataAccessObject,
-                (ShortTransactionDataAccessInterface) transactionDataAccessObject,
-                shortPresenter);
-        this.shortController = new ShortController(shortInteractor);
+        public AppBuilder addSignupView() {
+                signupView = SignupViewFactory.create(signupViewModel, signupController);
+                cardPanel.add(signupView, signupView.getViewName());
+                return this;
+        }
 
-        tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfolioHubController, newsController,
-                portfolioController, navigationController, searchController, searchViewModel,
-                dashboardView, portfoliosView, newsView, watchlistView, leaderboardView, settingsView);
-        cardPanel.add(tabbedMainView, tabbedMainView.getViewName());
-        return this;
-    }
+        /**
+         * Adds the portfolios view to the application
+         *
+         * @return this builder
+         */
+        public AppBuilder addPortfoliosView() {
+                portfoliosView = PortfolioHubViewFactory.create(
+                                portfoliosViewModel,
+                                portfolioHubController,
+                                portfolioController,
+                                navigationController);
+                cardPanel.add(portfoliosView, portfoliosView.getViewName());
+                return this;
+        }
 
-    /**
-     * Adds the login view to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addLoginView() {
-        loginView = LoginViewFactory.create(loginViewModel, loginController);
-        cardPanel.add(loginView, loginView.getViewName());
-        return this;
-    }
+        /**
+         * Adds the create view to the application
+         *
+         * @return this builder
+         */
+        public AppBuilder addCreateView() {
+                createView = CreateViewFactory.create(
+                                createViewModel,
+                                createController,
+                                viewManagerModel);
+                cardPanel.add(createView, createView.getViewName());
+                return this;
+        }
 
-    /**
-     * Adds the signup view to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addSignupView() {
-        signupView = SignupViewFactory.create(signupViewModel, signupController);
-        cardPanel.add(signupView, signupView.getViewName());
-        return this;
-    }
+        /**
+         * Adds the portfolio view to the application
+         *
+         * @return this builder
+         */
+        public AppBuilder addPortfolioView() {
+                portfolioView = PortfolioViewFactory.create(
+                                portfolioViewModel,
+                                portfolioController,
+                                historyController,
+                                analysisController,
+                                recommendController,
+                                viewManagerModel);
+                cardPanel.add(portfolioView, portfolioView.getViewName());
+                return this;
+        }
 
-    /**
-     * Adds the portfolios view to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addPortfoliosView() {
-        portfoliosView = PortfolioHubViewFactory.create(
-                portfoliosViewModel,
-                portfolioHubController,
-                portfolioController,
-                navigationController);
-        cardPanel.add(portfoliosView, portfoliosView.getViewName());
-        return this;
-    }
+        public AppBuilder addNewsView() {
+                // You already have a searchDAO instance, reuse it.
+                // If not, create one: SearchDataAccessInterface searchDAO = new FinnhubSearchDataAccessObject();
+                newsController = NewsUseCaseFactory.create(
+                                viewManagerModel,
+                                newsViewModel,
+                                transactionDataAccessObject,
+                                searchDataAccessObject // Pass the existing search DAO
+                );
+                newsView = NewsViewFactory.create(newsViewModel, navigationController);
+                newsView.setNewsController(newsController);
+                cardPanel.add(newsView, newsView.getViewName());
+                return this;
+        }
 
-    /**
-     * Adds the create view to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addCreateView() {
-        createView = CreateViewFactory.create(
-                createViewModel,
-                createController,
-                viewManagerModel);
-        cardPanel.add(createView, createView.getViewName());
-        return this;
-    }
+        /**
+         * Adds the buy view to the application
+         *
+         * @return this builder
+         */
+        public AppBuilder addBuyView() {
+                buyView = BuyViewFactory.create(
+                                buyViewModel,
+                                buyController,
+                                navigationController);
+                cardPanel.add(buyView, buyView.getViewName());
+                return this;
+        }
 
-    /**
-     * Adds the portfolio view to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addPortfolioView() {
-        portfolioView = PortfolioViewFactory.create(
-                portfolioViewModel,
-                portfolioController,
-                historyController,
-                analysisController,
-                recommendController,
-                viewManagerModel);
-        cardPanel.add(portfolioView, portfolioView.getViewName());
-        return this;
-    }
+        public AppBuilder addSellView() {
+                sellView = SellViewFactory.create(sellViewModel, sellController, navigationController);
+                cardPanel.add(sellView, sellView.getViewName());
+                return this;
+        }
 
-    /**
-     * Adds the news view to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addNewsView() {
-        newsController = NewsUseCaseFactory.create(
-                viewManagerModel,
-                newsViewModel,
-                transactionDataAccessObject,
-                searchDataAccessObject
-        );
-        newsView = NewsViewFactory.create(newsViewModel, navigationController);
-        newsView.setNewsController(newsController);
-        cardPanel.add(newsView, newsView.getViewName());
-        return this;
-    }
+        public AppBuilder addHistoryView() {
 
-    /**
-     * Adds the buy view to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addBuyView() {
-        buyView = BuyViewFactory.create(
-                buyViewModel,
-                buyController,
-                navigationController);
-        cardPanel.add(buyView, buyView.getViewName());
-        return this;
-    }
+                historyView = HistoryViewFactory.create(
+                                historyViewModel,
+                                navigationController);
 
-    /**
-     * Adds the sell view to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addSellView() {
-        sellView = SellViewFactory.create(sellViewModel, sellController, navigationController);
-        cardPanel.add(sellView, sellView.getViewName());
-        return this;
-    }
+                cardPanel.add(historyView, historyView.getViewName());
+                return this;
+        }
 
-    /**
-     * Adds the short sell view to the application.
-     *
-     * @return this builder
-     */
-    public AppBuilder addShortView() {
-        // Initialize short use case (only once)
-        if (shortController == null) {
-            ShortOutputBoundary shortPresenter =
-                    new ShortPresenter(viewManagerModel, shortViewModel, portfolioViewModel);
-            ShortInputBoundary shortInteractor = new ShortInteractor(
-                    (ShortStockDataAccessInterface) stockDataAccessObject,
-                    (ShortTransactionDataAccessInterface) transactionDataAccessObject,
-                    shortPresenter);
-            shortController = new ShortController(shortInteractor);
+        public AppBuilder addAnalysisView() {
+
+                analysisView = AnalysisViewFactory.create(
+                                analysisViewModel,
+                                navigationController);
+                cardPanel.add(analysisView, analysisView.getViewName());
+                return this;
+        }
+
+        public AppBuilder addRecommendView() {
+
+                recommendView = RecommendViewFactory.create(
+                                recommendViewModel,
+                                recommendController,
+                                viewManagerModel);
+                cardPanel.add(recommendView, recommendView.getViewName());
+                return this;
+        }
+
+        public AppBuilder addCompanyDetailsView() {
+                companyDetailsView = CompanyDetailsViewFactory.create(
+                                companyDetailsViewModel,
+                                companyDetailsController,
+                                viewManagerModel);
+                cardPanel.add(companyDetailsView, companyDetailsView.getViewName());
+                return this;
+        }
+
+        /**
+         * Creates the JFrame for the application and initially sets the SignupView to
+         * be displayed.
+         * 
+         * @return the application
+         */
+        public JFrame build() {
+                final JFrame application = new JFrame("FUNDI");
+                application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+
+                application.add(cardPanel);
+
+                viewManagerModel.setState(signupViewModel.getViewName());
+                viewManagerModel.firePropertyChanged();
+
+                return application;
+        }
+
+        /**
+         * Adds the Leaderboard View to the application.
+         * 
+         * @return this builder
+         */
+        public AppBuilder addLeaderboardView() {
+                final LeaderboardController leaderboardController = LeaderboardUseCaseFactory
+                                .createLeaderboardController(leaderboardViewModel);
+                leaderboardView = LeaderboardViewFactory.create(
+                                leaderboardViewModel,
+                                leaderboardController);
+                cardPanel.add(leaderboardView, leaderboardView.getViewName());
+                return this;
         }
         shortView = new ShortView(shortViewModel, shortController, navigationController);
         cardPanel.add(shortView, shortView.getViewName());

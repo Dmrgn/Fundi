@@ -5,17 +5,15 @@ import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.portfolio_hub.PortfolioHubController;
 import view.ui.ButtonFactory;
-import view.ui.FieldFactory;
-import view.ui.PanelFactory;
+import view.ui.UiConstants;
 import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
-import view.ui.UiConstants;
+import view.ui.icons.BellIcon;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
+import view.ui.FieldFactory;
 
 /**
  * The Main View
@@ -26,205 +24,270 @@ public class MainView extends BaseView {
     private final NewsController newsController;
     private final NavigationController navigationController;
     private final SearchController searchController;
-    private final SearchViewModel searchViewModel;
-    private final JPanel searchResultsPanel = new JPanel();
-    private final JButton notificationButton = createNotificationButton();
+    private JButton notificationButton; // Will be initialized in constructor
     private int notificationCount = 0;
 
-
-    public MainView(MainViewModel mainViewModel, PortfolioHubController portfolioHubController, NewsController newsController, NavigationController navigationController, SearchController searchController, SearchViewModel searchViewModel) {
+    public MainView(MainViewModel mainViewModel, PortfolioHubController portfolioHubController,
+            NewsController newsController, NavigationController navigationController, SearchController searchController,
+            SearchViewModel searchViewModel) {
         super("main");
         this.mainViewModel = mainViewModel;
         this.portfolioHubController = portfolioHubController;
         this.newsController = newsController;
         this.navigationController = navigationController;
         this.searchController = searchController;
-        this.searchViewModel = searchViewModel;
+        // Note: searchViewModel parameter is kept for API compatibility but not stored
 
-        JPanel contentPanel = createGradientContentPanel();
-        this.add(contentPanel, BorderLayout.CENTER);
+        // Header: back/title left, notification bell right
+        JLabel title = new JLabel("Home");
+        title.setFont(UiConstants.Fonts.TITLE);
+        title.setForeground(UiConstants.Colors.ON_PRIMARY);
+        JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
+        headerLeft.setOpaque(false);
+        headerLeft.add(title);
+        header.add(headerLeft, BorderLayout.WEST);
 
-        JPanel topPanel = createTopPanel();
-        contentPanel.add(topPanel, BorderLayout.NORTH);
+        JPanel headerRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        headerRight.setOpaque(false);
+        this.notificationButton = createModernNotificationButton();
+        headerRight.add(this.notificationButton);
+        header.add(headerRight, BorderLayout.EAST);
 
-        JPanel centerPanel = createCenterPanel();
-        contentPanel.add(centerPanel, BorderLayout.CENTER);
+        // Content: top section (welcome + username + search), center (quick nav)
+        JPanel mainPanel = new JPanel(new GridBagLayout());
+        mainPanel.setOpaque(false);
 
-        // Add bottom panel with notification button
-        JPanel bottomPanel = createBottomPanel();
-        contentPanel.add(bottomPanel, BorderLayout.SOUTH);
+        GridBagConstraints mainGbc = new GridBagConstraints();
+        mainGbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
+        mainGbc.fill = GridBagConstraints.BOTH;
+        mainGbc.anchor = GridBagConstraints.CENTER;
+        mainGbc.weightx = 1.0;
+
+        JPanel topSection = createTopSection();
+        mainGbc.gridx = 0;
+        mainGbc.gridy = 0;
+        mainGbc.gridwidth = 1;
+        mainPanel.add(topSection, mainGbc);
+
+        mainGbc.gridy++;
+        mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.XL), mainGbc);
+
+        JPanel centerSection = createCenterSection();
+        mainGbc.gridy++;
+        mainPanel.add(centerSection, mainGbc);
+
+        JScrollPane scrollPane = new JScrollPane(mainPanel);
+        scrollPane.setBackground(UiConstants.Colors.CANVAS_BG);
+        scrollPane.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
+        scrollPane.setBorder(null);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+        content.add(scrollPane, BorderLayout.CENTER);
     }
 
-    private JPanel createTopPanel() {
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.setOpaque(false);
-        // Welcome
-        JButton settingsButton = new JButton();
-        settingsButton.setToolTipText("Settings");
-        settingsButton.setContentAreaFilled(false);
-        settingsButton.setBorderPainted(false);
-        settingsButton.setFocusPainted(false);
-        settingsButton.setPreferredSize(UiConstants.PREFERRED_MINI_BUTTON_DIM);
-        JPanel welcomePanel = PanelFactory.createTitlePanel("Welcome to Fundi!");
-        welcomePanel.add(settingsButton);
+    private JPanel createTopSection() {
+        JPanel topSection = new JPanel(new GridBagLayout());
+        topSection.setOpaque(false);
 
-        // Search and Username
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        JLabel welcomeTitle = new JLabel("Welcome to Fundi!");
+        welcomeTitle.setFont(new Font("SansSerif", Font.BOLD, 28));
+        welcomeTitle.setForeground(UiConstants.Colors.ON_PRIMARY);
+        welcomeTitle.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        topSection.add(welcomeTitle, gbc);
+
+        gbc.gridy++;
+        topSection.add(Box.createVerticalStrut(UiConstants.Spacing.LG), gbc);
 
         JLabel usernameLabel = new JLabel();
-        usernameLabel.setFont(UiConstants.NORMAL_FONT);
-        usernameLabel.setForeground(Color.WHITE);
+        usernameLabel.setFont(UiConstants.Fonts.BODY);
+        usernameLabel.setForeground(UiConstants.Colors.SURFACE_BG);
+        usernameLabel.setHorizontalAlignment(SwingConstants.CENTER);
         this.mainViewModel.addPropertyChangeListener(evt -> {
             MainState mainState = mainViewModel.getState();
             usernameLabel.setText("Logged in as: " + mainState.getUsername());
         });
-        usernameLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        gbc.gridy++;
+        topSection.add(usernameLabel, gbc);
 
-        JButton searchButton = ButtonFactory.createStyledButton("Search");
-        JTextField searchField = FieldFactory.createTextField();
-        JPanel searchPanel = PanelFactory.createSingleFieldForm(searchField, searchButton);
+        gbc.gridy++;
+        topSection.add(Box.createVerticalStrut(UiConstants.Spacing.MD), gbc);
 
-        JPanel centerStack = new JPanel();
-        centerStack.setLayout(new BoxLayout(centerStack, BoxLayout.Y_AXIS));
-        centerStack.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerStack.setOpaque(false);
-        centerStack.add(searchPanel);
-        centerStack.add(UiConstants.smallVerticalGap());
-        centerStack.add(usernameLabel);
+        JPanel searchPanel = createModernSearchPanel();
+        gbc.gridy++;
+        topSection.add(searchPanel, gbc);
 
-        JPanel centerRow = new JPanel();
-        centerRow.setLayout(new BoxLayout(centerRow, BoxLayout.X_AXIS));
-        centerRow.setAlignmentX(Component.CENTER_ALIGNMENT);
-        centerRow.setOpaque(false);
-        centerRow.add(Box.createHorizontalGlue());
-        centerRow.add(centerStack);
-        centerRow.add(Box.createHorizontalGlue());
+        return topSection;
+    }
 
-        topPanel.add(welcomePanel);
-        topPanel.add(UiConstants.mediumVerticalGap());
-        topPanel.add(centerRow);
+    private JPanel createModernSearchPanel() {
+        JPanel searchPanel = new JPanel(new GridBagLayout());
+        searchPanel.setOpaque(false);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+
+        JTextField searchField = FieldFactory.createSearchField("Search symbols or companies");
+        searchField.setMinimumSize(new Dimension(200, 36));
+        searchField.setPreferredSize(new Dimension(250, 36));
+
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.weightx = 1.0;
+        searchPanel.add(searchField, gbc);
+
+        JButton searchButton = ButtonFactory.createPrimaryButton("Search");
+        searchButton.setPreferredSize(new Dimension(100, 36));
+        gbc.gridx = 1;
+        gbc.weightx = 0.0;
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.LG, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
+        searchPanel.add(searchButton, gbc);
 
         Runnable doSearch = () -> {
             String query = searchField.getText();
             if (!query.isEmpty()) {
-                this.searchController.execute(query); // <-- Call the use case
-            }
-
-            else {
+                this.searchController.execute(query);
+            } else {
                 JOptionPane.showMessageDialog(this, "Please enter a search query.");
             }
         };
         searchButton.addActionListener(evt -> doSearch.run());
         searchField.addActionListener(evt -> doSearch.run());
-        searchButton.addActionListener(evt -> doSearch.run());
-        searchField.addActionListener(evt -> doSearch.run());
 
-        return topPanel;
+        return searchPanel;
     }
 
-    private JPanel createCenterPanel() {
-        JPanel centerPanel = new JPanel();
-        centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
-        centerPanel.setOpaque(false);
+    private JPanel createCenterSection() {
+        JPanel centerSection = new JPanel(new GridBagLayout());
+        centerSection.setOpaque(false);
+
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(UiConstants.Spacing.MD, UiConstants.Spacing.MD, UiConstants.Spacing.MD,
+                UiConstants.Spacing.MD);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
+        gbc.anchor = GridBagConstraints.CENTER;
 
         JLabel promptLabel = new JLabel("What would you like to look at?");
-        promptLabel.setFont(UiConstants.NORMAL_FONT);
-        promptLabel.setForeground(Color.WHITE);
-        promptLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        promptLabel.setFont(UiConstants.Fonts.BODY);
+        promptLabel.setForeground(UiConstants.Colors.ON_PRIMARY);
+        promptLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        gbc.gridx = 0;
+        gbc.gridy = 0;
+        gbc.gridwidth = 2;
+        centerSection.add(promptLabel, gbc);
 
-        JPanel buttonPanel = new JPanel(UiConstants.BUTTON_LAYOUT);
-        buttonPanel.setMaximumSize(UiConstants.BUTTON_PANEL_DIM);
-        buttonPanel.setOpaque(false);
+        gbc.gridy++;
+        centerSection.add(Box.createVerticalStrut(UiConstants.Spacing.XL), gbc);
 
         String[] useCases = { "Portfolios", "News", "Watchlist", "Leaderboard" };
+
+        gbc.gridwidth = 1;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.anchor = GridBagConstraints.CENTER;
+
+        int col = 0;
+        int row = 2; // Start after prompt and spacing
+
         for (String useCase : useCases) {
-            JButton useCaseButton = new JButton(useCase);
-            useCaseButton.setFont(UiConstants.NORMAL_FONT);
-            useCaseButton.setBackground(UiConstants.PRIMARY_COLOUR);
-            useCaseButton.setForeground(Color.WHITE);
-            useCaseButton.setFocusPainted(false);
-            useCaseButton.setBorder(UiConstants.EMPTY_BORDER);
+            JButton useCaseButton = createModernUseCaseButton(useCase);
 
-            useCaseButton.addActionListener(evt -> {
-                MainState mainState = mainViewModel.getState();
-                mainState.setUseCase(useCase);
-                mainViewModel.setState(mainState);
-                this.navigationController.navigateTo(mainViewModel.getViewName(), useCase.toLowerCase());
-                switch (useCase) {
-                    case "Portfolios" -> this.portfolioHubController.execute(mainState.getUsername());
-                    case "News" -> this.newsController.execute(mainState.getUsername());
+            gbc.gridx = col;
+            gbc.gridy = row;
+            centerSection.add(useCaseButton, gbc);
 
-                }
-            });
-
-            buttonPanel.add(useCaseButton);
+            col++;
+            if (col >= 2) { // Two buttons per row
+                col = 0;
+                row++;
+            }
         }
 
-        centerPanel.add(promptLabel);
-        centerPanel.add(Box.createVerticalStrut(10));
-        centerPanel.add(buttonPanel);
-
-        return centerPanel;
+        return centerSection;
     }
 
-    // Add this method to create the notification button
-    private JButton createNotificationButton() {
-        JButton button = new JButton();
-        button.setLayout(new BorderLayout());
+    private JButton createModernUseCaseButton(String useCase) {
+        JButton button = ButtonFactory.createPrimaryButton(useCase);
+        button.setPreferredSize(new Dimension(140, 50));
 
-        // Create the main button
-        JLabel iconLabel = new JLabel("🔔"); // Bell emoji as icon
-        iconLabel.setFont(UiConstants.NORMAL_FONT);
-        button.add(iconLabel, BorderLayout.CENTER);
-
-        // Create notification badge
-        JLabel badge = new JLabel("0");
-        badge.setFont(UiConstants.SMALL_FONT);
-        badge.setForeground(Color.WHITE);
-        badge.setBackground(Color.RED); // Red color
-        badge.setOpaque(true);
-        badge.setBorder(UiConstants.BUTTON_BORDER);
-        badge.setVisible(false); // Hidden by default
-        button.add(badge, BorderLayout.EAST);
-
-        // Style the button
-        button.setContentAreaFilled(false);
-        button.setBorderPainted(false);
-        button.setFocusPainted(false);
-        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
-
-        // Add hover effect
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseEntered(MouseEvent e) {
-                button.setContentAreaFilled(true);
-                button.setBackground(new Color(40, 70, 130, 50));
-            }
-
-            @Override
-            public void mouseExited(MouseEvent e) {
-                button.setContentAreaFilled(false);
+        // Wire up navigation logic
+        button.addActionListener(evt -> {
+            MainState mainState = mainViewModel.getState();
+            mainState.setUseCase(useCase);
+            mainViewModel.setState(mainState);
+            this.navigationController.navigateTo(mainViewModel.getViewName(), useCase.toLowerCase());
+            switch (useCase) {
+                case "Portfolios" -> this.portfolioHubController.execute(mainState.getUsername());
+                case "News" -> this.newsController.execute(mainState.getUsername());
+                case "Watchlist" -> {
+                    // Defer data fetching until Watchlist is clicked
+                }
             }
         });
 
         return button;
     }
 
-    // Modify the existing createBottomPanel method or add it if it doesn't exist
-    private JPanel createBottomPanel() {
-        JPanel bottomPanel = new JPanel(new BorderLayout());
-        bottomPanel.setOpaque(false);
+    private JButton createModernNotificationButton() {
+        JButton button = new JButton();
+        button.setLayout(new BorderLayout());
+        button.setBackground(UiConstants.Colors.SURFACE_BG);
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)));
+        button.setFocusPainted(false);
+        button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Create notification button panel
-        JPanel notificationPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        notificationPanel.setOpaque(false);
-        notificationPanel.add(notificationButton);
+        JLabel iconLabel = new JLabel();
+        iconLabel.setIcon(new BellIcon(18, UiConstants.Colors.PRIMARY));
+        iconLabel.setForeground(UiConstants.Colors.PRIMARY);
+        button.add(iconLabel, BorderLayout.CENTER);
 
-        bottomPanel.add(notificationPanel, BorderLayout.EAST);
-        return bottomPanel;
+        JLabel badge = new JLabel("0");
+        badge.setFont(new Font("SansSerif", Font.BOLD, 11));
+        badge.setForeground(UiConstants.Colors.ON_PRIMARY);
+        badge.setBackground(UiConstants.Colors.BADGE_BG);
+        badge.setOpaque(true);
+        badge.setBorder(UiConstants.BADGE_BORDER);
+        badge.setVisible(false);
+        button.add(badge, BorderLayout.EAST);
+
+        button.addMouseListener(new java.awt.event.MouseAdapter() {
+            @Override
+            public void mouseEntered(java.awt.event.MouseEvent e) {
+                button.setBackground(UiConstants.Colors.SURFACE_BG);
+            }
+
+            @Override
+            public void mouseExited(java.awt.event.MouseEvent e) {
+                button.setBackground(UiConstants.Colors.SURFACE_BG);
+            }
+        });
+
+        // Add click action for notifications
+        button.addActionListener(e -> {
+            JOptionPane.showMessageDialog(this,
+                    "Notifications: " + notificationCount + " new notifications",
+                    "Notifications",
+                    JOptionPane.INFORMATION_MESSAGE);
+        });
+
+        this.notificationButton = button;
+        return button;
     }
 
-    // Add methods to control notifications
+    // Notification helpers
     public void incrementNotification() {
         notificationCount++;
         JLabel badge = (JLabel) notificationButton.getComponent(1);

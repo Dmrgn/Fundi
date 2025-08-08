@@ -24,6 +24,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.*;
 import java.util.List;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
 
 public class DashboardView extends BaseView {
     private final MainViewModel mainViewModel;
@@ -31,6 +33,7 @@ public class DashboardView extends BaseView {
     private final SearchViewModel searchViewModel;
     private final DashboardViewModel dashboardViewModel;
     private final DashboardController dashboardController;
+    @SuppressWarnings("unused")
     private final interface_adapter.navigation.NavigationController navigationController;
     private final CompanyDetailsController companyDetailsController;
     private ChartPanel chartPanel;
@@ -50,17 +53,26 @@ public class DashboardView extends BaseView {
         this.navigationController = navigationController;
         this.companyDetailsController = companyDetailsController;
 
-        // Use modern layout similar to Login/Signup views
-        setLayout(new GridBagLayout());
-        setBackground(new Color(30, 60, 120)); // UiConstants.PRIMARY_COLOUR
+        // Header
+        JLabel titleLabel = new JLabel("Dashboard");
+        titleLabel.setFont(UiConstants.Fonts.TITLE);
+        titleLabel.setForeground(Color.WHITE);
+        JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
+        headerLeft.setOpaque(false);
+        headerLeft.add(titleLabel);
+        header.add(headerLeft, BorderLayout.WEST);
 
-        // Create main light gray panel
+        // Main light canvas panel
         JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(new Color(245, 245, 245)); // Light gray instead of white
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        mainPanel.setBackground(UiConstants.Colors.CANVAS_BG);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.BOTH;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.weightx = 1.0;
@@ -102,20 +114,14 @@ public class DashboardView extends BaseView {
         gbc.weighty = 0.0;
         mainPanel.add(usernameSection, gbc);
 
-        // Add main panel to a scroll pane for overflow handling
+        // Add main panel to a scroll pane for overflow handling into BaseView content
         JScrollPane scrollPane = new JScrollPane(mainPanel);
-        scrollPane.setBackground(UiConstants.PRIMARY_COLOUR);
-        scrollPane.getViewport().setBackground(UiConstants.PRIMARY_COLOUR);
+        scrollPane.setBackground(UiConstants.Colors.CANVAS_BG);
+        scrollPane.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
-        // Add scroll pane to view with proper resizing
-        GridBagConstraints viewGbc = new GridBagConstraints();
-        viewGbc.fill = GridBagConstraints.BOTH;
-        viewGbc.weightx = 1.0;
-        viewGbc.weighty = 1.0;
-        this.add(scrollPane, viewGbc);
+        content.add(scrollPane, BorderLayout.CENTER);
 
         // Set up listeners
         setupListeners();
@@ -123,17 +129,17 @@ public class DashboardView extends BaseView {
 
     private JPanel createModernWelcomePanel() {
         JPanel welcomePanel = new JPanel(new GridBagLayout());
-        welcomePanel.setBackground(new Color(245, 245, 245));
+        welcomePanel.setBackground(UiConstants.Colors.CANVAS_BG);
         welcomePanel.setOpaque(true);
-        
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.CENTER;
-        
+
         JLabel welcomeLabel = new JLabel("Welcome to Fundi!");
-        welcomeLabel.setFont(new Font("SansSerif", Font.BOLD, 24));
-        welcomeLabel.setForeground(new Color(30, 60, 120)); // UiConstants.PRIMARY_COLOUR
+        welcomeLabel.setFont(UiConstants.Fonts.HEADING);
+        welcomeLabel.setForeground(UiConstants.Colors.PRIMARY);
         welcomeLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        
+
         gbc.gridx = 0;
         gbc.gridy = 0;
         welcomePanel.add(welcomeLabel, gbc);
@@ -143,17 +149,17 @@ public class DashboardView extends BaseView {
 
     private JPanel createModernSearchPanel() {
         JPanel searchPanel = new JPanel(new GridBagLayout());
-        searchPanel.setBackground(new Color(245, 245, 245));
+        searchPanel.setBackground(UiConstants.Colors.CANVAS_BG);
         searchPanel.setOpaque(true);
-        
+
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 5, 10, 5);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Search title
         JLabel searchTitle = new JLabel("Search Stocks");
-        searchTitle.setFont(new Font("SansSerif", Font.BOLD, 18));
-        searchTitle.setForeground(Color.DARK_GRAY);
+        searchTitle.setFont(UiConstants.Fonts.HEADING);
+        searchTitle.setForeground(UiConstants.Colors.TEXT_PRIMARY);
         searchTitle.setHorizontalAlignment(SwingConstants.CENTER);
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -161,36 +167,26 @@ public class DashboardView extends BaseView {
         searchPanel.add(searchTitle, gbc);
 
         gbc.gridy++;
-        searchPanel.add(Box.createVerticalStrut(10), gbc);
+        searchPanel.add(Box.createVerticalStrut(UiConstants.Spacing.SM), gbc);
 
-        // Search field
-        JTextField searchField = new JTextField();
-        searchField.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        searchField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-            BorderFactory.createEmptyBorder(8, 12, 8, 12)
-        ));
+        // Search field (centralized)
+        JTextField searchField = FieldFactory.createSearchField("Search symbols or companies");
         searchField.setPreferredSize(new Dimension(200, 36));
         searchField.setMaximumSize(new Dimension(200, 36));
-        
+
         gbc.gridy++;
         gbc.gridwidth = 1;
         gbc.gridx = 0;
         gbc.weightx = 1.0;
         searchPanel.add(searchField, gbc);
 
-        // Search button
-        JButton searchButton = new JButton("Search");
-        searchButton.setFont(new Font("SansSerif", Font.BOLD, 14));
-        searchButton.setBackground(new Color(30, 60, 120));
-        searchButton.setForeground(Color.WHITE);
-        searchButton.setFocusPainted(false);
-        searchButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
-        searchButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        
+        // Search button (centralized)
+        JButton searchButton = ButtonFactory.createPrimaryButton("Search");
+        searchButton.setPreferredSize(new Dimension(100, 36));
+
         gbc.gridx = 1;
         gbc.weightx = 0.0;
-        gbc.insets = new Insets(10, 10, 10, 5);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.LG, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
         searchPanel.add(searchButton, gbc);
 
         // Wire up search functionality
@@ -214,15 +210,15 @@ public class DashboardView extends BaseView {
 
     private JPanel createModernUsernamePanel() {
         JPanel usernamePanel = new JPanel(new GridBagLayout());
-        usernamePanel.setBackground(new Color(245, 245, 245));
+        usernamePanel.setBackground(UiConstants.Colors.CANVAS_BG);
         usernamePanel.setOpaque(true);
-        
+
         GridBagConstraints gbc = new GridBagConstraints();
         gbc.anchor = GridBagConstraints.CENTER;
 
         JLabel usernameLabel = new JLabel();
-        usernameLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        usernameLabel.setForeground(Color.DARK_GRAY);
+        usernameLabel.setFont(UiConstants.Fonts.BODY);
+        usernameLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
         usernameLabel.setHorizontalAlignment(SwingConstants.CENTER);
 
         // Listen for username updates
@@ -242,26 +238,25 @@ public class DashboardView extends BaseView {
 
     private JPanel createModernPortfolioChart() {
         JPanel chartContainer = new JPanel(new BorderLayout());
-        chartContainer.setBackground(new Color(245, 245, 245));
+        chartContainer.setBackground(UiConstants.Colors.CANVAS_BG);
         chartContainer.setOpaque(true);
         chartContainer.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-            BorderFactory.createEmptyBorder(15, 15, 15, 15)
-        ));
-        // Let layout decide width; remove hard max draw width constraints
+                BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1),
+                BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG)));
+        // Preferred size hint only
         chartContainer.setPreferredSize(new Dimension(600, 420));
 
         JLabel chartTitle = new JLabel("Portfolio Value Over Time (Last 30 Days)");
-        chartTitle.setFont(new Font("SansSerif", Font.BOLD, 18));
-        chartTitle.setForeground(Color.DARK_GRAY);
+        chartTitle.setFont(UiConstants.Fonts.HEADING);
+        chartTitle.setForeground(UiConstants.Colors.TEXT_PRIMARY);
         chartTitle.setHorizontalAlignment(SwingConstants.CENTER);
-        chartTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, 10, 0));
+        chartTitle.setBorder(BorderFactory.createEmptyBorder(0, 0, UiConstants.Spacing.SM, 0));
         chartContainer.add(chartTitle, BorderLayout.NORTH);
 
         // Create initial empty chart
         TimeSeriesCollection dataset = new TimeSeriesCollection();
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                "",  // No title since we have a separate label
+                "", // No title since we have a separate label
                 "Date",
                 "Value ($)",
                 dataset,
@@ -273,14 +268,13 @@ public class DashboardView extends BaseView {
         chart.setBackgroundPaint(Color.WHITE);
         chart.setAntiAlias(true);
         XYPlot plot = chart.getXYPlot();
-        plot.setBackgroundPaint(new Color(250, 250, 250));
-        plot.setDomainGridlinePaint(new Color(230, 230, 230));
-        plot.setRangeGridlinePaint(new Color(230, 230, 230));
+        plot.setBackgroundPaint(UiConstants.Colors.SURFACE_BG);
+        plot.setDomainGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHT);
+        plot.setRangeGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHT);
 
         chartPanel = new ChartPanel(chart);
         chartPanel.setPreferredSize(new Dimension(600, 360));
-        chartPanel.setBackground(new Color(245, 245, 245));
-        // Remove prior hard constraints
+        chartPanel.setBackground(UiConstants.Colors.CANVAS_BG);
         chartPanel.setMaximumDrawWidth(Integer.MAX_VALUE);
         chartPanel.setMinimumDrawWidth(0);
 
@@ -323,27 +317,21 @@ public class DashboardView extends BaseView {
         if (results != null && !results.isEmpty()) {
             // Create modern styled container for results
             JPanel resultsContainer = new JPanel(new BorderLayout());
-            resultsContainer.setBackground(new Color(245, 245, 245));
+            resultsContainer.setBackground(UiConstants.Colors.CANVAS_BG);
             resultsContainer.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-                    BorderFactory.createEmptyBorder(15, 15, 15, 15)));
+                    BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1),
+                    BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG)));
 
             // Header with title and clear button
             JPanel headerPanel = new JPanel(new BorderLayout());
-            headerPanel.setBackground(new Color(245, 245, 245));
+            headerPanel.setBackground(UiConstants.Colors.CANVAS_BG);
 
             JLabel resultsTitle = new JLabel("Search Results:");
-            resultsTitle.setFont(new Font("SansSerif", Font.BOLD, 16));
-            resultsTitle.setForeground(Color.DARK_GRAY);
+            resultsTitle.setFont(UiConstants.Fonts.HEADING);
+            resultsTitle.setForeground(UiConstants.Colors.TEXT_PRIMARY);
 
-            JButton clearButton = new JButton("Clear");
-            clearButton.setFont(new Font("SansSerif", Font.PLAIN, 12));
-            clearButton.setForeground(Color.WHITE);
-            clearButton.setBackground(new Color(180, 50, 50));
-            clearButton.setPreferredSize(new Dimension(60, 25));
-            clearButton.setBorder(BorderFactory.createEmptyBorder(4, 8, 4, 8));
-            clearButton.setFocusPainted(false);
-            clearButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+            JButton clearButton = ButtonFactory.createSecondaryButton("Clear");
+            clearButton.setPreferredSize(new Dimension(80, 28));
             clearButton.addActionListener(e -> clearSearchResults());
 
             headerPanel.add(resultsTitle, BorderLayout.WEST);
@@ -353,8 +341,8 @@ public class DashboardView extends BaseView {
             // Content panel for results
             JPanel contentPanel = new JPanel();
             contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-            contentPanel.setBackground(new Color(245, 245, 245));
-            contentPanel.add(Box.createVerticalStrut(10));
+            contentPanel.setBackground(UiConstants.Colors.CANVAS_BG);
+            contentPanel.add(Box.createVerticalStrut(UiConstants.Spacing.SM));
 
             // Filter and add valid results
             List<SearchResult> validResults = results.stream()
@@ -364,28 +352,8 @@ public class DashboardView extends BaseView {
                     .toList();
 
             for (SearchResult result : validResults) {
-                JButton resultButton = new JButton(result.getSymbol() + " - " + result.getName());
-                resultButton.setFont(new Font("SansSerif", Font.PLAIN, 12));
-                resultButton.setBackground(new Color(30, 60, 120));
-                resultButton.setForeground(Color.WHITE);
-                resultButton.setFocusPainted(false);
-                resultButton.setBorder(BorderFactory.createEmptyBorder(8, 12, 8, 12));
-                resultButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+                JButton resultButton = ButtonFactory.createOutlinedButton(result.getSymbol() + " - " + result.getName());
                 resultButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-                
-                // Add hover effect
-                resultButton.addMouseListener(new java.awt.event.MouseAdapter() {
-                    @Override
-                    public void mouseEntered(java.awt.event.MouseEvent evt) {
-                        resultButton.setBackground(new Color(40, 70, 130));
-                    }
-
-                    @Override
-                    public void mouseExited(java.awt.event.MouseEvent evt) {
-                        resultButton.setBackground(new Color(30, 60, 120));
-                    }
-                });
-                
                 resultButton.addActionListener(e -> {
                     companyDetailsController.execute(result.getSymbol(), "dashboard");
                 });
@@ -394,8 +362,8 @@ public class DashboardView extends BaseView {
             }
 
             JScrollPane scrollPane = new JScrollPane(contentPanel);
-            scrollPane.setBackground(new Color(245, 245, 245));
-            scrollPane.getViewport().setBackground(new Color(245, 245, 245));
+            scrollPane.setBackground(UiConstants.Colors.CANVAS_BG);
+            scrollPane.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
             scrollPane.setBorder(null);
             scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
             scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
@@ -416,7 +384,8 @@ public class DashboardView extends BaseView {
     }
 
     private void updateChart(List<PortfolioValuePoint> valuePoints) {
-        if (chartPanel == null) return;
+        if (chartPanel == null)
+            return;
 
         Map<String, TimeSeries> portfolioSeries = new HashMap<>();
         long minMillis = Long.MAX_VALUE, maxMillis = Long.MIN_VALUE;
@@ -426,7 +395,8 @@ public class DashboardView extends BaseView {
             String portfolioName = point.getPortfolioName();
             portfolioSeries.computeIfAbsent(portfolioName, TimeSeries::new);
             TimeSeries series = portfolioSeries.get(portfolioName);
-            java.util.Date date = java.util.Date.from(point.getDate().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant());
+            java.util.Date date = java.util.Date
+                    .from(point.getDate().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant());
             Day day = new Day(date);
             try {
                 series.addOrUpdate(day, point.getValue());
@@ -441,7 +411,8 @@ public class DashboardView extends BaseView {
         }
 
         TimeSeriesCollection dataset = new TimeSeriesCollection();
-        for (TimeSeries s : portfolioSeries.values()) dataset.addSeries(s);
+        for (TimeSeries s : portfolioSeries.values())
+            dataset.addSeries(s);
 
         JFreeChart chart = chartPanel.getChart();
         XYPlot plot = chart.getXYPlot();

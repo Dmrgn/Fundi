@@ -9,20 +9,25 @@ import interface_adapter.navigation.NavigationController;
 import interface_adapter.search.SearchController;
 import interface_adapter.search.SearchViewModel;
 import use_case.notifications.*;
+import view.ui.UiConstants;
+import view.ui.icons.BellIcon;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.util.List;
 
 public class TabbedMainView extends BaseView {
     private final MainViewModel mainViewModel;
     private final PortfolioHubController portfolioHubController;
     private final NewsController newsController;
+    @SuppressWarnings("unused")
     private final PortfolioController portfolioController;
+    @SuppressWarnings("unused")
     private final NavigationController navigationController;
+    @SuppressWarnings("unused")
     private final SearchController searchController;
+    @SuppressWarnings("unused")
     private final SearchViewModel searchViewModel;
 
     private final DashboardView dashboardView;
@@ -38,17 +43,17 @@ public class TabbedMainView extends BaseView {
     private int notificationCount = 0;
 
     public TabbedMainView(MainViewModel mainViewModel,
-                          PortfolioHubController portfolioHubController,
-                          NewsController newsController,
-                          PortfolioController portfolioController,
-                          NavigationController navigationController,
-                          SearchController searchController,
-                          SearchViewModel searchViewModel,
-                          DashboardView dashboardView,
-                          PortfolioHubView portfoliosView,
-                          NewsView newsView,
-                          WatchlistView watchlistView,
-                          LeaderboardView leaderboardView, SettingsView settingsView) {
+            PortfolioHubController portfolioHubController,
+            NewsController newsController,
+            PortfolioController portfolioController,
+            NavigationController navigationController,
+            SearchController searchController,
+            SearchViewModel searchViewModel,
+            DashboardView dashboardView,
+            PortfolioHubView portfoliosView,
+            NewsView newsView,
+            WatchlistView watchlistView,
+            LeaderboardView leaderboardView, SettingsView settingsView) {
         super("tabbedmain");
         this.mainViewModel = mainViewModel;
         this.portfolioHubController = portfolioHubController;
@@ -67,28 +72,38 @@ public class TabbedMainView extends BaseView {
         // Initialize notification components
         this.notificationButton = createNotificationButton();
         this.notificationBadge = createNotificationBadge();
+        // Don't modify the button's layout - keep it simple
+        // Just add the badge next to the button instead of inside it
 
         // Register this view with the notification manager
         NotificationManager.getInstance().setMainView(this);
 
-        JPanel contentPanel = createGradientContentPanel();
-        this.add(contentPanel, BorderLayout.CENTER);
+        // Use BaseView's content area instead of replacing the whole page
+        content.setLayout(new BorderLayout());
 
-        // Ensure the content panel spans the full width and height of the Base View
-        contentPanel.setLayout(new BorderLayout());
+        // Add notification to header right - simpler layout
+        JPanel headerRight = new JPanel();
+        headerRight.setLayout(new OverlayLayout(headerRight));
+        headerRight.setOpaque(false);
+        
+        // Add button first (bottom layer)
+        notificationButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        notificationButton.setAlignmentY(Component.CENTER_ALIGNMENT);
+        headerRight.add(notificationButton);
+        
+        // Add badge on top, positioned in top-right corner
+        JPanel badgePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
+        badgePanel.setOpaque(false);
+        badgePanel.add(notificationBadge);
+        badgePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        badgePanel.setAlignmentY(Component.TOP_ALIGNMENT);
+        headerRight.add(badgePanel);
+        
+        header.add(headerRight, BorderLayout.EAST);
 
         // Create tabbed pane
         tabbedPane = createTabbedPane();
-        contentPanel.add(tabbedPane, BorderLayout.CENTER);
-
-        // Add notification button to the top panel
-        JPanel rightPanel = new JPanel(new BorderLayout());
-        rightPanel.setOpaque(true);
-        rightPanel.setBackground(new Color(240, 240, 240)); // Light gray color
-
-        rightPanel.add(notificationButton, BorderLayout.NORTH);
-
-        contentPanel.add(rightPanel, BorderLayout.EAST);
+        content.add(tabbedPane, BorderLayout.CENTER);
 
         // Initialize with portfolios data when view is created
         mainViewModel.addPropertyChangeListener(evt -> {
@@ -100,16 +115,16 @@ public class TabbedMainView extends BaseView {
     }
 
     private JButton createNotificationButton() {
-        JButton button = new JButton("🔔");
-        button.setFont(new Font("Sans Serif", Font.PLAIN, 16));
-        button.setForeground(Color.WHITE);
-        button.setBackground(new Color(30, 60, 120)); // Default blue color
-        button.setPreferredSize(new Dimension(30, 32));
+        JButton button = new JButton();
+        button.setIcon(new BellIcon(18, UiConstants.Colors.ON_PRIMARY));
+        button.setText(null);
+        button.setForeground(UiConstants.Colors.ON_PRIMARY);
+        button.setBackground(UiConstants.Colors.PRIMARY);
+        button.setPreferredSize(new Dimension(32, 32));
         button.setFocusPainted(false);
         button.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(40, 70, 130), 2),
-            BorderFactory.createEmptyBorder(5, 5, 5, 5)
-        ));
+                BorderFactory.createLineBorder(UiConstants.Colors.PRIMARY.darker(), 2),
+                BorderFactory.createEmptyBorder(3, 3, 3, 3)));
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         // Add hover effect
@@ -118,9 +133,9 @@ public class TabbedMainView extends BaseView {
             public void mouseEntered(MouseEvent e) {
                 // Change hover color based on notification state
                 if (notificationCount > 0) {
-                    button.setBackground(new Color(200, 50, 50)); // Darker red on hover
+                    button.setBackground(UiConstants.Colors.DANGER.darker());
                 } else {
-                    button.setBackground(new Color(40, 70, 130)); // Blue on hover
+                    button.setBackground(UiConstants.Colors.PRIMARY.brighter());
                 }
             }
 
@@ -128,18 +143,18 @@ public class TabbedMainView extends BaseView {
             public void mouseExited(MouseEvent e) {
                 // Restore color based on notification state
                 if (notificationCount > 0) {
-                    button.setBackground(new Color(220, 20, 60)); // Red when notifications exist
+                    button.setBackground(UiConstants.Colors.DANGER);
                 } else {
-                    button.setBackground(new Color(30, 60, 120)); // Default blue
+                    button.setBackground(UiConstants.Colors.PRIMARY);
                 }
             }
 
             @Override
             public void mousePressed(MouseEvent e) {
                 if (notificationCount > 0) {
-                    button.setBackground(new Color(180, 30, 30)); // Darker red on press
+                    button.setBackground(UiConstants.Colors.DANGER.darker());
                 } else {
-                    button.setBackground(new Color(25, 50, 100)); // Darker blue on press
+                    button.setBackground(UiConstants.Colors.SECONDARY);
                 }
             }
         });
@@ -152,25 +167,25 @@ public class TabbedMainView extends BaseView {
 
     private JLabel createNotificationBadge() {
         JLabel badge = new JLabel("0");
-        badge.setFont(new Font("Sans Serif", Font.BOLD, 10));
-        badge.setForeground(Color.WHITE);
-        badge.setBackground(new Color(220, 20, 60));
+        badge.setFont(new Font("Sans Serif", Font.BOLD, 9));
+        badge.setForeground(UiConstants.Colors.ON_PRIMARY);
+        badge.setBackground(UiConstants.Colors.DANGER);
         badge.setOpaque(true);
         badge.setHorizontalAlignment(SwingConstants.CENTER);
         badge.setVerticalAlignment(SwingConstants.CENTER);
-        badge.setPreferredSize(new Dimension(18, 18));
-        badge.setBorder(BorderFactory.createEmptyBorder(2, 4, 2, 4));
+        badge.setPreferredSize(new Dimension(16, 16));
+        badge.setBorder(BorderFactory.createEmptyBorder(1, 3, 1, 3));
         badge.setVisible(false); // Hidden by default
 
         return badge;
     }
 
     private void showNotificationDialog() {
-        List<String> notifications = NotificationManager.getInstance().getNotifications();
-        
+        java.util.List<String> notifications = NotificationManager.getInstance().getNotifications();
+
         if (notifications.isEmpty()) {
-            JOptionPane.showMessageDialog(this, "No new notifications", "Notifications", 
-                JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this, "No new notifications", "Notifications",
+                    JOptionPane.INFORMATION_MESSAGE);
             return;
         }
 
@@ -182,12 +197,12 @@ public class TabbedMainView extends BaseView {
 
         // Header
         JPanel headerPanel = new JPanel(new BorderLayout());
-        headerPanel.setBackground(new Color(30, 60, 120));
+        headerPanel.setBackground(UiConstants.Colors.PRIMARY);
         headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
 
         JLabel titleLabel = new JLabel("📢 Notifications");
         titleLabel.setFont(new Font("Sans Serif", Font.BOLD, 18));
-        titleLabel.setForeground(Color.WHITE);
+        titleLabel.setForeground(UiConstants.Colors.ON_PRIMARY);
 
         JLabel countLabel = new JLabel(notifications.size() + " notification(s)");
         countLabel.setFont(new Font("Sans Serif", Font.PLAIN, 14));
@@ -219,7 +234,7 @@ public class TabbedMainView extends BaseView {
         JButton newsButton = new JButton("Open News");
         newsButton.setFont(new Font("Sans Serif", Font.BOLD, 12));
         newsButton.setForeground(Color.WHITE);
-        newsButton.setBackground(new Color(30, 60, 120));
+        newsButton.setBackground(UiConstants.Colors.PRIMARY);
         newsButton.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
         newsButton.setFocusPainted(false);
         newsButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -231,7 +246,7 @@ public class TabbedMainView extends BaseView {
         JButton clearButton = new JButton("Clear All");
         clearButton.setFont(new Font("Sans Serif", Font.BOLD, 12));
         clearButton.setForeground(Color.WHITE);
-        clearButton.setBackground(new Color(220, 20, 60));
+        clearButton.setBackground(UiConstants.Colors.DANGER);
         clearButton.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));
         clearButton.setFocusPainted(false);
         clearButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -244,7 +259,7 @@ public class TabbedMainView extends BaseView {
         closeButton.setFont(new Font("Sans Serif", Font.PLAIN, 12));
         closeButton.setForeground(new Color(100, 100, 100));
         closeButton.setBackground(Color.WHITE);
-        closeButton.setBorder(BorderFactory.createLineBorder(new Color(200, 200, 200), 1));
+        closeButton.setBorder(BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1));
         closeButton.setFocusPainted(false);
         closeButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
         closeButton.addActionListener(e -> dialog.dispose());
@@ -266,9 +281,8 @@ public class TabbedMainView extends BaseView {
         JPanel panel = new JPanel(new BorderLayout());
         panel.setBackground(new Color(248, 249, 250));
         panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(new Color(220, 220, 220), 1),
-            BorderFactory.createEmptyBorder(12, 15, 12, 15)
-        ));
+                BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1),
+                BorderFactory.createEmptyBorder(12, 15, 12, 15)));
 
         JLabel messageLabel = new JLabel("<html><div style='width:400px'>" + message + "</div></html>");
         messageLabel.setFont(new Font("Sans Serif", Font.PLAIN, 13));
@@ -288,8 +302,8 @@ public class TabbedMainView extends BaseView {
         JTabbedPane tabbedPane = new JTabbedPane();
 
         // Style the tabbed pane
-        tabbedPane.setBackground(new Color(30, 60, 120));
-        tabbedPane.setForeground(Color.WHITE);
+        tabbedPane.setBackground(UiConstants.Colors.PRIMARY);
+        tabbedPane.setForeground(UiConstants.Colors.ON_PRIMARY);
         tabbedPane.setFont(new Font("Sans Serif", Font.BOLD, 14));
 
         // Add tabs with Dashboard first
@@ -306,25 +320,12 @@ public class TabbedMainView extends BaseView {
             MainState mainState = mainViewModel.getState();
 
             switch (selectedIndex) {
-                case 0: // Dashboard
-                    // Dashboard is always available, no special action needed
-                    break;
-                case 1: // Portfolios
-                    if (mainState.getUsername() != null) {
-                        portfolioHubController.execute(mainState.getUsername());
-                    }
-                    break;
-                case 2: // News
-                    if (mainState.getUsername() != null) {
-                        newsController.execute(mainState.getUsername());
-                    }
-                    break;
-                case 3: // Watchlist
-                    // Future implementation
-                    break;
-                case 4: // Leaderboard
-                    // Future implementation
-                    break;
+                case 0 -> { /* Dashboard */ }
+                case 1 -> { if (mainState.getUsername() != null) portfolioHubController.execute(mainState.getUsername()); }
+                case 2 -> { if (mainState.getUsername() != null) newsController.execute(mainState.getUsername()); }
+                case 3 -> { /* Watchlist */ }
+                case 4 -> { /* Leaderboard */ }
+                default -> {}
             }
         });
 
@@ -352,24 +353,22 @@ public class TabbedMainView extends BaseView {
         if (notificationCount > 0) {
             notificationBadge.setText(String.valueOf(notificationCount));
             notificationBadge.setVisible(true);
-            
+
             // Change button color to red when notifications are available
-            notificationButton.setBackground(new Color(220, 20, 60)); // Red color
+            notificationButton.setBackground(UiConstants.Colors.DANGER);
             notificationButton.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(200, 50, 50), 2),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)
-            ));
+                    BorderFactory.createLineBorder(UiConstants.Colors.DANGER.darker(), 2),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         } else {
             notificationBadge.setVisible(false);
-            
-            // Restore default blue color when no notifications
-            notificationButton.setBackground(new Color(30, 60, 120)); // Default blue
+
+            // Restore default primary color when no notifications
+            notificationButton.setBackground(UiConstants.Colors.PRIMARY);
             notificationButton.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(40, 70, 130), 2),
-                BorderFactory.createEmptyBorder(5, 5, 5, 5)
-            ));
+                    BorderFactory.createLineBorder(UiConstants.Colors.PRIMARY.darker(), 2),
+                    BorderFactory.createEmptyBorder(5, 5, 5, 5)));
         }
-        
+
         // Repaint to ensure visual update
         notificationButton.repaint();
     }

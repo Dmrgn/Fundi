@@ -11,6 +11,8 @@ import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 import java.util.List;
 
+import view.ui.UiConstants;
+
 public class LeaderboardView extends BaseView {
     private final LeaderboardViewModel leaderboardViewModel;
     private final DefaultTableModel tableModel;
@@ -20,7 +22,6 @@ public class LeaderboardView extends BaseView {
             LeaderboardController leaderboardController) {
         super("leaderboard");
         this.leaderboardViewModel = leaderboardViewModel;
-        // this.leaderboardController = leaderboardController; // Removed unused field
 
         // Initialize table model
         String[] columnNames = { "Rank", "Username", "Portfolio", "Total Value" };
@@ -31,66 +32,65 @@ public class LeaderboardView extends BaseView {
             }
         };
 
-        // Use modern layout similar to Login/Signup views
-        setLayout(new GridBagLayout());
-        setBackground(new Color(30, 60, 120)); // PRIMARY_COLOUR
+        // Header
+        JLabel titleLabel = new JLabel("Leaderboard");
+        titleLabel.setFont(UiConstants.Fonts.TITLE);
+        titleLabel.setForeground(UiConstants.Colors.ON_PRIMARY);
+        JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
+        headerLeft.setOpaque(false);
+        headerLeft.add(titleLabel);
+        header.add(headerLeft, BorderLayout.WEST);
 
-        // Create main white panel
+        // Main content panel
         JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(new Color(245, 245, 245));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        mainPanel.setBackground(UiConstants.Colors.CANVAS_BG);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.BOTH;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.weightx = 1.0;
 
-        // Title
-        JLabel titleLabel = new JLabel("Leaderboard");
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
-        titleLabel.setForeground(new Color(30, 60, 120));
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
+        // Title (in content area subtle repeat or description)
+        JLabel descriptionLabel = new JLabel("Compare your portfolio performance with other users.");
+        descriptionLabel.setFont(UiConstants.Fonts.BODY);
+        descriptionLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+        descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
+
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 1;
-        mainPanel.add(titleLabel, gbc);
-
-        gbc.gridy++;
-        mainPanel.add(Box.createVerticalStrut(10), gbc);
-
-        // Description
-        JLabel descriptionLabel = new JLabel("Compare your portfolio performance with other users.");
-        descriptionLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        descriptionLabel.setForeground(Color.DARK_GRAY);
-        descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        gbc.gridy++;
         mainPanel.add(descriptionLabel, gbc);
 
         gbc.gridy++;
-        mainPanel.add(Box.createVerticalStrut(20), gbc);
+        mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.LG), gbc);
 
         // Refresh button
         JButton refreshButton = new JButton("Refresh Leaderboard");
-        refreshButton.setFont(new Font("SansSerif", Font.BOLD, 14));
-        refreshButton.setBackground(new Color(30, 60, 120));
-        refreshButton.setForeground(Color.WHITE);
+        refreshButton.setFont(UiConstants.Fonts.BUTTON);
+        refreshButton.setBackground(UiConstants.Colors.PRIMARY);
+        refreshButton.setForeground(UiConstants.Colors.ON_PRIMARY);
         refreshButton.setFocusPainted(false);
         refreshButton.setBorder(BorderFactory.createEmptyBorder(10, 15, 10, 15));
         refreshButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
-        refreshButton.setPreferredSize(new Dimension(180, 40)); // Make it less wide
+        refreshButton.setPreferredSize(new Dimension(180, 40));
         refreshButton.addActionListener(e -> leaderboardController.execute());
-        
-        // Add hover effect
+
+        // Hover effect
         refreshButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                refreshButton.setBackground(new Color(40, 70, 130));
+                refreshButton.setBackground(UiConstants.PRESSED_COLOUR);
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                refreshButton.setBackground(new Color(30, 60, 120));
+                refreshButton.setBackground(UiConstants.Colors.PRIMARY);
             }
         });
 
@@ -98,7 +98,7 @@ public class LeaderboardView extends BaseView {
         mainPanel.add(refreshButton, gbc);
 
         gbc.gridy++;
-        mainPanel.add(Box.createVerticalStrut(20), gbc);
+        mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.LG), gbc);
 
         // Modern table
         JPanel tableSection = createModernTableSection();
@@ -110,50 +110,53 @@ public class LeaderboardView extends BaseView {
 
         // Add main panel to a scroll pane for overflow handling
         JScrollPane scrollPane = new JScrollPane(mainPanel);
-        scrollPane.setBackground(new Color(30, 60, 120)); // UiConstants.PRIMARY_COLOUR
-        scrollPane.getViewport().setBackground(new Color(30, 60, 120));
+        scrollPane.setBackground(UiConstants.Colors.CANVAS_BG);
+        scrollPane.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
-        // Add scroll pane to view with proper resizing
-        GridBagConstraints viewGbc = new GridBagConstraints();
-        viewGbc.fill = GridBagConstraints.BOTH;
-        viewGbc.weightx = 1.0;
-        viewGbc.weighty = 1.0;
-        this.add(scrollPane, viewGbc);
+
+        content.add(scrollPane, BorderLayout.CENTER);
 
         // Set up listeners
         setupListeners();
 
         // Load leaderboard data when view is created
         leaderboardController.execute();
+
+        // Optional: also refresh when shown to address stale UI states
+        this.addComponentListener(new java.awt.event.ComponentAdapter() {
+            @Override
+            public void componentShown(java.awt.event.ComponentEvent e) {
+                leaderboardController.execute();
+            }
+        });
     }
 
     private JPanel createModernTableSection() {
         JPanel container = new JPanel(new BorderLayout());
-        container.setBackground(new Color(245, 245, 245));
+        container.setBackground(UiConstants.Colors.CANVAS_BG);
         container.setOpaque(true);
 
         // Create styled table
         JTable table = new JTable(tableModel);
-        table.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        table.setFont(UiConstants.Fonts.BODY);
         table.setRowHeight(32);
-        table.setBackground(new Color(245, 245, 245));
-        table.setForeground(Color.DARK_GRAY);
+        table.setBackground(UiConstants.Colors.CANVAS_BG);
+        table.setForeground(UiConstants.Colors.TEXT_PRIMARY);
         table.setSelectionBackground(new Color(230, 240, 250));
-        table.setSelectionForeground(Color.DARK_GRAY);
-        table.setGridColor(new Color(220, 220, 220)); // Lighter grid lines for a modern look
+        table.setSelectionForeground(UiConstants.Colors.TEXT_PRIMARY);
+        table.setGridColor(new Color(220, 220, 220));
         table.setShowGrid(true);
         table.setShowHorizontalLines(true);
         table.setShowVerticalLines(true);
         table.setFillsViewportHeight(true);
-        
+
         // Center-align text, zebra striping, and highlight top 3 rows
         table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
             @Override
             public Component getTableCellRendererComponent(JTable tbl, Object value, boolean isSelected,
-                                                           boolean hasFocus, int row, int column) {
+                    boolean hasFocus, int row, int column) {
                 Component c = super.getTableCellRendererComponent(tbl, value, isSelected, hasFocus, row, column);
                 if (c instanceof JLabel label) {
                     label.setHorizontalAlignment(SwingConstants.CENTER);
@@ -176,15 +179,15 @@ public class LeaderboardView extends BaseView {
         });
 
         // Style the header
-        table.getTableHeader().setFont(new Font("SansSerif", Font.BOLD, 14));
-        table.getTableHeader().setBackground(new Color(30, 60, 120));
-        table.getTableHeader().setForeground(Color.WHITE);
+        table.getTableHeader().setFont(UiConstants.Fonts.BUTTON);
+        table.getTableHeader().setBackground(UiConstants.Colors.PRIMARY);
+        table.getTableHeader().setForeground(UiConstants.Colors.ON_PRIMARY);
         table.getTableHeader().setBorder(BorderFactory.createEmptyBorder(10, 5, 10, 5));
 
         tableScrollPane = new JScrollPane(table);
-        tableScrollPane.setBackground(new Color(245, 245, 245));
-        tableScrollPane.getViewport().setBackground(new Color(245, 245, 245));
-        tableScrollPane.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+        tableScrollPane.setBackground(UiConstants.Colors.CANVAS_BG);
+        tableScrollPane.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
+        tableScrollPane.setBorder(BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1));
 
         container.add(tableScrollPane, BorderLayout.CENTER);
         return container;
@@ -193,7 +196,8 @@ public class LeaderboardView extends BaseView {
     private void setupListeners() {
         leaderboardViewModel.addPropertyChangeListener(evt -> {
             LeaderboardState state = leaderboardViewModel.getState();
-            updateLeaderboard(state.getLeaderboardEntries());
+            // Ensure updates happen on EDT to avoid refresh issues
+            SwingUtilities.invokeLater(() -> updateLeaderboard(state.getLeaderboardEntries()));
         });
     }
 
@@ -213,7 +217,6 @@ public class LeaderboardView extends BaseView {
                 tableModel.addRow(rowData);
             }
         }
-
         // Table automatically repaints when model changes
     }
 }

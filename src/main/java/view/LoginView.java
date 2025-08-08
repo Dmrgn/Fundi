@@ -5,7 +5,6 @@ import interface_adapter.login.LoginState;
 import interface_adapter.login.LoginViewModel;
 import view.ui.ButtonFactory;
 import view.ui.FieldFactory;
-import view.ui.PanelFactory;
 import view.ui.UiConstants;
 
 import javax.swing.*;
@@ -35,38 +34,45 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         this.loginController = loginController;
         this.loginViewModel.addPropertyChangeListener(this);
 
-        setLayout(new GridBagLayout());
-        setBackground(UiConstants.PRIMARY_COLOUR);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        // Header
+        JLabel title = new JLabel("Sign in");
+        title.setFont(UiConstants.Fonts.TITLE);
+        title.setForeground(Color.WHITE);
+        JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
+        headerLeft.setOpaque(false);
+        headerLeft.add(title);
+        header.add(headerLeft, BorderLayout.WEST);
 
+        // Main panel
         JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(Color.WHITE);
-        panel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        panel.setBackground(UiConstants.Colors.CANVAS_BG);
+        panel.setBorder(BorderFactory.createEmptyBorder(
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL));
 
-        JLabel titleLabel = new JLabel("Sign in");
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
-        titleLabel.setForeground(UiConstants.PRIMARY_COLOUR);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        panel.add(titleLabel, gbc);
 
         JLabel subLabel = new JLabel("or ");
-        subLabel.setFont(new Font("SansSerif", Font.PLAIN, 14));
-        subLabel.setForeground(UiConstants.SECONDARY_COLOUR);
-        gbc.gridy++;
-        gbc.gridwidth = 1;
-        panel.add(subLabel, gbc);
+        subLabel.setFont(UiConstants.Fonts.BODY);
+        subLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
 
+        // Layout
+        gbc.gridwidth = 2;
+        panel.add(subLabel, gbc);
         gbc.gridx = 1;
+        gbc.gridwidth = 1;
         panel.add(signUpButton, gbc);
 
-        gbc.gridx = 0;
-        gbc.gridy++;
+        gbc.gridx = 0; gbc.gridy++;
         gbc.gridwidth = 2;
-        panel.add(Box.createVerticalStrut(20), gbc);
+        panel.add(Box.createVerticalStrut(UiConstants.Spacing.XL), gbc);
 
         gbc.gridy++;
         panel.add(createFieldPanel("Username", usernameField), gbc);
@@ -75,35 +81,32 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         panel.add(createFieldPanel("Password", passwordField), gbc);
 
         gbc.gridy++;
+        rememberMeBox.setFont(UiConstants.Fonts.BODY);
+        rememberMeBox.setOpaque(false);
         panel.add(rememberMeBox, gbc);
 
         gbc.gridy++;
-        errorLabel.setForeground(Color.RED);
-        errorLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        errorLabel.setForeground(UiConstants.Colors.DANGER);
+        errorLabel.setFont(UiConstants.Fonts.SMALL);
         errorLabel.setVisible(false);
         panel.add(errorLabel, gbc);
 
         gbc.gridy++;
         loginButton.setPreferredSize(new Dimension(0, 40));
-        loginButton.setBackground(UiConstants.PRIMARY_COLOUR);
-        loginButton.setForeground(Color.WHITE);
-        loginButton.setFont(new Font("SansSerif", Font.BOLD, 16));
         panel.add(loginButton, gbc);
 
-        gbc.gridy++;
+        // Add to BaseView content within scroll pane
+        JScrollPane scroll = new JScrollPane(panel);
+        scroll.setBorder(null);
+        scroll.setBackground(UiConstants.Colors.CANVAS_BG);
+        scroll.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
+        content.add(scroll, BorderLayout.CENTER);
 
-        add(panel);
         wireListeners();
-    }
-
-    private JPanel createFormPanel() {
-        // No longer used; replaced by createFieldPanel for modern layout
-        return null;
     }
 
     private void wireListeners() {
         loginButton.addActionListener(evt -> {
-            LoginState loginState = loginViewModel.getState();
             loginController.execute(usernameField.getText(), new String(passwordField.getPassword()));
         });
 
@@ -149,19 +152,19 @@ public class LoginView extends BaseView implements PropertyChangeListener {
     }
 
     private JPanel createFieldPanel(String label, JComponent field) {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Color.WHITE);
+        JPanel p = new JPanel(new BorderLayout());
+        p.setBackground(UiConstants.Colors.CANVAS_BG);
         JLabel lbl = new JLabel(label);
-        lbl.setFont(new Font("SansSerif", Font.PLAIN, 15));
-        lbl.setForeground(Color.DARK_GRAY);
-        panel.add(lbl, BorderLayout.NORTH);
-        field.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        lbl.setFont(UiConstants.Fonts.BODY);
+        lbl.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+        p.add(lbl, BorderLayout.NORTH);
+        field.setFont(UiConstants.Fonts.FORM);
         field.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
                 new javax.swing.border.EmptyBorder(0, 8, 0, 0)));
         field.setBackground(Color.WHITE);
         field.setPreferredSize(new Dimension(0, 36));
-        panel.add(field, BorderLayout.CENTER);
-        return panel;
+        p.add(field, BorderLayout.CENTER);
+        return p;
     }
 
 }

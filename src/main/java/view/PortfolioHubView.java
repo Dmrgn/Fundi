@@ -10,8 +10,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
+import view.ui.UiConstants;
+
 /**
- * Custom layout manager that wraps components like FlowLayout but respects container width
+ * Custom layout manager that wraps components like FlowLayout but respects
+ * container width
  */
 class WrapLayout extends FlowLayout {
     public WrapLayout() {
@@ -117,109 +120,93 @@ public class PortfolioHubView extends BaseView {
     private final PortfolioHubViewModel portfoliosViewModel;
     private final PortfolioHubController portfolioHubController;
     private final PortfolioController portfolioController;
+    @SuppressWarnings("unused")
     private final NavigationController navigationController;
 
     private JPanel buttonPanel;
 
     public PortfolioHubView(PortfolioHubViewModel portfoliosViewModel, PortfolioHubController portfolioHubController,
-                            PortfolioController portfolioController, NavigationController navigationController) {
+            PortfolioController portfolioController, NavigationController navigationController) {
         super("portfolio hub");
         this.portfoliosViewModel = portfoliosViewModel;
         this.portfolioHubController = portfolioHubController;
         this.portfolioController = portfolioController;
         this.navigationController = navigationController;
 
-        // Use modern layout with GridBagLayout
-        this.setBackground(new Color(30, 60, 120));
-        this.setLayout(new GridBagLayout());
+        // Header
+        JLabel titleLabel = new JLabel("Portfolios");
+        titleLabel.setFont(UiConstants.Fonts.TITLE);
+        titleLabel.setForeground(UiConstants.Colors.ON_PRIMARY);
+        JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
+        headerLeft.setOpaque(false);
+        headerLeft.add(titleLabel);
+        header.add(headerLeft, BorderLayout.WEST);
 
-        // Main white panel
+        // Main canvas panel
         JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(new Color(245, 245, 245));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        mainPanel.setBackground(UiConstants.Colors.CANVAS_BG);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(UiConstants.Spacing.XL, UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL, UiConstants.Spacing.XL));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.anchor = GridBagConstraints.WEST; // left align
-        gbc.insets = new Insets(8, 0, 8, 0); // tighter spacing
+        gbc.anchor = GridBagConstraints.WEST;
+        gbc.insets = new Insets(UiConstants.Spacing.MD, 0, UiConstants.Spacing.MD, 0);
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
 
-        // Title
-        JLabel titleLabel = new JLabel("Portfolios");
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
-        titleLabel.setForeground(Color.DARK_GRAY);
-        gbc.gridy = 0;
-        mainPanel.add(titleLabel, gbc);
-
-        gbc.gridy++;
-        mainPanel.add(Box.createVerticalStrut(12), gbc);
-
         // Create button section
         JPanel createButtonSection = createModernCreateButtonPanel();
-        gbc.gridy++;
+        gbc.gridy = 0; gbc.gridx = 0; gbc.gridwidth = 1;
         mainPanel.add(createButtonSection, gbc);
 
         gbc.gridy++;
-        mainPanel.add(Box.createVerticalStrut(12), gbc);
+        mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.LG), gbc);
 
         // Your Portfolios label
         JLabel portfoliosLabel = new JLabel("Your Portfolios:");
-        portfoliosLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        portfoliosLabel.setForeground(Color.DARK_GRAY);
+        portfoliosLabel.setFont(UiConstants.Fonts.HEADING);
+        portfoliosLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
         gbc.gridy++;
         mainPanel.add(portfoliosLabel, gbc);
 
         gbc.gridy++;
-        mainPanel.add(Box.createVerticalStrut(8), gbc);
+        mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.MD), gbc);
 
         // Portfolio buttons panel
         buttonPanel = new JPanel();
-        // Use custom grid layout that wraps dynamically and centers rows
-        buttonPanel.setLayout(new WrapLayout(FlowLayout.CENTER, 12, 12));
-        buttonPanel.setBackground(new Color(245, 245, 245));
-        
-        // Add component listener to trigger relayout on resize
+        buttonPanel.setLayout(new WrapLayout(FlowLayout.CENTER, UiConstants.Spacing.LG, UiConstants.Spacing.LG));
+        buttonPanel.setBackground(UiConstants.Colors.CANVAS_BG);
         buttonPanel.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentResized(java.awt.event.ComponentEvent evt) {
                 buttonPanel.revalidate();
             }
         });
-        
+
         gbc.gridy++;
         gbc.fill = GridBagConstraints.BOTH;
         gbc.weightx = 1.0;
         gbc.weighty = 1.0;
         mainPanel.add(buttonPanel, gbc);
 
-        // Add main panel to a scroll pane for overflow handling
+        // Route via BaseView content
         JScrollPane scrollPane = new JScrollPane(mainPanel);
-        scrollPane.setBackground(new Color(30, 60, 120)); // UiConstants.PRIMARY_COLOUR
-        scrollPane.getViewport().setBackground(new Color(30, 60, 120));
+        scrollPane.setBackground(UiConstants.Colors.CANVAS_BG);
+        scrollPane.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
         scrollPane.setBorder(null);
-        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
-        // Add scroll pane to view with proper resizing
-        GridBagConstraints viewGbc = new GridBagConstraints();
-        viewGbc.fill = GridBagConstraints.BOTH;
-        viewGbc.weightx = 1.0;
-        viewGbc.weighty = 1.0;
-        this.add(scrollPane, viewGbc);
+        content.add(scrollPane, BorderLayout.CENTER);
 
         registerViewModelListener();
     }
 
     private JPanel createModernCreateButtonPanel() {
-        // Left-align the New Portfolio button under the title
         JPanel container = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
-        container.setBackground(new Color(245, 245, 245));
-        
+        container.setBackground(UiConstants.Colors.CANVAS_BG);
+
         JButton createButton = new JButton("New Portfolio");
-        createButton.setFont(new Font("SansSerif", Font.BOLD, 14));
-        // Green button per spec
-        createButton.setBackground(new Color(34, 139, 34)); // ForestGreen
-        createButton.setForeground(Color.WHITE);
+        createButton.setFont(UiConstants.Fonts.BUTTON);
+        createButton.setBackground(UiConstants.Colors.SUCCESS);
+        createButton.setForeground(UiConstants.Colors.ON_PRIMARY);
         createButton.setFocusPainted(false);
         createButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         createButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -228,7 +215,6 @@ public class PortfolioHubView extends BaseView {
             this.portfolioHubController.routeToCreate(portfoliosState.getUsername());
         });
 
-        // Hover effect shades of green
         createButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
@@ -237,7 +223,7 @@ public class PortfolioHubView extends BaseView {
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                createButton.setBackground(new Color(34, 139, 34));
+                createButton.setBackground(UiConstants.Colors.SUCCESS);
             }
         });
 
@@ -251,63 +237,57 @@ public class PortfolioHubView extends BaseView {
             PortfolioHubState portfoliosState = portfoliosViewModel.getState();
             Map<String, String> portfolios = portfoliosState.getPortfolios();
 
-            // Deep neon orange cards, taller and slightly wider than tall
-            Dimension cardSize = new Dimension(520, 180); // wider than tall
-            Color neonOrange = new Color(255, 94, 0); // vivid orange
-            Color neonOrangeHover = new Color(255, 120, 40);
+            Dimension cardSize = UiConstants.Sizes.CARD;
+            Color cardBg = new Color(255, 94, 0);
+            Color cardBgHover = new Color(255, 120, 40);
 
             for (String portfolio : portfolios.keySet()) {
-                // Capture portfolio ID for this iteration
                 final String portfolioId = portfolios.get(portfolio);
                 final String portfolioName = portfolio;
                 final String username = portfoliosState.getUsername();
-                
+
                 JPanel card = new JPanel(new BorderLayout());
-                card.setBackground(neonOrange);
+                card.setBackground(cardBg);
                 card.setBorder(BorderFactory.createCompoundBorder(
-                    BorderFactory.createLineBorder(Color.BLACK, 2),
-                    BorderFactory.createEmptyBorder(14, 18, 14, 18)
-                ));
+                        BorderFactory.createLineBorder(Color.BLACK, 2),
+                        BorderFactory.createEmptyBorder(14, 18, 14, 18)));
                 card.setPreferredSize(cardSize);
                 card.setMaximumSize(cardSize);
                 card.setMinimumSize(cardSize);
 
                 JButton openButton = new JButton(portfolioName);
-                openButton.setFont(new Font("SansSerif", Font.BOLD, 18));
+                openButton.setFont(UiConstants.Fonts.HEADING);
                 openButton.setForeground(Color.BLACK);
-                openButton.setBackground(neonOrange);
+                openButton.setBackground(cardBg);
                 openButton.setFocusPainted(false);
                 openButton.setBorder(BorderFactory.createEmptyBorder(10, 16, 10, 16));
                 openButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
 
-                // Add action listener FIRST
                 openButton.addActionListener(nxtEvt -> {
                     portfolioController.execute(username, portfolioId, portfolioName);
                 });
 
                 card.add(openButton, BorderLayout.CENTER);
 
-                // Hover: lighten orange
                 java.awt.event.MouseAdapter hover = new java.awt.event.MouseAdapter() {
                     @Override
                     public void mouseEntered(java.awt.event.MouseEvent evt) {
-                        card.setBackground(neonOrangeHover);
-                        openButton.setBackground(neonOrangeHover);
+                        card.setBackground(cardBgHover);
+                        openButton.setBackground(cardBgHover);
                     }
 
                     @Override
                     public void mouseExited(java.awt.event.MouseEvent evt) {
-                        card.setBackground(neonOrange);
-                        openButton.setBackground(neonOrange);
+                        card.setBackground(cardBg);
+                        openButton.setBackground(cardBg);
                     }
                 };
                 openButton.addMouseListener(hover);
                 card.addMouseListener(hover);
 
-                // Add card directly; FlowLayout will wrap into rows
                 buttonPanel.add(card);
             }
-            
+
             buttonPanel.revalidate();
             buttonPanel.repaint();
         });

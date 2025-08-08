@@ -6,20 +6,12 @@ import java.time.LocalDate;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
-//import interface_adapter.change_password.ChangePasswordController;
-//import interface_adapter.change_password.LoggedInState;
-//import interface_adapter.change_password.LoggedInViewModel;
-//import interface_adapter.logout.LogoutController;
 import interface_adapter.history.HistoryState;
 import interface_adapter.history.HistoryViewModel;
 import interface_adapter.navigation.NavigationController;
 import view.ui.PanelFactory;
 import view.ui.TableFactory;
-import view.ui.UiConstants;
 
-/**
- * The View for the History Use Case.
- */
 public class HistoryView extends BaseView {
     private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Price", "Date"};
     private final HistoryViewModel historyViewModel;
@@ -37,13 +29,15 @@ public class HistoryView extends BaseView {
         this.historyViewModel = historyViewModel;
         this.navigationController = navigationController;
 
-        JPanel contentPanel = createGradientContentPanel();
+        header.add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.WEST);
+
+        JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
-        contentPanel.add(createBackButtonPanel(evt -> this.navigationController.goBack()));
-        contentPanel.add(UiConstants.mediumVerticalGap());
+        contentPanel.setOpaque(false);
         contentPanel.add(PanelFactory.createTitlePanel("Portfolio History"));
         contentPanel.add(createCenterPanel());
-        this.add(contentPanel);
+
+        content.add(contentPanel, BorderLayout.CENTER);
 
         wireListeners();
     }

@@ -18,8 +18,8 @@ public final class LabelFactory {
     public static JLabel createTitleLabel(String text) {
         JLabel title = new JLabel(text);
         title.setAlignmentX(Component.CENTER_ALIGNMENT);
-        title.setFont(UiConstants.TITLE_FONT);
-        title.setForeground(Color.WHITE);
+        title.setFont(UiConstants.Fonts.TITLE);
+        title.setForeground(UiConstants.Colors.ON_PRIMARY);
         return title;
     }
 
@@ -30,8 +30,8 @@ public final class LabelFactory {
      */
     public static JLabel createFormLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(UiConstants.FORM_FONT);
-        label.setForeground(Color.WHITE);
+        label.setFont(UiConstants.Fonts.FORM);
+        label.setForeground(UiConstants.Colors.ON_PRIMARY);
 
         return label;
     }
@@ -43,8 +43,8 @@ public final class LabelFactory {
      */
     public static JLabel createLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(UiConstants.LABEL_FONT);
-        label.setForeground(Color.WHITE);
+        label.setFont(UiConstants.Fonts.LABEL);
+        label.setForeground(UiConstants.Colors.ON_PRIMARY);
         label.setAlignmentX(Component.CENTER_ALIGNMENT);
         return label;
     }
@@ -56,8 +56,8 @@ public final class LabelFactory {
      */
     public static JLabel createListItemLabel(String text) {
         JLabel label = new JLabel(text);
-        label.setFont(UiConstants.NORMAL_FONT);
-        label.setForeground(Color.WHITE);
+        label.setFont(UiConstants.Fonts.BODY);
+        label.setForeground(UiConstants.Colors.ON_PRIMARY);
         return label;
     }
 
@@ -67,8 +67,8 @@ public final class LabelFactory {
      */
     public static JLabel createStatLabel() {
         JLabel statLabel = new JLabel();
-        statLabel.setFont(UiConstants.NORMAL_FONT);
-        statLabel.setForeground(Color.WHITE);
+        statLabel.setFont(UiConstants.Fonts.BODY);
+        statLabel.setForeground(UiConstants.Colors.ON_PRIMARY);
         return statLabel;
     }
 
@@ -79,8 +79,8 @@ public final class LabelFactory {
      */
     public static JLabel createStatLabel(String text) {
         JLabel statLabel = new JLabel(text);
-        statLabel.setFont(UiConstants.NORMAL_FONT);
-        statLabel.setForeground(Color.WHITE);
+        statLabel.setFont(UiConstants.Fonts.BODY);
+        statLabel.setForeground(UiConstants.Colors.ON_PRIMARY);
         return statLabel;
     }
 
@@ -92,8 +92,8 @@ public final class LabelFactory {
     public static JLabel createStatTitleLabel(String text) {
         JLabel statLabel = new JLabel(text);
         statLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-        statLabel.setFont(UiConstants.HEADING_FONT);
-        statLabel.setForeground(Color.WHITE);
+        statLabel.setFont(UiConstants.Fonts.HEADING);
+        statLabel.setForeground(UiConstants.Colors.ON_PRIMARY);
         return statLabel;
     }
 }

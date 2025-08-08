@@ -10,6 +10,7 @@ import javax.swing.border.*;
  */
 public final class UiConstants {
 
+    // Backward-compatible legacy constants (will be mapped to new nested classes)
     // ------------------ COLORS ------------------
     public static final Color PRIMARY_COLOUR = new Color(30, 60, 120);
     public static final Color SECONDARY_COLOUR = new Color(10, 30, 60);
@@ -94,9 +95,67 @@ public final class UiConstants {
     private static final int MEDIUM_VERTICAL_GAP = 10;
     private static final int BIG_VERTICAL_GAP = 20;
 
-    private UiConstants() {
-
+    // New centralized nested classes for modularity & no magic numbers
+    public static final class Colors {
+        public static final Color CANVAS_BG = new Color(245, 245, 245);
+        public static final Color SURFACE_BG = new Color(250, 250, 250);
+        public static final Color GRIDLINE_LIGHT = new Color(230, 230, 230);
+        public static final Color GRIDLINE_LIGHTER = new Color(240, 240, 240);
+        public static final Color TEXT_PRIMARY = Color.DARK_GRAY;
+        public static final Color TEXT_MUTED = new Color(120, 120, 120);
+        public static final Color SUCCESS = new Color(34, 139, 34);
+        public static final Color DANGER = new Color(200, 60, 60);
+        public static final Color PRIMARY = PRIMARY_COLOUR;
+        public static final Color SECONDARY = SECONDARY_COLOUR;
+        // Text color to use on primary/secondary dark areas
+        public static final Color ON_PRIMARY = Color.WHITE;
+        // Common muted border color
+        public static final Color BORDER_MUTED = new Color(220, 220, 220);
+        // Badge background (defaults to DANGER)
+        public static final Color BADGE_BG = DANGER;
     }
+
+    // Section and feature-specific palette
+    public static final class Palette {
+        public static final Color SECTION_INFO = new Color(138, 43, 226);      // BlueViolet
+        public static final Color SECTION_METRICS = new Color(255, 140, 0);    // DarkOrange
+        public static final Color SECTION_PEERS = new Color(30, 144, 255);     // DodgerBlue
+        public static final Color SECTION_DEFAULT = new Color(100, 149, 237);  // CornflowerBlue
+    }
+
+    public static final class Fonts {
+        public static final Font TITLE = TITLE_FONT;
+        public static final Font HEADING = HEADING_FONT;
+        public static final Font BODY = NORMAL_FONT;
+        public static final Font SMALL = SMALL_FONT;
+        public static final Font BUTTON = BUTTON_FONT;
+        public static final Font FORM = FORM_FONT;
+        public static final Font LABEL = LABEL_FONT;
+    }
+
+    public static final class Spacing {
+        public static final int XS = 4;
+        public static final int SM = 8;
+        public static final int MD = 12;
+        public static final int LG = 16;
+        public static final int XL = 24;
+        public static final int XXL = 32;
+
+        public static final Insets CONTENT_INSETS = new Insets(XL, XL, XL, XL);
+        public static final Insets SECTION_INSETS = new Insets(LG, LG, LG, LG);
+    }
+
+    public static final class Sizes {
+        public static final Dimension WINDOW_DEFAULT = DEFAULT_WINDOW_DIM;
+        public static final Dimension TABLE_PREFERRED = PREFERRED_TABLE_DIM;
+        public static final Dimension CHART_PANEL = new Dimension(520, 160);
+        public static final Dimension CHART_PANEL_WIDE = new Dimension(520, 180);
+        public static final Dimension CARD = new Dimension(520, 180);
+        public static final int ICON = ICON_DIM;
+        public static final int ROW_HEIGHT_DEFAULT = ROW_HEIGHT;
+    }
+
+    private UiConstants() { }
 
     /**
      * Create form gap.

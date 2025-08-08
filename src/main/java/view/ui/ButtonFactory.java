@@ -7,28 +7,77 @@ import java.awt.*;
 
 public final class ButtonFactory {
     /**
-     * Create a modern primary blue button.
+     * Create a modern primary button using centralized theme colors.
      */
     public static JButton createPrimaryButton(String text) {
         JButton button = new JButton(text);
-        button.setFont(UiConstants.BUTTON_FONT);
-        button.setBackground(UiConstants.PRIMARY_COLOUR);
-        button.setForeground(Color.WHITE);
+        button.setFont(UiConstants.Fonts.BUTTON);
+        button.setBackground(UiConstants.Colors.PRIMARY);
+        button.setForeground(UiConstants.Colors.ON_PRIMARY);
         button.setFocusPainted(false);
-        button.setBorder(UiConstants.BUTTON_BORDER);
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(UiConstants.Colors.PRIMARY.darker(), 1),
+                UiConstants.EMPTY_BUTTON_BORDER));
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
         return button;
     }
 
     /**
-     * Create a link-style button (flat, blue, underlined text).
+     * Secondary button (subtle prominence).
+     */
+    public static JButton createSecondaryButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(UiConstants.Fonts.BUTTON);
+        button.setBackground(UiConstants.Colors.SECONDARY);
+        button.setForeground(UiConstants.Colors.ON_PRIMARY);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(UiConstants.Colors.SECONDARY.darker(), 1),
+                UiConstants.EMPTY_BUTTON_BORDER));
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return button;
+    }
+
+    /**
+     * Destructive/alert action button.
+     */
+    public static JButton createDangerButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(UiConstants.Fonts.BUTTON);
+        button.setBackground(UiConstants.Colors.DANGER);
+        button.setForeground(UiConstants.Colors.ON_PRIMARY);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(UiConstants.Colors.DANGER.darker(), 1),
+                UiConstants.EMPTY_BUTTON_BORDER));
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return button;
+    }
+
+    /**
+     * Outlined variant using muted border and transparent background.
+     */
+    public static JButton createOutlinedButton(String text) {
+        JButton button = new JButton(text);
+        button.setFont(UiConstants.Fonts.BUTTON);
+        button.setBackground(UiConstants.Colors.SURFACE_BG);
+        button.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+        button.setFocusPainted(false);
+        button.setBorder(BorderFactory.createCompoundBorder(
+                BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1),
+                UiConstants.EMPTY_BUTTON_BORDER));
+        button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+        return button;
+    }
+
+    /**
+     * Create a link-style button (flat, primary-colored, underlined text).
      */
     public static JButton createLinkButton(String text) {
-        // Use HTML to underline text since Font.UNDERLINE is not supported in Java
         JButton button = new JButton("<html><u>" + text + "</u></html>");
-        button.setFont(UiConstants.BUTTON_FONT);
-        button.setForeground(UiConstants.PRIMARY_COLOUR);
-        button.setBackground(Color.WHITE);
+        button.setFont(UiConstants.Fonts.BUTTON);
+        button.setForeground(UiConstants.Colors.PRIMARY);
+        button.setBackground(UiConstants.Colors.SURFACE_BG);
         button.setBorder(BorderFactory.createEmptyBorder());
         button.setFocusPainted(false);
         button.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -43,19 +92,10 @@ public final class ButtonFactory {
     }
 
     /**
-     * Create a styled button.
-     * 
-     * @param text The text
-     * @return The styled button
+     * Backward-compatible alias for primary button.
      */
     public static JButton createStyledButton(String text) {
-        JButton button = new JButton(text);
-        button.setFont(UiConstants.BUTTON_FONT);
-        button.setBackground(UiConstants.PRIMARY_COLOUR);
-        button.setForeground(Color.WHITE);
-        button.setFocusPainted(false);
-        button.setBorder(UiConstants.BUTTON_BORDER);
-        return button;
+        return createPrimaryButton(text);
     }
 
     /**

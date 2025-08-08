@@ -32,8 +32,19 @@ public class TimeSeriesViewModel {
         support.firePropertyChange(PROP_UPDATE, null, null);
     }
 
-    public String getSymbol() { return symbol; }
-    public List<TimeSeriesPoint> getPoints() { return points; }
-    public String getError() { return error; }
-    public String getRange() { return range; }
+    public String getSymbol() {
+        return symbol;
+    }
+
+    public List<TimeSeriesPoint> getPoints() {
+        return points;
+    }
+
+    public String getError() {
+        return error;
+    }
+
+    public String getRange() {
+        return range;
+    }
 }

@@ -15,18 +15,21 @@ public class TwelveDataClient {
     private String apiKey;
 
     private String sanitize(String s) {
-        if (s == null) return "";
+        if (s == null)
+            return "";
         // Remove BOM and whitespace
         s = s.replace("\uFEFF", "").replace("\u200B", "");
         return s.trim();
     }
 
     public synchronized String getApiKey() {
-        if (apiKey != null) return apiKey;
+        if (apiKey != null)
+            return apiKey;
 
         // 1) Try env vars
         String env = System.getenv("TWELVEDATA_API_KEY");
-        if (env == null || env.isBlank()) env = System.getenv("TD_API_KEY");
+        if (env == null || env.isBlank())
+            env = System.getenv("TD_API_KEY");
         if (env != null && !env.isBlank()) {
             apiKey = sanitize(env);
             System.out.println("DEBUG TD: loaded API key from ENV, length=" + apiKey.length());
@@ -45,10 +48,13 @@ public class TwelveDataClient {
                 if (Files.exists(keyPath)) {
                     String raw = Files.readString(keyPath);
                     apiKey = sanitize(raw);
-                    System.out.println("DEBUG TD: loaded API key from file " + keyPath.toAbsolutePath() + ", length=" + apiKey.length());
-                    if (!apiKey.isBlank()) return apiKey;
+                    System.out.println("DEBUG TD: loaded API key from file " + keyPath.toAbsolutePath() + ", length="
+                            + apiKey.length());
+                    if (!apiKey.isBlank())
+                        return apiKey;
                 }
-            } catch (IOException ignored) { }
+            } catch (IOException ignored) {
+            }
         }
 
         apiKey = "";
@@ -72,7 +78,8 @@ public class TwelveDataClient {
                 encSym, encInt, outputsize, encKey);
 
         String body1 = doGet(urlApikey);
-        if (bodyIndicatesKeyOk(body1)) return body1;
+        if (bodyIndicatesKeyOk(body1))
+            return body1;
 
         String body2 = doGet(urlApiUnderscore);
         return body2;
@@ -96,9 +103,11 @@ public class TwelveDataClient {
     }
 
     private boolean bodyIndicatesKeyOk(String body) {
-        if (body == null || body.isBlank()) return false;
+        if (body == null || body.isBlank())
+            return false;
         String lc = body.toLowerCase();
-        if (lc.contains("api key parameter is incorrect") || lc.contains("invalid api key") || lc.contains("not specified")) {
+        if (lc.contains("api key parameter is incorrect") || lc.contains("invalid api key")
+                || lc.contains("not specified")) {
             return false;
         }
         return lc.contains("\"values\"") || lc.contains("\"meta\"");

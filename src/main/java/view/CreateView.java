@@ -27,31 +27,26 @@ public class CreateView extends BaseView implements PropertyChangeListener {
         this.createController = createController;
         this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
         this.createViewModel.addPropertyChangeListener(this);
-        JPanel contentPanel = createGradientContentPanel();
-        setLayout(UiConstants.BORDER_LAYOUT);
-        setBorder(UiConstants.EMPTY_BORDER);
-        this.add(contentPanel, BorderLayout.CENTER);
 
-        // Add back button
-        contentPanel.add(createBackButtonPanel(evt -> {
-            backNavigationHelper.goBackToPortfolios();
-        }), BorderLayout.NORTH);
+        // Header
+        header.add(createBackButtonPanel(evt -> backNavigationHelper.goBackToPortfolios()), BorderLayout.WEST);
+        JLabel title = LabelFactory.createTitleLabel("Create Portfolio");
+        JPanel titleWrap = new JPanel();
+        titleWrap.setOpaque(false);
+        titleWrap.setLayout(new BoxLayout(titleWrap, BoxLayout.Y_AXIS));
+        titleWrap.add(title);
+        header.add(titleWrap, BorderLayout.CENTER);
 
-        // === 1. Top panel with plain text intro ===
+        // Content
         JPanel centerPanel = new JPanel();
         centerPanel.setOpaque(false);
         centerPanel.setLayout(new BoxLayout(centerPanel, BoxLayout.Y_AXIS));
         centerPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-        JLabel welcomeLabel = LabelFactory.createTitleLabel("Create Portfolio");
-
-        centerPanel.add(welcomeLabel);
-        centerPanel.add(UiConstants.smallVerticalGap());
-
         JTextField createNameField = FieldFactory.createTextField();
         final JPanel form = PanelFactory.createFormPanel("Name: ", createNameField);
         centerPanel.add(form);
-        final JButton create = ButtonFactory.createStyledButton("create");
+        final JButton create = ButtonFactory.createPrimaryButton("Create");
         create.addActionListener(
                 evt -> {
                     if (evt.getSource().equals(create)) {
@@ -60,10 +55,10 @@ public class CreateView extends BaseView implements PropertyChangeListener {
                     }
                 });
         create.setAlignmentX(Component.CENTER_ALIGNMENT);
+        centerPanel.add(Box.createVerticalStrut(UiConstants.Spacing.MD));
         centerPanel.add(create);
 
-        // Add to main layout
-        contentPanel.add(centerPanel, BorderLayout.CENTER);
+        content.add(centerPanel, BorderLayout.NORTH);
     }
 
     @Override

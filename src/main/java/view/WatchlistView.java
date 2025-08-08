@@ -46,75 +46,60 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         this.mainViewModel = mainViewModel;
         this.mainViewModel.addPropertyChangeListener(this);
 
-        // Use modern layout similar to Login/Signup views
-        setLayout(new GridBagLayout());
-        setBackground(new Color(30, 60, 120)); // PRIMARY_COLOUR
+        // Header
+        JLabel titleLabel = new JLabel("Watchlist");
+        titleLabel.setFont(UiConstants.Fonts.TITLE);
+        titleLabel.setForeground(UiConstants.Colors.ON_PRIMARY);
+        JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
+        headerLeft.setOpaque(false);
+        headerLeft.add(titleLabel);
+        header.add(headerLeft, BorderLayout.WEST);
 
-        // Create main white panel
+        // Main content panel
         JPanel mainPanel = new JPanel(new GridBagLayout());
-        mainPanel.setBackground(new Color(245, 245, 245));
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(30, 30, 30, 30));
+        mainPanel.setBackground(UiConstants.Colors.CANVAS_BG);
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(
+            UiConstants.Spacing.XL,
+            UiConstants.Spacing.XL,
+            UiConstants.Spacing.XL,
+            UiConstants.Spacing.XL
+        ));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.BOTH;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.weightx = 1.0;
 
-        // Title section
-        JLabel titleLabel = new JLabel("Watchlist");
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
-        titleLabel.setForeground(new Color(30, 60, 120));
-        titleLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        gbc.gridx = 0;
-        gbc.gridy = 0;
-        gbc.gridwidth = 1;
-        mainPanel.add(titleLabel, gbc);
-
-        gbc.gridy++;
-        mainPanel.add(Box.createVerticalStrut(10), gbc);
-
         // Description
         JLabel descriptionLabel = new JLabel("Track your favorite stocks and monitor their performance.");
-        descriptionLabel.setFont(new Font("SansSerif", Font.PLAIN, 16));
-        descriptionLabel.setForeground(Color.DARK_GRAY);
+        descriptionLabel.setFont(UiConstants.Fonts.BODY);
+        descriptionLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
         descriptionLabel.setHorizontalAlignment(SwingConstants.CENTER);
-        gbc.gridy++;
-        mainPanel.add(descriptionLabel, gbc);
-
-        gbc.gridy++;
-        mainPanel.add(Box.createVerticalStrut(20), gbc);
 
         // Add ticker section
         JPanel addTickerSection = createModernAddTickerPanel();
-        gbc.gridy++;
-        mainPanel.add(addTickerSection, gbc);
-
-        gbc.gridy++;
-        mainPanel.add(Box.createVerticalStrut(20), gbc);
 
         // Watchlist display section
         JPanel watchlistSection = createModernWatchlistPanel();
-        gbc.gridy++;
-        gbc.fill = GridBagConstraints.BOTH;
-        gbc.weightx = 1.0;
-        gbc.weighty = 1.0;
-        mainPanel.add(watchlistSection, gbc);
 
-        // Add main panel to a scroll pane for overflow handling
+        // Layout rows
+        int row = 0;
+        gbc.gridx = 0; gbc.gridy = row++; gbc.gridwidth = 1; gbc.weighty = 0;
+        mainPanel.add(descriptionLabel, gbc);
+        gbc.gridy = row++; mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.XL), gbc);
+        gbc.gridy = row++; mainPanel.add(addTickerSection, gbc);
+        gbc.gridy = row++; mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.LG), gbc);
+        gbc.gridy = row++; gbc.weighty = 1.0; mainPanel.add(watchlistSection, gbc);
+
+        // Add to BaseView content area
         JScrollPane scrollPane = new JScrollPane(mainPanel);
-        scrollPane.setBackground(UiConstants.PRIMARY_COLOUR);
-        scrollPane.getViewport().setBackground(UiConstants.PRIMARY_COLOUR);
+        scrollPane.setBackground(UiConstants.Colors.CANVAS_BG);
+        scrollPane.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        
-        // Add scroll pane to view with proper resizing
-        GridBagConstraints viewGbc = new GridBagConstraints();
-        viewGbc.fill = GridBagConstraints.BOTH;
-        viewGbc.weightx = 1.0;
-        viewGbc.weighty = 1.0;
-        this.add(scrollPane, viewGbc);
+        content.add(scrollPane, BorderLayout.CENTER);
 
         // Fetch when the view becomes visible (most up-to-date and avoids rate limit on app start)
         this.addComponentListener(new java.awt.event.ComponentAdapter() {
@@ -127,20 +112,20 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
 
     private JPanel createModernAddTickerPanel() {
         JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(new Color(245, 245, 245));
+        panel.setBackground(UiConstants.Colors.CANVAS_BG);
         panel.setOpaque(true);
         panel.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-            BorderFactory.createEmptyBorder(15, 15, 15, 15)
+            BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG)
         ));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(5, 5, 5, 5);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Input field
         tickerField = new JTextField();
-        tickerField.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        tickerField.setFont(UiConstants.Fonts.FORM);
         tickerField.setBorder(BorderFactory.createCompoundBorder(
             BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
             BorderFactory.createEmptyBorder(8, 12, 8, 12)
@@ -149,19 +134,19 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
 
         // Placeholder text behavior
         tickerField.setText("Enter ticker symbol (e.g., AAPL)");
-        tickerField.setForeground(Color.GRAY);
+        tickerField.setForeground(UiConstants.Colors.TEXT_MUTED);
         tickerField.addFocusListener(new java.awt.event.FocusAdapter() {
             public void focusGained(java.awt.event.FocusEvent evt) {
                 if (tickerField.getText().equals("Enter ticker symbol (e.g., AAPL)")) {
                     tickerField.setText("");
-                    tickerField.setForeground(Color.BLACK);
+                    tickerField.setForeground(UiConstants.Colors.TEXT_PRIMARY);
                 }
             }
 
             public void focusLost(java.awt.event.FocusEvent evt) {
                 if (tickerField.getText().isEmpty()) {
                     tickerField.setText("Enter ticker symbol (e.g., AAPL)");
-                    tickerField.setForeground(Color.GRAY);
+                    tickerField.setForeground(UiConstants.Colors.TEXT_MUTED);
                 }
             }
         });
@@ -173,9 +158,9 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
 
         // Add button
         JButton addButton = new JButton("Add to Watchlist");
-        addButton.setFont(new Font("SansSerif", Font.BOLD, 14));
-        addButton.setBackground(new Color(30, 60, 120));
-        addButton.setForeground(Color.WHITE);
+        addButton.setFont(UiConstants.Fonts.BUTTON);
+        addButton.setBackground(UiConstants.Colors.PRIMARY);
+        addButton.setForeground(UiConstants.Colors.ON_PRIMARY);
         addButton.setFocusPainted(false);
         addButton.setBorder(BorderFactory.createEmptyBorder(10, 20, 10, 20));
         addButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -188,7 +173,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
 
         gbc.gridx = 1;
         gbc.weightx = 0.0;
-        gbc.insets = new Insets(5, 10, 5, 5);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.LG, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
         panel.add(addButton, gbc);
 
         return panel;
@@ -196,19 +181,19 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
 
     private JPanel createModernWatchlistPanel() {
         JPanel container = new JPanel(new BorderLayout());
-        container.setBackground(new Color(245, 245, 245));
+        container.setBackground(UiConstants.Colors.CANVAS_BG);
         container.setOpaque(true);
 
         // Initialize watchlist panel
         watchlistPanel = new JPanel();
         watchlistPanel.setLayout(new BoxLayout(watchlistPanel, BoxLayout.Y_AXIS));
-        watchlistPanel.setBackground(new Color(245, 245, 245));
+        watchlistPanel.setBackground(UiConstants.Colors.CANVAS_BG);
         watchlistPanel.setOpaque(true);
 
         JScrollPane scrollPane = new JScrollPane(watchlistPanel);
-        scrollPane.setBackground(new Color(245, 245, 245));
-        scrollPane.getViewport().setBackground(new Color(245, 245, 245));
-        scrollPane.setBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1));
+        scrollPane.setBackground(UiConstants.Colors.CANVAS_BG);
+        scrollPane.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
+        scrollPane.setBorder(BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1));
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
@@ -247,7 +232,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         try {
             userDao.addToWatchlist(username, ticker);
             tickerField.setText("Enter ticker symbol (e.g., AAPL)");
-            tickerField.setForeground(Color.GRAY);
+            tickerField.setForeground(UiConstants.Colors.TEXT_MUTED);
             refreshWatchlist();
             JOptionPane.showMessageDialog(this, ticker + " added to watchlist", "Success",
                     JOptionPane.INFORMATION_MESSAGE);
@@ -284,7 +269,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         if (mainState == null || mainState.getUsername() == null || mainState.getUsername().isEmpty()) {
             JLabel noUserLabel = new JLabel("Please log in to view your watchlist.");
             noUserLabel.setFont(new Font("Sans Serif", Font.ITALIC, 14));
-            noUserLabel.setForeground(new Color(150, 150, 150));
+            noUserLabel.setForeground(UiConstants.Colors.TEXT_MUTED);
             noUserLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             watchlistPanel.add(noUserLabel);
             watchlistPanel.revalidate();
@@ -300,7 +285,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
             if (watchlist.isEmpty()) {
                 JLabel emptyLabel = new JLabel("Your watchlist is empty. Add some tickers above!");
                 emptyLabel.setFont(new Font("Sans Serif", Font.ITALIC, 14));
-                emptyLabel.setForeground(new Color(150, 150, 150));
+                emptyLabel.setForeground(UiConstants.Colors.TEXT_MUTED);
                 emptyLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
                 watchlistPanel.add(emptyLabel);
             } else {
@@ -313,7 +298,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         } catch (Exception e) {
             JLabel errorLabel = new JLabel("Error loading watchlist: " + e.getMessage());
             errorLabel.setFont(new Font("Sans Serif", Font.PLAIN, 14));
-            errorLabel.setForeground(Color.RED);
+            errorLabel.setForeground(UiConstants.Colors.DANGER);
             errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
             watchlistPanel.add(errorLabel);
         }
@@ -325,17 +310,17 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
     private JPanel createTickerPanel(String ticker) {
         String apiTicker = ticker == null ? "" : ticker.trim().toUpperCase();
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(245, 245, 245));
+        panel.setBackground(UiConstants.Colors.CANVAS_BG);
         panel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-                BorderFactory.createEmptyBorder(15, 20, 15, 20)));
+                BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.XL, UiConstants.Spacing.LG, UiConstants.Spacing.XL)));
 
         // Left: Ticker label and range selector
         JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
         left.setOpaque(false);
         JLabel tickerLabel = new JLabel(apiTicker);
         tickerLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
-        tickerLabel.setForeground(Color.DARK_GRAY);
+        tickerLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
         JComboBox<String> range = new JComboBox<>(new String[]{"1W", "1M", "3M", "6M", "1Y"});
         range.setFont(new Font("SansSerif", Font.PLAIN, 12));
         JLabel changeLabel = new JLabel("");
@@ -347,12 +332,12 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         // Center: chart holder + error label
         JPanel chartHolder = new JPanel(new BorderLayout());
         chartHolder.setOpaque(false);
-        chartHolder.setPreferredSize(new Dimension(520, 180));
+        chartHolder.setPreferredSize(UiConstants.Sizes.CHART_PANEL_WIDE);
         chartHolder.setMinimumSize(new Dimension(360, 160));
         chartHolder.setMaximumSize(new Dimension(Integer.MAX_VALUE, 220));
         JLabel errorLabel = new JLabel("");
         errorLabel.setFont(new Font("SansSerif", Font.ITALIC, 13));
-        errorLabel.setForeground(new Color(200, 60, 60));
+        errorLabel.setForeground(UiConstants.Colors.DANGER);
         errorLabel.setHorizontalAlignment(SwingConstants.CENTER);
         chartHolder.add(errorLabel, BorderLayout.SOUTH);
 
@@ -368,8 +353,8 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         // Right: Remove
         JButton removeButton = new JButton("Remove");
         removeButton.setFont(new Font("SansSerif", Font.PLAIN, 12));
-        removeButton.setBackground(new Color(220, 53, 69));
-        removeButton.setForeground(Color.WHITE);
+        removeButton.setBackground(UiConstants.Colors.DANGER);
+        removeButton.setForeground(UiConstants.Colors.ON_PRIMARY);
         removeButton.setFocusPainted(false);
         removeButton.setBorder(BorderFactory.createEmptyBorder(6, 12, 6, 12));
         removeButton.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
@@ -377,11 +362,11 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         removeButton.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseEntered(java.awt.event.MouseEvent evt) {
-                removeButton.setBackground(new Color(200, 35, 51));
+                removeButton.setBackground(UiConstants.Colors.DANGER.darker());
             }
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
-                removeButton.setBackground(new Color(220, 53, 69));
+                removeButton.setBackground(UiConstants.Colors.DANGER);
             }
         });
 
@@ -420,14 +405,14 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
                 JLabel tLabel = (JLabel) chartHolder.getClientProperty("ts_tickerLabel");
                 JLabel cLabel = (JLabel) chartHolder.getClientProperty("ts_changeLabel");
                 if (err != null && !err.isBlank()) {
-                    if (tLabel != null) tLabel.setForeground(Color.DARK_GRAY);
-                    if (cLabel != null) { cLabel.setText(""); cLabel.setForeground(Color.DARK_GRAY); }
+                    if (tLabel != null) tLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+                    if (cLabel != null) { cLabel.setText(""); cLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY); }
                     errorLabel.setText(err);
                     chartHolder.add(buildEmptyChartPanel(), BorderLayout.CENTER);
                     chartHolder.add(errorLabel, BorderLayout.SOUTH);
                 } else if (pts == null || pts.isEmpty()) {
-                    if (tLabel != null) tLabel.setForeground(Color.DARK_GRAY);
-                    if (cLabel != null) { cLabel.setText("No data"); cLabel.setForeground(new Color(120,120,120)); }
+                    if (tLabel != null) tLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+                    if (cLabel != null) { cLabel.setText("No data"); cLabel.setForeground(UiConstants.Colors.TEXT_MUTED); }
                     errorLabel.setText("No data for this range");
                     chartHolder.add(buildEmptyChartPanel(), BorderLayout.CENTER);
                     chartHolder.add(errorLabel, BorderLayout.SOUTH);
@@ -437,8 +422,8 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
                     double change = last - first;
                     double pct = first != 0.0 ? (change / first) * 100.0 : 0.0;
                     boolean up = last >= first;
-                    Color upColor = new Color(34, 139, 34);
-                    Color downColor = new Color(200, 60, 60);
+                    Color upColor = UiConstants.Colors.SUCCESS;
+                    Color downColor = UiConstants.Colors.DANGER;
                     if (tLabel != null) tLabel.setForeground(up ? upColor : downColor);
                     if (cLabel != null) {
                         cLabel.setText(String.format((up ? "+%.2f%%" : "%.2f%%"), pct));
@@ -460,13 +445,12 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         return controller;
     }
 
-    // --- Async chart loading via Controller ---
     private void loadTickerChart(String ticker, String range, JPanel chartHolder, JLabel errorLabel) {
         // Show loading state
         errorLabel.setText("");
         chartHolder.removeAll();
         JLabel loading = new JLabel("Loading...", SwingConstants.CENTER);
-        loading.setForeground(new Color(120, 120, 120));
+        loading.setForeground(UiConstants.Colors.TEXT_MUTED);
         chartHolder.add(loading, BorderLayout.CENTER);
         chartHolder.add(errorLabel, BorderLayout.SOUTH);
         chartHolder.revalidate();
@@ -499,9 +483,9 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         chart.setBackgroundPaint(Color.WHITE);
         chart.setAntiAlias(true);
         XYPlot plot = chart.getXYPlot();
-        plot.setBackgroundPaint(new Color(250, 250, 250));
-        plot.setDomainGridlinePaint(new Color(230, 230, 230));
-        plot.setRangeGridlinePaint(new Color(230, 230, 230));
+        plot.setBackgroundPaint(UiConstants.Colors.SURFACE_BG);
+        plot.setDomainGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHT);
+        plot.setRangeGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHT);
         plot.setAxisOffset(new RectangleInsets(2, 2, 2, 2));
 
         // Smooth spline renderer
@@ -515,16 +499,16 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
             double first = series.getValue(0).doubleValue();
             double last = series.getValue(series.getItemCount() - 1).doubleValue();
             if (Double.isFinite(first) && Double.isFinite(last)) {
-                if (last >= first) lineColor = new Color(34, 139, 34);
-                else lineColor = new Color(200, 60, 60);
+                if (last >= first) lineColor = UiConstants.Colors.SUCCESS;
+                else lineColor = UiConstants.Colors.DANGER;
             }
         }
         renderer.setSeriesPaint(0, lineColor);
         plot.setRenderer(renderer);
 
         ChartPanel panel = new ChartPanel(chart);
-        panel.setPreferredSize(new Dimension(520, 160));
-        panel.setBackground(new Color(245, 245, 245));
+        panel.setPreferredSize(UiConstants.Sizes.CHART_PANEL);
+        panel.setBackground(UiConstants.Colors.CANVAS_BG);
         panel.setDomainZoomable(false);
         panel.setRangeZoomable(false);
         return panel;
@@ -536,12 +520,12 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         chart.setBackgroundPaint(Color.WHITE);
         chart.setAntiAlias(true);
         XYPlot plot = chart.getXYPlot();
-        plot.setBackgroundPaint(new Color(250, 250, 250));
-        plot.setDomainGridlinePaint(new Color(240, 240, 240));
-        plot.setRangeGridlinePaint(new Color(240, 240, 240));
+        plot.setBackgroundPaint(UiConstants.Colors.SURFACE_BG);
+        plot.setDomainGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHTER);
+        plot.setRangeGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHTER);
         ChartPanel panel = new ChartPanel(chart);
         panel.setPreferredSize(new Dimension(480, 160));
-        panel.setBackground(new Color(245, 245, 245));
+        panel.setBackground(UiConstants.Colors.CANVAS_BG);
         return panel;
     }
 

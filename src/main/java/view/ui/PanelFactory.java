@@ -41,7 +41,7 @@ public final class PanelFactory {
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         panel.setOpaque(false);
 
-        label.setForeground(Color.WHITE);
+        label.setForeground(UiConstants.Colors.ON_PRIMARY);
         label.setPreferredSize(UiConstants.PREFERRED_LABEL_DIM);
         label.setMaximumSize(UiConstants.PREFERRED_LABEL_DIM);
         label.setMinimumSize(UiConstants.PREFERRED_LABEL_DIM);
@@ -95,11 +95,11 @@ public final class PanelFactory {
         panel.setOpaque(false);
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
         TitledBorder border = TitledBorderFactory.createLightTitledBorder(title);
-        border.setTitleFont(UiConstants.FORM_FONT);
+        border.setTitleFont(UiConstants.Fonts.FORM);
         panel.setBorder(border);
         panel.setMinimumSize(UiConstants.SINGLE_DIM);
 
-        panel.setForeground(Color.WHITE);
+        panel.setForeground(UiConstants.Colors.ON_PRIMARY);
         return panel;
     }
 
@@ -140,7 +140,7 @@ public final class PanelFactory {
         panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(
                 UiConstants.TRANSLUCENT_BORDER, 1, true),
                 UiConstants.EMPTY_BORDER));
-        panel.setForeground(Color.WHITE);
+        panel.setForeground(UiConstants.Colors.ON_PRIMARY);
 
         summaryLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(LabelFactory.createStatTitleLabel(title));
@@ -149,9 +149,7 @@ public final class PanelFactory {
 
         if (detailPanels.length == 1) {
             panel.add(detailPanels[0]);
-        }
-
-        else if (detailPanels.length == 2) {
+        } else if (detailPanels.length == 2) {
             panel.add(createSideBySide(detailPanels[0], detailPanels[1]));
         }
 

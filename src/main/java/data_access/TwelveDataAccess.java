@@ -50,9 +50,11 @@ public class TwelveDataAccess implements TimeSeriesDataAccess {
             throw new Exception(msg);
         }
         JSONArray values = root.optJSONArray("values");
-        if (values == null) return new ArrayList<>();
+        if (values == null)
+            return new ArrayList<>();
 
-        // TwelveData dates are in local market tz, string like "2025-08-07" or with time for intraday
+        // TwelveData dates are in local market tz, string like "2025-08-07" or with
+        // time for intraday
         // We'll parse to epoch millis in UTC
         SimpleDateFormat dfDate = new SimpleDateFormat("yyyy-MM-dd");
         dfDate.setTimeZone(TimeZone.getTimeZone("UTC"));
@@ -64,19 +66,22 @@ public class TwelveDataAccess implements TimeSeriesDataAccess {
             JSONObject v = values.getJSONObject(i);
             String dt = v.optString("datetime");
             String closeStr = v.optString("close");
-            if (dt == null || closeStr == null || closeStr.isEmpty()) continue;
+            if (dt == null || closeStr == null || closeStr.isEmpty())
+                continue;
             try {
                 Date d;
                 if (dt.length() == 10) {
                     d = dfDate.parse(dt);
                 } else {
                     // TwelveData intraday sometimes returns "YYYY-MM-DD HH:mm:ss"
-                    if (dt.length() == 16) dt = dt + ":00";
+                    if (dt.length() == 16)
+                        dt = dt + ":00";
                     d = dfDateTime.parse(dt);
                 }
                 double close = Double.parseDouble(closeStr);
                 out.add(new TimeSeriesPoint(d.getTime(), close));
-            } catch (Exception ignore) { }
+            } catch (Exception ignore) {
+            }
         }
         return out;
     }

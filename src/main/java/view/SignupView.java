@@ -5,7 +5,6 @@ import interface_adapter.signup.SignupState;
 import interface_adapter.signup.SignupController;
 import view.ui.ButtonFactory;
 import view.ui.FieldFactory;
-import view.ui.PanelFactory;
 import view.ui.UiConstants;
 
 import javax.swing.*;
@@ -34,26 +33,33 @@ public class SignupView extends BaseView implements PropertyChangeListener {
         this.signupController = signupController;
         signupViewModel.addPropertyChangeListener(this);
 
-        setLayout(new GridBagLayout());
-        setBackground(UiConstants.PRIMARY_COLOUR);
-        GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(10, 10, 10, 10);
-        gbc.fill = GridBagConstraints.HORIZONTAL;
+        // Header
+        JLabel title = new JLabel("Sign up");
+        title.setFont(UiConstants.Fonts.TITLE);
+        title.setForeground(Color.WHITE);
+        JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
+        headerLeft.setOpaque(false);
+        headerLeft.add(title);
+        header.add(headerLeft, BorderLayout.WEST);
 
+        // Main panel
         JPanel panel = new JPanel(new GridBagLayout());
-        panel.setBackground(Color.WHITE);
-        panel.setBorder(BorderFactory.createEmptyBorder(40, 40, 40, 40));
+        panel.setBackground(UiConstants.Colors.CANVAS_BG);
+        panel.setBorder(BorderFactory.createEmptyBorder(
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL));
 
-        JLabel titleLabel = new JLabel("Sign up");
-        titleLabel.setFont(new Font("SansSerif", Font.BOLD, 28));
-        titleLabel.setForeground(UiConstants.PRIMARY_COLOUR);
+        GridBagConstraints gbc = new GridBagConstraints();
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
         gbc.gridwidth = 2;
-        panel.add(titleLabel, gbc);
 
         gbc.gridy++;
-        panel.add(Box.createVerticalStrut(20), gbc);
+        panel.add(Box.createVerticalStrut(UiConstants.Spacing.XL), gbc);
 
         gbc.gridy++;
         panel.add(createFieldPanel("Username", usernameField), gbc);
@@ -65,33 +71,30 @@ public class SignupView extends BaseView implements PropertyChangeListener {
         panel.add(createFieldPanel("Confirm Password", confirmPasswordField), gbc);
 
         gbc.gridy++;
-        errorLabel.setForeground(Color.RED);
-        errorLabel.setFont(new Font("SansSerif", Font.PLAIN, 13));
+        errorLabel.setForeground(UiConstants.Colors.DANGER);
+        errorLabel.setFont(UiConstants.Fonts.SMALL);
         errorLabel.setVisible(false);
         panel.add(errorLabel, gbc);
 
         gbc.gridy++;
         signUpButton.setPreferredSize(new Dimension(0, 40));
-        signUpButton.setBackground(UiConstants.PRIMARY_COLOUR);
-        signUpButton.setForeground(Color.WHITE);
-        signUpButton.setFont(new Font("SansSerif", Font.BOLD, 16));
         panel.add(signUpButton, gbc);
 
         gbc.gridy++;
         panel.add(loginButton, gbc);
 
-        add(panel);
-        wireListeners();
-    }
+        // Add to BaseView content within scroll pane
+        JScrollPane scroll = new JScrollPane(panel);
+        scroll.setBorder(null);
+        scroll.setBackground(UiConstants.Colors.CANVAS_BG);
+        scroll.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
+        content.add(scroll, BorderLayout.CENTER);
 
-    private JPanel createFormPanel() {
-        // No longer used; replaced by createFieldPanel for modern layout
-        return null;
+        wireListeners();
     }
 
     private void wireListeners() {
         signUpButton.addActionListener(evt -> {
-            SignupState signupState = signupViewModel.getState();
             signupController.execute(usernameField.getText(), new String(passwordField.getPassword()),
                     new String(confirmPasswordField.getPassword()));
         });
@@ -142,18 +145,18 @@ public class SignupView extends BaseView implements PropertyChangeListener {
     }
 
     private JPanel createFieldPanel(String label, JComponent field) {
-        JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(Color.WHITE);
+        JPanel p = new JPanel(new BorderLayout());
+        p.setBackground(UiConstants.Colors.CANVAS_BG);
         JLabel lbl = new JLabel(label);
-        lbl.setFont(new Font("SansSerif", Font.PLAIN, 15));
-        lbl.setForeground(Color.DARK_GRAY);
-        panel.add(lbl, BorderLayout.NORTH);
-        field.setFont(new Font("SansSerif", Font.PLAIN, 15));
+        lbl.setFont(UiConstants.Fonts.BODY);
+        lbl.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+        p.add(lbl, BorderLayout.NORTH);
+        field.setFont(UiConstants.Fonts.FORM);
         field.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
                 new javax.swing.border.EmptyBorder(0, 8, 0, 0)));
         field.setBackground(Color.WHITE);
         field.setPreferredSize(new Dimension(0, 36));
-        panel.add(field, BorderLayout.CENTER);
-        return panel;
+        p.add(field, BorderLayout.CENTER);
+        return p;
     }
 }

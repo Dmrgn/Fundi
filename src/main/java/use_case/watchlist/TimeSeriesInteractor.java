@@ -19,7 +19,8 @@ public class TimeSeriesInteractor implements TimeSeriesInputBoundary {
             List<TimeSeriesPoint> points = dataAccess.getTimeSeries(request.symbol, request.range);
             presenter.present(new TimeSeriesResponse(request.symbol, points, null, request.range));
         } catch (Exception ex) {
-            presenter.present(new TimeSeriesResponse(request.symbol, java.util.List.of(), ex.getMessage(), request.range));
+            presenter.present(
+                    new TimeSeriesResponse(request.symbol, java.util.List.of(), ex.getMessage(), request.range));
         }
     }
 }

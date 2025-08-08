@@ -82,22 +82,22 @@ public class NewsInteractor implements NewsInputBoundary {
                     JSONArray articles = new JSONArray(jsonData);
 
                     if (articles.length() > 0) {
-                        allNews.add(new String[]{"Latest News for " + symbol, "-----------------------------------"});
+                        allNews.add(new String[]{"Latest News for " + symbol, "-----------------------------------", ""});
                     }
-
                     // Limit to 3 articles per symbol
                     for (int i = 0; i < Math.min(3, articles.length()); i++) {
                         JSONObject article = articles.getJSONObject(i);
                         allNews.add(new String[]{
-                            article.optString("headline", "No Title"),
-                            article.optString("summary", "No Summary Available.")
+                                article.optString("headline", "No Title"),
+                                article.optString("summary", "No Summary Available."),
+                                article.optString("url", "")
                         });
                     }
                 }
             }
 
             if (allNews.isEmpty()) {
-                allNews.add(new String[]{"No recent news found for your query.", "Please try another stock."});
+                allNews.add(new String[]{"No recent news found for your query.", "Please try another stock.", ""});
             }
 
             NewsOutputData outputData = new NewsOutputData(allNews.toArray(new String[0][]));

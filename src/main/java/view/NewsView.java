@@ -9,6 +9,8 @@ import interface_adapter.navigation.NavigationController;
 import view.ui.ButtonFactory;
 import view.ui.LabelFactory;
 import view.ui.FieldFactory;
+import java.awt.Desktop;
+import java.net.URI;
 
 public class NewsView extends BaseView {
     private final NewsViewModel newsViewModel;
@@ -133,6 +135,10 @@ public class NewsView extends BaseView {
         newsPanel.removeAll();
 
         for (String[] newsItem : state.getNewsItems()) {
+            String title = newsItem[0];
+            String summary = newsItem.length > 1 ? newsItem[1] : "";
+            String url = newsItem.length > 2 ? newsItem[2] : "";
+
             JPanel itemPanel = new JPanel();
             itemPanel.setLayout(new BoxLayout(itemPanel, BoxLayout.Y_AXIS));
             itemPanel.setBorder(BorderFactory.createCompoundBorder(
@@ -142,14 +148,12 @@ public class NewsView extends BaseView {
             itemPanel.setMaximumSize(new Dimension(800, 150));
             itemPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
-            // Title with custom styling
-            JLabel titleLabel = new JLabel(newsItem[0]);
+            JLabel titleLabel = new JLabel(title);
             titleLabel.setForeground(Color.WHITE);
             titleLabel.setFont(new Font("Sans Serif", Font.BOLD, 14));
             titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-            // Description with custom styling
-            JTextArea descArea = new JTextArea(newsItem[1]);
+            JTextArea descArea = new JTextArea(summary);
             descArea.setWrapStyleWord(true);
             descArea.setLineWrap(true);
             descArea.setEditable(false);
@@ -159,18 +163,48 @@ public class NewsView extends BaseView {
             descArea.setFont(new Font("Sans Serif", Font.PLAIN, 12));
             descArea.setAlignmentX(Component.LEFT_ALIGNMENT);
 
+            if (url != null && !url.isBlank()) {
+                // Make clickable
+                itemPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                itemPanel.addMouseListener(new java.awt.event.MouseAdapter() {
+                    @Override
+                    public void mouseEntered(java.awt.event.MouseEvent e) {
+                        itemPanel.setBackground(new Color(35, 50, 90));
+                        itemPanel.repaint();
+                    }
+
+                    @Override
+                    public void mouseExited(java.awt.event.MouseEvent e) {
+                        itemPanel.setBackground(new Color(20, 30, 70));
+                        itemPanel.repaint();
+                    }
+
+                    @Override
+                    public void mouseClicked(java.awt.event.MouseEvent e) {
+                        try {
+                            if (Desktop.isDesktopSupported()) {
+                                Desktop.getDesktop().browse(new URI(url));
+                            }
+                        } catch (Exception ex) {
+                            JOptionPane.showMessageDialog(NewsView.this,
+                                    "Could not open link: " + ex.getMessage(),
+                                    "Error",
+                                    JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+                });
+                titleLabel.setText("🔗 " + title);
+            }
+
             itemPanel.add(titleLabel);
             itemPanel.add(Box.createVerticalStrut(8));
             itemPanel.add(descArea);
 
-            // Add padding between news items
             newsPanel.add(Box.createVerticalStrut(15));
             newsPanel.add(itemPanel);
         }
 
-        // Add final padding at bottom
         newsPanel.add(Box.createVerticalStrut(15));
-
         newsPanel.revalidate();
         newsPanel.repaint();
     }

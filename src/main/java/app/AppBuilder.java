@@ -42,6 +42,15 @@ import interface_adapter.search.SearchPresenter;
 import interface_adapter.search.SearchViewModel;
 import interface_adapter.sell.SellController;
 import interface_adapter.sell.SellViewModel;
+import interface_adapter.shortsell.ShortController;
+import interface_adapter.shortsell.ShortPresenter;
+import interface_adapter.shortsell.ShortViewModel;
+import use_case.shortsell.ShortInputBoundary;
+import use_case.shortsell.ShortInteractor;
+import use_case.shortsell.ShortOutputBoundary;
+import use_case.shortsell.ShortStockDataAccessInterface;
+import use_case.shortsell.ShortTransactionDataAccessInterface;
+import view.ShortView;
 import interface_adapter.signup.SignupController;
 import interface_adapter.signup.SignupViewModel;
 import use_case.login.LoginUserDataAccessInterface;
@@ -79,6 +88,7 @@ public class AppBuilder {
     private final PortfolioViewModel portfolioViewModel = new PortfolioViewModel();
     private final BuyViewModel buyViewModel = new BuyViewModel();
     private final SellViewModel sellViewModel = new SellViewModel();
+    private final ShortViewModel shortViewModel = new ShortViewModel();
     private final HistoryViewModel historyViewModel = new HistoryViewModel();
     private final AnalysisViewModel analysisViewModel = new AnalysisViewModel();
     private final RecommendViewModel recommendViewModel = new RecommendViewModel();
@@ -121,6 +131,7 @@ public class AppBuilder {
             portfolioViewModel,
             buyViewModel,
             sellViewModel,
+            shortViewModel,
             transactionDataAccessObject,
             stockDataAccessObject,
             navigationController);
@@ -138,6 +149,8 @@ public class AppBuilder {
             portfolioViewModel,
             stockDataAccessObject,
             transactionDataAccessObject);
+    // Short selling controller (initialized in constructor)
+    private ShortController shortController;
 
     private final HistoryController historyController = HistoryUseCaseFactory.create(
             viewManagerModel,
@@ -187,6 +200,7 @@ public class AppBuilder {
     private NewsView newsView;
     private BuyView buyView;
     private SellView sellView;
+    private ShortView shortView;
     private HistoryView historyView;
     private AnalysisView analysisView;
     private RecommendView recommendView;
@@ -198,9 +212,7 @@ public class AppBuilder {
         SearchDataAccessInterface tempSearchDataAccessObject;
         try {
             tempSearchDataAccessObject = new FinnhubSearchDataAccessObject();
-        }
-
-        catch (IOException exception) {
+        } catch (IOException exception) {
             javax.swing.JOptionPane.showMessageDialog(null,
                     "Failed to initialize FinnHub search API. Application exiting...\n"
                             + exception.getMessage(),
@@ -226,6 +238,7 @@ public class AppBuilder {
 
     /**
      * Adds the settings view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addSettingsView() {
@@ -238,17 +251,26 @@ public class AppBuilder {
 
     /**
      * Adds the Tabbed Main View to the application.
+     *
      * @return this builder
      */
-    public AppBuilder addTabbedMainView() {
+    public AppBuilder addTabbedMainView() throws IOException {
         dashboardView = DashboardViewFactory.create(mainViewModel, searchController, searchViewModel,
                 dashboardViewModel, dashboardController, navigationController,
                 companyDetailsController);
         final LeaderboardController tempLeaderboardController = LeaderboardUseCaseFactory
                 .createLeaderboardController(leaderboardViewModel);
-        leaderboardView = LeaderboardViewFactory.create(leaderboardViewModel, tempLeaderboardController);
-        watchlistView = WatchlistViewFactory.create(mainViewModel,
-                (DBUserDataAccessObject) userDataAccessObject);
+        this.companyDetailsController = CompanyDetailsUseCaseFactory.create(
+                viewManagerModel, companyDetailsViewModel, navigationController);
+
+        // Initialize short sell use case
+        ShortOutputBoundary shortPresenter = new ShortPresenter(viewManagerModel, shortViewModel, portfolioViewModel);
+        ShortInputBoundary shortInteractor = new ShortInteractor(
+                (ShortStockDataAccessInterface) stockDataAccessObject,
+                (ShortTransactionDataAccessInterface) transactionDataAccessObject,
+                shortPresenter);
+        this.shortController = new ShortController(shortInteractor);
+
         tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfolioHubController, newsController,
                 portfolioController, navigationController, searchController, searchViewModel,
                 dashboardView, portfoliosView, newsView, watchlistView, leaderboardView, settingsView);
@@ -258,6 +280,7 @@ public class AppBuilder {
 
     /**
      * Adds the login view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addLoginView() {
@@ -268,6 +291,7 @@ public class AppBuilder {
 
     /**
      * Adds the signup view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addSignupView() {
@@ -278,6 +302,7 @@ public class AppBuilder {
 
     /**
      * Adds the portfolios view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addPortfoliosView() {
@@ -292,6 +317,7 @@ public class AppBuilder {
 
     /**
      * Adds the create view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addCreateView() {
@@ -305,6 +331,7 @@ public class AppBuilder {
 
     /**
      * Adds the portfolio view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addPortfolioView() {
@@ -321,6 +348,7 @@ public class AppBuilder {
 
     /**
      * Adds the news view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addNewsView() {
@@ -338,6 +366,7 @@ public class AppBuilder {
 
     /**
      * Adds the buy view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addBuyView() {
@@ -351,6 +380,7 @@ public class AppBuilder {
 
     /**
      * Adds the sell view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addSellView() {
@@ -360,25 +390,43 @@ public class AppBuilder {
     }
 
     /**
+     * Adds the short sell view to the application.
+     *
+     * @return this builder
+     */
+    public AppBuilder addShortView() {
+        // Initialize short use case (only once)
+        if (shortController == null) {
+            ShortOutputBoundary shortPresenter =
+                    new ShortPresenter(viewManagerModel, shortViewModel, portfolioViewModel);
+            ShortInputBoundary shortInteractor = new ShortInteractor(
+                    (ShortStockDataAccessInterface) stockDataAccessObject,
+                    (ShortTransactionDataAccessInterface) transactionDataAccessObject,
+                    shortPresenter);
+            shortController = new ShortController(shortInteractor);
+        }
+        shortView = new ShortView(shortViewModel, shortController, navigationController);
+        cardPanel.add(shortView, shortView.getViewName());
+        return this;
+    }
+
+    /**
      * Adds the history view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addHistoryView() {
-
-        historyView = HistoryViewFactory.create(
-                historyViewModel,
-                navigationController);
-
+        historyView = HistoryViewFactory.create(historyViewModel, navigationController);
         cardPanel.add(historyView, historyView.getViewName());
         return this;
     }
 
     /**
      * Adds the analysis view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addAnalysisView() {
-
         analysisView = AnalysisViewFactory.create(
                 analysisViewModel,
                 navigationController);
@@ -388,10 +436,10 @@ public class AppBuilder {
 
     /**
      * Adds the recommend view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addRecommendView() {
-
         recommendView = RecommendViewFactory.create(
                 recommendViewModel,
                 recommendController,
@@ -402,6 +450,7 @@ public class AppBuilder {
 
     /**
      * Adds the company details view to the application.
+     *
      * @return this builder
      */
     public AppBuilder addCompanyDetailsView() {
@@ -415,11 +464,12 @@ public class AppBuilder {
 
     /**
      * Adds the Leaderboard View to the application.
+     *
      * @return this builder
      */
     public AppBuilder addLeaderboardView() {
-        final LeaderboardController leaderboardController = LeaderboardUseCaseFactory
-                .createLeaderboardController(leaderboardViewModel);
+        final LeaderboardController leaderboardController =
+                LeaderboardUseCaseFactory.createLeaderboardController(leaderboardViewModel);
         leaderboardView = LeaderboardViewFactory.create(
                 leaderboardViewModel,
                 leaderboardController);
@@ -436,12 +486,9 @@ public class AppBuilder {
     public JFrame build() {
         final JFrame application = new JFrame("FUNDI");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
-
         application.add(cardPanel);
-
         viewManagerModel.setState(signupViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
-
         return application;
     }
 }

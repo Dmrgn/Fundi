@@ -23,6 +23,7 @@ import use_case.history.HistoryDataAccessInterface;
 import use_case.portfolio.PortfolioTransactionDataAccessInterface;
 import use_case.recommend.RecommendTransactionDataAccessInterface;
 import use_case.sell.SellTransactionDataAccessInterface;
+import use_case.shortsell.ShortTransactionDataAccessInterface;
 
 /**
  * DAO for transaction data implemented using a Database to persist the data.
@@ -30,7 +31,7 @@ import use_case.sell.SellTransactionDataAccessInterface;
 public class DBTransactionDataAccessObject implements AnalysisTransactionDataAccessInterface,
         BuyTransactionDataAccessInterface, SellTransactionDataAccessInterface,
         HistoryDataAccessInterface, PortfolioTransactionDataAccessInterface,
-        RecommendTransactionDataAccessInterface {
+        RecommendTransactionDataAccessInterface, ShortTransactionDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, List<Transaction>> transactions = new HashMap<>();
 

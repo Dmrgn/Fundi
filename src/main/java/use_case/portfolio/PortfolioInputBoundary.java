@@ -22,4 +22,10 @@ public interface PortfolioInputBoundary {
      * @param portfolioId Portfolio Id used to update the Sell View Model State.
      */
     void routeToSell(String portfolioId);
+
+    /**
+     * Switch to the Short Sell Use Case.
+     * @param portfolioId Portfolio Id used to update the Short Sell View Model State.
+     */
+    void routeToShort(String portfolioId);
 }

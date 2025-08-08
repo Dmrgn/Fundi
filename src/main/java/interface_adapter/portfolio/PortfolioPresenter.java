@@ -4,6 +4,8 @@ import interface_adapter.ViewManagerModel;
 import interface_adapter.buy.BuyState;
 import interface_adapter.buy.BuyViewModel;
 import interface_adapter.navigation.NavigationController;
+import interface_adapter.shortsell.ShortState;
+import interface_adapter.shortsell.ShortViewModel;
 import interface_adapter.sell.SellState;
 import interface_adapter.sell.SellViewModel;
 import use_case.portfolio.PortfolioOutputBoundary;
@@ -19,13 +21,19 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
     private final BuyViewModel buyViewModel;
     private final SellViewModel sellViewModel;
     private final NavigationController navigationController;
+    private final ShortViewModel shortViewModel;
 
-    public PortfolioPresenter(ViewManagerModel viewManagerModel, PortfolioViewModel portfolioViewModel,
-            BuyViewModel buyViewModel, SellViewModel sellViewModel, NavigationController navigationController) {
+    public PortfolioPresenter(ViewManagerModel viewManagerModel,
+                              PortfolioViewModel portfolioViewModel,
+                              BuyViewModel buyViewModel,
+                              SellViewModel sellViewModel,
+                              ShortViewModel shortViewModel,
+                              NavigationController navigationController) {
         this.viewManagerModel = viewManagerModel;
         this.portfolioViewModel = portfolioViewModel;
         this.buyViewModel = buyViewModel;
         this.sellViewModel = sellViewModel;
+        this.shortViewModel = shortViewModel;
         this.navigationController = navigationController;
     }
 
@@ -80,6 +88,21 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
         sellViewModel.firePropertyChanged();
         navigationController.navigateTo(viewManagerModel.getState(), "sell");
         viewManagerModel.setState("sell");
+        viewManagerModel.firePropertyChanged();
+    }
+
+    /**
+     * Switch to the Short Sell View.
+     * @param portfolioId Set the state information for the Short Sell View Model
+     */
+    @Override
+    public void routeToShort(String portfolioId) {
+        ShortState state = shortViewModel.getState();
+        state.setPortfolioId(portfolioId);
+        shortViewModel.setState(state);
+        shortViewModel.firePropertyChanged();
+        navigationController.navigateTo(viewManagerModel.getState(), "short");
+        viewManagerModel.setState("short");
         viewManagerModel.firePropertyChanged();
     }
 }

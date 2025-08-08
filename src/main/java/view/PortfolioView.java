@@ -25,7 +25,7 @@ import static entity.PreferredCurrencyManager.getPreferredCurrency;
  */
 public class PortfolioView extends BaseView {
     private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Amount" };
-    private static final String[] USE_CASES = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell"};
+    private static final String[] USE_CASES = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell", "Short"};
     private final PortfolioViewModel portfolioViewModel;
     private final PortfolioController portfolioController;
     private final HistoryController historyController;
@@ -172,6 +172,9 @@ public class PortfolioView extends BaseView {
 
                 else if (useCaseButton.getText().equals("Recommendations")) {
                     this.recommendController.execute(state.getPortfolioId());
+                }
+                else if (useCaseButton.getText().equals("Short")) {
+                    this.portfolioController.routeToShort(state.getPortfolioId());
                 }
             });
         }

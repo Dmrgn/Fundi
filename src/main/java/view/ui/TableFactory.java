@@ -20,6 +20,7 @@ public final class TableFactory {
 
     /**
      * Create a styled table.
+     * 
      * @param model The table model
      * @return The table
      */

@@ -234,7 +234,7 @@ public class AppBuilder {
         }
 
         public AppBuilder addSettingsView() {
-                settingsView = new SettingsView(changePwdViewModel, viewManager, loginView);
+                settingsView = new SettingsView(changePwdViewModel, viewManager, loginView, dashboardController, mainViewModel);
                 settingsView.setController(changePwdController);
                 cardPanel.add(settingsView, settingsView.getViewName());
                 return this;

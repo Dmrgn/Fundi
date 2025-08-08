@@ -24,7 +24,8 @@ public class SellView extends BaseView implements PropertyChangeListener {
     private final SellController sellController;
     private final NavigationController navigationController;
 
-    public SellView(SellViewModel sellViewModel, SellController sellController, NavigationController navigationController) {
+    public SellView(SellViewModel sellViewModel, SellController sellController,
+            NavigationController navigationController) {
         super("sell");
         this.sellViewModel = sellViewModel;
         this.sellController = sellController;
@@ -65,11 +66,9 @@ public class SellView extends BaseView implements PropertyChangeListener {
                         this.sellController.execute(
                                 currentState.getPortfolioId(),
                                 tickerField.getText(),
-                                Integer.parseInt(amountField.getText())
-                        );
+                                Integer.parseInt(amountField.getText()));
                     }
-                }
-        );
+                });
         mainPanel.add(ButtonFactory.createButtonPanel(sell), BorderLayout.SOUTH);
         content.add(mainPanel, BorderLayout.CENTER);
     }

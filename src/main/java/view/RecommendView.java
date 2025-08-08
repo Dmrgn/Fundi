@@ -1,5 +1,6 @@
 package view;
 
+import entity.CurrencyConverter;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.recommend.RecommendController;
 import interface_adapter.recommend.RecommendState;
@@ -11,6 +12,9 @@ import view.ui.UiConstants;
 import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
+
+import static entity.PreferredCurrencyManager.getConverter;
+import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
 /**
  * The View for the Recommend Use Case.
@@ -69,8 +73,20 @@ public class RecommendView extends BaseView {
         panel.removeAll();
         int i = 1;
         for (Map.Entry<String, Double> entry : recs.entrySet()) {
+            CurrencyConverter converter = getConverter();
+            String preferredCurrency = getPreferredCurrency();
+            double originalValue = entry.getValue();
+            double convertedPrice = originalValue;
+
+            if (converter != null && !preferredCurrency.equals("USD")) {
+                try {
+                    convertedPrice = converter.convert(originalValue, "USD", preferredCurrency);
+                } catch (Exception e) {
+                    System.err.println("Currency conversion failed: " + e.getMessage());
+                }
+            }
             JLabel label = LabelFactory
-                    .createListItemLabel(i + ". " + entry.getKey() + ": " + String.format("$%.2f", entry.getValue()));
+                    .createListItemLabel(i + ". " + entry.getKey() + ": " + String.format("%.2f %s", convertedPrice, preferredCurrency ));
             panel.add(label);
             i++;
         }
@@ -85,6 +101,6 @@ public class RecommendView extends BaseView {
             updateListPanel(notHaveRecsPanel, recommendState.getNotHaveRecs());
             updateListPanel(safeRecsPanel, recommendState.getSafeRecs());
         });
-
     }
+
 }

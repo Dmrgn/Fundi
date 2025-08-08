@@ -1,5 +1,7 @@
 package view;
 
+import entity.CurrencyConverter;
+import entity.PreferredCurrencyManager;
 import entity.PortfolioValuePoint;
 import interface_adapter.dashboard.DashboardController;
 import interface_adapter.dashboard.DashboardState;
@@ -26,6 +28,8 @@ import java.util.*;
 import java.util.List;
 import view.ui.ButtonFactory;
 import view.ui.FieldFactory;
+
+import static entity.PreferredCurrencyManager.*;
 
 public class DashboardView extends BaseView {
     private final MainViewModel mainViewModel;
@@ -72,7 +76,8 @@ public class DashboardView extends BaseView {
                 UiConstants.Spacing.XL));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.BOTH;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.weightx = 1.0;
@@ -153,7 +158,8 @@ public class DashboardView extends BaseView {
         searchPanel.setOpaque(true);
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Search title
@@ -186,7 +192,8 @@ public class DashboardView extends BaseView {
 
         gbc.gridx = 1;
         gbc.weightx = 0.0;
-        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.LG, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.LG, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
         searchPanel.add(searchButton, gbc);
 
         // Wire up search functionality
@@ -242,7 +249,8 @@ public class DashboardView extends BaseView {
         chartContainer.setOpaque(true);
         chartContainer.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1),
-                BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG)));
+                BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG,
+                        UiConstants.Spacing.LG)));
         // Preferred size hint only
         chartContainer.setPreferredSize(new Dimension(600, 420));
 
@@ -258,7 +266,7 @@ public class DashboardView extends BaseView {
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
                 "", // No title since we have a separate label
                 "Date",
-                "Value ($)",
+                "Value",
                 dataset,
                 true,
                 true,
@@ -320,7 +328,8 @@ public class DashboardView extends BaseView {
             resultsContainer.setBackground(UiConstants.Colors.CANVAS_BG);
             resultsContainer.setBorder(BorderFactory.createCompoundBorder(
                     BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1),
-                    BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG)));
+                    BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.LG,
+                            UiConstants.Spacing.LG, UiConstants.Spacing.LG)));
 
             // Header with title and clear button
             JPanel headerPanel = new JPanel(new BorderLayout());
@@ -352,7 +361,8 @@ public class DashboardView extends BaseView {
                     .toList();
 
             for (SearchResult result : validResults) {
-                JButton resultButton = ButtonFactory.createOutlinedButton(result.getSymbol() + " - " + result.getName());
+                JButton resultButton = ButtonFactory
+                        .createOutlinedButton(result.getSymbol() + " - " + result.getName());
                 resultButton.setAlignmentX(Component.CENTER_ALIGNMENT);
                 resultButton.addActionListener(e -> {
                     companyDetailsController.execute(result.getSymbol(), "dashboard");
@@ -398,11 +408,20 @@ public class DashboardView extends BaseView {
             java.util.Date date = java.util.Date
                     .from(point.getDate().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant());
             Day day = new Day(date);
-            try {
-                series.addOrUpdate(day, point.getValue());
-            } catch (Exception ex) {
-                series.update(day, point.getValue());
+            double usdValue = point.getValue();
+            
+            String preferredCurrency = getPreferredCurrency();
+            CurrencyConverter converter = PreferredCurrencyManager.getConverter();
+
+            double convertedValue;
+            if (converter != null) {
+                convertedValue = converter.convert(usdValue, "USD", preferredCurrency);
+                series.addOrUpdate(day, convertedValue);
+            } else {
+                convertedValue = usdValue;
+                preferredCurrency = "USD";
             }
+           
             long t = date.getTime();
             minMillis = Math.min(minMillis, t);
             maxMillis = Math.max(maxMillis, t);

@@ -85,12 +85,12 @@ public class TabbedMainView extends BaseView {
         JPanel headerRight = new JPanel();
         headerRight.setLayout(new OverlayLayout(headerRight));
         headerRight.setOpaque(false);
-        
+
         // Add button first (bottom layer)
         notificationButton.setAlignmentX(Component.CENTER_ALIGNMENT);
         notificationButton.setAlignmentY(Component.CENTER_ALIGNMENT);
         headerRight.add(notificationButton);
-        
+
         // Add badge on top, positioned in top-right corner
         JPanel badgePanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 0, 0));
         badgePanel.setOpaque(false);
@@ -98,7 +98,7 @@ public class TabbedMainView extends BaseView {
         badgePanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         badgePanel.setAlignmentY(Component.TOP_ALIGNMENT);
         headerRight.add(badgePanel);
-        
+
         header.add(headerRight, BorderLayout.EAST);
 
         // Create tabbed pane
@@ -320,12 +320,22 @@ public class TabbedMainView extends BaseView {
             MainState mainState = mainViewModel.getState();
 
             switch (selectedIndex) {
-                case 0 -> { /* Dashboard */ }
-                case 1 -> { if (mainState.getUsername() != null) portfolioHubController.execute(mainState.getUsername()); }
-                case 2 -> { if (mainState.getUsername() != null) newsController.execute(mainState.getUsername()); }
-                case 3 -> { /* Watchlist */ }
-                case 4 -> { /* Leaderboard */ }
-                default -> {}
+                case 0 -> {
+                    /* Dashboard */ }
+                case 1 -> {
+                    if (mainState.getUsername() != null)
+                        portfolioHubController.execute(mainState.getUsername());
+                }
+                case 2 -> {
+                    if (mainState.getUsername() != null)
+                        newsController.execute(mainState.getUsername());
+                }
+                case 3 -> {
+                    /* Watchlist */ }
+                case 4 -> {
+                    /* Leaderboard */ }
+                default -> {
+                }
             }
         });
 

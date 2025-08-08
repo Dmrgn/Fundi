@@ -13,6 +13,7 @@ public final class PanelFactory {
 
     /**
      * Create a titled panel.
+     * 
      * @param text The text
      * @return The titled panel
      */
@@ -29,6 +30,7 @@ public final class PanelFactory {
 
     /**
      * Create a form panel.
+     * 
      * @param text      The text
      * @param textField the text field
      * @return The form panel
@@ -58,6 +60,7 @@ public final class PanelFactory {
 
     /**
      * Create a single field form.
+     * 
      * @param textField The text field
      * @param button    The button
      * @return The form
@@ -86,6 +89,7 @@ public final class PanelFactory {
 
     /**
      * Create a stat list panel.
+     * 
      * @param title The text
      * @return The panel
      */
@@ -105,7 +109,8 @@ public final class PanelFactory {
 
     /**
      * Create panel with two side by side.
-     * @param left Left panel
+     * 
+     * @param left  Left panel
      * @param right Right panel
      * @return The combined panel
      */
@@ -127,7 +132,8 @@ public final class PanelFactory {
 
     /**
      * Create a summary section.
-     * @param title Title
+     * 
+     * @param title        Title
      * @param summaryLabel Label
      * @param detailPanels Details
      * @return The summary panel

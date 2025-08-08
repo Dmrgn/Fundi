@@ -58,7 +58,8 @@ public class MainView extends BaseView {
         mainPanel.setOpaque(false);
 
         GridBagConstraints mainGbc = new GridBagConstraints();
-        mainGbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        mainGbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
         mainGbc.fill = GridBagConstraints.BOTH;
         mainGbc.anchor = GridBagConstraints.CENTER;
         mainGbc.weightx = 1.0;
@@ -90,7 +91,8 @@ public class MainView extends BaseView {
         topSection.setOpaque(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.CENTER;
 
@@ -132,7 +134,8 @@ public class MainView extends BaseView {
         searchPanel.setOpaque(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         JTextField searchField = FieldFactory.createSearchField("Search symbols or companies");
@@ -148,7 +151,8 @@ public class MainView extends BaseView {
         searchButton.setPreferredSize(new Dimension(100, 36));
         gbc.gridx = 1;
         gbc.weightx = 0.0;
-        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.LG, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.LG, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
         searchPanel.add(searchButton, gbc);
 
         Runnable doSearch = () -> {
@@ -170,7 +174,8 @@ public class MainView extends BaseView {
         centerSection.setOpaque(false);
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(UiConstants.Spacing.MD, UiConstants.Spacing.MD, UiConstants.Spacing.MD, UiConstants.Spacing.MD);
+        gbc.insets = new Insets(UiConstants.Spacing.MD, UiConstants.Spacing.MD, UiConstants.Spacing.MD,
+                UiConstants.Spacing.MD);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.anchor = GridBagConstraints.CENTER;
 
@@ -272,10 +277,10 @@ public class MainView extends BaseView {
 
         // Add click action for notifications
         button.addActionListener(e -> {
-            JOptionPane.showMessageDialog(this, 
-                "Notifications: " + notificationCount + " new notifications", 
-                "Notifications", 
-                JOptionPane.INFORMATION_MESSAGE);
+            JOptionPane.showMessageDialog(this,
+                    "Notifications: " + notificationCount + " new notifications",
+                    "Notifications",
+                    JOptionPane.INFORMATION_MESSAGE);
         });
 
         this.notificationButton = button;

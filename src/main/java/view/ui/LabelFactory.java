@@ -12,6 +12,7 @@ public final class LabelFactory {
 
     /**
      * Create a titled label.
+     * 
      * @param text The text
      * @return The title label
      */
@@ -25,6 +26,7 @@ public final class LabelFactory {
 
     /**
      * Create a form label.
+     * 
      * @param text the text
      * @return The label
      */
@@ -38,6 +40,7 @@ public final class LabelFactory {
 
     /**
      * Create a regular label.
+     * 
      * @param text The text
      * @return The label
      */
@@ -51,6 +54,7 @@ public final class LabelFactory {
 
     /**
      * Create a list item label.
+     * 
      * @param text The text
      * @return The label
      */
@@ -63,6 +67,7 @@ public final class LabelFactory {
 
     /**
      * Create a stat label.
+     * 
      * @return The label
      */
     public static JLabel createStatLabel() {
@@ -74,6 +79,7 @@ public final class LabelFactory {
 
     /**
      * Create a stat label.
+     * 
      * @param text label text
      * @return The label
      */
@@ -86,6 +92,7 @@ public final class LabelFactory {
 
     /**
      * Create a stat Title.
+     * 
      * @param text The text
      * @return The label
      */
@@ -97,4 +104,3 @@ public final class LabelFactory {
         return statLabel;
     }
 }
-

@@ -6,14 +6,18 @@ import java.time.LocalDate;
 import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
+import entity.CurrencyConverter;
 import interface_adapter.history.HistoryState;
 import interface_adapter.history.HistoryViewModel;
 import interface_adapter.navigation.NavigationController;
 import view.ui.PanelFactory;
 import view.ui.TableFactory;
 
+import static entity.PreferredCurrencyManager.getConverter;
+import static entity.PreferredCurrencyManager.getPreferredCurrency;
+
 public class HistoryView extends BaseView {
-    private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Price", "Date"};
+    private static final String[] COLUMN_NAMES = { "Ticker", "Quantity", "Price", "Date" };
     private final HistoryViewModel historyViewModel;
     private final interface_adapter.navigation.NavigationController navigationController;
     private final DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0) {
@@ -24,7 +28,7 @@ public class HistoryView extends BaseView {
     };
 
     public HistoryView(HistoryViewModel historyViewModel,
-                       NavigationController navigationController) {
+            NavigationController navigationController) {
         super("history");
         this.historyViewModel = historyViewModel;
         this.navigationController = navigationController;
@@ -60,8 +64,22 @@ public class HistoryView extends BaseView {
             LocalDate[] dates = state.getDates();
             tableModel.setRowCount(0);
 
+            CurrencyConverter converter = getConverter();
+            String preferredCurrency = getPreferredCurrency();
+
             for (int i = 0; i < names.length; i++) {
-                tableModel.addRow(new Object[] {names[i], amounts[i], String.format("$%.2f", prices[i]), dates[i] });
+                double originalPrice = prices[i];
+                double convertedPrice = originalPrice;
+
+                if (converter != null && !preferredCurrency.equals("USD")) {
+                    try {
+                        convertedPrice = converter.convert(originalPrice, "USD", preferredCurrency);
+                    } catch (Exception e) {
+                        System.err.println("Currency conversion failed: " + e.getMessage());
+                    }
+
+                }
+                tableModel.addRow(new Object[] {names[i], amounts[i], String.format("%.2f %s", convertedPrice, preferredCurrency), dates[i]});
             }
         });
     }

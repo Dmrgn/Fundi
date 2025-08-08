@@ -10,6 +10,7 @@ public final class TitledBorderFactory {
 
     /**
      * Create a titled border.
+     * 
      * @param title The text
      * @return The border
      */

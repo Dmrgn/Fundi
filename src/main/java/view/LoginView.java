@@ -53,7 +53,8 @@ public class LoginView extends BaseView implements PropertyChangeListener {
                 UiConstants.Spacing.XL));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.HORIZONTAL;
         gbc.gridx = 0;
         gbc.gridy = 0;
@@ -70,7 +71,8 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         gbc.gridwidth = 1;
         panel.add(signUpButton, gbc);
 
-        gbc.gridx = 0; gbc.gridy++;
+        gbc.gridx = 0;
+        gbc.gridy++;
         gbc.gridwidth = 2;
         panel.add(Box.createVerticalStrut(UiConstants.Spacing.XL), gbc);
 

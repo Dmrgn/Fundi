@@ -3,22 +3,29 @@ package view;
 import data_access.ExchangeAPIDataAccessObject;
 import interface_adapter.change_password.ChangePwdController;
 import interface_adapter.change_password.ChangePwdViewModel;
+import entity.CurrencyConverter;
+import entity.PreferredCurrencyManager;
 
 import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
 import view.ui.UiConstants;
+import interface_adapter.dashboard.DashboardController;
+import interface_adapter.main.MainViewModel;
 
 public class SettingsView extends BaseView {
     private final JComboBox<String> currencyDropdown;
     private final JPasswordField passwordField;
     private final JButton updatePasswordBtn;
     private final JButton logoutBtn;
+    private final ExchangeAPIDataAccessObject exchangeAPI = new ExchangeAPIDataAccessObject();
 
     private ChangePwdController controller;
 
-    public SettingsView(ChangePwdViewModel changePwdViewModel, ViewManager viewManager, LoginView loginView) {
+    public SettingsView(ChangePwdViewModel changePwdViewModel, ViewManager viewManager, LoginView loginView, DashboardController dashboardController,
+                    
+    MainViewModel mainViewModel) {
         super("settings");
 
         // Header
@@ -49,31 +56,64 @@ public class SettingsView extends BaseView {
         JLabel currencyLabel = new JLabel("Default Currency:");
         currencyLabel.setFont(UiConstants.Fonts.BODY);
         currencyLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
-        gbc.gridy = 0; gbc.gridx = 0; gbc.gridwidth = 1;
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridwidth = 1;
         mainPanel.add(currencyLabel, gbc);
 
         ExchangeAPIDataAccessObject currencyDAO = new ExchangeAPIDataAccessObject();
         List<String> currencyList = currencyDAO.getSupportedCurrencies();
         String[] currencies = currencyList.toArray(new String[0]);
+        
         currencyDropdown = new JComboBox<>(currencies);
+
         currencyDropdown.setFont(UiConstants.Fonts.FORM);
         currencyDropdown.setBorder(BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1));
+
+
+        String current = PreferredCurrencyManager.getPreferredCurrency();
+        currencyDropdown.setSelectedItem(current);
+
+        currencyDropdown.addActionListener(e -> {
+            String selectedCurrency = (String) currencyDropdown.getSelectedItem();
+            if (selectedCurrency != null) {
+                CurrencyConverter converter = exchangeAPI.getConverter("USD");
+                if (converter != null) {
+                    PreferredCurrencyManager.setPreferredCurrency(selectedCurrency, converter);
+                    System.out.println("Currency changed to " + selectedCurrency);
+                } else {
+                    System.out.println("Failed to fetch currency data");
+                }
+            }
+            String username = mainViewModel.getState().getUsername();
+            if (username != null && !username.isEmpty()) {
+                dashboardController.execute(username);
+            }
+        });
+
         JPanel currencyRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         currencyRow.setOpaque(false);
         currencyRow.add(currencyDropdown);
-        gbc.gridy++; gbc.gridwidth = GridBagConstraints.REMAINDER;
-        int prevFill = gbc.fill; double prevWeightX = gbc.weightx;
-        gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0.0; gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridy++;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        int prevFill = gbc.fill;
+        double prevWeightX = gbc.weightx;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0.0;
+        gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(currencyRow, gbc);
-        gbc.fill = prevFill; gbc.weightx = prevWeightX;
+        gbc.fill = prevFill;
+        gbc.weightx = prevWeightX;
 
-        gbc.gridy++; mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.LG), gbc);
+        gbc.gridy++;
+        mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.LG), gbc);
 
         // Password section
         JLabel passwordLabel = new JLabel("Change Password:");
         passwordLabel.setFont(UiConstants.Fonts.BODY);
         passwordLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
-        gbc.gridy++; gbc.gridwidth = 1;
+        gbc.gridy++;
+        gbc.gridwidth = 1;
         mainPanel.add(passwordLabel, gbc);
 
         passwordField = new JPasswordField();
@@ -84,13 +124,19 @@ public class SettingsView extends BaseView {
         JPanel passwordRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         passwordRow.setOpaque(false);
         passwordRow.add(passwordField);
-        gbc.gridy++; gbc.gridwidth = GridBagConstraints.REMAINDER;
-        prevFill = gbc.fill; prevWeightX = gbc.weightx;
-        gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0.0; gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridy++;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        prevFill = gbc.fill;
+        prevWeightX = gbc.weightx;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0.0;
+        gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(passwordRow, gbc);
-        gbc.fill = prevFill; gbc.weightx = prevWeightX;
+        gbc.fill = prevFill;
+        gbc.weightx = prevWeightX;
 
-        gbc.gridy++; mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.MD), gbc);
+        gbc.gridy++;
+        mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.MD), gbc);
 
         // Update password button
         updatePasswordBtn = new JButton("Update Password");
@@ -103,13 +149,19 @@ public class SettingsView extends BaseView {
         JPanel updateRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         updateRow.setOpaque(false);
         updateRow.add(updatePasswordBtn);
-        gbc.gridy++; gbc.gridwidth = GridBagConstraints.REMAINDER;
-        prevFill = gbc.fill; prevWeightX = gbc.weightx;
-        gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0.0; gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridy++;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        prevFill = gbc.fill;
+        prevWeightX = gbc.weightx;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0.0;
+        gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(updateRow, gbc);
-        gbc.fill = prevFill; gbc.weightx = prevWeightX;
+        gbc.fill = prevFill;
+        gbc.weightx = prevWeightX;
 
-        gbc.gridy++; mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.LG), gbc);
+        gbc.gridy++;
+        mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.LG), gbc);
 
         // Logout button
         logoutBtn = new JButton("Log Out");
@@ -122,11 +174,16 @@ public class SettingsView extends BaseView {
         JPanel logoutRow = new JPanel(new FlowLayout(FlowLayout.LEFT, 0, 0));
         logoutRow.setOpaque(false);
         logoutRow.add(logoutBtn);
-        gbc.gridy++; gbc.gridwidth = GridBagConstraints.REMAINDER;
-        prevFill = gbc.fill; prevWeightX = gbc.weightx;
-        gbc.fill = GridBagConstraints.NONE; gbc.weightx = 0.0; gbc.anchor = GridBagConstraints.WEST;
+        gbc.gridy++;
+        gbc.gridwidth = GridBagConstraints.REMAINDER;
+        prevFill = gbc.fill;
+        prevWeightX = gbc.weightx;
+        gbc.fill = GridBagConstraints.NONE;
+        gbc.weightx = 0.0;
+        gbc.anchor = GridBagConstraints.WEST;
         mainPanel.add(logoutRow, gbc);
-        gbc.fill = prevFill; gbc.weightx = prevWeightX;
+        gbc.fill = prevFill;
+        gbc.weightx = prevWeightX;
 
         // Action listeners
         updatePasswordBtn.addActionListener(e -> {

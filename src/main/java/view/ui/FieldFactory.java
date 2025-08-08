@@ -16,9 +16,8 @@ public class FieldFactory {
         textField.setForeground(UiConstants.Colors.TEXT_PRIMARY);
         textField.setBackground(Color.WHITE);
         textField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1),
-            UiConstants.EMPTY_BUTTON_BORDER
-        ));
+                BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1),
+                UiConstants.EMPTY_BUTTON_BORDER));
         return textField;
     }
 
@@ -41,9 +40,8 @@ public class FieldFactory {
         passwordField.setForeground(UiConstants.Colors.TEXT_PRIMARY);
         passwordField.setBackground(Color.WHITE);
         passwordField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1),
-            UiConstants.EMPTY_BUTTON_BORDER
-        ));
+                BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1),
+                UiConstants.EMPTY_BUTTON_BORDER));
         return passwordField;
     }
 }

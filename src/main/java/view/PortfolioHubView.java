@@ -156,7 +156,9 @@ public class PortfolioHubView extends BaseView {
 
         // Create button section
         JPanel createButtonSection = createModernCreateButtonPanel();
-        gbc.gridy = 0; gbc.gridx = 0; gbc.gridwidth = 1;
+        gbc.gridy = 0;
+        gbc.gridx = 0;
+        gbc.gridwidth = 1;
         mainPanel.add(createButtonSection, gbc);
 
         gbc.gridy++;

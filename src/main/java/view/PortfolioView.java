@@ -1,5 +1,6 @@
 package view;
 
+import entity.CurrencyConverter;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analysis.AnalysisController;
 import interface_adapter.history.HistoryController;
@@ -16,9 +17,12 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 import java.awt.*;
 
+import static entity.PreferredCurrencyManager.getConverter;
+import static entity.PreferredCurrencyManager.getPreferredCurrency;
+
 public class PortfolioView extends BaseView {
     private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Amount"};
-    private static final String[] USE_CASES = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell"};
+    private static final String[] USE_CASES = new String[]{"Analysis", "Recommendations", "History", "Buy", "Sell"};
     private final PortfolioViewModel portfolioViewModel;
     private final PortfolioController portfolioController;
     private final HistoryController historyController;
@@ -103,8 +107,25 @@ public class PortfolioView extends BaseView {
             double[] prices = state.getStockPrices();
             tableModel.setRowCount(0);
 
+            CurrencyConverter converter = getConverter();
+            String preferredCurrency = getPreferredCurrency();
+
             for (int i = 0; i < names.length; i++) {
-                tableModel.addRow(new Object[] {names[i], amounts[i], String.format("$%.2f", prices[i])});
+                double originalPrice = prices[i];
+                double convertedPrice = originalPrice;
+
+                if (converter != null && !preferredCurrency.equals("USD")) {
+                    try {
+                        convertedPrice = converter.convert(originalPrice, "USD", preferredCurrency);
+                    }
+                    catch (Exception e) {
+                        System.err.println("Currency conversion failed: " + e.getMessage());
+                    }
+
+                }
+
+                tableModel.addRow(new Object[] {
+                        names[i], amounts[i], String.format("%.2f %s", convertedPrice, preferredCurrency)});
             }
         });
 

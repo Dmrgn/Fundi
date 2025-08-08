@@ -117,10 +117,10 @@ public final class UiConstants {
 
     // Section and feature-specific palette
     public static final class Palette {
-        public static final Color SECTION_INFO = new Color(138, 43, 226);      // BlueViolet
-        public static final Color SECTION_METRICS = new Color(255, 140, 0);    // DarkOrange
-        public static final Color SECTION_PEERS = new Color(30, 144, 255);     // DodgerBlue
-        public static final Color SECTION_DEFAULT = new Color(100, 149, 237);  // CornflowerBlue
+        public static final Color SECTION_INFO = new Color(138, 43, 226); // BlueViolet
+        public static final Color SECTION_METRICS = new Color(255, 140, 0); // DarkOrange
+        public static final Color SECTION_PEERS = new Color(30, 144, 255); // DodgerBlue
+        public static final Color SECTION_DEFAULT = new Color(100, 149, 237); // CornflowerBlue
     }
 
     public static final class Fonts {
@@ -155,10 +155,12 @@ public final class UiConstants {
         public static final int ROW_HEIGHT_DEFAULT = ROW_HEIGHT;
     }
 
-    private UiConstants() { }
+    private UiConstants() {
+    }
 
     /**
      * Create form gap.
+     * 
      * @return Component
      */
     public static Component formGap() {
@@ -167,6 +169,7 @@ public final class UiConstants {
 
     /**
      * Create big horizontal gap.
+     * 
      * @return Component
      */
     public static Component bigHorizontalGap() {
@@ -175,6 +178,7 @@ public final class UiConstants {
 
     /**
      * Create small vertical strut.
+     * 
      * @return Component
      */
     public static Component smallVerticalGap() {
@@ -183,6 +187,7 @@ public final class UiConstants {
 
     /**
      * Create medium vertical strut.
+     * 
      * @return Component
      */
     public static Component mediumVerticalGap() {
@@ -191,6 +196,7 @@ public final class UiConstants {
 
     /**
      * Create big vertical strut.
+     * 
      * @return Component
      */
     public static Component bigVerticalGap() {

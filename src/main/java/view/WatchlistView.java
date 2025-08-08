@@ -59,14 +59,14 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         JPanel mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setBackground(UiConstants.Colors.CANVAS_BG);
         mainPanel.setBorder(BorderFactory.createEmptyBorder(
-            UiConstants.Spacing.XL,
-            UiConstants.Spacing.XL,
-            UiConstants.Spacing.XL,
-            UiConstants.Spacing.XL
-        ));
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL,
+                UiConstants.Spacing.XL));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.BOTH;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.weightx = 1.0;
@@ -85,12 +85,20 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
 
         // Layout rows
         int row = 0;
-        gbc.gridx = 0; gbc.gridy = row++; gbc.gridwidth = 1; gbc.weighty = 0;
+        gbc.gridx = 0;
+        gbc.gridy = row++;
+        gbc.gridwidth = 1;
+        gbc.weighty = 0;
         mainPanel.add(descriptionLabel, gbc);
-        gbc.gridy = row++; mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.XL), gbc);
-        gbc.gridy = row++; mainPanel.add(addTickerSection, gbc);
-        gbc.gridy = row++; mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.LG), gbc);
-        gbc.gridy = row++; gbc.weighty = 1.0; mainPanel.add(watchlistSection, gbc);
+        gbc.gridy = row++;
+        mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.XL), gbc);
+        gbc.gridy = row++;
+        mainPanel.add(addTickerSection, gbc);
+        gbc.gridy = row++;
+        mainPanel.add(Box.createVerticalStrut(UiConstants.Spacing.LG), gbc);
+        gbc.gridy = row++;
+        gbc.weighty = 1.0;
+        mainPanel.add(watchlistSection, gbc);
 
         // Add to BaseView content area
         JScrollPane scrollPane = new JScrollPane(mainPanel);
@@ -101,7 +109,8 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         content.add(scrollPane, BorderLayout.CENTER);
 
-        // Fetch when the view becomes visible (most up-to-date and avoids rate limit on app start)
+        // Fetch when the view becomes visible (most up-to-date and avoids rate limit on
+        // app start)
         this.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentShown(java.awt.event.ComponentEvent e) {
@@ -115,21 +124,21 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         panel.setBackground(UiConstants.Colors.CANVAS_BG);
         panel.setOpaque(true);
         panel.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-            BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG)
-        ));
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+                BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.LG, UiConstants.Spacing.LG,
+                        UiConstants.Spacing.LG)));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.HORIZONTAL;
 
         // Input field
         tickerField = new JTextField();
         tickerField.setFont(UiConstants.Fonts.FORM);
         tickerField.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-            BorderFactory.createEmptyBorder(8, 12, 8, 12)
-        ));
+                BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
+                BorderFactory.createEmptyBorder(8, 12, 8, 12)));
         tickerField.setPreferredSize(new Dimension(200, 36));
 
         // Placeholder text behavior
@@ -173,7 +182,8 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
 
         gbc.gridx = 1;
         gbc.weightx = 0.0;
-        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.LG, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.LG, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
         panel.add(addButton, gbc);
 
         return panel;
@@ -313,7 +323,8 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         panel.setBackground(UiConstants.Colors.CANVAS_BG);
         panel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(Color.LIGHT_GRAY, 1),
-                BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.XL, UiConstants.Spacing.LG, UiConstants.Spacing.XL)));
+                BorderFactory.createEmptyBorder(UiConstants.Spacing.LG, UiConstants.Spacing.XL, UiConstants.Spacing.LG,
+                        UiConstants.Spacing.XL)));
 
         // Left: Ticker label and range selector
         JPanel left = new JPanel(new FlowLayout(FlowLayout.LEFT, 10, 0));
@@ -321,7 +332,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         JLabel tickerLabel = new JLabel(apiTicker);
         tickerLabel.setFont(new Font("SansSerif", Font.BOLD, 16));
         tickerLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
-        JComboBox<String> range = new JComboBox<>(new String[]{"1W", "1M", "3M", "6M", "1Y"});
+        JComboBox<String> range = new JComboBox<>(new String[] { "1W", "1M", "3M", "6M", "1Y" });
         range.setFont(new Font("SansSerif", Font.PLAIN, 12));
         JLabel changeLabel = new JLabel("");
         changeLabel.setFont(new Font("SansSerif", Font.BOLD, 12));
@@ -364,6 +375,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
             public void mouseEntered(java.awt.event.MouseEvent evt) {
                 removeButton.setBackground(UiConstants.Colors.DANGER.darker());
             }
+
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 removeButton.setBackground(UiConstants.Colors.DANGER);
@@ -383,7 +395,8 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         return panel;
     }
 
-    // Build/ensure one controller+vm per chart holder; presenter updates VM; view listens to VM
+    // Build/ensure one controller+vm per chart holder; presenter updates VM; view
+    // listens to VM
     private TimeSeriesController ensureTickerController(String ticker, JPanel chartHolder, JLabel errorLabel) {
         Object existing = chartHolder.getClientProperty("ts_controller");
         if (existing instanceof TimeSeriesController) {
@@ -395,7 +408,8 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         TimeSeriesController controller = new TimeSeriesController(interactor);
 
         vm.addPropertyChangeListener(evt -> {
-            if (!TimeSeriesViewModel.PROP_UPDATE.equals(evt.getPropertyName())) return;
+            if (!TimeSeriesViewModel.PROP_UPDATE.equals(evt.getPropertyName()))
+                return;
             String sym = vm.getSymbol();
             List<TimeSeriesPoint> pts = vm.getPoints();
             String err = vm.getError();
@@ -405,14 +419,22 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
                 JLabel tLabel = (JLabel) chartHolder.getClientProperty("ts_tickerLabel");
                 JLabel cLabel = (JLabel) chartHolder.getClientProperty("ts_changeLabel");
                 if (err != null && !err.isBlank()) {
-                    if (tLabel != null) tLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
-                    if (cLabel != null) { cLabel.setText(""); cLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY); }
+                    if (tLabel != null)
+                        tLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+                    if (cLabel != null) {
+                        cLabel.setText("");
+                        cLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+                    }
                     errorLabel.setText(err);
                     chartHolder.add(buildEmptyChartPanel(), BorderLayout.CENTER);
                     chartHolder.add(errorLabel, BorderLayout.SOUTH);
                 } else if (pts == null || pts.isEmpty()) {
-                    if (tLabel != null) tLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
-                    if (cLabel != null) { cLabel.setText("No data"); cLabel.setForeground(UiConstants.Colors.TEXT_MUTED); }
+                    if (tLabel != null)
+                        tLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+                    if (cLabel != null) {
+                        cLabel.setText("No data");
+                        cLabel.setForeground(UiConstants.Colors.TEXT_MUTED);
+                    }
                     errorLabel.setText("No data for this range");
                     chartHolder.add(buildEmptyChartPanel(), BorderLayout.CENTER);
                     chartHolder.add(errorLabel, BorderLayout.SOUTH);
@@ -424,11 +446,13 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
                     boolean up = last >= first;
                     Color upColor = UiConstants.Colors.SUCCESS;
                     Color downColor = UiConstants.Colors.DANGER;
-                    if (tLabel != null) tLabel.setForeground(up ? upColor : downColor);
+                    if (tLabel != null)
+                        tLabel.setForeground(up ? upColor : downColor);
                     if (cLabel != null) {
                         cLabel.setText(String.format((up ? "+%.2f%%" : "%.2f%%"), pct));
                         cLabel.setForeground(up ? upColor : downColor);
-                        cLabel.setToolTipText(String.format("Change: %s%.2f (%.2f%%)", up ? "+" : "-", Math.abs(change), Math.abs(pct)));
+                        cLabel.setToolTipText(String.format("Change: %s%.2f (%.2f%%)", up ? "+" : "-", Math.abs(change),
+                                Math.abs(pct)));
                     }
                     errorLabel.setText("");
                     ChartPanel panel = buildChartPanelFromPoints(sym, pts, range);
@@ -478,7 +502,8 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
 
     private ChartPanel buildChartPanelFromSeries(TimeSeries series) {
         TimeSeriesCollection dataset = new TimeSeriesCollection();
-        if (series != null) dataset.addSeries(series);
+        if (series != null)
+            dataset.addSeries(series);
         JFreeChart chart = ChartFactory.createTimeSeriesChart("", "", "", dataset, false, false, false);
         chart.setBackgroundPaint(Color.WHITE);
         chart.setAntiAlias(true);
@@ -499,8 +524,10 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
             double first = series.getValue(0).doubleValue();
             double last = series.getValue(series.getItemCount() - 1).doubleValue();
             if (Double.isFinite(first) && Double.isFinite(last)) {
-                if (last >= first) lineColor = UiConstants.Colors.SUCCESS;
-                else lineColor = UiConstants.Colors.DANGER;
+                if (last >= first)
+                    lineColor = UiConstants.Colors.SUCCESS;
+                else
+                    lineColor = UiConstants.Colors.DANGER;
             }
         }
         renderer.setSeriesPaint(0, lineColor);

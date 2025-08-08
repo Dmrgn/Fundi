@@ -5,6 +5,7 @@ import interface_adapter.leaderboard.LeaderboardController;
 import interface_adapter.leaderboard.LeaderboardState;
 import interface_adapter.leaderboard.LeaderboardViewModel;
 
+import entity.CurrencyConverter;
 import javax.swing.*;
 import javax.swing.table.DefaultTableCellRenderer;
 import javax.swing.table.DefaultTableModel;
@@ -12,6 +13,9 @@ import java.awt.*;
 import java.util.List;
 
 import view.ui.UiConstants;
+
+import static entity.PreferredCurrencyManager.getConverter;
+import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
 public class LeaderboardView extends BaseView {
     private final LeaderboardViewModel leaderboardViewModel;
@@ -51,7 +55,8 @@ public class LeaderboardView extends BaseView {
                 UiConstants.Spacing.XL));
 
         GridBagConstraints gbc = new GridBagConstraints();
-        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM);
+        gbc.insets = new Insets(UiConstants.Spacing.SM, UiConstants.Spacing.SM, UiConstants.Spacing.SM,
+                UiConstants.Spacing.SM);
         gbc.fill = GridBagConstraints.BOTH;
         gbc.anchor = GridBagConstraints.CENTER;
         gbc.weightx = 1.0;
@@ -205,14 +210,26 @@ public class LeaderboardView extends BaseView {
         // Clear existing data
         tableModel.setRowCount(0);
 
+        CurrencyConverter converter = getConverter();
+        String preferredCurrency = getPreferredCurrency();
+
         if (entries != null && !entries.isEmpty()) {
             // Add entries to table
             for (LeaderboardEntry entry : entries) {
+                double originalValue = entry.getTotalValue();
+                double convertedPrice = originalValue;
+                if (converter != null && !preferredCurrency.equals("USD")) {
+                    try {
+                        convertedPrice = converter.convert(originalValue, "USD", preferredCurrency);
+                    } catch (Exception e) {
+                        System.err.println("Currency conversion failed: " + e.getMessage());
+                    }
+                }
                 Object[] rowData = {
-                        entry.getRank(),
-                        entry.getUsername(),
-                        entry.getPortfolioName(),
-                        String.format("$%.2f", entry.getTotalValue())
+                    entry.getRank(),
+                    entry.getUsername(),
+                    entry.getPortfolioName(),
+                    String.format("%.2f %s", convertedPrice, preferredCurrency)
                 };
                 tableModel.addRow(rowData);
             }

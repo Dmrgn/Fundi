@@ -5,7 +5,8 @@ import java.awt.*;
 import java.awt.geom.GeneralPath;
 
 /**
- * Lightweight, LAF-agnostic bell icon drawn with Java2D so it renders on all platforms
+ * Lightweight, LAF-agnostic bell icon drawn with Java2D so it renders on all
+ * platforms
  * without relying on emoji fonts.
  */
 public class BellIcon implements Icon {

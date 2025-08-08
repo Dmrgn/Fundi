@@ -39,11 +39,10 @@ public abstract class BaseView extends JPanel {
 
         // Content padding
         content.setBorder(BorderFactory.createEmptyBorder(
-            theme.contentInsets().top,
-            theme.contentInsets().left,
-            theme.contentInsets().bottom,
-            theme.contentInsets().right
-        ));
+                theme.contentInsets().top,
+                theme.contentInsets().left,
+                theme.contentInsets().bottom,
+                theme.contentInsets().right));
 
         page.add(header, BorderLayout.NORTH);
         page.add(content, BorderLayout.CENTER);
@@ -60,22 +59,21 @@ public abstract class BaseView extends JPanel {
     protected JPanel createBackButtonPanel(java.awt.event.ActionListener action) {
         JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
         panel.setOpaque(false);
-        
+
         // Create a container for the back button with hover effect
         JPanel buttonContainer = new JPanel();
         buttonContainer.setLayout(new BorderLayout());
         buttonContainer.setOpaque(false);
         buttonContainer.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
-        
+
         // Style the back button
         backButton.setText("← Back");
         backButton.setFont(theme.button());
         backButton.setForeground(new Color(200, 200, 200));
         backButton.setBackground(theme.primary());
         backButton.setBorder(BorderFactory.createCompoundBorder(
-            BorderFactory.createLineBorder(theme.primary().darker(), 1),
-            BorderFactory.createEmptyBorder(8, 15, 8, 15)
-        ));
+                BorderFactory.createLineBorder(theme.primary().darker(), 1),
+                BorderFactory.createEmptyBorder(8, 15, 8, 15)));
         backButton.setFocusPainted(false);
         backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 

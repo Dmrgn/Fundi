@@ -2,7 +2,6 @@ package com.fundi;
 
 import java.sql.*;
 import java.util.Set;
-import java.util.HashSet;
 
 public class HoldingsTableInitializer {
     private static final String DB_URL = "jdbc:sqlite:data/fundi.sqlite";

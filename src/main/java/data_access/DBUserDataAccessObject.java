@@ -15,8 +15,6 @@ import entity.User;
 import use_case.login.LoginUserDataAccessInterface;
 import use_case.signup.SignupUserDataAccessInterface;
 
-import javax.swing.*;
-
 /**
  * DAO for user data implemented using a Database to persist the data.
  */

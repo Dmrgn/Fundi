@@ -1,6 +1,5 @@
 package app;
 
-import interface_adapter.PortfolioUpdateCommand;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.portfolio.PortfolioViewModel;
 import interface_adapter.sell.SellController;

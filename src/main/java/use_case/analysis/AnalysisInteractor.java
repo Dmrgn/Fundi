@@ -29,23 +29,24 @@ public class AnalysisInteractor implements AnalysisInputBoundary {
 
     @Override
     public void execute(AnalysisInputData analysisInputData) {
-        String portfolioId = analysisInputData.getPortfolioId();
-        List<Transaction> transactions = transactionDataAccessInterface.pastTransactions(portfolioId);
-        Map<String, Integer> tickerAmounts = FinancialCalculator.getTickerAmounts(transactions);
-        int totalStocks = FinancialCalculator.getTotalAmount(tickerAmounts);
-        Map<String, Double> percentages = new HashMap<>();
+        final String portfolioId = analysisInputData.getPortfolioId();
+        final List<Transaction> transactions = transactionDataAccessInterface.pastTransactions(portfolioId);
+        final Map<String, Integer> tickerAmounts = FinancialCalculator.getTickerAmounts(transactions);
+        final int totalStocks = FinancialCalculator.getTotalAmount(tickerAmounts);
+        final Map<String, Double> percentages = new HashMap<>();
         double totalVol = 0;
-        Map<String, Double> vols = new HashMap<>();
+        final Map<String, Double> vols = new HashMap<>();
         double totalReturn = 0;
-        Map<String, Double> returns = new HashMap<>();
+        final Map<String, Double> returns = new HashMap<>();
 
         for (String ticker : tickerAmounts.keySet()) {
             percentages.put(ticker, FinancialCalculator.computePercentage(totalStocks, tickerAmounts.get(ticker)));
-            List<StockData> stockData = stockDataAccessInterface.pastStockData(ticker);
-            double vol = FinancialCalculator.computeVolatility(stockData.stream().map(StockData::getPrice).collect(Collectors.toList()), true);
+            final List<StockData> stockData = stockDataAccessInterface.pastStockData(ticker);
+            final double vol = FinancialCalculator.computeVolatility(stockData.stream().map(StockData::getPrice)
+                    .collect(Collectors.toList()), true);
             totalVol += vol;
             vols.put(ticker, vol);
-            double retr = FinancialCalculator.computeReturn(stockData);
+            final double retr = FinancialCalculator.computeReturn(stockData);
             totalReturn += retr * tickerAmounts.get(ticker);
             returns.put(ticker, retr);
         }

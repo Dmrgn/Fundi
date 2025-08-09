@@ -11,9 +11,11 @@ import view.ui.LabelFactory;
 import view.ui.FieldFactory;
 import view.ui.UiConstants;
 
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+
 public class NewsView extends BaseView {
     private static final String SEARCH_PLACEHOLDER = "Enter stock ticker (e.g., AAPL, GOOGL)";
-
     private final NewsViewModel newsViewModel;
     private final JPanel newsPanel;
     private NewsController newsController;
@@ -40,6 +42,23 @@ public class NewsView extends BaseView {
 
         // Create search field with placeholder (centralized)
         this.searchField = FieldFactory.createSearchField(SEARCH_PLACEHOLDER);
+        this.searchField.addFocusListener(new FocusAdapter() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (searchField.getText().equals(SEARCH_PLACEHOLDER)) {
+                    searchField.setText("");
+                    searchField.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (searchField.getText().isEmpty()) {
+                    searchField.setForeground(UiConstants.Colors.TEXT_MUTED);
+                    searchField.setText(SEARCH_PLACEHOLDER);
+                }
+            }
+        });
         this.searchButton = ButtonFactory.createPrimaryButton("Search");
 
         JPanel searchPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
@@ -80,8 +99,8 @@ public class NewsView extends BaseView {
         String query = searchField.getText().trim();
         if (!query.isEmpty() && !query.equals(SEARCH_PLACEHOLDER) && newsController != null) {
             newsController.executeSearch(query.toUpperCase());
-            searchField.setText(SEARCH_PLACEHOLDER);
-            searchField.setForeground(UiConstants.Colors.TEXT_MUTED);
+            searchField.setText(""); // Clear field after search
+            searchField.getTopLevelAncestor().requestFocus(); // Remove focus
         }
     }
 

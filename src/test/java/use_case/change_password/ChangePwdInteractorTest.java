@@ -87,7 +87,6 @@ class ChangePwdInteractorTest {
             savedPassword = newPassword;
         }
 
-        // You can leave the rest unimplemented if not used
     }
 
     // Fake Presenter

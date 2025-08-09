@@ -107,7 +107,7 @@ public class NewsView extends BaseView {
             searchField.setText(""); // Clear field after search
             searchField.getTopLevelAncestor().requestFocus(); // Remove focus
         }
-    }
+}
 
     private void updateNewsPanel(NewsState state) {
         newsPanel.removeAll();

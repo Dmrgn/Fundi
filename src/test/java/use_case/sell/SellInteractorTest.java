@@ -2,7 +2,6 @@ package use_case.sell;
 
 import data_access.DBTransactionDataAccessObject;
 import data_access.DBStockDataAccessObject;
-import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;

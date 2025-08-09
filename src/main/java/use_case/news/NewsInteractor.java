@@ -111,11 +111,53 @@ public class NewsInteractor implements NewsInputBoundary {
     }
 
     /**
-     * Simple check to differentiate a search query (like "AAPL") from a username.
-     * THIS METHOD IS NO LONGER USED but can be kept for reference or removed.
+     * This method is for testing purposes only. It allows manual injection of symbols
+     * to fetch news for, bypassing the portfolio and search functionality.
      */
-    private boolean isSearchQuery(String input) {
-        // A short, non-spaced, uppercase string is likely a stock symbol.
-        return input != null && !input.isEmpty() && input.matches("^[A-Z]{1,5}$");
+    public void fetchNewsForTesting(List<String> testSymbols) {
+        try {
+            List<String[]> allNews = new ArrayList<>();
+            LocalDate today = LocalDate.now();
+            LocalDate fromDate = today.minusDays(7); // Fetch news from the last 7 days
+
+            for (String symbol : testSymbols) {
+                String url = String.format(
+                    "https://finnhub.io/api/v1/company-news?symbol=%s&from=%s&to=%s&token=%s",
+                    symbol, fromDate, today, apiKey
+                );
+
+                Request request = new Request.Builder().url(url).build();
+                try (Response response = client.newCall(request).execute()) {
+                    if (!response.isSuccessful()) continue;
+
+                    String jsonData = response.body().string();
+                    JSONArray articles = new JSONArray(jsonData);
+
+                    if (articles.length() > 0) {
+                        allNews.add(new String[]{"Latest News for " + symbol, "-----------------------------------", ""});
+                    }
+                    // Limit to 3 articles per symbol
+                    for (int i = 0; i < Math.min(3, articles.length()); i++) {
+                        JSONObject article = articles.getJSONObject(i);
+                        allNews.add(new String[]{
+                            article.optString("headline", "No Title"),
+                            article.optString("summary", "No Summary Available."),
+                            article.optString("url", "")
+                        });
+                    }
+                }
+            }
+
+            if (allNews.isEmpty()) {
+                allNews.add(new String[]{"No recent news found for the provided symbols.", "Please try different symbols.", ""});
+            }
+
+            NewsOutputData outputData = new NewsOutputData(allNews.toArray(new String[0][]));
+            newsPresenter.prepareView(outputData);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            newsPresenter.prepareView(new NewsOutputData(new String[][]{{"Error", "Could not fetch news: " + e.getMessage(), ""}}));
+        }
     }
 }

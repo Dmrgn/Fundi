@@ -10,12 +10,11 @@ import java.util.HashMap;
 import java.util.Map;
 
 import use_case.create.CreateDataAccessInterface;
-import use_case.portfolio_hub.PortfolioHubDataAccessInterface;
 
 /**
  * DAO for portfolios data implemented using a Database to persist the data.
  */
-public class DBPortfoliosDataAccessObject implements PortfolioHubDataAccessInterface, CreateDataAccessInterface {
+public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, Map<String, String>> portfolios = new HashMap<>();
     private final Map<String, String> userToId = new HashMap<>();

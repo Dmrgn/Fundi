@@ -13,7 +13,6 @@ import data_access.DBStockDataAccessObject;
 import data_access.DBTransactionDataAccessObject;
 import data_access.DBUserDataAccessObject;
 import entity.NavigationState;
-import interface_adapter.PortfolioUpdateCommand;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.analysis.AnalysisController;
 import interface_adapter.analysis.AnalysisViewModel;
@@ -174,7 +173,6 @@ public class AppBuilder {
 
         private SettingsView settingsView;
         private ChangePwdController changePwdController;
-        private ChangePwdInteractor changePwdInteractor;
 
         private TabbedMainView tabbedMainView;
         private DashboardView dashboardView;

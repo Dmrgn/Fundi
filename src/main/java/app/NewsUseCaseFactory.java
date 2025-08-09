@@ -1,6 +1,5 @@
 package app;
 
-import data_access.FinnhubSearchDataAccessObject;
 import interface_adapter.ViewManagerModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.news.NewsPresenter;

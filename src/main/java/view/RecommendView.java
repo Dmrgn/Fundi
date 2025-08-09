@@ -22,6 +22,7 @@ import static entity.PreferredCurrencyManager.getPreferredCurrency;
 public class RecommendView extends BaseView {
     private static final String LABEL = "Recs: ";
     private final RecommendViewModel recommendViewModel;
+    @SuppressWarnings("unused")
     private final RecommendController recommendController;
     private final JPanel haveRecsPanel = PanelFactory.createStatListPanel(LABEL);
     private final JPanel notHaveRecsPanel = PanelFactory.createStatListPanel(LABEL);
@@ -36,14 +37,12 @@ public class RecommendView extends BaseView {
         this.recommendController = recommendController;
         this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
 
-        JPanel contentPanel = createGradientContentPanel();
-        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        // Header back
+        header.add(createBackButtonPanel(evt -> backNavigationHelper.goBackToPortfolio()), BorderLayout.WEST);
 
-        contentPanel.add(createBackButtonPanel(evt -> {
-            // Navigate back to the portfolio view explicitly
-            backNavigationHelper.goBackToPortfolio();
-        }));
-        contentPanel.add(UiConstants.mediumVerticalGap());
+        JPanel contentPanel = new JPanel();
+        contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
+        contentPanel.setOpaque(false);
 
         JPanel havePanel = PanelFactory.createSection("Recs In Your Portfolio",
                 LabelFactory.createStatLabel(), haveRecsPanel);
@@ -65,7 +64,8 @@ public class RecommendView extends BaseView {
         scrollPane.getVerticalScrollBar().setUnitIncrement(UiConstants.SCROLL_UNIT_INCREMENT);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
-        this.add(scrollPane, BorderLayout.CENTER);
+        content.add(scrollPane, BorderLayout.CENTER);
+
         wireListeners();
     }
 
@@ -73,7 +73,6 @@ public class RecommendView extends BaseView {
         panel.removeAll();
         int i = 1;
         for (Map.Entry<String, Double> entry : recs.entrySet()) {
-
             CurrencyConverter converter = getConverter();
             String preferredCurrency = getPreferredCurrency();
             double originalValue = entry.getValue();
@@ -102,6 +101,6 @@ public class RecommendView extends BaseView {
             updateListPanel(notHaveRecsPanel, recommendState.getNotHaveRecs());
             updateListPanel(safeRecsPanel, recommendState.getSafeRecs());
         });
-
     }
+
 }

@@ -13,7 +13,8 @@ public class CurrencyConverter {
     }
 
     public double convert(double amount, String fromCurrency, String toCurrency) {
-        if (fromCurrency.equals(toCurrency)) return amount;
+        if (fromCurrency.equals(toCurrency))
+            return amount;
 
         double baseAmount = amount;
         if (!fromCurrency.equals(baseCurrency)) {

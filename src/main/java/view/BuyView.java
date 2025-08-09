@@ -31,28 +31,27 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         this.navigationController = navigationController;
         this.buyViewModel.addPropertyChangeListener(this);
 
-        JPanel contentPanel = createGradientContentPanel();
+        // Header back button and title
+        header.add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.WEST);
+        JPanel titlePanel = PanelFactory.createTitlePanel("Buy Stock");
+        titlePanel.setOpaque(false);
+        header.add(titlePanel, BorderLayout.CENTER);
+
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setOpaque(false);
 
-        // Add back button (top left) using w/ NavigationController
-        contentPanel.add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.NORTH);
+        JTextField tickerField = FieldFactory.createTextField();
+        final JPanel tickerPanel = PanelFactory.createFormPanel("Ticker Name: ", tickerField);
 
-        JPanel welcomePanel = PanelFactory.createTitlePanel("Buy Stock");
-        mainPanel.add(welcomePanel, BorderLayout.NORTH);
+        JTextField amountField = FieldFactory.createTextField();
+        final JPanel amountPanel = PanelFactory.createFormPanel("Amount: ", amountField);
 
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));
         formPanel.setMaximumSize(UiConstants.BUTTON_PANEL_DIM);
         formPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         formPanel.setOpaque(false);
-
-        JTextField tickerField = FieldFactory.createTextField();
-        final JPanel tickerPanel = PanelFactory.createFormPanel("Ticker Name", tickerField);
-
-        JTextField amountField = FieldFactory.createTextField();
-        final JPanel amountPanel = PanelFactory.createFormPanel("Amount Name", amountField);
 
         formPanel.add(tickerPanel);
         formPanel.add(UiConstants.smallVerticalGap());
@@ -71,8 +70,7 @@ public class BuyView extends BaseView implements PropertyChangeListener {
                     }
                 });
         mainPanel.add(ButtonFactory.createButtonPanel(buy), BorderLayout.SOUTH);
-        contentPanel.add(mainPanel, BorderLayout.CENTER);
-        add(contentPanel, BorderLayout.CENTER);
+        content.add(mainPanel, BorderLayout.CENTER);
     }
 
     @Override

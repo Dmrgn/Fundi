@@ -60,7 +60,7 @@ public class NewsInteractor implements NewsInputBoundary {
             }
 
             if (symbolsToFetch.isEmpty()) {
-                newsPresenter.prepareView(new NewsOutputData(new String[][]{{"No Results", "Could not find a stock matching '" + input + "'."}}));
+                newsPresenter.prepareView(new NewsOutputData(new String[][]{{"No Results", "Could not find a stock matching '" + input + "'.", ""}}));
                 return;
             }
 
@@ -88,9 +88,9 @@ public class NewsInteractor implements NewsInputBoundary {
                     for (int i = 0; i < Math.min(3, articles.length()); i++) {
                         JSONObject article = articles.getJSONObject(i);
                         allNews.add(new String[]{
-                                article.optString("headline", "No Title"),
-                                article.optString("summary", "No Summary Available."),
-                                article.optString("url", "")
+                            article.optString("headline", "No Title"),
+                            article.optString("summary", "No Summary Available."),
+                            article.optString("url", "")
                         });
                     }
                 }
@@ -106,7 +106,7 @@ public class NewsInteractor implements NewsInputBoundary {
         } catch (Exception e) {
             e.printStackTrace();
             // Prepare an error view
-            newsPresenter.prepareView(new NewsOutputData(new String[][]{{"Error", "Could not fetch news: " + e.getMessage()}}));
+            newsPresenter.prepareView(new NewsOutputData(new String[][]{{"Error", "Could not fetch news: " + e.getMessage(), ""}}));
         }
     }
 

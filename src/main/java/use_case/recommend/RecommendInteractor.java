@@ -19,7 +19,8 @@ public class RecommendInteractor implements RecommendInputBoundary {
     private final RecommendTransactionDataAccessInterface transactionDataAccessInterface;
     private final RecommendOutputBoundary recommendOutputBoundary;
 
-    public RecommendInteractor(RecommendStockDataAccessInterface stockDataAccessInterface, RecommendTransactionDataAccessInterface transactionDataAccessInterface,
+    public RecommendInteractor(RecommendStockDataAccessInterface stockDataAccessInterface,
+                               RecommendTransactionDataAccessInterface transactionDataAccessInterface,
                                RecommendOutputBoundary recommendOutputBoundary) {
         this.stockDataAccessInterface = stockDataAccessInterface;
         this.transactionDataAccessInterface = transactionDataAccessInterface;
@@ -32,26 +33,26 @@ public class RecommendInteractor implements RecommendInputBoundary {
      */
     @Override
     public void execute(RecommendInputData recommendInputData) {
-        Set<String> tickers = stockDataAccessInterface.getAvailableTickers();
-        Set<String> portfolioTickers = transactionDataAccessInterface
+        final Set<String> tickers = stockDataAccessInterface.getAvailableTickers();
+        final Set<String> portfolioTickers = transactionDataAccessInterface
                 .getPortfolioTickers(recommendInputData.getPortfolioId());
-        Set<String> nonPortfolioTickers = tickers.stream().filter(port -> !portfolioTickers.contains(port))
+        final Set<String> nonPortfolioTickers = tickers.stream().filter(port -> !portfolioTickers.contains(port))
                 .collect(Collectors.toSet());
-        Map<String, Double> sharpeRatios = new LinkedHashMap<>();
-        Map<String, Double> volatility = new LinkedHashMap<>();
-        Map<String, Double> pricesMap = new LinkedHashMap<>();
+        final Map<String, Double> sharpeRatios = new LinkedHashMap<>();
+        final Map<String, Double> volatility = new LinkedHashMap<>();
+        final Map<String, Double> pricesMap = new LinkedHashMap<>();
         for (String ticker : tickers) {
-            List<StockData> stockData = stockDataAccessInterface.pastStockData(ticker);
-            List<Double> prices = stockData.stream().map(StockData::getPrice).collect(Collectors.toList());
+            final List<StockData> stockData = stockDataAccessInterface.pastStockData(ticker);
+            final List<Double> prices = stockData.stream().map(StockData::getPrice).collect(Collectors.toList());
             sharpeRatios.put(ticker, FinancialCalculator.sharpeRatio(prices));
             volatility.put(ticker, FinancialCalculator.computeVolatility(prices, true));
             pricesMap.put(ticker, prices.get(0));
         }
-        Map<String, Double> haveRecs = SortingUtil.getTopnByValue(
+        final Map<String, Double> haveRecs = SortingUtil.getTopnByValue(
                 sharpeRatios, N, true, nonPortfolioTickers, pricesMap);
-        Map<String, Double> notHaveRecs = SortingUtil.getTopnByValue(
+        final Map<String, Double> notHaveRecs = SortingUtil.getTopnByValue(
                 sharpeRatios, N, true, portfolioTickers, pricesMap);
-        Map<String, Double> stable = SortingUtil.getTopnByValue(
+        final Map<String, Double> stable = SortingUtil.getTopnByValue(
                 volatility, N, false, nonPortfolioTickers, pricesMap);
 
         recommendOutputBoundary.prepareView(new RecommendOutputData(

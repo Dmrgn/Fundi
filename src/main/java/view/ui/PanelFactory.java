@@ -13,6 +13,7 @@ public final class PanelFactory {
 
     /**
      * Create a titled panel.
+     * 
      * @param text The text
      * @return The titled panel
      */
@@ -29,6 +30,7 @@ public final class PanelFactory {
 
     /**
      * Create a form panel.
+     * 
      * @param text      The text
      * @param textField the text field
      * @return The form panel
@@ -41,7 +43,7 @@ public final class PanelFactory {
         panel.setLayout(new BoxLayout(panel, BoxLayout.X_AXIS));
         panel.setOpaque(false);
 
-        label.setForeground(Color.WHITE);
+        label.setForeground(UiConstants.Colors.ON_PRIMARY);
         label.setPreferredSize(UiConstants.PREFERRED_LABEL_DIM);
         label.setMaximumSize(UiConstants.PREFERRED_LABEL_DIM);
         label.setMinimumSize(UiConstants.PREFERRED_LABEL_DIM);
@@ -58,6 +60,7 @@ public final class PanelFactory {
 
     /**
      * Create a single field form.
+     * 
      * @param textField The text field
      * @param button    The button
      * @return The form
@@ -86,6 +89,7 @@ public final class PanelFactory {
 
     /**
      * Create a stat list panel.
+     * 
      * @param title The text
      * @return The panel
      */
@@ -95,17 +99,18 @@ public final class PanelFactory {
         panel.setOpaque(false);
         panel.setAlignmentX(Component.CENTER_ALIGNMENT);
         TitledBorder border = TitledBorderFactory.createLightTitledBorder(title);
-        border.setTitleFont(UiConstants.FORM_FONT);
+        border.setTitleFont(UiConstants.Fonts.FORM);
         panel.setBorder(border);
         panel.setMinimumSize(UiConstants.SINGLE_DIM);
 
-        panel.setForeground(Color.WHITE);
+        panel.setForeground(UiConstants.Colors.ON_PRIMARY);
         return panel;
     }
 
     /**
      * Create panel with two side by side.
-     * @param left Left panel
+     * 
+     * @param left  Left panel
      * @param right Right panel
      * @return The combined panel
      */
@@ -127,7 +132,8 @@ public final class PanelFactory {
 
     /**
      * Create a summary section.
-     * @param title Title
+     * 
+     * @param title        Title
      * @param summaryLabel Label
      * @param detailPanels Details
      * @return The summary panel
@@ -140,7 +146,7 @@ public final class PanelFactory {
         panel.setBorder(BorderFactory.createCompoundBorder(BorderFactory.createLineBorder(
                 UiConstants.TRANSLUCENT_BORDER, 1, true),
                 UiConstants.EMPTY_BORDER));
-        panel.setForeground(Color.WHITE);
+        panel.setForeground(UiConstants.Colors.ON_PRIMARY);
 
         summaryLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(LabelFactory.createStatTitleLabel(title));
@@ -149,9 +155,7 @@ public final class PanelFactory {
 
         if (detailPanels.length == 1) {
             panel.add(detailPanels[0]);
-        }
-
-        else if (detailPanels.length == 2) {
+        } else if (detailPanels.length == 2) {
             panel.add(createSideBySide(detailPanels[0], detailPanels[1]));
         }
 

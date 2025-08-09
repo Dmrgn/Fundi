@@ -11,6 +11,7 @@ import java.awt.*;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+import view.ui.UiConstants;
 
 /**
  * The View for Company Details.
@@ -21,7 +22,7 @@ public class CompanyDetailsView extends BaseView {
     private final CompanyDetailsController companyDetailsController;
     private final BackNavigationHelper backNavigationHelper;
 
-    private JPanel contentPanel;
+    private JPanel mainContainer;
     private JScrollPane scrollPane;
 
     public CompanyDetailsView(CompanyDetailsViewModel companyDetailsViewModel,
@@ -32,48 +33,28 @@ public class CompanyDetailsView extends BaseView {
         this.companyDetailsController = companyDetailsController;
         this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
 
-        // Initialize UI
         initializeView();
 
-        // Set up property change listener
         companyDetailsViewModel.addPropertyChangeListener(evt -> updateView());
     }
 
     private void initializeView() {
-        setLayout(new BorderLayout());
+        // Header with back button only (title is dynamic inside content)
+        header.add(createBackButtonPanel(e -> backNavigationHelper.goBackToPortfolios()), BorderLayout.WEST);
 
-        // Create main content panel
-        contentPanel = createGradientContentPanel();
-        contentPanel.setLayout(new BorderLayout());
+        // Content container
+        mainContainer = new JPanel(new BorderLayout());
+        mainContainer.setOpaque(false);
 
-        // Create back button panel
-        JPanel topPanel = createTopPanel();
-        contentPanel.add(topPanel, BorderLayout.NORTH);
-
-        // Create scrollable content area
+        // Scrollable content area
         scrollPane = new JScrollPane();
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        contentPanel.add(scrollPane, BorderLayout.CENTER);
 
-        add(contentPanel, BorderLayout.CENTER);
-    }
-
-    private JPanel createTopPanel() {
-        JPanel topPanel = new JPanel(new BorderLayout());
-        topPanel.setOpaque(false);
-
-        // Create back button panel
-        JPanel backButtonPanel = createBackButtonPanel(e -> {
-            // Use back navigation helper to go back to portfolios view
-            backNavigationHelper.goBackToPortfolios();
-        });
-
-        topPanel.add(backButtonPanel, BorderLayout.WEST);
-
-        return topPanel;
+        mainContainer.add(scrollPane, BorderLayout.CENTER);
+        content.add(mainContainer, BorderLayout.CENTER);
     }
 
     private void updateView() {
@@ -83,7 +64,6 @@ public class CompanyDetailsView extends BaseView {
             showErrorView(state.getErrorMessage());
         } else if (state.getCompanyDetails() != null) {
             CompanyDetails details = state.getCompanyDetails();
-
             showCompanyDetails(details);
         } else {
             showLoadingView();
@@ -97,8 +77,8 @@ public class CompanyDetailsView extends BaseView {
         errorPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 
         JLabel errorLabel = new JLabel("Error: " + errorMessage);
-        errorLabel.setFont(new Font("Sans Serif", Font.BOLD, 16));
-        errorLabel.setForeground(Color.RED);
+        errorLabel.setFont(UiConstants.Fonts.HEADING);
+        errorLabel.setForeground(UiConstants.Colors.DANGER);
         errorLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         errorPanel.add(errorLabel);
@@ -115,8 +95,8 @@ public class CompanyDetailsView extends BaseView {
         loadingPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
 
         JLabel loadingLabel = new JLabel("Loading company details...");
-        loadingLabel.setFont(new Font("Sans Serif", Font.PLAIN, 16));
-        loadingLabel.setForeground(Color.WHITE);
+        loadingLabel.setFont(UiConstants.Fonts.BODY);
+        loadingLabel.setForeground(UiConstants.Colors.SURFACE_BG);
         loadingLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         loadingPanel.add(loadingLabel);
@@ -144,8 +124,6 @@ public class CompanyDetailsView extends BaseView {
         mainPanel.add(createFinancialMetricsSection(details));
         mainPanel.add(Box.createVerticalStrut(20));
 
-        // News section removed
-
         // Peers section
         if (!details.getPeers().isEmpty()) {
             mainPanel.add(createPeersSection(details.getPeers()));
@@ -162,7 +140,7 @@ public class CompanyDetailsView extends BaseView {
         headerPanel.setOpaque(false);
         headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
         headerPanel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(new Color(70, 130, 180), 2, true),
+                BorderFactory.createLineBorder(UiConstants.Colors.PRIMARY, 2, true),
                 BorderFactory.createEmptyBorder(20, 20, 20, 20)));
 
         // Left side: Company info
@@ -171,18 +149,18 @@ public class CompanyDetailsView extends BaseView {
         infoPanel.setOpaque(false);
 
         JLabel nameLabel = new JLabel(details.getName());
-        nameLabel.setFont(new Font("Sans Serif", Font.BOLD, 28));
+        nameLabel.setFont(UiConstants.Fonts.TITLE);
         nameLabel.setForeground(Color.WHITE);
         nameLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel symbolLabel = new JLabel("(" + details.getSymbol() + ")");
-        symbolLabel.setFont(new Font("Sans Serif", Font.PLAIN, 18));
-        symbolLabel.setForeground(new Color(173, 216, 230));
+        symbolLabel.setFont(UiConstants.Fonts.BODY);
+        symbolLabel.setForeground(UiConstants.Colors.SURFACE_BG);
         symbolLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         JLabel exchangeLabel = new JLabel("📈 " + details.getExchange());
-        exchangeLabel.setFont(new Font("Sans Serif", Font.ITALIC, 16));
-        exchangeLabel.setForeground(Color.CYAN);
+        exchangeLabel.setFont(UiConstants.Fonts.SMALL);
+        exchangeLabel.setForeground(UiConstants.Colors.SURFACE_BG);
         exchangeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         infoPanel.add(nameLabel);
@@ -199,19 +177,19 @@ public class CompanyDetailsView extends BaseView {
         pricePanel.setOpaque(false);
 
         JLabel priceTitle = new JLabel("Current Price");
-        priceTitle.setFont(new Font("Sans Serif", Font.BOLD, 14));
-        priceTitle.setForeground(new Color(255, 215, 0)); // Gold color
+        priceTitle.setFont(UiConstants.Fonts.FORM);
+        priceTitle.setForeground(UiConstants.Colors.TEXT_PRIMARY);
         priceTitle.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
         String priceText = details.getCurrentPrice() > 0 ? String.format("$%.2f", details.getCurrentPrice()) : "N/A";
         JLabel priceLabel = new JLabel(priceText);
         priceLabel.setFont(new Font("Sans Serif", Font.BOLD, 32));
-        priceLabel.setForeground(new Color(50, 205, 50)); // Lime green for price
+        priceLabel.setForeground(UiConstants.Colors.SUCCESS);
         priceLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
         JLabel currencyLabel = new JLabel(details.getCurrency());
-        currencyLabel.setFont(new Font("Sans Serif", Font.ITALIC, 12));
-        currencyLabel.setForeground(Color.LIGHT_GRAY);
+        currencyLabel.setFont(UiConstants.Fonts.SMALL);
+        currencyLabel.setForeground(UiConstants.Colors.TEXT_MUTED);
         currencyLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
         pricePanel.add(priceTitle);
@@ -282,12 +260,12 @@ public class CompanyDetailsView extends BaseView {
         section.setLayout(new BoxLayout(section, BoxLayout.Y_AXIS));
         section.setOpaque(false);
 
-        // Different colored borders for different sections
+        // Section palette (centralized)
         Color borderColor = switch (title) {
-            case "Company Information" -> new Color(138, 43, 226); // Blue Violet
-            case "Financial Metrics" -> new Color(255, 140, 0); // Dark Orange
-            case "Peer Companies" -> new Color(30, 144, 255); // Dodger Blue
-            default -> new Color(100, 149, 237); // Cornflower Blue
+            case "Company Information" -> UiConstants.Palette.SECTION_INFO;
+            case "Financial Metrics" -> UiConstants.Palette.SECTION_METRICS;
+            case "Peer Companies" -> UiConstants.Palette.SECTION_PEERS;
+            default -> UiConstants.Palette.SECTION_DEFAULT;
         };
 
         section.setBorder(BorderFactory.createCompoundBorder(
@@ -295,7 +273,6 @@ public class CompanyDetailsView extends BaseView {
                 BorderFactory.createEmptyBorder(20, 20, 20, 20)));
         section.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
-        // Section title with icon and enhanced styling
         String icon = switch (title) {
             case "Company Information" -> "🏢 ";
             case "Financial Metrics" -> "📊 ";
@@ -305,13 +282,12 @@ public class CompanyDetailsView extends BaseView {
 
         JLabel titleLabel = new JLabel(icon + title);
         titleLabel.setFont(new Font("Sans Serif", Font.BOLD, 20));
-        titleLabel.setForeground(borderColor.brighter()); // Use lighter version of border color
+        titleLabel.setForeground(borderColor.brighter());
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         section.add(titleLabel);
         section.add(Box.createVerticalStrut(15));
 
-        // Center all child components added to this section
         section.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         return section;
@@ -328,14 +304,14 @@ public class CompanyDetailsView extends BaseView {
         row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
 
         JLabel labelComponent = new JLabel(label);
-        labelComponent.setFont(new Font("Sans Serif", Font.BOLD, 12));
-        labelComponent.setForeground(Color.LIGHT_GRAY);
+        labelComponent.setFont(UiConstants.Fonts.SMALL);
+        labelComponent.setForeground(UiConstants.Colors.TEXT_MUTED);
         labelComponent.setHorizontalAlignment(SwingConstants.CENTER);
         labelComponent.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         JLabel valueComponent = new JLabel(value);
-        valueComponent.setFont(new Font("Sans Serif", Font.PLAIN, 12));
-        valueComponent.setForeground(Color.WHITE);
+        valueComponent.setFont(UiConstants.Fonts.BODY);
+        valueComponent.setForeground(UiConstants.Colors.SURFACE_BG);
         valueComponent.setHorizontalAlignment(SwingConstants.CENTER);
         valueComponent.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -376,12 +352,12 @@ public class CompanyDetailsView extends BaseView {
 
     private JLabel createClickablePeerLabel(String ticker) {
         JLabel peerLabel = new JLabel(ticker + " →");
-        peerLabel.setFont(new Font("Sans Serif", Font.BOLD, 13));
+        peerLabel.setFont(UiConstants.Fonts.BODY);
         peerLabel.setForeground(Color.WHITE);
-        peerLabel.setBackground(new Color(70, 130, 180));
+        peerLabel.setBackground(UiConstants.Colors.PRIMARY);
         peerLabel.setOpaque(true);
         peerLabel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(Color.CYAN, 2, true),
+                BorderFactory.createLineBorder(UiConstants.Colors.SECONDARY.brighter(), 2, true),
                 BorderFactory.createEmptyBorder(8, 12, 8, 12)));
         peerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         peerLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
@@ -390,24 +366,23 @@ public class CompanyDetailsView extends BaseView {
         peerLabel.addMouseListener(new java.awt.event.MouseAdapter() {
             @Override
             public void mouseClicked(java.awt.event.MouseEvent e) {
-                // Navigate to the peer company's details
                 companyDetailsController.execute(ticker, "company_details");
             }
 
             @Override
             public void mouseEntered(java.awt.event.MouseEvent e) {
-                peerLabel.setBackground(new Color(100, 149, 237)); // Cornflower blue
+                peerLabel.setBackground(UiConstants.PRESSED_COLOUR);
                 peerLabel.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(Color.YELLOW, 3, true),
+                        BorderFactory.createLineBorder(UiConstants.Colors.PRIMARY.brighter(), 3, true),
                         BorderFactory.createEmptyBorder(8, 12, 8, 12)));
                 peerLabel.repaint();
             }
 
             @Override
             public void mouseExited(java.awt.event.MouseEvent e) {
-                peerLabel.setBackground(new Color(70, 130, 180)); // Steel blue
+                peerLabel.setBackground(UiConstants.Colors.PRIMARY);
                 peerLabel.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(Color.CYAN, 2, true),
+                        BorderFactory.createLineBorder(UiConstants.Colors.SECONDARY.brighter(), 2, true),
                         BorderFactory.createEmptyBorder(8, 12, 8, 12)));
                 peerLabel.repaint();
             }

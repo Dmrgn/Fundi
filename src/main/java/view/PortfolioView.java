@@ -20,12 +20,9 @@ import java.awt.*;
 import static entity.PreferredCurrencyManager.getConverter;
 import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
-/**
- * The View for the Portfolio Use Case
- */
 public class PortfolioView extends BaseView {
-    private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Amount" };
-    private static final String[] USE_CASES = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell"};
+    private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Amount"};
+    private static final String[] USE_CASES = new String[]{"Analysis", "Recommendations", "History", "Buy", "Sell"};
     private final PortfolioViewModel portfolioViewModel;
     private final PortfolioController portfolioController;
     private final HistoryController historyController;
@@ -34,7 +31,6 @@ public class PortfolioView extends BaseView {
     private final BackNavigationHelper backNavigationHelper;
     private final JLabel titleLabel = LabelFactory.createTitleLabel("");
     private final JLabel usernameLabel = LabelFactory.createLabel("");
-    private final JButton backButton = ButtonFactory.createStyledButton("Back");
     private final JButton[] useCaseButtons = new JButton[USE_CASES.length];
     private final DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0) {
         @Override
@@ -56,40 +52,22 @@ public class PortfolioView extends BaseView {
 
         generateButtons();
 
-        JPanel contentPanel = createGradientContentPanel();
-        this.add(contentPanel, BorderLayout.CENTER);
+        // Header with back button and title
+        JPanel headerTop = new JPanel();
+        headerTop.setOpaque(false);
+        headerTop.setLayout(new BoxLayout(headerTop, BoxLayout.Y_AXIS));
+        headerTop.add(createBackButtonPanel(evt -> backNavigationHelper.goBackToPortfolios()));
+        headerTop.add(titleLabel);
+        headerTop.add(UiConstants.mediumVerticalGap());
+        headerTop.add(usernameLabel);
+        header.add(headerTop, BorderLayout.CENTER);
 
-        JPanel topPanel = createTopPanel();
-        JPanel centerPanel = createCenterPanel();
-        JPanel bottomPanel = createBottomPanel();
-
-        contentPanel.add(topPanel, BorderLayout.NORTH);
-        contentPanel.add(centerPanel, BorderLayout.CENTER);
-        contentPanel.add(bottomPanel, BorderLayout.SOUTH);
-
-        wireListeners();
-    }
-
-    private JPanel createTopPanel() {
-        JPanel topPanel = new JPanel();
-        topPanel.setLayout(new BoxLayout(topPanel, BoxLayout.Y_AXIS));
-        topPanel.add(createBackButtonPanel(evt -> backNavigationHelper.goBackToPortfolios()));
-        topPanel.setOpaque(false);
-        topPanel.add(titleLabel);
-        topPanel.add(UiConstants.mediumVerticalGap());
-        topPanel.add(usernameLabel);
-        return topPanel;
-    }
-
-    private JPanel createCenterPanel() {
+        // Content: table + actions
         JPanel centerPanel = new JPanel(new BorderLayout());
         centerPanel.setOpaque(false);
         JScrollPane table = TableFactory.createStyledTable(tableModel);
         centerPanel.add(table, BorderLayout.CENTER);
-        return centerPanel;
-    }
 
-    private JPanel createBottomPanel() {
         JPanel bottomPanel = new JPanel();
         bottomPanel.setOpaque(false);
         bottomPanel.setLayout(new BoxLayout(bottomPanel, BoxLayout.Y_AXIS));
@@ -98,8 +76,15 @@ public class PortfolioView extends BaseView {
         buttonPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
         bottomPanel.add(buttonPanel);
         bottomPanel.add(UiConstants.bigVerticalGap());
-        // bottomPanel.add(createBackButtonPanel(e -> navigationController.goBack()));
-        return bottomPanel;
+
+        JPanel contentPanel = new JPanel(new BorderLayout());
+        contentPanel.setOpaque(false);
+        contentPanel.add(centerPanel, BorderLayout.CENTER);
+        contentPanel.add(bottomPanel, BorderLayout.SOUTH);
+
+        content.add(contentPanel, BorderLayout.CENTER);
+
+        wireListeners();
     }
 
     private void generateButtons() {
@@ -121,8 +106,6 @@ public class PortfolioView extends BaseView {
             int[] amounts = state.getStockAmounts();
             double[] prices = state.getStockPrices();
             tableModel.setRowCount(0);
-
-
 
             CurrencyConverter converter = getConverter();
             String preferredCurrency = getPreferredCurrency();
@@ -146,31 +129,19 @@ public class PortfolioView extends BaseView {
             }
         });
 
-
-
-
-
         for (int i = 0; i < USE_CASES.length; i++) {
             PortfolioState state = this.portfolioViewModel.getState();
             JButton useCaseButton = useCaseButtons[i];
             useCaseButton.addActionListener(evt -> {
                 if (useCaseButton.getText().equals("Buy")) {
                     this.portfolioController.routeToBuy(state.getPortfolioId());
-                }
-
-                else if (useCaseButton.getText().equals("Sell")) {
+                } else if (useCaseButton.getText().equals("Sell")) {
                     this.portfolioController.routeToSell(state.getPortfolioId());
-                }
-
-                else if (useCaseButton.getText().equals("History")) {
+                } else if (useCaseButton.getText().equals("History")) {
                     this.historyController.execute(state.getPortfolioId());
-                }
-
-                else if (useCaseButton.getText().equals("Analysis")) {
+                } else if (useCaseButton.getText().equals("Analysis")) {
                     this.analysisController.execute(state.getPortfolioId());
-                }
-
-                else if (useCaseButton.getText().equals("Recommendations")) {
+                } else if (useCaseButton.getText().equals("Recommendations")) {
                     this.recommendController.execute(state.getPortfolioId());
                 }
             });

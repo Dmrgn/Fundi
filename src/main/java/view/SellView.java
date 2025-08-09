@@ -24,25 +24,19 @@ public class SellView extends BaseView implements PropertyChangeListener {
     private final SellController sellController;
     private final NavigationController navigationController;
 
-    public SellView(SellViewModel sellViewModel, SellController sellController, NavigationController navigationController) {
+    public SellView(SellViewModel sellViewModel, SellController sellController,
+            NavigationController navigationController) {
         super("sell");
         this.sellViewModel = sellViewModel;
         this.sellController = sellController;
         this.navigationController = navigationController;
         this.sellViewModel.addPropertyChangeListener(this);
 
-        JPanel contentPanel = createGradientContentPanel();
-        JPanel mainPanel = new JPanel();
-        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
-        mainPanel.setOpaque(false);
-
-        // === 1. Top panel with plain text intro ===
-
+        // Header: back + title
+        header.add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.WEST);
         JPanel titlePanel = PanelFactory.createTitlePanel("Sell Stock");
-        mainPanel.add(titlePanel, BorderLayout.NORTH);
-        contentPanel.add(createBackButtonPanel(evt -> {
-            this.navigationController.goBack();
-        }), BorderLayout.NORTH);
+        titlePanel.setOpaque(false);
+        header.add(titlePanel, BorderLayout.CENTER);
 
         JTextField tickerField = FieldFactory.createTextField();
         JPanel tickerPanel = PanelFactory.createFormPanel("Ticker", tickerField);
@@ -58,24 +52,25 @@ public class SellView extends BaseView implements PropertyChangeListener {
         formPanel.add(tickerPanel);
         formPanel.add(UiConstants.smallVerticalGap());
         formPanel.add(amountPanel);
+
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        mainPanel.setOpaque(false);
         mainPanel.add(formPanel, BorderLayout.CENTER);
 
-        final JButton buy = ButtonFactory.createStyledButton("Sell");
-        buy.addActionListener(
+        final JButton sell = ButtonFactory.createStyledButton("Sell");
+        sell.addActionListener(
                 evt -> {
-                    if (evt.getSource().equals(buy)) {
+                    if (evt.getSource().equals(sell)) {
                         final SellState currentState = sellViewModel.getState();
                         this.sellController.execute(
                                 currentState.getPortfolioId(),
                                 tickerField.getText(),
-                                Integer.parseInt(amountField.getText())
-                        );
+                                Integer.parseInt(amountField.getText()));
                     }
-                }
-        );
-        mainPanel.add(ButtonFactory.createButtonPanel(buy), BorderLayout.SOUTH);
-        contentPanel.add(mainPanel, BorderLayout.CENTER);
-        this.add(contentPanel, BorderLayout.CENTER);
+                });
+        mainPanel.add(ButtonFactory.createButtonPanel(sell), BorderLayout.SOUTH);
+        content.add(mainPanel, BorderLayout.CENTER);
     }
 
     @Override

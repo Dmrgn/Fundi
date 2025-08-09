@@ -60,15 +60,7 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         gbc.gridy = 0;
         gbc.gridwidth = 2;
 
-        JLabel subLabel = new JLabel("or ");
-        subLabel.setFont(UiConstants.Fonts.BODY);
-        subLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
-
-        // Layout
         gbc.gridwidth = 2;
-        panel.add(subLabel, gbc);
-        gbc.gridx = 1;
-        gbc.gridwidth = 1;
         panel.add(signUpButton, gbc);
 
         gbc.gridx = 0;
@@ -96,6 +88,9 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         gbc.gridy++;
         loginButton.setPreferredSize(new Dimension(0, 40));
         panel.add(loginButton, gbc);
+
+        gbc.gridy++;
+        panel.add(signUpButton, gbc);
 
         // Add to BaseView content within scroll pane
         JScrollPane scroll = new JScrollPane(panel);

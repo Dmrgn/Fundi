@@ -13,6 +13,11 @@ import view.ui.UiConstants;
 
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+import java.io.IOException;
+import java.net.URI;
+import java.net.URISyntaxException;
 
 public class NewsView extends BaseView {
     private static final String SEARCH_PLACEHOLDER = "Enter stock ticker (e.g., AAPL, GOOGL)";
@@ -116,6 +121,33 @@ public class NewsView extends BaseView {
             itemPanel.setBackground(UiConstants.Colors.SURFACE_BG);
             itemPanel.setMaximumSize(new Dimension(800, 150));
             itemPanel.setAlignmentX(Component.CENTER_ALIGNMENT);
+
+            final String url = newsItem.length > 2 ? newsItem[2] : null;
+            if (url != null && !url.isEmpty()) {
+                itemPanel.setCursor(new Cursor(Cursor.HAND_CURSOR));
+                itemPanel.addMouseListener(new MouseAdapter() {
+                    @Override
+                    public void mouseClicked(MouseEvent e) {
+                        try {
+                            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                                Desktop.getDesktop().browse(new URI(url));
+                            }
+                        } catch (IOException | URISyntaxException ex) {
+                            JOptionPane.showMessageDialog(NewsView.this, "Could not open link: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                        }
+                    }
+
+                    @Override
+                    public void mouseEntered(MouseEvent e) {
+                        itemPanel.setBackground(UiConstants.Colors.SURFACE_BG.brighter());
+                    }
+
+                    @Override
+                    public void mouseExited(MouseEvent e) {
+                        itemPanel.setBackground(UiConstants.Colors.SURFACE_BG);
+                    }
+                });
+            }
 
             JLabel titleLabel = new JLabel(newsItem[0]);
             titleLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);

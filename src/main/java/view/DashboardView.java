@@ -89,7 +89,6 @@ public class DashboardView extends BaseView {
     private JPanel createWelcomePanel() {
         JPanel welcomePanel = PanelFactory.createTitlePanel("Welcome to Fundi!");
 
-        // Add settings button
         JButton settingsButton = new JButton();
         try {
         } catch (Exception e) {

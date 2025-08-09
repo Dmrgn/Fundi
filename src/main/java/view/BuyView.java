@@ -42,10 +42,10 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         mainPanel.setOpaque(false);
 
         JTextField tickerField = FieldFactory.createTextField();
-        final JPanel tickerPanel = PanelFactory.createFormPanel("Ticker Name", tickerField);
+        final JPanel tickerPanel = PanelFactory.createFormPanel("Ticker Name: ", tickerField);
 
         JTextField amountField = FieldFactory.createTextField();
-        final JPanel amountPanel = PanelFactory.createFormPanel("Amount Name", amountField);
+        final JPanel amountPanel = PanelFactory.createFormPanel("Amount: ", amountField);
 
         JPanel formPanel = new JPanel();
         formPanel.setLayout(new BoxLayout(formPanel, BoxLayout.Y_AXIS));

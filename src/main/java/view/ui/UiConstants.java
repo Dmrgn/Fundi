@@ -141,7 +141,7 @@ public final class UiConstants {
         public static final int XL = 24;
         public static final int XXL = 32;
 
-        public static final Insets CONTENT_INSETS = new Insets(XL, XL, XL, XL);
+        public static final Insets CONTENT_INSETS = new Insets(MD, MD, MD, MD);
         public static final Insets SECTION_INSETS = new Insets(LG, LG, LG, LG);
     }
 

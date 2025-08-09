@@ -21,7 +21,7 @@ public class BuyController {
      * @param amount the amount of stock to buy
      */
     public void execute(String portfolioId, String ticker, int amount) {
-        final BuyInputData buyInputData = new BuyInputData(portfolioId, ticker, amount);
+        final BuyInputData buyInputData = new BuyInputData(portfolioId, ticker.toUpperCase(), amount);
         buyUseCaseInteractor.execute(buyInputData);
     }
 }

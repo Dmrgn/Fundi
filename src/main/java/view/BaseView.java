@@ -137,7 +137,7 @@ public abstract class BaseView extends JPanel {
                 g2d.fillRect(0, 0, width, height);
             }
         };
-        panel.setLayout(new BorderLayout(10, 10));
+        panel.setLayout(new BorderLayout(3, 3));
         panel.setOpaque(false);
         return panel;
     }

@@ -87,7 +87,7 @@ class ChangePwdInteractorTest {
             savedPassword = newPassword;
         }
 
-    }
+     }
 
     // Fake Presenter
     private static class FakePresenter implements ChangePwdOutputBoundary {

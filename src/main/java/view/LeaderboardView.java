@@ -222,7 +222,7 @@ public class LeaderboardView extends BaseView {
                     try {
                         convertedPrice = converter.convert(originalValue, "USD", preferredCurrency);
                     } catch (Exception e) {
-                        System.err.println("Currency conversion failed: " + e.getMessage());
+                        System.err.println("Currency conversion failed in leaderboard: " + e.getMessage());
                     }
                 }
                 Object[] rowData = {

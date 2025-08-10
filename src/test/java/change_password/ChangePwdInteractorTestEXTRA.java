@@ -12,7 +12,7 @@ import use_case.login.LoginUserDataAccessInterface;
 
 import static org.junit.jupiter.api.Assertions.*;
 
-class ChangePwdInteractorTest {
+class ChangePwdInteractorTestEXTRA {
 
     private FakeUserDao fakeUserDao;
     private FakePresenter fakePresenter;

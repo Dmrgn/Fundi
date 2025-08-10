@@ -1,6 +1,9 @@
 package use_case.create;
 
 import data_access.DBPortfoliosDataAccessObject;
+import data_access.DBUserDataAccessObject;
+import entity.User;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
@@ -9,13 +12,12 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class CreateInteractorTest {
-
     @BeforeAll
-    static void tearDown() throws SQLException {
-        DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
-        if (portfoliosDataAccessObject.existsByName("testPortfolio", "Paul")) {
-            portfoliosDataAccessObject.remove("testPortfolio", "Paul");
-        }
+    static void setUp() throws SQLException {
+        // Assuming Login Test was already run
+
+        DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject();
+        userDataAccessObject.save(new User("Paul", "Paul"));
     }
 
     @Test
@@ -60,5 +62,14 @@ class CreateInteractorTest {
         };
         CreateInteractor createInteractor = new CreateInteractor(createDataAccessInterface, createOutputBoundary);
         createInteractor.execute(createInputData);
+    }
+
+    @AfterAll
+    static void tearDown() throws SQLException {
+        DBPortfoliosDataAccessObject portfoliosDataAccessObject = new DBPortfoliosDataAccessObject();
+        portfoliosDataAccessObject.remove("testPortfolio", "Paul");
+        DBUserDataAccessObject userDataAccessObject = new DBUserDataAccessObject();
+        userDataAccessObject.remove("Paul");
+
     }
 }

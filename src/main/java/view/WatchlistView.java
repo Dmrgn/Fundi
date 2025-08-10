@@ -2,6 +2,7 @@ package view;
 
 import data_access.DBUserDataAccessObject;
 import data_access.TickerCache;
+import entity.CurrencyConverter;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.main.MainState;
 import view.ui.UiConstants;
@@ -33,6 +34,9 @@ import entity.TimeSeriesPoint;
 import org.jfree.data.time.Hour;
 import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.chart.ui.RectangleInsets;
+
+import static entity.PreferredCurrencyManager.getConverter;
+import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
 public class WatchlistView extends BaseView implements PropertyChangeListener {
     private final DBUserDataAccessObject userDao;
@@ -488,12 +492,28 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         TimeSeries series = new TimeSeries(ticker);
         if (points != null) {
             boolean hourly = "1W".equalsIgnoreCase(range);
+
+            CurrencyConverter conv = getConverter();
+            String Tocurr = getPreferredCurrency();
+            if (Tocurr == null || Tocurr.isBlank()) Tocurr = "USD";
+
+            String fromCurr = "USD";
+
             for (TimeSeriesPoint p : points) {
                 java.util.Date d = new java.util.Date(p.getEpochMillis());
+                double defamount = p.getClose();
+                double convertedAmt = defamount;
+                if (conv != null && !fromCurr.equalsIgnoreCase(Tocurr)) {
+                    try {convertedAmt = conv.convert(defamount, fromCurr, Tocurr); }
+
+                    catch (Exception e) {
+                        System.err.println("Currency conversion failed in watchlist: " + e.getMessage());
+                    }
+                }
                 if (hourly) {
-                    series.addOrUpdate(new Hour(d), p.getClose());
+                    series.addOrUpdate(new Hour(d), convertedAmt);
                 } else {
-                    series.addOrUpdate(new Day(d), p.getClose());
+                    series.addOrUpdate(new Day(d), convertedAmt);
                 }
             }
         }

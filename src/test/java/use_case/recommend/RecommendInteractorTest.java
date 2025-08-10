@@ -2,6 +2,7 @@ package use_case.recommend;
 
 import data_access.DBTransactionDataAccessObject;
 import data_access.DBStockDataAccessObject;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
@@ -9,8 +10,13 @@ import java.sql.SQLException;
 import static org.junit.jupiter.api.Assertions.*;
 
 class RecommendInteractorTest {
+    @BeforeAll
+    static void setUp() {
+        // Assuming buy and sell tests were already run
+    }
+
     @Test
-    public void recommendTest() throws SQLException {
+    void recommendTest() throws SQLException {
         DBTransactionDataAccessObject dbTransactionDataAccessObject = new DBTransactionDataAccessObject();
         DBStockDataAccessObject dbStockDataAccessObject = new DBStockDataAccessObject();
 

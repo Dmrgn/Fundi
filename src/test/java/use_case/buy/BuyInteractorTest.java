@@ -2,18 +2,22 @@ package use_case.buy;
 
 import data_access.DBTransactionDataAccessObject;
 import data_access.DBStockDataAccessObject;
+import entity.Transaction;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.sql.SQLException;
+import java.time.LocalDate;
 
 import static org.junit.jupiter.api.Assertions.*;
 
 class BuyInteractorTest {
     @BeforeAll
     static void setUp() throws SQLException {
-        DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
-        transactionDataAccessObject.remove("51", "NVDA", 10); // Update portfolio id accordingly
+        DBTransactionDataAccessObject dbTransactionDataAccessObject = new DBTransactionDataAccessObject();
+        dbTransactionDataAccessObject.save(new Transaction("51", "NVDA", 10,
+                LocalDate.now(), 10.0));
     }
 
     @Test
@@ -89,5 +93,12 @@ class BuyInteractorTest {
         };
         BuyInteractor buyInteractor = new BuyInteractor(stockDataAccessInterface, transactionDataAccessInterface, buyPresenter);
         buyInteractor.execute(buyInputData);
+    }
+
+    @AfterAll
+    static void tearDown() throws SQLException {
+        DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
+        transactionDataAccessObject.remove("51", "NVDA", 10); // Update portfolio id accordingly
+
     }
 }

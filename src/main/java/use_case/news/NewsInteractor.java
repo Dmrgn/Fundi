@@ -1,17 +1,12 @@
 package use_case.news;
 
 import entity.SearchResult;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
 import org.json.JSONArray;
 import org.json.JSONObject;
 import use_case.portfolio.PortfolioTransactionDataAccessInterface;
 import use_case.search.SearchDataAccessInterface;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -20,22 +15,22 @@ import java.util.List;
 public class NewsInteractor implements NewsInputBoundary {
     private final NewsOutputBoundary newsPresenter;
     private final PortfolioTransactionDataAccessInterface portfolioDataAccess;
-    private final SearchDataAccessInterface searchDataAccess; // Added
-    private final String apiKey;
-    private final OkHttpClient client;
+    private final SearchDataAccessInterface searchDataAccess;
+    private final NewsAPIDataAccessInterface newsAPIDataAccess;
 
     // Default companies for users with no portfolio
     private static final List<String> DEFAULT_SYMBOLS = Arrays.asList("AAPL", "GOOGL", "MSFT", "TSLA");
+    private static final int MAX_ARTICLES_PER_SYMBOL = 3;
+    private static final int NEWS_FETCH_DAYS = 7;
 
     public NewsInteractor(NewsOutputBoundary newsPresenter,
                          PortfolioTransactionDataAccessInterface portfolioDataAccess,
-                         SearchDataAccessInterface searchDataAccess) throws IOException { // Modified constructor
+                         SearchDataAccessInterface searchDataAccess,
+                         NewsAPIDataAccessInterface newsAPIDataAccess) {
         this.newsPresenter = newsPresenter;
         this.portfolioDataAccess = portfolioDataAccess;
-        this.searchDataAccess = searchDataAccess; // Added
-        this.client = new OkHttpClient();
-        // Read Finnhub API key from the correct file
-        this.apiKey = Files.readString(Path.of("data/FHkey.txt")).trim();
+        this.searchDataAccess = searchDataAccess;
+        this.newsAPIDataAccess = newsAPIDataAccess;
     }
 
     @Override
@@ -66,33 +61,22 @@ public class NewsInteractor implements NewsInputBoundary {
 
             List<String[]> allNews = new ArrayList<>();
             LocalDate today = LocalDate.now();
-            LocalDate fromDate = today.minusDays(7); // Fetch news from the last 7 days
+            LocalDate fromDate = today.minusDays(NEWS_FETCH_DAYS); // Fetch news from the last 7 days
 
             for (String symbol : symbolsToFetch) {
-                String url = String.format(
-                    "https://finnhub.io/api/v1/company-news?symbol=%s&from=%s&to=%s&token=%s",
-                    symbol, fromDate, today, apiKey
-                );
+                JSONArray articles = newsAPIDataAccess.fetchNewsForSymbol(symbol, fromDate, today);
 
-                Request request = new Request.Builder().url(url).build();
-                try (Response response = client.newCall(request).execute()) {
-                    if (!response.isSuccessful()) continue;
-
-                    String jsonData = response.body().string();
-                    JSONArray articles = new JSONArray(jsonData);
-
-                    if (articles.length() > 0) {
-                        allNews.add(new String[]{"Latest News for " + symbol, "-----------------------------------", ""});
-                    }
-                    // Limit to 3 articles per symbol
-                    for (int i = 0; i < Math.min(3, articles.length()); i++) {
-                        JSONObject article = articles.getJSONObject(i);
-                        allNews.add(new String[]{
-                            article.optString("headline", "No Title"),
-                            article.optString("summary", "No Summary Available."),
-                            article.optString("url", "")
-                        });
-                    }
+                if (articles.length() > 0) {
+                    allNews.add(new String[]{"Latest News for " + symbol, "-----------------------------------", ""});
+                }
+                // Limit to 3 articles per symbol
+                for (int i = 0; i < Math.min(MAX_ARTICLES_PER_SYMBOL, articles.length()); i++) {
+                    JSONObject article = articles.getJSONObject(i);
+                    allNews.add(new String[]{
+                        article.optString("headline", "No Title"),
+                        article.optString("summary", "No Summary Available."),
+                        article.optString("url", "")
+                    });
                 }
             }
 
@@ -118,33 +102,22 @@ public class NewsInteractor implements NewsInputBoundary {
         try {
             List<String[]> allNews = new ArrayList<>();
             LocalDate today = LocalDate.now();
-            LocalDate fromDate = today.minusDays(7); // Fetch news from the last 7 days
+            LocalDate fromDate = today.minusDays(NEWS_FETCH_DAYS); // Fetch news from the last 7 days
 
             for (String symbol : testSymbols) {
-                String url = String.format(
-                    "https://finnhub.io/api/v1/company-news?symbol=%s&from=%s&to=%s&token=%s",
-                    symbol, fromDate, today, apiKey
-                );
+                JSONArray articles = newsAPIDataAccess.fetchNewsForSymbol(symbol, fromDate, today);
 
-                Request request = new Request.Builder().url(url).build();
-                try (Response response = client.newCall(request).execute()) {
-                    if (!response.isSuccessful()) continue;
-
-                    String jsonData = response.body().string();
-                    JSONArray articles = new JSONArray(jsonData);
-
-                    if (articles.length() > 0) {
-                        allNews.add(new String[]{"Latest News for " + symbol, "-----------------------------------", ""});
-                    }
-                    // Limit to 3 articles per symbol
-                    for (int i = 0; i < Math.min(3, articles.length()); i++) {
-                        JSONObject article = articles.getJSONObject(i);
-                        allNews.add(new String[]{
-                            article.optString("headline", "No Title"),
-                            article.optString("summary", "No Summary Available."),
-                            article.optString("url", "")
-                        });
-                    }
+                if (articles.length() > 0) {
+                    allNews.add(new String[]{"Latest News for " + symbol, "-----------------------------------", ""});
+                }
+                // Limit to 3 articles per symbol
+                for (int i = 0; i < Math.min(MAX_ARTICLES_PER_SYMBOL, articles.length()); i++) {
+                    JSONObject article = articles.getJSONObject(i);
+                    allNews.add(new String[]{
+                        article.optString("headline", "No Title"),
+                        article.optString("summary", "No Summary Available."),
+                        article.optString("url", "")
+                    });
                 }
             }
 

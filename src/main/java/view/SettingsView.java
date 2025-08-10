@@ -23,9 +23,10 @@ public class SettingsView extends BaseView {
 
     private ChangePwdController controller;
 
-    public SettingsView(ChangePwdViewModel changePwdViewModel, ViewManager viewManager, LoginView loginView, DashboardController dashboardController,
-                    
-    MainViewModel mainViewModel) {
+    public SettingsView(ChangePwdViewModel changePwdViewModel, ViewManager viewManager, LoginView loginView,
+            DashboardController dashboardController,
+
+            MainViewModel mainViewModel) {
         super("settings");
 
         // Header
@@ -64,12 +65,11 @@ public class SettingsView extends BaseView {
         ExchangeAPIDataAccessObject currencyDAO = new ExchangeAPIDataAccessObject();
         List<String> currencyList = currencyDAO.getSupportedCurrencies();
         String[] currencies = currencyList.toArray(new String[0]);
-        
+
         currencyDropdown = new JComboBox<>(currencies);
 
         currencyDropdown.setFont(UiConstants.Fonts.FORM);
         currencyDropdown.setBorder(BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1));
-
 
         String current = PreferredCurrencyManager.getPreferredCurrency();
         currencyDropdown.setSelectedItem(current);

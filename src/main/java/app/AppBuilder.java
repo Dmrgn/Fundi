@@ -191,7 +191,6 @@ public class AppBuilder {
         private RecommendView recommendView;
         private CompanyDetailsView companyDetailsView;
 
-
         public AppBuilder() throws SQLException, IOException {
                 cardPanel.setLayout(cardLayout);
                 SearchOutputBoundary searchPresenter = new SearchPresenter(searchViewModel);
@@ -210,12 +209,11 @@ public class AppBuilder {
                 SearchInputBoundary getMatches = new GetMatches(searchDataAccessObject, searchPresenter);
                 this.searchController = new SearchController(getMatches);
 
-
                 this.newsController = NewsUseCaseFactory.create(
-                        viewManagerModel,
-                        newsViewModel,
-                        transactionDataAccessObject,
-                        searchDataAccessObject);
+                                viewManagerModel,
+                                newsViewModel,
+                                transactionDataAccessObject,
+                                searchDataAccessObject);
 
                 // Initialize dashboard controller
                 this.dashboardController = DashboardUseCaseFactory.createDashboardController(dashboardViewModel);
@@ -232,7 +230,8 @@ public class AppBuilder {
         }
 
         public AppBuilder addSettingsView() {
-                settingsView = new SettingsView(changePwdViewModel, viewManager, loginView, dashboardController, mainViewModel);
+                settingsView = new SettingsView(changePwdViewModel, viewManager, loginView, dashboardController,
+                                mainViewModel);
                 settingsView.setController(changePwdController);
                 cardPanel.add(settingsView, settingsView.getViewName());
                 return this;
@@ -252,7 +251,8 @@ public class AppBuilder {
                 leaderboardView = LeaderboardViewFactory.create(leaderboardViewModel, tempLeaderboardController);
                 watchlistView = WatchlistViewFactory.create(mainViewModel,
                                 (DBUserDataAccessObject) userDataAccessObject);
-                tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfolioHubController, newsController,
+                tabbedMainView = TabbedMainViewFactory.create(mainViewModel, portfolioHubController,
+                                dashboardController, newsController,
                                 portfolioController, navigationController, searchController, searchViewModel,
                                 dashboardView, portfoliosView, newsView, watchlistView, leaderboardView, settingsView);
                 cardPanel.add(tabbedMainView, tabbedMainView.getViewName());
@@ -319,7 +319,8 @@ public class AppBuilder {
 
         public AppBuilder addNewsView() {
                 // You already have a searchDAO instance, reuse it.
-                // If not, create one: SearchDataAccessInterface searchDAO = new FinnhubSearchDataAccessObject();
+                // If not, create one: SearchDataAccessInterface searchDAO = new
+                // FinnhubSearchDataAccessObject();
                 newsController = NewsUseCaseFactory.create(
                                 viewManagerModel,
                                 newsViewModel,

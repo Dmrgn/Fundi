@@ -1,5 +1,6 @@
 package app;
 
+import interface_adapter.dashboard.DashboardController;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
 import interface_adapter.portfolio_hub.PortfolioHubController;
@@ -20,6 +21,7 @@ public class TabbedMainViewFactory {
     public static TabbedMainView create(
             MainViewModel mainViewModel,
             PortfolioHubController portfolioHubController,
+            DashboardController dashboardController,
             NewsController newsController,
             PortfolioController portfolioController,
             NavigationController navigationController,
@@ -34,6 +36,7 @@ public class TabbedMainViewFactory {
         return new TabbedMainView(
                 mainViewModel,
                 portfolioHubController,
+                dashboardController,
                 newsController,
                 portfolioController,
                 navigationController,

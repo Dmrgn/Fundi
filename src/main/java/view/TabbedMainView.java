@@ -1,5 +1,6 @@
 package view;
 
+import interface_adapter.dashboard.DashboardController;
 import interface_adapter.main.MainState;
 import interface_adapter.main.MainViewModel;
 import interface_adapter.news.NewsController;
@@ -20,6 +21,7 @@ import java.awt.event.MouseEvent;
 public class TabbedMainView extends BaseView {
     private final MainViewModel mainViewModel;
     private final PortfolioHubController portfolioHubController;
+    private final DashboardController dashboardController;
     private final NewsController newsController;
     @SuppressWarnings("unused")
     private final PortfolioController portfolioController;
@@ -44,6 +46,7 @@ public class TabbedMainView extends BaseView {
 
     public TabbedMainView(MainViewModel mainViewModel,
             PortfolioHubController portfolioHubController,
+            DashboardController dashboardController,
             NewsController newsController,
             PortfolioController portfolioController,
             NavigationController navigationController,
@@ -56,6 +59,7 @@ public class TabbedMainView extends BaseView {
             LeaderboardView leaderboardView, SettingsView settingsView) {
         super("tabbedmain");
         this.mainViewModel = mainViewModel;
+        this.dashboardController = dashboardController;
         this.portfolioHubController = portfolioHubController;
         this.newsController = newsController;
         this.portfolioController = portfolioController;
@@ -321,7 +325,11 @@ public class TabbedMainView extends BaseView {
 
             switch (selectedIndex) {
                 case 0 -> {
-                    /* Dashboard */ }
+                    String username = mainViewModel.getState().getUsername();
+                    if (username != null && !username.isEmpty()) {
+                        dashboardController.execute(username);
+                    }
+                }
                 case 1 -> {
                     if (mainState.getUsername() != null)
                         portfolioHubController.execute(mainState.getUsername());

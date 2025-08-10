@@ -22,6 +22,7 @@ public class MainState {
 
     /**
      * Getter.
+     * 
      * @return Id
      */
     public String getId() {
@@ -30,6 +31,7 @@ public class MainState {
 
     /**
      * Setter.
+     * 
      * @param id Value
      */
     public void setId(String id) {
@@ -38,6 +40,7 @@ public class MainState {
 
     /**
      * Getter.
+     * 
      * @return Username
      */
     public String getUsername() {
@@ -46,15 +49,16 @@ public class MainState {
 
     /**
      * Setter.
+     * 
      * @param username Value
      */
     public void setUsername(String username) {
-        System.out.println("username: " + username);
         this.username = username;
     }
 
     /**
      * Setter.
+     * 
      * @param useCase Value
      */
     public void setUseCase(String useCase) {
@@ -63,6 +67,7 @@ public class MainState {
 
     /**
      * Getter.
+     * 
      * @return Use Case
      */
     public String getUseCase() {

@@ -1,5 +1,7 @@
 package entity;
 
+import data_access.ExchangeAPIDataAccessObject;
+
 public class PreferredCurrencyManager {
 
     private static String preferredCurrency = "USD";
@@ -15,6 +17,10 @@ public class PreferredCurrencyManager {
     }
 
     public static CurrencyConverter getConverter() {
+        if (converter == null) {
+            final ExchangeAPIDataAccessObject exchangeAPI = new ExchangeAPIDataAccessObject();
+            converter = exchangeAPI.getConverter(preferredCurrency);
+        }
         return converter;
     }
 }

@@ -21,6 +21,10 @@ import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
+import org.jfree.chart.ChartUtils;
+import javax.swing.filechooser.FileNameExtensionFilter;
+import java.io.File;
+import java.io.IOException;
 
 import javax.swing.*;
 import java.awt.*;
@@ -288,6 +292,37 @@ public class DashboardView extends BaseView {
 
         chartContainer.add(chartPanel, BorderLayout.CENTER);
 
+        // Controls panel with Save button
+        JPanel controlsPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        controlsPanel.setOpaque(false);
+        JButton saveButton = ButtonFactory.createSecondaryButton("Share Graph");
+        saveButton.addActionListener(e -> {
+            JFileChooser chooser = new JFileChooser();
+            chooser.setDialogTitle("Save chart as PNG");
+            chooser.setAcceptAllFileFilterUsed(false);
+            chooser.setFileFilter(new FileNameExtensionFilter("PNG Images", "png"));
+            chooser.setSelectedFile(new File("portfolio_chart.png"));
+            int userSelection = chooser.showSaveDialog(this);
+            if (userSelection == JFileChooser.APPROVE_OPTION) {
+                File fileToSave = chooser.getSelectedFile();
+                if (!fileToSave.getName().toLowerCase().endsWith(".png")) {
+                    fileToSave = new File(fileToSave.getParentFile(), fileToSave.getName() + ".png");
+                }
+                int width = chartPanel.getWidth() > 0 ? chartPanel.getWidth() : 600;
+                int height = chartPanel.getHeight() > 0 ? chartPanel.getHeight() : 360;
+                try {
+                    ChartUtils.saveChartAsPNG(fileToSave, chartPanel.getChart(), width, height);
+                    JOptionPane.showMessageDialog(this, "Chart saved to " + fileToSave.getAbsolutePath());
+                } catch (IOException ex) {
+                    JOptionPane.showMessageDialog(this, "Failed to save chart: " + ex.getMessage(), "Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    ex.printStackTrace();
+                }
+            }
+        });
+        controlsPanel.add(saveButton);
+        chartContainer.add(controlsPanel, BorderLayout.SOUTH);
+
         return chartContainer;
     }
 
@@ -409,7 +444,7 @@ public class DashboardView extends BaseView {
                     .from(point.getDate().atStartOfDay(java.time.ZoneId.systemDefault()).toInstant());
             Day day = new Day(date);
             double usdValue = point.getValue();
-            
+
             String preferredCurrency = getPreferredCurrency();
             CurrencyConverter converter = PreferredCurrencyManager.getConverter();
 
@@ -421,7 +456,7 @@ public class DashboardView extends BaseView {
                 convertedValue = usdValue;
                 preferredCurrency = "USD";
             }
-           
+
             long t = date.getTime();
             minMillis = Math.min(minMillis, t);
             maxMillis = Math.max(maxMillis, t);

@@ -21,12 +21,13 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
 
     /**
      * Load the portfolio data into memory from SQL database.
+     * 
      * @throws SQLException If database connection fails
      */
     public DBPortfoliosDataAccessObject() throws SQLException {
         String query = """
                 SELECT p.id, p.name, u.id, u.username FROM portfolios p
-                JOIN users u ON p.user_id = u.id 
+                JOIN users u ON p.user_id = u.id
                 """;
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(query);
@@ -56,6 +57,7 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
 
     /**
      * Get the portfolio data.
+     * 
      * @param username the name to search at
      * @return A list of portfolio names
      */
@@ -68,7 +70,7 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
     }
 
     private String saveDB(String portfolioName, String username) {
-        String query = """ 
+        String query = """
                 SELECT id FROM users WHERE username = ?
                 """;
 
@@ -90,7 +92,7 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
 
         query = """
                 INSERT INTO portfolios(name, user_id)
-                VALUES (?, ?) 
+                VALUES (?, ?)
                 RETURNING id
                 """;
         String portfolioId = "";
@@ -115,6 +117,7 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
 
     /**
      * Update the portfolio map.
+     * 
      * @param portfolioName the Name
      */
     @Override
@@ -129,8 +132,9 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
 
     /**
      * Return whether a portfolio exists for a user.
+     * 
      * @param portfolioName the portfolioName to look for
-     * @param username the users name
+     * @param username      the users name
      * @return A boolean value
      */
     @Override
@@ -147,13 +151,45 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
     /**
      * Delete the portfolio for the given user from the DAO.
      * (For Testing Only)
+     * 
      * @param portfolioName The portfolio name to delete
-     * @param username The username to delete the portfolio at
+     * @param username      The username to delete the portfolio at
      */
     public void remove(String portfolioName, String username) {
         portfolios.get(userToId.get(username)).remove(portfolioName);
         String userId = userToId.get(username);
         userToId.remove(username);
+
+        // Get portfolio ID before deleting
+        String portfolioId = null;
+        String getPortfolioIdQuery = """
+                SELECT id FROM portfolios WHERE user_id = ? AND name = ?
+                """;
+        try (PreparedStatement pstmt = connection.prepareStatement(getPortfolioIdQuery)) {
+            pstmt.setString(1, userId);
+            pstmt.setString(2, portfolioName);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next()) {
+                portfolioId = rs.getString("id");
+            }
+        } catch (SQLException exception) {
+            System.out.println(exception.getMessage());
+        }
+
+        // Delete holdings first
+        if (portfolioId != null) {
+            String deleteHoldingsQuery = """
+                    DELETE FROM holdings WHERE portfolio_id = ?
+                    """;
+            try (PreparedStatement pstmt = connection.prepareStatement(deleteHoldingsQuery)) {
+                pstmt.setString(1, portfolioId);
+                pstmt.executeUpdate();
+            } catch (SQLException exception) {
+                System.out.println(exception.getMessage());
+            }
+        }
+
+        // Then delete portfolio
         String query = """
                 DELETE FROM portfolios WHERE user_id = ? and name = ?;
                 """;

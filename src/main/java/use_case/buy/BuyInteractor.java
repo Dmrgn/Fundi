@@ -13,8 +13,8 @@ public class BuyInteractor implements BuyInputBoundary {
     private final BuyOutputBoundary buyPresenter;
 
     public BuyInteractor(BuyStockDataAccessInterface stockDataAccessInterface,
-                         BuyTransactionDataAccessInterface transactionDataAccessInterface,
-                         BuyOutputBoundary buyOutputBoundary) {
+            BuyTransactionDataAccessInterface transactionDataAccessInterface,
+            BuyOutputBoundary buyOutputBoundary) {
         this.stockDataAccessObject = stockDataAccessInterface;
         this.transactionDataAccessObject = transactionDataAccessInterface;
         this.buyPresenter = buyOutputBoundary;
@@ -22,6 +22,7 @@ public class BuyInteractor implements BuyInputBoundary {
 
     /**
      * Executes the Buy Use Case.
+     * 
      * @param buyInputData the input data.
      */
     @Override
@@ -32,29 +33,24 @@ public class BuyInteractor implements BuyInputBoundary {
 
         if (!stockDataAccessObject.hasTicker(ticker)) {
             buyPresenter.prepareFailView("Ticker is not available");
-        }
-        else if (amount <= 0) {
+        } else if (amount <= 0) {
             buyPresenter.prepareFailView("Amount must be greater than 0");
-        }
-        else {
+        } else {
             final double price = stockDataAccessObject.getPrice(ticker);
             final LocalDate date = LocalDate.now();
-            
-            // Create and save transaction
+
             final Transaction transaction = new Transaction(
-                portfolioId,
-                ticker,
-                amount,
-                date,
-                price
-            );
-            
+                    portfolioId,
+                    ticker,
+                    amount,
+                    date,
+                    price);
+
             transactionDataAccessObject.save(transaction);
 
             final BuyOutputData buyOutputData = new BuyOutputData(ticker, price, amount);
             buyPresenter.prepareSuccessView(buyOutputData);
 
-            // Check for news notifications after successful purchase
             try {
                 NotificationManager.getInstance().checkNewsAfterPurchase(ticker, amount);
             } catch (Exception e) {

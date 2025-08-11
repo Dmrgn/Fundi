@@ -16,12 +16,11 @@ public class SellPresenter implements SellOutputBoundary {
     private final SellViewModel sellViewModel;
 
     public SellPresenter(ViewManagerModel viewManagerModel, PortfolioViewModel portfolioViewModel,
-                         SellViewModel sellViewModel) {
+            SellViewModel sellViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.portfolioViewModel = portfolioViewModel;
         this.sellViewModel = sellViewModel;
     }
-
 
     /**
      * Prepares the success view for the Sell Use Case.
@@ -30,7 +29,9 @@ public class SellPresenter implements SellOutputBoundary {
      */
     @Override
     public void prepareSuccessView(SellOutputData outputData) {
-        final PortfolioCommand cmd = new PortfolioUpdateCommand(outputData.getTicker(), outputData.getPrice(),
+        final PortfolioCommand cmd = new PortfolioUpdateCommand(
+                outputData.getTicker(),
+                -outputData.getPrice(), // negative => sell
                 outputData.getQuantity());
         cmd.execute(portfolioViewModel);
         portfolioViewModel.firePropertyChanged();

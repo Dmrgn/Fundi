@@ -230,10 +230,10 @@ public class LeaderboardView extends BaseView {
                     }
                 }
                 Object[] rowData = {
-                    entry.getRank(),
-                    entry.getUsername(),
-                    entry.getPortfolioName(),
-                    String.format("%.2f %s", convertedPrice, preferredCurrency)
+                        entry.getRank(),
+                        entry.getUsername(),
+                        entry.getPortfolioName(),
+                        String.format("%.2f %s", convertedPrice, preferredCurrency)
                 };
                 tableModel.addRow(rowData);
             }

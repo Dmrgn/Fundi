@@ -10,8 +10,8 @@ public class LeaderboardInteractor implements LeaderboardInputBoundary {
     private final LeaderboardDataAccessInterface dataAccess;
     private final LeaderboardOutputBoundary presenter;
 
-    public LeaderboardInteractor(LeaderboardDataAccessInterface dataAccess, 
-                               LeaderboardOutputBoundary presenter) {
+    public LeaderboardInteractor(LeaderboardDataAccessInterface dataAccess,
+            LeaderboardOutputBoundary presenter) {
         this.dataAccess = dataAccess;
         this.presenter = presenter;
     }
@@ -19,19 +19,18 @@ public class LeaderboardInteractor implements LeaderboardInputBoundary {
     @Override
     public void execute(LeaderboardInputData leaderboardInputData) {
         try {
-            List<LeaderboardDataAccessInterface.PortfolioLeaderboardData> portfolioData =
-                dataAccess.getPortfolioLeaderboardData();
+            List<LeaderboardDataAccessInterface.PortfolioLeaderboardData> portfolioData = dataAccess
+                    .getPortfolioLeaderboardData();
             List<LeaderboardEntry> entries = new ArrayList<>();
 
             // Assign ranks (data is already sorted by database)
             int rank = 1;
             for (LeaderboardDataAccessInterface.PortfolioLeaderboardData data : portfolioData) {
                 entries.add(new LeaderboardEntry(
-                    data.getPortfolioName(),
-                    data.getUsername(),
-                    data.getTotalValue(),
-                    rank++
-                ));
+                        data.getPortfolioName(),
+                        data.getUsername(),
+                        data.getTotalValue(),
+                        rank++));
             }
 
             LeaderboardOutputData outputData = new LeaderboardOutputData(entries, true);

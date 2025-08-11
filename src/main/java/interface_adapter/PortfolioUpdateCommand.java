@@ -21,6 +21,7 @@ public class PortfolioUpdateCommand implements PortfolioCommand {
 
     /**
      * Update the Portfolio View Model.
+     * 
      * @param portfolioViewModel The view model
      */
     public void execute(PortfolioViewModel portfolioViewModel) {
@@ -41,35 +42,32 @@ public class PortfolioUpdateCommand implements PortfolioCommand {
                 if (price > 0) {
                     outPrice.add(prices[i] + price * quantity);
                     outQuantity.add(amounts[i] + quantity);
-                }
-
-                else {
+                } else {
                     int newAmount = amounts[i] - quantity;
                     if (newAmount > 0) {
                         outPrice.add(Math.max(Math.abs(price) * newAmount, 0.0));
                         outQuantity.add(newAmount);
                     }
                 }
-            }
-
-            else {
+            } else {
                 outPrice.add(prices[i]);
                 outQuantity.add(amounts[i]);
             }
         }
 
         if (!found) {
-            outTickers.add(ticker);
-            outPrice.add(price * quantity);
-            outQuantity.add(quantity);
+            if (price > 0) { // only add on buys
+                outTickers.add(ticker);
+                outPrice.add(price * quantity);
+                outQuantity.add(quantity);
+            }
         }
+
         portfolioState.setStockNames(outTickers.toArray(new String[0]));
         double[] newPrices = toDoubleArray(outPrice);
         portfolioState.setStockPrices(newPrices);
-
         int[] newAmounts = toIntArray(outQuantity);
         portfolioState.setStockAmounts(newAmounts);
-
     }
 
     private static int[] toIntArray(ArrayList<Integer> outQuantity) {

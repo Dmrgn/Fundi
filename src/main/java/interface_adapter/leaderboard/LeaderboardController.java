@@ -15,6 +15,12 @@ public class LeaderboardController {
 
     public void execute() {
         LeaderboardInputData inputData = new LeaderboardInputData();
-        leaderboardInteractor.execute(inputData);
+        new javax.swing.SwingWorker<Void, Void>() {
+            @Override
+            protected Void doInBackground() {
+                leaderboardInteractor.execute(inputData);
+                return null;
+            }
+        }.execute();
     }
 }

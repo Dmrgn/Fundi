@@ -19,26 +19,23 @@ public class LeaderboardInteractor implements LeaderboardInputBoundary {
     @Override
     public void execute(LeaderboardInputData leaderboardInputData) {
         try {
-            List<LeaderboardDataAccessInterface.PortfolioLeaderboardData> portfolioData = 
+            List<LeaderboardDataAccessInterface.PortfolioLeaderboardData> portfolioData =
                 dataAccess.getPortfolioLeaderboardData();
             List<LeaderboardEntry> entries = new ArrayList<>();
 
             // Assign ranks (data is already sorted by database)
             int rank = 1;
             for (LeaderboardDataAccessInterface.PortfolioLeaderboardData data : portfolioData) {
-                if (rank > 100) break;
                 entries.add(new LeaderboardEntry(
                     data.getPortfolioName(),
-                    data.getUsername(), 
-                    data.getTotalValue(), 
-                    rank
+                    data.getUsername(),
+                    data.getTotalValue(),
+                    rank++
                 ));
-                rank++;
             }
 
             LeaderboardOutputData outputData = new LeaderboardOutputData(entries, true);
             presenter.prepareSuccessView(outputData);
-
         } catch (Exception e) {
             presenter.prepareFailView("Failed to generate leaderboard: " + e.getMessage());
         }

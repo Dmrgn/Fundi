@@ -21,6 +21,7 @@ public class LeaderboardView extends BaseView {
     private final LeaderboardViewModel leaderboardViewModel;
     private final DefaultTableModel tableModel;
     private JScrollPane tableScrollPane;
+    private boolean loadedOnce = false;
 
     public LeaderboardView(LeaderboardViewModel leaderboardViewModel,
             LeaderboardController leaderboardController) {
@@ -126,14 +127,17 @@ public class LeaderboardView extends BaseView {
         // Set up listeners
         setupListeners();
 
-        // Load leaderboard data when view is created
-        leaderboardController.execute();
+        // Remove the eager load here to avoid double fetch
+        // leaderboardController.execute();
 
-        // Optional: also refresh when shown to address stale UI states
+        // Load once when the view is first shown
         this.addComponentListener(new java.awt.event.ComponentAdapter() {
             @Override
             public void componentShown(java.awt.event.ComponentEvent e) {
-                leaderboardController.execute();
+                if (!loadedOnce) {
+                    loadedOnce = true;
+                    leaderboardController.execute();
+                }
             }
         });
     }

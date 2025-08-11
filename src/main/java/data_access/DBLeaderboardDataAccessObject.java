@@ -18,36 +18,43 @@ public class DBLeaderboardDataAccessObject implements LeaderboardDataAccessInter
     public List<LeaderboardDataAccessInterface.PortfolioLeaderboardData> getPortfolioLeaderboardData() {
         List<LeaderboardDataAccessInterface.PortfolioLeaderboardData> portfolioData = new ArrayList<>();
         String sql = """
-            SELECT p.name as portfolio_name, u.username, SUM(h.quantity * s.price) AS total_value
-            FROM portfolios p
-            JOIN users u ON p.user_id = u.id
-            JOIN holdings h ON p.id = h.portfolio_id
-            JOIN (
-                SELECT name, MAX(date) AS latest_date
-                FROM stocks
-                GROUP BY name
-            ) latest ON h.ticker = latest.name
-            JOIN stocks s ON s.name = latest.name AND s.date = latest.latest_date
-            WHERE h.quantity > 0
-            GROUP BY p.id, p.name, u.username
-            ORDER BY total_value DESC
-            LIMIT 100
-            """;
-            
+                WITH latest_prices AS (
+                    SELECT name, MAX(date) AS latest_date
+                    FROM stocks
+                    GROUP BY name
+                )
+                SELECT
+                    p.name AS portfolio_name,
+                    u.username,
+                    COALESCE(SUM(
+                        CASE
+                            WHEN s.price IS NOT NULL THEN h.quantity * s.price
+                            ELSE 0
+                        END
+                    ), 0) AS total_value
+                FROM portfolios p
+                JOIN users u ON p.user_id = u.id
+                LEFT JOIN holdings h ON p.id = h.portfolio_id
+                LEFT JOIN latest_prices lp ON h.ticker = lp.name
+                LEFT JOIN stocks s ON s.name = lp.name AND s.date = lp.latest_date
+                GROUP BY p.id, p.name, u.username
+                ORDER BY total_value DESC
+                LIMIT 100
+                """;
+
         try (Statement stmt = connection.createStatement();
-             ResultSet rs = stmt.executeQuery(sql)) {
-            
+                ResultSet rs = stmt.executeQuery(sql)) {
+
             while (rs.next()) {
                 portfolioData.add(new LeaderboardDataAccessInterface.PortfolioLeaderboardData(
-                    rs.getString("portfolio_name"),
-                    rs.getString("username"), 
-                    rs.getDouble("total_value")
-                ));
+                        rs.getString("portfolio_name"),
+                        rs.getString("username"),
+                        rs.getDouble("total_value")));
             }
         } catch (SQLException e) {
             throw new RuntimeException("Error fetching leaderboard data: " + e.getMessage());
         }
-        
+
         return portfolioData;
     }
 }

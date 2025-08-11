@@ -97,8 +97,8 @@ class BuyInteractorTest {
 
     @AfterAll
     static void tearDown() throws SQLException {
-        DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
-        transactionDataAccessObject.remove("51", "NVDA", 10); // Update portfolio id accordingly
-
+        DBTransactionDataAccessObject db = new DBTransactionDataAccessObject();
+        // Hard delete instead of inserting compensating transactions
+        db.hardDeleteAllFor("51", "NVDA");
     }
 }

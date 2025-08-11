@@ -268,4 +268,36 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
 
         return new ArrayList<>(symbols);
     }
+
+	@Override
+    public int getCurrentHoldings(String portfolioId, String ticker) {
+        final String sql = """
+            SELECT COALESCE(SUM(
+                CASE WHEN price < 0 THEN -amount ELSE amount END
+            ), 0) AS qty
+            FROM transactions
+            WHERE portfolio_id = ? AND stock_name = ?
+        """;
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, portfolioId);
+            ps.setString(2, ticker);
+            try (ResultSet rs = ps.executeQuery()) {
+                return rs.next() ? rs.getInt("qty") : 0;
+            }
+        } catch (Exception e) {
+            return 0;
+        }
+    }
+
+    /**
+     * Test-only cleanup: remove all rows for a portfolio/ticker.
+     */
+    public void hardDeleteAllFor(String portfolioId, String stockName) throws SQLException {
+        final String sql = "DELETE FROM transactions WHERE portfolio_id = ? AND stock_name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, portfolioId);
+            ps.setString(2, stockName);
+            ps.executeUpdate();
+        }
+    }
 }

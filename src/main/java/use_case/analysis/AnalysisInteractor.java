@@ -31,7 +31,15 @@ public class AnalysisInteractor implements AnalysisInputBoundary {
     public void execute(AnalysisInputData analysisInputData) {
         final String portfolioId = analysisInputData.getPortfolioId();
         final List<Transaction> transactions = transactionDataAccessInterface.pastTransactions(portfolioId);
-        final Map<String, Integer> tickerAmounts = FinancialCalculator.getTickerAmounts(transactions);
+
+        // Interpret side by price sign: price < 0 => sell
+        final Map<String, Integer> tickerAmounts = transactions.stream()
+                .collect(Collectors.toMap(
+                        Transaction::getStockTicker,
+                        t -> (t.getPrice() < 0 ? -t.getQuantity() : t.getQuantity()),
+                        Integer::sum
+                ));
+
         final int totalStocks = FinancialCalculator.getTotalAmount(tickerAmounts);
         final Map<String, Double> percentages = new HashMap<>();
         double totalVol = 0;

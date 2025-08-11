@@ -15,9 +15,11 @@ import static org.junit.jupiter.api.Assertions.*;
 class SellInteractorTest {
     @BeforeAll
     static void setUp() throws SQLException {
-        DBTransactionDataAccessObject dbTransactionDataAccessObject = new DBTransactionDataAccessObject();
-        dbTransactionDataAccessObject.save(new Transaction("51", "NVDA", 10,
-                LocalDate.now(), 10.0));
+        DBTransactionDataAccessObject db = new DBTransactionDataAccessObject();
+        // Neutralize any leftover rows from other suites
+        db.hardDeleteAllFor("51", "NVDA");
+        // Seed with a clean long position
+        db.save(new Transaction("51", "NVDA", 10, LocalDate.now(), 10.0));
     }
 
     @Test
@@ -122,9 +124,7 @@ class SellInteractorTest {
 
     @AfterAll
     static void tearDown() throws SQLException {
-        DBTransactionDataAccessObject transactionDataAccessObject = new DBTransactionDataAccessObject();
-        transactionDataAccessObject.remove("51", "NVDA", 10);
-        transactionDataAccessObject.remove("51", "NVDA", 1); // Update portfolio id accordingly
-
+        DBTransactionDataAccessObject db = new DBTransactionDataAccessObject();
+        db.hardDeleteAllFor("51", "NVDA");
     }
 }

@@ -239,7 +239,7 @@ public void removeFromWatchlist(String username, String ticker) {
     }
 
     String query = """
-        DELETE FROM watchlist WHERE user_id = ? AND ticker = ?;
+        DELETE FROM watchlist WHERE user_id = ? AND stock_name = ?;
     """;
     try (PreparedStatement stmt = connection.prepareStatement(query)) {
         stmt.setString(1, userId);

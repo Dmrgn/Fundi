@@ -54,8 +54,7 @@ public class SellInteractor implements SellInputBoundary {
                 ticker,
                 amount,
                 LocalDate.now(),
-                -price
-        );
+                -price);
         transactionDataAccessInterface.save(tx);
         sellOutputBoundary.prepareSuccessView(new SellOutputData(ticker, price, amount));
     }

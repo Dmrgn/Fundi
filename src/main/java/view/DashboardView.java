@@ -184,6 +184,27 @@ public class DashboardView extends BaseView {
         searchField.setPreferredSize(new Dimension(200, 36));
         searchField.setMaximumSize(new Dimension(200, 36));
 
+        // Add placeholder behavior
+        searchField.setText("Search symbols or companies");
+        searchField.setForeground(UiConstants.Colors.TEXT_MUTED);
+        searchField.addFocusListener(new java.awt.event.FocusAdapter() {
+            @Override
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (searchField.getText().equals("Search symbols or companies")) {
+                    searchField.setText("");
+                    searchField.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+                }
+            }
+
+            @Override
+            public void focusLost(java.awt.event.FocusEvent evt) {
+                if (searchField.getText().isEmpty()) {
+                    searchField.setText("Search symbols or companies");
+                    searchField.setForeground(UiConstants.Colors.TEXT_MUTED);
+                }
+            }
+        });
+
         gbc.gridy++;
         gbc.gridwidth = 1;
         gbc.gridx = 0;

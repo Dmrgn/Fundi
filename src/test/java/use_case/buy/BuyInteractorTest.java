@@ -41,7 +41,8 @@ class BuyInteractorTest {
                 fail("Should never get here");
             }
         };
-        BuyInteractor buyInteractor = new BuyInteractor(stockDataAccessInterface, transactionDataAccessInterface, buyPresenter);
+        BuyInteractor buyInteractor = new BuyInteractor(stockDataAccessInterface, transactionDataAccessInterface,
+                buyPresenter);
         buyInteractor.execute(buyInputData);
     }
 
@@ -66,7 +67,8 @@ class BuyInteractorTest {
                 assertEquals("Amount must be greater than 0", errorMessage);
             }
         };
-        BuyInteractor buyInteractor = new BuyInteractor(stockDataAccessInterface, transactionDataAccessInterface, buyPresenter);
+        BuyInteractor buyInteractor = new BuyInteractor(stockDataAccessInterface, transactionDataAccessInterface,
+                buyPresenter);
         buyInteractor.execute(buyInputData);
     }
 
@@ -91,14 +93,14 @@ class BuyInteractorTest {
                 assertEquals("Ticker is not available", errorMessage);
             }
         };
-        BuyInteractor buyInteractor = new BuyInteractor(stockDataAccessInterface, transactionDataAccessInterface, buyPresenter);
+        BuyInteractor buyInteractor = new BuyInteractor(stockDataAccessInterface, transactionDataAccessInterface,
+                buyPresenter);
         buyInteractor.execute(buyInputData);
     }
 
     @AfterAll
     static void tearDown() throws SQLException {
         DBTransactionDataAccessObject db = new DBTransactionDataAccessObject();
-        // Hard delete instead of inserting compensating transactions
         db.hardDeleteAllFor("51", "NVDA");
     }
 }

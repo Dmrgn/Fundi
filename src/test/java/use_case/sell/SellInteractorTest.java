@@ -43,7 +43,8 @@ class SellInteractorTest {
                 fail("Should never get here");
             }
         };
-        SellInteractor sellInteractor = new SellInteractor(stockDataAccessInterface, transactionDataAccessInterface, sellPresenter);
+        SellInteractor sellInteractor = new SellInteractor(stockDataAccessInterface, transactionDataAccessInterface,
+                sellPresenter);
         sellInteractor.execute(sellInputData);
     }
 
@@ -68,7 +69,8 @@ class SellInteractorTest {
                 assertEquals("Invalid amount", errorMessage);
             }
         };
-        SellInteractor sellInteractor = new SellInteractor(stockDataAccessInterface, transactionDataAccessInterface, sellPresenter);
+        SellInteractor sellInteractor = new SellInteractor(stockDataAccessInterface, transactionDataAccessInterface,
+                sellPresenter);
         sellInteractor.execute(buyInputData);
     }
 
@@ -93,7 +95,8 @@ class SellInteractorTest {
                 assertEquals("You do not have enough of this ticker", errorMessage);
             }
         };
-        SellInteractor sellInteractor = new SellInteractor(stockDataAccessInterface, transactionDataAccessInterface, sellPresenter);
+        SellInteractor sellInteractor = new SellInteractor(stockDataAccessInterface, transactionDataAccessInterface,
+                sellPresenter);
         sellInteractor.execute(buyInputData);
     }
 
@@ -118,7 +121,8 @@ class SellInteractorTest {
                 assertEquals("Invalid ticker", errorMessage);
             }
         };
-        SellInteractor sellInteractor = new SellInteractor(stockDataAccessInterface, transactionDataAccessInterface, sellPresenter);
+        SellInteractor sellInteractor = new SellInteractor(stockDataAccessInterface, transactionDataAccessInterface,
+                sellPresenter);
         sellInteractor.execute(buyInputData);
     }
 

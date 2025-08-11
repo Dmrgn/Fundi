@@ -20,8 +20,8 @@ public class AnalysisInteractor implements AnalysisInputBoundary {
     private final AnalysisOutputBoundary analysisOutputBoundary;
 
     public AnalysisInteractor(AnalysisStockDataAccessInterface stockDataAccessInterface,
-                              AnalysisTransactionDataAccessInterface analysisTransactionDataAccessInterface,
-                              AnalysisOutputBoundary analysisOutputBoundary) {
+            AnalysisTransactionDataAccessInterface analysisTransactionDataAccessInterface,
+            AnalysisOutputBoundary analysisOutputBoundary) {
         this.stockDataAccessInterface = stockDataAccessInterface;
         this.transactionDataAccessInterface = analysisTransactionDataAccessInterface;
         this.analysisOutputBoundary = analysisOutputBoundary;
@@ -37,8 +37,7 @@ public class AnalysisInteractor implements AnalysisInputBoundary {
                 .collect(Collectors.toMap(
                         Transaction::getStockTicker,
                         t -> (t.getPrice() < 0 ? -t.getQuantity() : t.getQuantity()),
-                        Integer::sum
-                ));
+                        Integer::sum));
 
         final int totalStocks = FinancialCalculator.getTotalAmount(tickerAmounts);
         final Map<String, Double> percentages = new HashMap<>();
@@ -69,8 +68,7 @@ public class AnalysisInteractor implements AnalysisInputBoundary {
                 SortingUtil.getTopnByValue(vols, N, false),
                 totalReturn,
                 SortingUtil.getTopnByValue(returns, N, true),
-                SortingUtil.getTopnByValue(returns, N, false)
-        ));
+                SortingUtil.getTopnByValue(returns, N, false)));
     }
 
     @Override

@@ -163,7 +163,7 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
         } catch (SQLException exception) {
             System.out.println("Holdings update error: " + exception.getMessage());
         }
-        
+
         // Delete holdings with quantity <= 0
         String cleanupHoldings = "DELETE FROM holdings WHERE quantity <= 0";
         try (Statement stmt = connection.createStatement()) {
@@ -244,8 +244,8 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
         return false;
     }
 
-	@Override
-	public List<String> getUserSymbols(String username) {
+    @Override
+    public List<String> getUserSymbols(String username) {
         Set<String> symbols = new HashSet<>();
 
         String sql = """
@@ -269,15 +269,15 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
         return new ArrayList<>(symbols);
     }
 
-	@Override
+    @Override
     public int getCurrentHoldings(String portfolioId, String ticker) {
         final String sql = """
-            SELECT COALESCE(SUM(
-                CASE WHEN price < 0 THEN -amount ELSE amount END
-            ), 0) AS qty
-            FROM transactions
-            WHERE portfolio_id = ? AND stock_name = ?
-        """;
+                    SELECT COALESCE(SUM(
+                        CASE WHEN price < 0 THEN -amount ELSE amount END
+                    ), 0) AS qty
+                    FROM transactions
+                    WHERE portfolio_id = ? AND stock_name = ?
+                """;
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setString(1, portfolioId);
             ps.setString(2, ticker);

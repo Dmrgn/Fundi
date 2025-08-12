@@ -1,7 +1,7 @@
 package app;
 
-import interface_adapter.signup.SignupController;
-import interface_adapter.signup.SignupViewModel;
+import interfaceadapter.signup.SignupController;
+import interfaceadapter.signup.SignupViewModel;
 import view.SignupView;
 
 /**

@@ -1,13 +1,13 @@
 package view;
 
 import entity.CurrencyConverter;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.analysis.AnalysisController;
-import interface_adapter.history.HistoryController;
-import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolio.PortfolioState;
-import interface_adapter.portfolio.PortfolioViewModel;
-import interface_adapter.recommend.RecommendController;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.analysis.AnalysisController;
+import interfaceadapter.history.HistoryController;
+import interfaceadapter.portfolio.PortfolioController;
+import interfaceadapter.portfolio.PortfolioState;
+import interfaceadapter.portfolio.PortfolioViewModel;
+import interfaceadapter.recommend.RecommendController;
 import view.ui.ButtonFactory;
 import view.ui.LabelFactory;
 import view.ui.TableFactory;

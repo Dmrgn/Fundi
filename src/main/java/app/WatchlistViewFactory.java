@@ -1,11 +1,11 @@
 package app;
 
-import data_access.DBUserDataAccessObject;
-import interface_adapter.main.MainViewModel;
+import dataaccess.DBUserDataAccessObject;
+import interfaceadapter.main.MainViewModel;
 import view.WatchlistView;
 
 /**
- * Factory for the Watchlist View
+ * Factory for the Watchlist View.
  */
 public class WatchlistViewFactory {
     private WatchlistViewFactory() {

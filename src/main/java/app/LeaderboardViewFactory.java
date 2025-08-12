@@ -1,7 +1,7 @@
 package app;
 
-import interface_adapter.leaderboard.LeaderboardController;
-import interface_adapter.leaderboard.LeaderboardViewModel;
+import interfaceadapter.leaderboard.LeaderboardController;
+import interfaceadapter.leaderboard.LeaderboardViewModel;
 import view.LeaderboardView;
 
 /**

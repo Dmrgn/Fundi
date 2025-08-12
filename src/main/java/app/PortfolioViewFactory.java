@@ -1,11 +1,11 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.analysis.AnalysisController;
-import interface_adapter.history.HistoryController;
-import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolio.PortfolioViewModel;
-import interface_adapter.recommend.RecommendController;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.analysis.AnalysisController;
+import interfaceadapter.history.HistoryController;
+import interfaceadapter.portfolio.PortfolioController;
+import interfaceadapter.portfolio.PortfolioViewModel;
+import interfaceadapter.recommend.RecommendController;
 import view.PortfolioView;
 
 /**

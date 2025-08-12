@@ -1,7 +1,7 @@
 package app;
 
-import interface_adapter.news.NewsViewModel;
-import interface_adapter.navigation.NavigationController;
+import interfaceadapter.news.NewsViewModel;
+import interfaceadapter.navigation.NavigationController;
 import view.NewsView;
 
 /**

@@ -1,10 +1,10 @@
 package view;
 
 import entity.CurrencyConverter;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.recommend.RecommendController;
-import interface_adapter.recommend.RecommendState;
-import interface_adapter.recommend.RecommendViewModel;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.recommend.RecommendController;
+import interfaceadapter.recommend.RecommendState;
+import interfaceadapter.recommend.RecommendViewModel;
 import view.ui.LabelFactory;
 import view.ui.PanelFactory;
 import view.ui.UiConstants;

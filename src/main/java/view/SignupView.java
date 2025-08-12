@@ -1,8 +1,8 @@
 package view;
 
-import interface_adapter.signup.SignupViewModel;
-import interface_adapter.signup.SignupState;
-import interface_adapter.signup.SignupController;
+import interfaceadapter.signup.SignupViewModel;
+import interfaceadapter.signup.SignupState;
+import interfaceadapter.signup.SignupController;
 import view.ui.ButtonFactory;
 import view.ui.FieldFactory;
 import view.ui.UiConstants;

@@ -2,10 +2,10 @@ package view;
 
 import javax.swing.*;
 import java.awt.*;
-import interface_adapter.news.NewsViewModel;
-import interface_adapter.news.NewsController;
-import interface_adapter.news.NewsState;
-import interface_adapter.navigation.NavigationController;
+import interfaceadapter.news.NewsViewModel;
+import interfaceadapter.news.NewsController;
+import interfaceadapter.news.NewsState;
+import interfaceadapter.navigation.NavigationController;
 import view.ui.ButtonFactory;
 import view.ui.LabelFactory;
 import view.ui.FieldFactory;

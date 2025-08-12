@@ -1,12 +1,12 @@
 package app;
 
-import interface_adapter.company_details.CompanyDetailsController;
-import interface_adapter.dashboard.DashboardController;
-import interface_adapter.dashboard.DashboardViewModel;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.navigation.NavigationController;
-import interface_adapter.search.SearchController;
-import interface_adapter.search.SearchViewModel;
+import interfaceadapter.company_details.CompanyDetailsController;
+import interfaceadapter.dashboard.DashboardController;
+import interfaceadapter.dashboard.DashboardViewModel;
+import interfaceadapter.main.MainViewModel;
+import interfaceadapter.navigation.NavigationController;
+import interfaceadapter.search.SearchController;
+import interfaceadapter.search.SearchViewModel;
 import view.DashboardView;
 
 /**

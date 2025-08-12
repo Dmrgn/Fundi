@@ -1,15 +1,20 @@
 package view;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-import interface_adapter.buy.BuyController;
-import interface_adapter.buy.BuyState;
-import interface_adapter.buy.BuyViewModel;
-import interface_adapter.navigation.NavigationController;
+import interfaceadapter.buy.BuyController;
+import interfaceadapter.buy.BuyState;
+import interfaceadapter.buy.BuyViewModel;
+import interfaceadapter.navigation.NavigationController;
 import view.ui.ButtonFactory;
 import view.ui.FieldFactory;
 import view.ui.PanelFactory;

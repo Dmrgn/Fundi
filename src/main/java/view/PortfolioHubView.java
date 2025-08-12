@@ -1,10 +1,10 @@
 package view;
 
-import interface_adapter.navigation.NavigationController;
-import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolio_hub.PortfolioHubController;
-import interface_adapter.portfolio_hub.PortfolioHubState;
-import interface_adapter.portfolio_hub.PortfolioHubViewModel;
+import interfaceadapter.navigation.NavigationController;
+import interfaceadapter.portfolio.PortfolioController;
+import interfaceadapter.portfolio_hub.PortfolioHubController;
+import interfaceadapter.portfolio_hub.PortfolioHubState;
+import interfaceadapter.portfolio_hub.PortfolioHubViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -13,7 +13,7 @@ import java.util.Map;
 import view.ui.UiConstants;
 
 /**
- * Custom layout manager that wraps components like FlowLayout but respects
+ * Custom layout manager that wraps components like FlowLayout but respects.
  * container width
  */
 class WrapLayout extends FlowLayout {
@@ -76,7 +76,8 @@ class WrapLayout extends FlowLayout {
                         addRow(dim, rowWidth, rowHeight);
                         rowWidth = d.width;
                         rowHeight = d.height;
-                    } else {
+                    }
+                    else {
                         rowWidth += hgap + d.width;
                         rowHeight = Math.max(rowHeight, d.height);
                     }

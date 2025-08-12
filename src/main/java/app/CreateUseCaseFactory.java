@@ -1,14 +1,14 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.create.CreateController;
-import interface_adapter.create.CreatePresenter;
-import interface_adapter.create.CreateViewModel;
-import interface_adapter.portfolio_hub.PortfolioHubViewModel;
-import use_case.create.CreateDataAccessInterface;
-import use_case.create.CreateInputBoundary;
-import use_case.create.CreateInteractor;
-import use_case.create.CreateOutputBoundary;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.create.CreateController;
+import interfaceadapter.create.CreatePresenter;
+import interfaceadapter.create.CreateViewModel;
+import interfaceadapter.portfolio_hub.PortfolioHubViewModel;
+import usecase.create.CreateDataAccessInterface;
+import usecase.create.CreateInputBoundary;
+import usecase.create.CreateInteractor;
+import usecase.create.CreateOutputBoundary;
 
 /**
  * Factory for the Create Use Case.

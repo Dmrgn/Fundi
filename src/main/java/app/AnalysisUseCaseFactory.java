@@ -1,15 +1,15 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.analysis.AnalysisController;
-import interface_adapter.analysis.AnalysisPresenter;
-import interface_adapter.analysis.AnalysisViewModel;
-import interface_adapter.navigation.NavigationController;
-import use_case.analysis.AnalysisInputBoundary;
-import use_case.analysis.AnalysisInteractor;
-import use_case.analysis.AnalysisOutputBoundary;
-import use_case.analysis.AnalysisStockDataAccessInterface;
-import use_case.analysis.AnalysisTransactionDataAccessInterface;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.analysis.AnalysisController;
+import interfaceadapter.analysis.AnalysisPresenter;
+import interfaceadapter.analysis.AnalysisViewModel;
+import interfaceadapter.navigation.NavigationController;
+import usecase.analysis.AnalysisInputBoundary;
+import usecase.analysis.AnalysisInteractor;
+import usecase.analysis.AnalysisOutputBoundary;
+import usecase.analysis.AnalysisStockDataAccessInterface;
+import usecase.analysis.AnalysisTransactionDataAccessInterface;
 
 /**
  * Factory for the Analysis Use case.

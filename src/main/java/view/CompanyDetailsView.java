@@ -1,22 +1,49 @@
 package view;
 
-import entity.CompanyDetails;
-import interface_adapter.company_details.CompanyDetailsController;
-import interface_adapter.company_details.CompanyDetailsState;
-import interface_adapter.company_details.CompanyDetailsViewModel;
-import interface_adapter.ViewManagerModel;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.Font;
 import java.text.NumberFormat;
 import java.util.List;
 import java.util.Locale;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
+
+import entity.CompanyDetails;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.company_details.CompanyDetailsController;
+import interfaceadapter.company_details.CompanyDetailsState;
+import interfaceadapter.company_details.CompanyDetailsViewModel;
 import view.ui.UiConstants;
 
 /**
  * The View for Company Details.
  */
 public class CompanyDetailsView extends BaseView {
+
+    private static final int HEADER_MAX_HEIGHT = 140;
+    private static final int TWO = 2;
+    private static final int BORDER_THICK = 3;
+    private static final int TWENTY = 20;
+    private static final int THIRTY_TWO = 32;
+    private static final int MILLION = 1_000_000;
+    private static final int FIVE = 5;
+    private static final int TEN = 10;
+    private static final int FIFTEEN = 15;
+    private static final int FIFTY = 50;
+    private static final int TWENTY_FIVE = 25;
+    private static final int EIGHT = 8;
+    private static final int TWELVE = 12;
+    private static final int THIRTY = 30;
 
     private final CompanyDetailsViewModel companyDetailsViewModel;
     private final CompanyDetailsController companyDetailsController;
@@ -40,7 +67,7 @@ public class CompanyDetailsView extends BaseView {
 
     private void initializeView() {
         // Header with back button only (title is dynamic inside content)
-        header.add(createBackButtonPanel(e -> backNavigationHelper.goBackToPortfolios()), BorderLayout.WEST);
+        header.add(createBackButtonPanel(ex -> backNavigationHelper.goBackToPortfolios()), BorderLayout.WEST);
 
         // Content container
         mainContainer = new JPanel(new BorderLayout());
@@ -62,10 +89,12 @@ public class CompanyDetailsView extends BaseView {
 
         if (state.getErrorMessage() != null) {
             showErrorView(state.getErrorMessage());
-        } else if (state.getCompanyDetails() != null) {
+        }
+        else if (state.getCompanyDetails() != null) {
             CompanyDetails details = state.getCompanyDetails();
             showCompanyDetails(details);
-        } else {
+        }
+        else {
             showLoadingView();
         }
     }
@@ -74,7 +103,7 @@ public class CompanyDetailsView extends BaseView {
         JPanel errorPanel = new JPanel();
         errorPanel.setLayout(new BoxLayout(errorPanel, BoxLayout.Y_AXIS));
         errorPanel.setOpaque(false);
-        errorPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        errorPanel.setBorder(BorderFactory.createEmptyBorder(FIFTY, FIFTY, FIFTY, FIFTY));
 
         JLabel errorLabel = new JLabel("Error: " + errorMessage);
         errorLabel.setFont(UiConstants.Fonts.HEADING);
@@ -92,7 +121,7 @@ public class CompanyDetailsView extends BaseView {
         JPanel loadingPanel = new JPanel();
         loadingPanel.setLayout(new BoxLayout(loadingPanel, BoxLayout.Y_AXIS));
         loadingPanel.setOpaque(false);
-        loadingPanel.setBorder(BorderFactory.createEmptyBorder(50, 50, 50, 50));
+        loadingPanel.setBorder(BorderFactory.createEmptyBorder(FIFTY, FIFTY, FIFTY, FIFTY));
 
         JLabel loadingLabel = new JLabel("Loading company details...");
         loadingLabel.setFont(UiConstants.Fonts.BODY);
@@ -110,24 +139,24 @@ public class CompanyDetailsView extends BaseView {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setOpaque(false);
-        mainPanel.setBorder(BorderFactory.createEmptyBorder(20, 30, 20, 30));
+        mainPanel.setBorder(BorderFactory.createEmptyBorder(TWENTY, THIRTY, TWENTY, THIRTY));
 
         // Company header
         mainPanel.add(createCompanyHeader(details));
-        mainPanel.add(Box.createVerticalStrut(20));
+        mainPanel.add(Box.createVerticalStrut(TWENTY));
 
         // Basic info section
         mainPanel.add(createBasicInfoSection(details));
-        mainPanel.add(Box.createVerticalStrut(20));
+        mainPanel.add(Box.createVerticalStrut(TWENTY));
 
         // Financial metrics section
         mainPanel.add(createFinancialMetricsSection(details));
-        mainPanel.add(Box.createVerticalStrut(20));
+        mainPanel.add(Box.createVerticalStrut(TWENTY));
 
         // Peers section
         if (!details.getPeers().isEmpty()) {
             mainPanel.add(createPeersSection(details.getPeers()));
-            mainPanel.add(Box.createVerticalStrut(20));
+            mainPanel.add(Box.createVerticalStrut(TWENTY));
         }
 
         scrollPane.setViewportView(mainPanel);
@@ -138,10 +167,10 @@ public class CompanyDetailsView extends BaseView {
     private JPanel createCompanyHeader(CompanyDetails details) {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setOpaque(false);
-        headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, 140));
+        headerPanel.setMaximumSize(new Dimension(Integer.MAX_VALUE, HEADER_MAX_HEIGHT));
         headerPanel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(UiConstants.Colors.PRIMARY, 2, true),
-                BorderFactory.createEmptyBorder(20, 20, 20, 20)));
+                BorderFactory.createEmptyBorder(TWENTY, TWENTY, TWENTY, TWENTY)));
 
         // Left side: Company info
         JPanel infoPanel = new JPanel();
@@ -164,9 +193,9 @@ public class CompanyDetailsView extends BaseView {
         exchangeLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
 
         infoPanel.add(nameLabel);
-        infoPanel.add(Box.createVerticalStrut(5));
+        infoPanel.add(Box.createVerticalStrut(FIVE));
         infoPanel.add(symbolLabel);
-        infoPanel.add(Box.createVerticalStrut(5));
+        infoPanel.add(Box.createVerticalStrut(FIVE));
         infoPanel.add(exchangeLabel);
 
         headerPanel.add(infoPanel, BorderLayout.WEST);
@@ -183,7 +212,7 @@ public class CompanyDetailsView extends BaseView {
 
         String priceText = details.getCurrentPrice() > 0 ? String.format("$%.2f", details.getCurrentPrice()) : "N/A";
         JLabel priceLabel = new JLabel(priceText);
-        priceLabel.setFont(new Font("Sans Serif", Font.BOLD, 32));
+        priceLabel.setFont(new Font("Sans Serif", Font.BOLD, THIRTY_TWO));
         priceLabel.setForeground(UiConstants.Colors.SUCCESS);
         priceLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
@@ -193,9 +222,9 @@ public class CompanyDetailsView extends BaseView {
         currencyLabel.setAlignmentX(Component.RIGHT_ALIGNMENT);
 
         pricePanel.add(priceTitle);
-        pricePanel.add(Box.createVerticalStrut(5));
+        pricePanel.add(Box.createVerticalStrut(FIVE));
         pricePanel.add(priceLabel);
-        pricePanel.add(Box.createVerticalStrut(2));
+        pricePanel.add(Box.createVerticalStrut(TWO));
         pricePanel.add(currencyLabel);
 
         headerPanel.add(pricePanel, BorderLayout.EAST);
@@ -215,11 +244,11 @@ public class CompanyDetailsView extends BaseView {
         addInfoRow(section, "IPO Date:", details.getIpoDate());
 
         if (details.getMarketCapitalization() > 0) {
-            addInfoRow(section, "Market Cap:", currencyFormat.format(details.getMarketCapitalization() * 1_000_000));
+            addInfoRow(section, "Market Cap:", currencyFormat.format(details.getMarketCapitalization() * MILLION));
         }
 
         if (details.getShareOutstanding() > 0) {
-            addInfoRow(section, "Shares Outstanding:", numberFormat.format(details.getShareOutstanding() * 1_000_000));
+            addInfoRow(section, "Shares Outstanding:", numberFormat.format(details.getShareOutstanding() * MILLION));
         }
 
         if (!details.getPhone().equals("N/A") && !details.getPhone().isEmpty()) {
@@ -269,8 +298,8 @@ public class CompanyDetailsView extends BaseView {
         };
 
         section.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(borderColor, 3, true),
-                BorderFactory.createEmptyBorder(20, 20, 20, 20)));
+                BorderFactory.createLineBorder(borderColor, BORDER_THICK, true),
+                BorderFactory.createEmptyBorder(TWENTY, TWENTY, TWENTY, TWENTY)));
         section.setMaximumSize(new Dimension(Integer.MAX_VALUE, Integer.MAX_VALUE));
 
         String icon = switch (title) {
@@ -281,12 +310,12 @@ public class CompanyDetailsView extends BaseView {
         };
 
         JLabel titleLabel = new JLabel(icon + title);
-        titleLabel.setFont(new Font("Sans Serif", Font.BOLD, 20));
+        titleLabel.setFont(new Font("Sans Serif", Font.BOLD, TWENTY));
         titleLabel.setForeground(borderColor.brighter());
         titleLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
 
         section.add(titleLabel);
-        section.add(Box.createVerticalStrut(15));
+        section.add(Box.createVerticalStrut(FIFTEEN));
 
         section.setAlignmentX(Component.CENTER_ALIGNMENT);
 
@@ -301,7 +330,7 @@ public class CompanyDetailsView extends BaseView {
         JPanel row = new JPanel();
         row.setLayout(new BoxLayout(row, BoxLayout.X_AXIS));
         row.setOpaque(false);
-        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, 25));
+        row.setMaximumSize(new Dimension(Integer.MAX_VALUE, TWENTY_FIVE));
 
         JLabel labelComponent = new JLabel(label);
         labelComponent.setFont(UiConstants.Fonts.SMALL);
@@ -317,7 +346,7 @@ public class CompanyDetailsView extends BaseView {
 
         row.add(Box.createHorizontalGlue());
         row.add(labelComponent);
-        row.add(Box.createHorizontalStrut(10));
+        row.add(Box.createHorizontalStrut(TEN));
         row.add(valueComponent);
         row.add(Box.createHorizontalGlue());
 
@@ -340,7 +369,7 @@ public class CompanyDetailsView extends BaseView {
             peersFlow.add(peerLabel);
 
             if (i < peers.size() - 1) {
-                peersFlow.add(Box.createHorizontalStrut(10));
+                peersFlow.add(Box.createHorizontalStrut(TEN));
             }
         }
 
@@ -357,8 +386,8 @@ public class CompanyDetailsView extends BaseView {
         peerLabel.setBackground(UiConstants.Colors.PRIMARY);
         peerLabel.setOpaque(true);
         peerLabel.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(UiConstants.Colors.SECONDARY.brighter(), 2, true),
-                BorderFactory.createEmptyBorder(8, 12, 8, 12)));
+                BorderFactory.createLineBorder(UiConstants.Colors.SECONDARY.brighter(), TWO, true),
+                BorderFactory.createEmptyBorder(EIGHT, TWELVE, EIGHT, TWELVE)));
         peerLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         peerLabel.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -373,8 +402,8 @@ public class CompanyDetailsView extends BaseView {
             public void mouseEntered(java.awt.event.MouseEvent e) {
                 peerLabel.setBackground(UiConstants.PRESSED_COLOUR);
                 peerLabel.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(UiConstants.Colors.PRIMARY.brighter(), 3, true),
-                        BorderFactory.createEmptyBorder(8, 12, 8, 12)));
+                        BorderFactory.createLineBorder(UiConstants.Colors.PRIMARY.brighter(), BORDER_THICK, true),
+                        BorderFactory.createEmptyBorder(EIGHT, TWELVE, EIGHT, TWELVE)));
                 peerLabel.repaint();
             }
 
@@ -382,8 +411,8 @@ public class CompanyDetailsView extends BaseView {
             public void mouseExited(java.awt.event.MouseEvent e) {
                 peerLabel.setBackground(UiConstants.Colors.PRIMARY);
                 peerLabel.setBorder(BorderFactory.createCompoundBorder(
-                        BorderFactory.createLineBorder(UiConstants.Colors.SECONDARY.brighter(), 2, true),
-                        BorderFactory.createEmptyBorder(8, 12, 8, 12)));
+                        BorderFactory.createLineBorder(UiConstants.Colors.SECONDARY.brighter(), TWO, true),
+                        BorderFactory.createEmptyBorder(EIGHT, TWELVE, EIGHT, TWELVE)));
                 peerLabel.repaint();
             }
         });

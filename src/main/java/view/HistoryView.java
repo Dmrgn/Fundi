@@ -7,9 +7,9 @@ import javax.swing.*;
 import javax.swing.table.DefaultTableModel;
 
 import entity.CurrencyConverter;
-import interface_adapter.history.HistoryState;
-import interface_adapter.history.HistoryViewModel;
-import interface_adapter.navigation.NavigationController;
+import interfaceadapter.history.HistoryState;
+import interfaceadapter.history.HistoryViewModel;
+import interfaceadapter.navigation.NavigationController;
 import view.ui.PanelFactory;
 import view.ui.TableFactory;
 
@@ -19,7 +19,7 @@ import static entity.PreferredCurrencyManager.getPreferredCurrency;
 public class HistoryView extends BaseView {
     private static final String[] COLUMN_NAMES = { "Ticker", "Quantity", "Price", "Date" };
     private final HistoryViewModel historyViewModel;
-    private final interface_adapter.navigation.NavigationController navigationController;
+    private final interfaceadapter.navigation.NavigationController navigationController;
     private final DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0) {
         @Override
         public boolean isCellEditable(int row, int column) {

@@ -1,13 +1,13 @@
 package app;
 
-import interface_adapter.dashboard.DashboardController;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.news.NewsController;
-import interface_adapter.portfolio_hub.PortfolioHubController;
-import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.navigation.NavigationController;
-import interface_adapter.search.SearchController;
-import interface_adapter.search.SearchViewModel;
+import interfaceadapter.dashboard.DashboardController;
+import interfaceadapter.main.MainViewModel;
+import interfaceadapter.news.NewsController;
+import interfaceadapter.portfolio_hub.PortfolioHubController;
+import interfaceadapter.portfolio.PortfolioController;
+import interfaceadapter.navigation.NavigationController;
+import interfaceadapter.search.SearchController;
+import interfaceadapter.search.SearchViewModel;
 import view.*;
 
 /**

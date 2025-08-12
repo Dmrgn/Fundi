@@ -1,14 +1,14 @@
 package view;
 
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.news.NewsController;
-import interface_adapter.portfolio_hub.PortfolioHubController;
+import interfaceadapter.main.MainState;
+import interfaceadapter.main.MainViewModel;
+import interfaceadapter.news.NewsController;
+import interfaceadapter.portfolio_hub.PortfolioHubController;
 import view.ui.ButtonFactory;
 import view.ui.UiConstants;
-import interface_adapter.navigation.NavigationController;
-import interface_adapter.search.SearchController;
-import interface_adapter.search.SearchViewModel;
+import interfaceadapter.navigation.NavigationController;
+import interfaceadapter.search.SearchController;
+import interfaceadapter.search.SearchViewModel;
 import view.ui.icons.BellIcon;
 
 import javax.swing.*;

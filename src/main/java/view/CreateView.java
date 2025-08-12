@@ -1,16 +1,27 @@
 package view;
 
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Component;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
-import interface_adapter.create.CreateController;
-import interface_adapter.create.CreateState;
-import interface_adapter.create.CreateViewModel;
-import interface_adapter.ViewManagerModel;
-import view.ui.*;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.create.CreateController;
+import interfaceadapter.create.CreateState;
+import interfaceadapter.create.CreateViewModel;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
+import view.ui.LabelFactory;
+import view.ui.PanelFactory;
+import view.ui.UiConstants;
 
 /**
  * The View For the Create Use Case.

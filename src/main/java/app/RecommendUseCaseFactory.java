@@ -1,14 +1,14 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.recommend.RecommendController;
-import interface_adapter.recommend.RecommendPresenter;
-import interface_adapter.recommend.RecommendViewModel;
-import use_case.recommend.RecommendInputBoundary;
-import use_case.recommend.RecommendInteractor;
-import use_case.recommend.RecommendOutputBoundary;
-import use_case.recommend.RecommendStockDataAccessInterface;
-import use_case.recommend.RecommendTransactionDataAccessInterface;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.recommend.RecommendController;
+import interfaceadapter.recommend.RecommendPresenter;
+import interfaceadapter.recommend.RecommendViewModel;
+import usecase.recommend.RecommendInputBoundary;
+import usecase.recommend.RecommendInteractor;
+import usecase.recommend.RecommendOutputBoundary;
+import usecase.recommend.RecommendStockDataAccessInterface;
+import usecase.recommend.RecommendTransactionDataAccessInterface;
 
 /**
  * Factory for the Recommend Use Case.

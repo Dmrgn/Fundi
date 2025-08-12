@@ -1,13 +1,13 @@
 package app;
 
-import interface_adapter.change_password.ChangePwdController;
-import interface_adapter.change_password.ChangePwdViewModel;
-import interface_adapter.main.MainViewModel;
-import use_case.change_password.ChangePwdInputBoundary;
-import use_case.change_password.ChangePwdInteractor;
-import use_case.change_password.ChangePwdOutputBoundary;
-import use_case.change_password.ChangePwdPresenter;
-import use_case.login.LoginUserDataAccessInterface;
+import interfaceadapter.change_password.ChangePwdController;
+import interfaceadapter.change_password.ChangePwdViewModel;
+import interfaceadapter.main.MainViewModel;
+import usecase.change_password.ChangePwdInputBoundary;
+import usecase.change_password.ChangePwdInteractor;
+import usecase.change_password.ChangePwdOutputBoundary;
+import usecase.change_password.ChangePwdPresenter;
+import usecase.login.LoginUserDataAccessInterface;
 
 public final class ChangePwdUseCaseFactory {
     private ChangePwdUseCaseFactory() {

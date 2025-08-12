@@ -1,8 +1,8 @@
 package app;
 
-import interface_adapter.company_details.CompanyDetailsController;
-import interface_adapter.company_details.CompanyDetailsViewModel;
-import interface_adapter.ViewManagerModel;
+import interfaceadapter.company_details.CompanyDetailsController;
+import interfaceadapter.company_details.CompanyDetailsViewModel;
+import interfaceadapter.ViewManagerModel;
 import view.CompanyDetailsView;
 
 /**

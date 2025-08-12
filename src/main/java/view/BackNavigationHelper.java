@@ -1,6 +1,6 @@
 package view;
 
-import interface_adapter.ViewManagerModel;
+import interfaceadapter.ViewManagerModel;
 
 /**
  * Simple utility class for handling back navigation without complex stack
@@ -43,6 +43,7 @@ public class BackNavigationHelper {
 
     /**
      * Generic navigation method for custom back destinations.
+     * @param viewName the name of the view to show
      */
     public void goBackTo(String viewName) {
         viewManagerModel.setState(viewName);

@@ -1,14 +1,32 @@
 package view;
 
-import javax.swing.*;
-import java.awt.*;
-import view.ui.Theme;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
 import view.ui.DefaultTheme;
+import view.ui.Theme;
 
 /**
- * The generic base class for all of the views in our app
+ * The generic base class for all the views in our app.
  */
 public abstract class BaseView extends JPanel {
+    private static final int BACKBTN_H_GAP = 15;
+    private static final int BACKBTN_V_GAP = 10;
+    private static final int BTN_CONTAINER_PADDING = 5;
+    private static final int BTN_LINE_BORDER_WIDTH = 1;
+    private static final int BTN_PAD_VERTICAL = 8;
+    private static final int BTN_PAD_HORIZONTAL = 15;
+    private static final int PANEL_GAP = 3;
+    private static final int RGB = 200;
     protected String viewName;
     protected final JButton backButton = new JButton("Back");
     protected final Theme theme;
@@ -16,7 +34,7 @@ public abstract class BaseView extends JPanel {
     // Standard areas
     protected final JPanel header = new JPanel(new BorderLayout());
     protected final JPanel content = new JPanel(new BorderLayout());
-    protected final JPanel footer = new JPanel(new BorderLayout());
+    private final JPanel footer = new JPanel(new BorderLayout());
 
     protected BaseView(String viewName) {
         this(viewName, new DefaultTheme());
@@ -57,23 +75,25 @@ public abstract class BaseView extends JPanel {
      * @return the panel containing the back button
      */
     protected JPanel createBackButtonPanel(java.awt.event.ActionListener action) {
-        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, 15, 10));
+        JPanel panel = new JPanel(new FlowLayout(FlowLayout.LEFT, BACKBTN_H_GAP, BACKBTN_V_GAP));
         panel.setOpaque(false);
 
         // Create a container for the back button with hover effect
         JPanel buttonContainer = new JPanel();
         buttonContainer.setLayout(new BorderLayout());
         buttonContainer.setOpaque(false);
-        buttonContainer.setBorder(BorderFactory.createEmptyBorder(5, 5, 5, 5));
+        buttonContainer.setBorder(BorderFactory.createEmptyBorder(BTN_CONTAINER_PADDING, BTN_CONTAINER_PADDING,
+                BTN_CONTAINER_PADDING, BTN_CONTAINER_PADDING));
 
         // Style the back button
         backButton.setText("← Back");
         backButton.setFont(theme.button());
-        backButton.setForeground(new Color(200, 200, 200));
+        backButton.setForeground(new Color(RGB, RGB, RGB));
         backButton.setBackground(theme.primary());
         backButton.setBorder(BorderFactory.createCompoundBorder(
-                BorderFactory.createLineBorder(theme.primary().darker(), 1),
-                BorderFactory.createEmptyBorder(8, 15, 8, 15)));
+                BorderFactory.createLineBorder(theme.primary().darker(), BTN_LINE_BORDER_WIDTH),
+                BorderFactory.createEmptyBorder(BTN_PAD_VERTICAL, BTN_PAD_HORIZONTAL,
+                        BTN_PAD_VERTICAL, BTN_PAD_HORIZONTAL)));
         backButton.setFocusPainted(false);
         backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
@@ -88,7 +108,7 @@ public abstract class BaseView extends JPanel {
             @Override
             public void mouseExited(java.awt.event.MouseEvent evt) {
                 backButton.setBackground(theme.primary());
-                backButton.setForeground(new Color(200, 200, 200));
+                backButton.setForeground(new Color(RGB, RGB, RGB));
             }
 
             @Override
@@ -114,12 +134,17 @@ public abstract class BaseView extends JPanel {
         return panel;
     }
 
+    /**
+     * Gets the name of the view.
+     *
+     * @return the view name
+     */
     public String getViewName() {
         return viewName;
     }
 
     /**
-     * Build the generic panel for the app
+     * Build the generic panel for the app.
      * 
      * @return the coloured panel
      */
@@ -137,7 +162,7 @@ public abstract class BaseView extends JPanel {
                 g2d.fillRect(0, 0, width, height);
             }
         };
-        panel.setLayout(new BorderLayout(3, 3));
+        panel.setLayout(new BorderLayout(PANEL_GAP, PANEL_GAP));
         panel.setOpaque(false);
         return panel;
     }

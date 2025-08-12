@@ -1,10 +1,10 @@
 package view;
 
-import data_access.DBUserDataAccessObject;
-import data_access.TickerCache;
+import dataaccess.DBUserDataAccessObject;
+import dataaccess.TickerCache;
 import entity.CurrencyConverter;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.main.MainState;
+import interfaceadapter.main.MainViewModel;
+import interfaceadapter.main.MainState;
 import view.ui.UiConstants;
 
 import javax.swing.*;
@@ -25,11 +25,11 @@ import org.jfree.data.time.TimeSeriesCollection;
 import java.awt.BasicStroke;
 
 // New imports for TwelveData clean architecture
-import interface_adapter.watchlist.TimeSeriesController;
-import interface_adapter.watchlist.TimeSeriesPresenter;
-import interface_adapter.watchlist.TimeSeriesViewModel;
-import use_case.watchlist.TimeSeriesInteractor;
-import data_access.TwelveDataAccess;
+import interfaceadapter.watchlist.TimeSeriesController;
+import interfaceadapter.watchlist.TimeSeriesPresenter;
+import interfaceadapter.watchlist.TimeSeriesViewModel;
+import usecase.watchlist.TimeSeriesInteractor;
+import dataaccess.TwelveDataAccess;
 import entity.TimeSeriesPoint;
 import org.jfree.data.time.Hour;
 import org.jfree.chart.renderer.xy.XYSplineRenderer;

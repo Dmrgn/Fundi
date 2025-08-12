@@ -1,8 +1,8 @@
 package app;
 
-import interface_adapter.buy.BuyController;
-import interface_adapter.buy.BuyViewModel;
-import interface_adapter.navigation.NavigationController;
+import interfaceadapter.buy.BuyController;
+import interfaceadapter.buy.BuyViewModel;
+import interfaceadapter.navigation.NavigationController;
 import view.BuyView;
 
 /**
@@ -20,7 +20,8 @@ public final class BuyViewFactory {
      * @param navigationController The Navigation Controller
      * @return The Buy View
      */
-    public static BuyView create(BuyViewModel viewModel, BuyController controller, NavigationController navigationController) {
+    public static BuyView create(BuyViewModel viewModel, BuyController controller,
+                                 NavigationController navigationController) {
         return new BuyView(viewModel, controller, navigationController);
     }
 }

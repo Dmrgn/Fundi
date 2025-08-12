@@ -1,7 +1,7 @@
 package app;
 
-import interface_adapter.analysis.AnalysisViewModel;
-import interface_adapter.navigation.NavigationController;
+import interfaceadapter.analysis.AnalysisViewModel;
+import interfaceadapter.navigation.NavigationController;
 import view.AnalysisView;
 
 /**

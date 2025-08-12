@@ -1,39 +1,59 @@
 package view;
 
-import entity.CurrencyConverter;
-import entity.PreferredCurrencyManager;
-import entity.PortfolioValuePoint;
-import interface_adapter.dashboard.DashboardController;
-import interface_adapter.dashboard.DashboardState;
-import interface_adapter.dashboard.DashboardViewModel;
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.search.SearchController;
-import interface_adapter.search.SearchViewModel;
-import interface_adapter.search.SearchState;
-import interface_adapter.company_details.CompanyDetailsController;
-import entity.SearchResult;
-import view.ui.UiConstants;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+import java.io.File;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JFileChooser;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.filechooser.FileNameExtensionFilter;
+
 import org.jfree.chart.ChartFactory;
 import org.jfree.chart.ChartPanel;
+import org.jfree.chart.ChartUtils;
 import org.jfree.chart.JFreeChart;
 import org.jfree.chart.plot.XYPlot;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
-import org.jfree.chart.ChartUtils;
-import javax.swing.filechooser.FileNameExtensionFilter;
-import java.io.File;
-import java.io.IOException;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.*;
-import java.util.List;
+import entity.CurrencyConverter;
+import entity.PortfolioValuePoint;
+import entity.PreferredCurrencyManager;
+import entity.SearchResult;
+import interfaceadapter.company_details.CompanyDetailsController;
+import interfaceadapter.dashboard.DashboardController;
+import interfaceadapter.dashboard.DashboardState;
+import interfaceadapter.dashboard.DashboardViewModel;
+import interfaceadapter.main.MainState;
+import interfaceadapter.main.MainViewModel;
+import interfaceadapter.search.SearchController;
+import interfaceadapter.search.SearchState;
+import interfaceadapter.search.SearchViewModel;
 import view.ui.ButtonFactory;
 import view.ui.FieldFactory;
+import view.ui.UiConstants;
 
-import static entity.PreferredCurrencyManager.*;
+import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
 public class DashboardView extends BaseView {
     private final MainViewModel mainViewModel;
@@ -42,16 +62,16 @@ public class DashboardView extends BaseView {
     private final DashboardViewModel dashboardViewModel;
     private final DashboardController dashboardController;
     @SuppressWarnings("unused")
-    private final interface_adapter.navigation.NavigationController navigationController;
+    private final interfaceadapter.navigation.NavigationController navigationController;
     private final CompanyDetailsController companyDetailsController;
     private ChartPanel chartPanel;
     private JPanel searchResultsPanel;
 
     public DashboardView(MainViewModel mainViewModel, SearchController searchController,
-            SearchViewModel searchViewModel, DashboardViewModel dashboardViewModel,
-            DashboardController dashboardController,
-            interface_adapter.navigation.NavigationController navigationController,
-            CompanyDetailsController companyDetailsController) {
+                         SearchViewModel searchViewModel, DashboardViewModel dashboardViewModel,
+                         DashboardController dashboardController,
+                         interfaceadapter.navigation.NavigationController navigationController,
+                         CompanyDetailsController companyDetailsController) {
         super("dashboard");
         this.mainViewModel = mainViewModel;
         this.searchController = searchController;
@@ -289,7 +309,8 @@ public class DashboardView extends BaseView {
         // Create initial empty chart
         TimeSeriesCollection dataset = new TimeSeriesCollection();
         JFreeChart chart = ChartFactory.createTimeSeriesChart(
-                "", // No title since we have a separate label
+                // No title since we have a separate label
+                "",
                 "Date",
                 "Value",
                 dataset,

@@ -1,13 +1,14 @@
 package view;
 
-import javax.swing.JPanel;
-import javax.swing.JTextField;
-import javax.swing.JPasswordField;
-import javax.swing.JButton;
-import javax.swing.BoxLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Font;
-import java.awt.Color;
+
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JTextField;
 
 /**
  * Base form panel for login and signup views.

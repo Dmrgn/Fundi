@@ -5,7 +5,7 @@ import interfaceadapter.main.MainViewModel;
 import view.WatchlistView;
 
 /**
- * Factory for the Watchlist View
+ * Factory for the Watchlist View.
  */
 public class WatchlistViewFactory {
     private WatchlistViewFactory() {

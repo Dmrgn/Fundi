@@ -1,8 +1,9 @@
 package usecase.buy;
 
+import java.time.LocalDate;
+
 import entity.Transaction;
 import usecase.notifications.NotificationManager;
-import java.time.LocalDate;
 
 /**
  * Interactor for the Buy Use Case.
@@ -25,6 +26,7 @@ public class BuyInteractor implements BuyInputBoundary {
      * 
      * @param buyInputData the input data.
      */
+
     @Override
     public void execute(BuyInputData buyInputData) {
         final String portfolioId = buyInputData.getPortfolioId();
@@ -33,9 +35,11 @@ public class BuyInteractor implements BuyInputBoundary {
 
         if (!stockDataAccessObject.hasTicker(ticker)) {
             buyPresenter.prepareFailView("Ticker is not available");
-        } else if (amount <= 0) {
+        }
+        else if (amount <= 0) {
             buyPresenter.prepareFailView("Amount must be greater than 0");
-        } else {
+        }
+        else {
             final double price = stockDataAccessObject.getPrice(ticker);
             final LocalDate date = LocalDate.now();
 
@@ -53,8 +57,9 @@ public class BuyInteractor implements BuyInputBoundary {
 
             try {
                 NotificationManager.getInstance().checkNewsAfterPurchase(ticker, amount);
-            } catch (Exception e) {
-                System.err.println("Failed to check news notifications: " + e.getMessage());
+            }
+            catch (Exception ex) {
+                System.err.println("Failed to check news notifications: " + ex.getMessage());
             }
         }
     }

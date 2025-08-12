@@ -1,15 +1,16 @@
 package dataaccess;
 
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.json.JSONArray;
-import usecase.news.NewsAPIDataAccessInterface;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.time.LocalDate;
+
+import org.json.JSONArray;
+
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import usecase.news.NewsAPIDataAccessInterface;
 
 public class FinnhubNewsDataAccessObject implements NewsAPIDataAccessInterface {
 

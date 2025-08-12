@@ -13,7 +13,7 @@ import java.util.Map;
 import view.ui.UiConstants;
 
 /**
- * Custom layout manager that wraps components like FlowLayout but respects
+ * Custom layout manager that wraps components like FlowLayout but respects.
  * container width
  */
 class WrapLayout extends FlowLayout {
@@ -76,7 +76,8 @@ class WrapLayout extends FlowLayout {
                         addRow(dim, rowWidth, rowHeight);
                         rowWidth = d.width;
                         rowHeight = d.height;
-                    } else {
+                    }
+                    else {
                         rowWidth += hgap + d.width;
                         rowHeight = Math.max(rowHeight, d.height);
                     }

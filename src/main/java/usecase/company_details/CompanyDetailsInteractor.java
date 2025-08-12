@@ -25,8 +25,9 @@ public class CompanyDetailsInteractor implements CompanyDetailsInputBoundary {
             final CompanyDetailsOutputData outputData = new CompanyDetailsOutputData(
                     companyDetails, false, null);
             companyDetailsPresenter.prepareSuccessView(outputData);
-        } catch (Exception e) {
-            companyDetailsPresenter.prepareFailView("Failed to fetch company details: " + e.getMessage());
+        }
+        catch (Exception ex) {
+            companyDetailsPresenter.prepareFailView("Failed to fetch company details: " + ex.getMessage());
         }
     }
 }

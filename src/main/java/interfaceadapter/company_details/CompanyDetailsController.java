@@ -11,7 +11,7 @@ public class CompanyDetailsController {
 
     private final CompanyDetailsInputBoundary companyDetailsUseCaseInteractor;
     private final NavigationController navigationController;
-    private String currentCompanySymbol; // Track current company
+    private String currentCompanySymbol;
 
     public CompanyDetailsController(CompanyDetailsInputBoundary companyDetailsUseCaseInteractor,
             NavigationController navigationController) {
@@ -30,7 +30,8 @@ public class CompanyDetailsController {
         if ("company_details".equals(currentView) && currentCompanySymbol != null) {
             // Navigating from one company to another
             navigationController.navigateToCompany(currentView, "company_details", currentCompanySymbol);
-        } else {
+        }
+        else {
             // Navigating from a different view (like search) to company details
             navigationController.navigateTo(currentView, "company_details");
         }
@@ -43,7 +44,9 @@ public class CompanyDetailsController {
     }
 
     /**
-     * Get the current company symbol being displayed
+     * Get the current company symbol being displayed.
+     *
+     * @return the symbol of the current company
      */
     public String getCurrentCompanySymbol() {
         return currentCompanySymbol;

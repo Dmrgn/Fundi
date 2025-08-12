@@ -1,12 +1,28 @@
 package view.ui;
 
-import javax.swing.*;
-import java.awt.*;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+import javax.swing.SwingConstants;
 
 public final class ButtonFactory {
+
+    private ButtonFactory() {
+
+    }
+
     /**
      * Create a modern primary button using centralized theme colors.
+     *
+     *  @param text the text to display on the button
+     *  @return a primary button ready to use
      */
+
     public static JButton createPrimaryButton(String text) {
         JButton button = new JButton(text);
         button.setFont(UiConstants.Fonts.BUTTON);
@@ -22,6 +38,9 @@ public final class ButtonFactory {
 
     /**
      * Secondary button (subtle prominence).
+     *
+     * @param text the text to display on the button
+     * @return a Secondary button ready to use
      */
     public static JButton createSecondaryButton(String text) {
         JButton button = new JButton(text);
@@ -38,6 +57,9 @@ public final class ButtonFactory {
 
     /**
      * Destructive/alert action button.
+     *
+     * @param text the text to display on the button
+     * @return an action/alert button ready to use
      */
     public static JButton createDangerButton(String text) {
         JButton button = new JButton(text);
@@ -54,6 +76,9 @@ public final class ButtonFactory {
 
     /**
      * Outlined variant using muted border and transparent background.
+     *
+     * @param text the text to display on the button
+     * @return Outlined button ready to use
      */
     public static JButton createOutlinedButton(String text) {
         JButton button = new JButton(text);
@@ -70,6 +95,8 @@ public final class ButtonFactory {
 
     /**
      * Create a link-style button (flat, primary-colored, underlined text).
+     * @param text the text to display on the button
+     * @return link button ready to use
      */
     public static JButton createLinkButton(String text) {
         JButton button = new JButton("<html><u>" + text + "</u></html>");
@@ -85,12 +112,10 @@ public final class ButtonFactory {
         return button;
     }
 
-    private ButtonFactory() {
-
-    }
-
     /**
      * Backward-compatible alias for primary button.
+     * @param text the text to display on the button
+     * @return button ready to use
      */
     public static JButton createStyledButton(String text) {
         return createPrimaryButton(text);

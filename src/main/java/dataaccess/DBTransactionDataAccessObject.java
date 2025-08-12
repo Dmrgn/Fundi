@@ -142,7 +142,8 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
             pstmt.setDate(4, java.sql.Date.valueOf(transaction.getTimestamp()));
             pstmt.setDouble(5, transaction.getPrice());
             pstmt.executeUpdate();
-        } catch (SQLException exception) {
+        }
+        catch (SQLException exception) {
             System.out.println(exception.getMessage());
         }
 
@@ -160,7 +161,8 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
             pstmt.setInt(3, delta);
             pstmt.executeUpdate();
 
-        } catch (SQLException exception) {
+        }
+        catch (SQLException exception) {
             System.out.println("Holdings update error: " + exception.getMessage());
         }
 
@@ -168,7 +170,8 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
         String cleanupHoldings = "DELETE FROM holdings WHERE quantity <= 0";
         try (Statement stmt = connection.createStatement()) {
             stmt.executeUpdate(cleanupHoldings);
-        } catch (SQLException exception) {
+        }
+        catch (SQLException exception) {
             System.out.println("Holdings cleanup error: " + exception.getMessage());
         }
     }
@@ -262,8 +265,9 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
             while (rs.next()) {
                 symbols.add(rs.getString("stock_name"));
             }
-        } catch (SQLException e) {
-            System.out.println("Error fetching user symbols: " + e.getMessage());
+        }
+        catch (SQLException ex) {
+            System.out.println("Error fetching user symbols: " + ex.getMessage());
         }
 
         return new ArrayList<>(symbols);
@@ -284,7 +288,8 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next() ? rs.getInt("qty") : 0;
             }
-        } catch (Exception e) {
+        }
+        catch (Exception ex) {
             return 0;
         }
     }

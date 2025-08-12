@@ -9,9 +9,20 @@ public class ChangePwdInputData {
         this.newPassword = newPassword;
     }
 
+    /**
+     * Gets the new password.
+     *
+     * @return the new password.
+     */
     public String getNewPassword() {
         return newPassword;
     }
+
+    /**
+     *  Gets the username of the user.
+     *
+     *  @return the username.
+     */
 
     public String getUsername() {
         return username;

@@ -16,7 +16,8 @@ public class BuyPresenter implements BuyOutputBoundary {
     private final PortfolioViewModel portfolioViewModel;
     private final BuyViewModel buyViewModel;
 
-    public BuyPresenter(ViewManagerModel viewManagerModel, BuyViewModel buyViewModel, PortfolioViewModel portfolioViewModel) {
+    public BuyPresenter(ViewManagerModel viewManagerModel, BuyViewModel buyViewModel,
+                        PortfolioViewModel portfolioViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.buyViewModel = buyViewModel;
         this.portfolioViewModel = portfolioViewModel;

@@ -87,8 +87,9 @@ public class ExchangeAPIDataAccessObject {
 
             return new CurrencyConverter(rateMap, baseCurrency);
 
-        } catch (IOException e) {
-            System.out.println("Failed to fetch conversion rates: " + e.getMessage());
+        }
+        catch (IOException ex) {
+            System.out.println("Failed to fetch conversion rates: " + ex.getMessage());
             return null;
         }
     }

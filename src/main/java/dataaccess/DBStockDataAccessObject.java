@@ -108,7 +108,7 @@ public class DBStockDataAccessObject implements RecommendStockDataAccessInterfac
         LocalDate mostRecent = today;
         while (dates.size() < NUM_DAYS) {
             mostRecent = mostRecent.minusDays(1);
-            if (mostRecent.getDayOfWeek() != DayOfWeek.SATURDAY && mostRecent.getDayOfWeek() != DayOfWeek.SUNDAY ) {
+            if (mostRecent.getDayOfWeek() != DayOfWeek.SATURDAY && mostRecent.getDayOfWeek() != DayOfWeek.SUNDAY) {
                 dates.add(mostRecent);
             }
         }

@@ -1,18 +1,19 @@
 package dataaccess;
 
-import entity.SearchResult;
-import usecase.search.SearchDataAccessInterface;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import entity.SearchResult;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import usecase.search.SearchDataAccessInterface;
 
 /**
  * FinnHub-based implementation of SearchDataAccessInterface using FinnHub
@@ -21,13 +22,16 @@ import java.util.List;
 public class FinnhubSearchDataAccessObject implements SearchDataAccessInterface {
 
     private static final String API_BASE_URL = "https://finnhub.io/api/v1/search";
+    private static final int NUMBER_FIVE = 5;
+    private static final int NUMBER_TEN = 10;
+
     private final OkHttpClient httpClient;
     private final String apiKey;
 
     public FinnhubSearchDataAccessObject() throws IOException {
         this.httpClient = new OkHttpClient.Builder()
-                .connectTimeout(5, java.util.concurrent.TimeUnit.SECONDS)
-                .readTimeout(10, java.util.concurrent.TimeUnit.SECONDS)
+                .connectTimeout(NUMBER_FIVE, java.util.concurrent.TimeUnit.SECONDS)
+                .readTimeout(NUMBER_TEN, java.util.concurrent.TimeUnit.SECONDS)
                 .build();
         // Read API key from FHkey.txt
         this.apiKey = Files.readString(Path.of("data/FHkey.txt")).trim();
@@ -81,20 +85,29 @@ public class FinnhubSearchDataAccessObject implements SearchDataAccessInterface 
                 // FinnHub doesn't provide all the same fields as Alpha Vantage,
                 // so we'll use default values for missing fields
                 final SearchResult searchResult = new SearchResult(
-                        symbol, // symbol
-                        description, // name (using description)
-                        type, // type
-                        "US", // region (default to US)
-                        "09:30", // marketOpen (default US market hours)
-                        "16:00", // marketClose (default US market hours)
-                        "America/New_York", // timezone (default US timezone)
-                        "USD", // currency (default to USD)
-                        1.0 // matchScore (default to perfect match)
+                        // symbol
+                        symbol,
+                        // name (using description)
+                        description,
+                        // type
+                        type,
+                        // region (default to US)
+                        "US",
+                        // marketOpen (default US market hours)
+                        "09:30",
+                        // marketClose (default US market hours)
+                        "16:00",
+                        // timezone (default US timezone)
+                        "America/New_York",
+                        // currency (default to USD)
+                        "USD",
+                        // matchScore (default to perfect match)
+                        1.0
                 );
                 results.add(searchResult);
 
                 // Stop once we have exactly 10 valid results
-                if (results.size() == 10) {
+                if (results.size() == NUMBER_TEN) {
                     break;
                 }
             }

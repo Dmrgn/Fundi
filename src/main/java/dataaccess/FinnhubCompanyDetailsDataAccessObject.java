@@ -1,18 +1,19 @@
 package dataaccess;
 
-import entity.CompanyDetails;
-import usecase.company_details.CompanyDetailsDataAccessInterface;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.Response;
-import org.json.JSONArray;
-import org.json.JSONObject;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
 import java.util.List;
+
+import org.json.JSONArray;
+import org.json.JSONObject;
+
+import entity.CompanyDetails;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.Response;
+import usecase.company_details.CompanyDetailsDataAccessInterface;
 
 /**
  * FinnHub-based implementation of CompanyDetailsDataAccessInterface.
@@ -23,14 +24,15 @@ public class FinnhubCompanyDetailsDataAccessObject implements CompanyDetailsData
     private static final String METRICS_API_URL = "https://finnhub.io/api/v1/stock/metric";
     private static final String PEERS_API_URL = "https://finnhub.io/api/v1/stock/peers";
     private static final String QUOTE_API_URL = "https://finnhub.io/api/v1/quote";
-
+    private static final int NUMBER_FIVE = 5;
+    private static final int NUMBER_TEN = 10;
     private final OkHttpClient httpClient;
     private final String apiKey;
 
     public FinnhubCompanyDetailsDataAccessObject() throws IOException {
         this.httpClient = new OkHttpClient.Builder()
-                .connectTimeout(5, java.util.concurrent.TimeUnit.SECONDS)
-                .readTimeout(10, java.util.concurrent.TimeUnit.SECONDS)
+                .connectTimeout(NUMBER_FIVE, java.util.concurrent.TimeUnit.SECONDS)
+                .readTimeout(NUMBER_TEN, java.util.concurrent.TimeUnit.SECONDS)
                 .build();
         // Read API key from FHkey.txt
         this.apiKey = Files.readString(Path.of("data/FHkey.txt")).trim();
@@ -83,7 +85,8 @@ public class FinnhubCompanyDetailsDataAccessObject implements CompanyDetailsData
     private double fetchCurrentPrice(String symbol) throws Exception {
         String url = String.format("%s?symbol=%s&token=%s", QUOTE_API_URL, symbol, apiKey);
         JSONObject quote = makeApiCall(url);
-        return quote.optDouble("c", 0.0); // 'c' is current price in Finnhub API
+        // 'c' is current price in Finnhub API
+        return quote.optDouble("c", 0.0);
     }
 
     private List<String> fetchCompanyPeers(String symbol) throws Exception {
@@ -92,7 +95,7 @@ public class FinnhubCompanyDetailsDataAccessObject implements CompanyDetailsData
 
         List<String> peers = new ArrayList<>();
         // Limit to first 5 peers
-        int limit = Math.min(5, peersArray.length());
+        int limit = Math.min(NUMBER_FIVE, peersArray.length());
         for (int i = 0; i < limit; i++) {
             peers.add(peersArray.getString(i));
         }

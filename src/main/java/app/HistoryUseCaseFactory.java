@@ -1,14 +1,14 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.history.HistoryController;
-import interface_adapter.history.HistoryPresenter;
-import interface_adapter.history.HistoryViewModel;
-import interface_adapter.navigation.NavigationController;
-import use_case.history.HistoryDataAccessInterface;
-import use_case.history.HistoryInputBoundary;
-import use_case.history.HistoryInteractor;
-import use_case.history.HistoryOutputBoundary;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.history.HistoryController;
+import interfaceadapter.history.HistoryPresenter;
+import interfaceadapter.history.HistoryViewModel;
+import interfaceadapter.navigation.NavigationController;
+import usecase.history.HistoryDataAccessInterface;
+import usecase.history.HistoryInputBoundary;
+import usecase.history.HistoryInteractor;
+import usecase.history.HistoryOutputBoundary;
 
 /**
  * Factory for the History Use Case.

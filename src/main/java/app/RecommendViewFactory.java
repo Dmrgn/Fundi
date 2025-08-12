@@ -1,8 +1,8 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.recommend.RecommendController;
-import interface_adapter.recommend.RecommendViewModel;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.recommend.RecommendController;
+import interfaceadapter.recommend.RecommendViewModel;
 import view.RecommendView;
 
 /**

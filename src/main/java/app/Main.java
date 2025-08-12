@@ -6,7 +6,7 @@ import java.sql.SQLException;
 import javax.swing.JFrame;
 
 import com.formdev.flatlaf.FlatLightLaf;
-import data_access.TickerCache;
+import dataaccess.TickerCache;
 
 /**
  * The Main class of our application.

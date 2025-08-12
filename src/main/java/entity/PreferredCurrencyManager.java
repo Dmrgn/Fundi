@@ -1,6 +1,6 @@
 package entity;
 
-import data_access.ExchangeAPIDataAccessObject;
+import dataaccess.ExchangeAPIDataAccessObject;
 
 public class PreferredCurrencyManager {
 

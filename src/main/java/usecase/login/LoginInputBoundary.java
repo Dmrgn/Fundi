@@ -1,0 +1,18 @@
+package usecase.login;
+
+/**
+ * Input boundary for login functionality.
+ */
+public interface LoginInputBoundary {
+    /**
+     * Executes the login usecase.
+     * 
+     * @param loginInputData the input data.
+     */
+    void execute(LoginInputData loginInputData);
+
+    /**
+     * Switch to the Signup View.
+     */
+    void switchToSignupView();
+}

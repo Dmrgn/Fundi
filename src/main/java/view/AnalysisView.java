@@ -1,12 +1,16 @@
 package view;
 
-import java.awt.*;
+import java.awt.BorderLayout;
 import java.util.Map;
 
-import javax.swing.*;
+import javax.swing.Box;
+import javax.swing.BoxLayout;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
 
-import interface_adapter.analysis.AnalysisViewModel;
-import interface_adapter.navigation.NavigationController;
+import interfaceadapter.analysis.AnalysisViewModel;
+import interfaceadapter.navigation.NavigationController;
 import view.ui.LabelFactory;
 import view.ui.PanelFactory;
 import view.ui.UiConstants;

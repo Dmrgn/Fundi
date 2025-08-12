@@ -1,7 +1,7 @@
 package app;
 
-import interface_adapter.history.HistoryViewModel;
-import interface_adapter.navigation.NavigationController;
+import interfaceadapter.history.HistoryViewModel;
+import interfaceadapter.navigation.NavigationController;
 import view.HistoryView;
 
 /**

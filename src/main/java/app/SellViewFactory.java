@@ -1,8 +1,8 @@
 package app;
 
-import interface_adapter.navigation.NavigationController;
-import interface_adapter.sell.SellController;
-import interface_adapter.sell.SellViewModel;
+import interfaceadapter.navigation.NavigationController;
+import interfaceadapter.sell.SellController;
+import interfaceadapter.sell.SellViewModel;
 import view.SellView;
 
 /**

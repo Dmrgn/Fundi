@@ -1,0 +1,41 @@
+package usecase.signup;
+
+/**
+ * The Input Data for the Signup Use Case.
+ */
+public class SignupInputData {
+
+    private final String username;
+    private final String password;
+    private final String repeatPassword;
+
+    public SignupInputData(String username, String password, String repeatPassword) {
+        this.username = username;
+        this.password = password;
+        this.repeatPassword = repeatPassword;
+    }
+
+    /**
+     * Getter.
+     * @return Username
+     */
+    public String getUsername() {
+        return username;
+    }
+
+    /**
+     * Getter.
+     * @return Password
+     */
+    public String getPassword() {
+        return password;
+    }
+
+    /**
+     * Getter.
+     * @return Repeat Password
+     */
+    public String getRepeatPassword() {
+        return repeatPassword;
+    }
+}

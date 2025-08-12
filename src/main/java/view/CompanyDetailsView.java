@@ -1,10 +1,10 @@
 package view;
 
 import entity.CompanyDetails;
-import interface_adapter.company_details.CompanyDetailsController;
-import interface_adapter.company_details.CompanyDetailsState;
-import interface_adapter.company_details.CompanyDetailsViewModel;
-import interface_adapter.ViewManagerModel;
+import interfaceadapter.company_details.CompanyDetailsController;
+import interfaceadapter.company_details.CompanyDetailsState;
+import interfaceadapter.company_details.CompanyDetailsViewModel;
+import interfaceadapter.ViewManagerModel;
 
 import javax.swing.*;
 import java.awt.*;

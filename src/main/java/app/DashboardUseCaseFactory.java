@@ -1,12 +1,12 @@
 package app;
 
-import data_access.DBDashboardDataAccessObject;
-import interface_adapter.dashboard.DashboardController;
-import interface_adapter.dashboard.DashboardPresenter;
-import interface_adapter.dashboard.DashboardViewModel;
-import use_case.dashboard.DashboardInputBoundary;
-import use_case.dashboard.DashboardInteractor;
-import use_case.dashboard.DashboardOutputBoundary;
+import dataaccess.DBDashboardDataAccessObject;
+import interfaceadapter.dashboard.DashboardController;
+import interfaceadapter.dashboard.DashboardPresenter;
+import interfaceadapter.dashboard.DashboardViewModel;
+import usecase.dashboard.DashboardInputBoundary;
+import usecase.dashboard.DashboardInteractor;
+import usecase.dashboard.DashboardOutputBoundary;
 
 import java.sql.SQLException;
 

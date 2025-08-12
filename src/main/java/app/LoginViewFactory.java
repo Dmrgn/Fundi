@@ -1,7 +1,7 @@
 package app;
 
-import interface_adapter.login.LoginController;
-import interface_adapter.login.LoginViewModel;
+import interfaceadapter.login.LoginController;
+import interfaceadapter.login.LoginViewModel;
 import view.LoginView;
 
 /**

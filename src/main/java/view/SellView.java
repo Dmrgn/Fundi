@@ -6,10 +6,10 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 
-import interface_adapter.navigation.NavigationController;
-import interface_adapter.sell.SellController;
-import interface_adapter.sell.SellState;
-import interface_adapter.sell.SellViewModel;
+import interfaceadapter.navigation.NavigationController;
+import interfaceadapter.sell.SellController;
+import interfaceadapter.sell.SellState;
+import interfaceadapter.sell.SellViewModel;
 import view.ui.ButtonFactory;
 import view.ui.FieldFactory;
 import view.ui.PanelFactory;

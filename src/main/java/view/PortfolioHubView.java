@@ -1,10 +1,10 @@
 package view;
 
-import interface_adapter.navigation.NavigationController;
-import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolio_hub.PortfolioHubController;
-import interface_adapter.portfolio_hub.PortfolioHubState;
-import interface_adapter.portfolio_hub.PortfolioHubViewModel;
+import interfaceadapter.navigation.NavigationController;
+import interfaceadapter.portfolio.PortfolioController;
+import interfaceadapter.portfolio_hub.PortfolioHubController;
+import interfaceadapter.portfolio_hub.PortfolioHubState;
+import interfaceadapter.portfolio_hub.PortfolioHubViewModel;
 
 import javax.swing.*;
 import java.awt.*;

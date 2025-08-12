@@ -1,7 +1,7 @@
 package app;
 
-import data_access.DBUserDataAccessObject;
-import interface_adapter.main.MainViewModel;
+import dataaccess.DBUserDataAccessObject;
+import interfaceadapter.main.MainViewModel;
 import view.WatchlistView;
 
 /**

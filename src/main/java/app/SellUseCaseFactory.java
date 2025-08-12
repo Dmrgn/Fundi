@@ -1,15 +1,15 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.portfolio.PortfolioViewModel;
-import interface_adapter.sell.SellController;
-import interface_adapter.sell.SellPresenter;
-import interface_adapter.sell.SellViewModel;
-import use_case.sell.SellInputBoundary;
-import use_case.sell.SellInteractor;
-import use_case.sell.SellOutputBoundary;
-import use_case.sell.SellStockDataAccessInterface;
-import use_case.sell.SellTransactionDataAccessInterface;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.portfolio.PortfolioViewModel;
+import interfaceadapter.sell.SellController;
+import interfaceadapter.sell.SellPresenter;
+import interfaceadapter.sell.SellViewModel;
+import usecase.sell.SellInputBoundary;
+import usecase.sell.SellInteractor;
+import usecase.sell.SellOutputBoundary;
+import usecase.sell.SellStockDataAccessInterface;
+import usecase.sell.SellTransactionDataAccessInterface;
 
 /**
  * Factory for the Sell Use Case.

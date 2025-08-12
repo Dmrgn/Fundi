@@ -6,10 +6,10 @@ import java.beans.PropertyChangeListener;
 
 import javax.swing.*;
 
-import interface_adapter.create.CreateController;
-import interface_adapter.create.CreateState;
-import interface_adapter.create.CreateViewModel;
-import interface_adapter.ViewManagerModel;
+import interfaceadapter.create.CreateController;
+import interfaceadapter.create.CreateState;
+import interfaceadapter.create.CreateViewModel;
+import interfaceadapter.ViewManagerModel;
 import view.ui.*;
 
 /**

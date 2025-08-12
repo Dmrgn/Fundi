@@ -1,8 +1,8 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.create.CreateController;
-import interface_adapter.create.CreateViewModel;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.create.CreateController;
+import interfaceadapter.create.CreateViewModel;
 import view.CreateView;
 
 /**

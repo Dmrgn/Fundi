@@ -1,16 +1,16 @@
 package app;
 
-import data_access.FinnhubNewsDataAccessObject;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.news.NewsController;
-import interface_adapter.news.NewsPresenter;
-import interface_adapter.news.NewsViewModel;
-import use_case.news.NewsAPIDataAccessInterface;
-import use_case.news.NewsInputBoundary;
-import use_case.news.NewsInteractor;
-import use_case.news.NewsOutputBoundary;
-import use_case.portfolio.PortfolioTransactionDataAccessInterface;
-import use_case.search.SearchDataAccessInterface;
+import dataaccess.FinnhubNewsDataAccessObject;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.news.NewsController;
+import interfaceadapter.news.NewsPresenter;
+import interfaceadapter.news.NewsViewModel;
+import usecase.news.NewsAPIDataAccessInterface;
+import usecase.news.NewsInputBoundary;
+import usecase.news.NewsInteractor;
+import usecase.news.NewsOutputBoundary;
+import usecase.portfolio.PortfolioTransactionDataAccessInterface;
+import usecase.search.SearchDataAccessInterface;
 
 import java.io.IOException;
 

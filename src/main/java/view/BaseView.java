@@ -1,12 +1,22 @@
 package view;
 
-import javax.swing.*;
-import java.awt.*;
-import view.ui.Theme;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Cursor;
+import java.awt.FlowLayout;
+import java.awt.GradientPaint;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JPanel;
+
 import view.ui.DefaultTheme;
+import view.ui.Theme;
 
 /**
- * The generic base class for all of the views in our app
+ * The generic base class for all the views in our app.
  */
 public abstract class BaseView extends JPanel {
     protected String viewName;

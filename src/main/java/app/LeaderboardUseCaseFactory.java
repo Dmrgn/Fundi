@@ -1,12 +1,12 @@
 package app;
 
-import data_access.DBLeaderboardDataAccessObject;
-import interface_adapter.leaderboard.LeaderboardController;
-import interface_adapter.leaderboard.LeaderboardPresenter;
-import interface_adapter.leaderboard.LeaderboardViewModel;
-import use_case.leaderboard.LeaderboardInputBoundary;
-import use_case.leaderboard.LeaderboardInteractor;
-import use_case.leaderboard.LeaderboardOutputBoundary;
+import dataaccess.DBLeaderboardDataAccessObject;
+import interfaceadapter.leaderboard.LeaderboardController;
+import interfaceadapter.leaderboard.LeaderboardPresenter;
+import interfaceadapter.leaderboard.LeaderboardViewModel;
+import usecase.leaderboard.LeaderboardInputBoundary;
+import usecase.leaderboard.LeaderboardInteractor;
+import usecase.leaderboard.LeaderboardOutputBoundary;
 
 import java.sql.SQLException;
 

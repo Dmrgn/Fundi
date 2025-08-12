@@ -3,15 +3,15 @@ package view;
 import entity.CurrencyConverter;
 import entity.PreferredCurrencyManager;
 import entity.PortfolioValuePoint;
-import interface_adapter.dashboard.DashboardController;
-import interface_adapter.dashboard.DashboardState;
-import interface_adapter.dashboard.DashboardViewModel;
-import interface_adapter.main.MainState;
-import interface_adapter.main.MainViewModel;
-import interface_adapter.search.SearchController;
-import interface_adapter.search.SearchViewModel;
-import interface_adapter.search.SearchState;
-import interface_adapter.company_details.CompanyDetailsController;
+import interfaceadapter.dashboard.DashboardController;
+import interfaceadapter.dashboard.DashboardState;
+import interfaceadapter.dashboard.DashboardViewModel;
+import interfaceadapter.main.MainState;
+import interfaceadapter.main.MainViewModel;
+import interfaceadapter.search.SearchController;
+import interfaceadapter.search.SearchViewModel;
+import interfaceadapter.search.SearchState;
+import interfaceadapter.company_details.CompanyDetailsController;
 import entity.SearchResult;
 import view.ui.UiConstants;
 import org.jfree.chart.ChartFactory;
@@ -42,16 +42,16 @@ public class DashboardView extends BaseView {
     private final DashboardViewModel dashboardViewModel;
     private final DashboardController dashboardController;
     @SuppressWarnings("unused")
-    private final interface_adapter.navigation.NavigationController navigationController;
+    private final interfaceadapter.navigation.NavigationController navigationController;
     private final CompanyDetailsController companyDetailsController;
     private ChartPanel chartPanel;
     private JPanel searchResultsPanel;
 
     public DashboardView(MainViewModel mainViewModel, SearchController searchController,
-            SearchViewModel searchViewModel, DashboardViewModel dashboardViewModel,
-            DashboardController dashboardController,
-            interface_adapter.navigation.NavigationController navigationController,
-            CompanyDetailsController companyDetailsController) {
+                         SearchViewModel searchViewModel, DashboardViewModel dashboardViewModel,
+                         DashboardController dashboardController,
+                         interfaceadapter.navigation.NavigationController navigationController,
+                         CompanyDetailsController companyDetailsController) {
         super("dashboard");
         this.mainViewModel = mainViewModel;
         this.searchController = searchController;

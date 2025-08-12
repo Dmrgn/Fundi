@@ -1,15 +1,15 @@
 package app;
 
-import data_access.FinnhubCompanyDetailsDataAccessObject;
-import interface_adapter.ViewManagerModel;
-import interface_adapter.company_details.CompanyDetailsController;
-import interface_adapter.company_details.CompanyDetailsPresenter;
-import interface_adapter.company_details.CompanyDetailsViewModel;
-import interface_adapter.navigation.NavigationController;
-import use_case.company_details.CompanyDetailsDataAccessInterface;
-import use_case.company_details.CompanyDetailsInputBoundary;
-import use_case.company_details.CompanyDetailsInteractor;
-import use_case.company_details.CompanyDetailsOutputBoundary;
+import dataaccess.FinnhubCompanyDetailsDataAccessObject;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.company_details.CompanyDetailsController;
+import interfaceadapter.company_details.CompanyDetailsPresenter;
+import interfaceadapter.company_details.CompanyDetailsViewModel;
+import interfaceadapter.navigation.NavigationController;
+import usecase.company_details.CompanyDetailsDataAccessInterface;
+import usecase.company_details.CompanyDetailsInputBoundary;
+import usecase.company_details.CompanyDetailsInteractor;
+import usecase.company_details.CompanyDetailsOutputBoundary;
 
 import java.io.IOException;
 

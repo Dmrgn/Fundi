@@ -1,8 +1,8 @@
 package view;
 
-import data_access.ExchangeAPIDataAccessObject;
-import interface_adapter.change_password.ChangePwdController;
-import interface_adapter.change_password.ChangePwdViewModel;
+import dataaccess.ExchangeAPIDataAccessObject;
+import interfaceadapter.change_password.ChangePwdController;
+import interfaceadapter.change_password.ChangePwdViewModel;
 import entity.CurrencyConverter;
 import entity.PreferredCurrencyManager;
 
@@ -11,8 +11,8 @@ import java.awt.*;
 import java.util.List;
 
 import view.ui.UiConstants;
-import interface_adapter.dashboard.DashboardController;
-import interface_adapter.main.MainViewModel;
+import interfaceadapter.dashboard.DashboardController;
+import interfaceadapter.main.MainViewModel;
 
 public class SettingsView extends BaseView {
     private final JComboBox<String> currencyDropdown;

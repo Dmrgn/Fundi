@@ -1,8 +1,14 @@
 package view.ui.icons;
 
-import javax.swing.Icon;
-import java.awt.*;
+import java.awt.BasicStroke;
+import java.awt.Color;
+import java.awt.Component;
+import java.awt.Graphics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
 import java.awt.geom.GeneralPath;
+
+import javax.swing.Icon;
 
 /**
  * Lightweight, LAF-agnostic bell icon drawn with Java2D so it renders on all
@@ -59,7 +65,8 @@ public class BellIcon implements Icon {
             int r = Math.max(2, Math.round(size * 0.12f));
             int cy = bottomY + Math.round(size * 0.10f);
             g2.fillOval(cx - r, cy - r, r * 2, r * 2);
-        } finally {
+        }
+        finally {
             g2.dispose();
         }
     }

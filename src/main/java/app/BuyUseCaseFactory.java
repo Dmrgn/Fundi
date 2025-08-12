@@ -1,15 +1,15 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.buy.BuyController;
-import interface_adapter.buy.BuyPresenter;
-import interface_adapter.buy.BuyViewModel;
-import interface_adapter.portfolio.PortfolioViewModel;
-import use_case.buy.BuyInputBoundary;
-import use_case.buy.BuyInteractor;
-import use_case.buy.BuyOutputBoundary;
-import use_case.buy.BuyStockDataAccessInterface;
-import use_case.buy.BuyTransactionDataAccessInterface;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.buy.BuyController;
+import interfaceadapter.buy.BuyPresenter;
+import interfaceadapter.buy.BuyViewModel;
+import interfaceadapter.portfolio.PortfolioViewModel;
+import usecase.buy.BuyInputBoundary;
+import usecase.buy.BuyInteractor;
+import usecase.buy.BuyOutputBoundary;
+import usecase.buy.BuyStockDataAccessInterface;
+import usecase.buy.BuyTransactionDataAccessInterface;
 
 /**
  * Factory for the Buy Use Case.

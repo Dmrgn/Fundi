@@ -1,17 +1,17 @@
 package app;
 
-import interface_adapter.ViewManagerModel;
-import interface_adapter.buy.BuyViewModel;
-import interface_adapter.navigation.NavigationController;
-import interface_adapter.portfolio.PortfolioController;
-import interface_adapter.portfolio.PortfolioPresenter;
-import interface_adapter.portfolio.PortfolioViewModel;
-import interface_adapter.sell.SellViewModel;
-import use_case.portfolio.PortfolioInputBoundary;
-import use_case.portfolio.PortfolioInteractor;
-import use_case.portfolio.PortfolioOutputBoundary;
-import use_case.portfolio.PortfolioStockDataAccessInterface;
-import use_case.portfolio.PortfolioTransactionDataAccessInterface;
+import interfaceadapter.ViewManagerModel;
+import interfaceadapter.buy.BuyViewModel;
+import interfaceadapter.navigation.NavigationController;
+import interfaceadapter.portfolio.PortfolioController;
+import interfaceadapter.portfolio.PortfolioPresenter;
+import interfaceadapter.portfolio.PortfolioViewModel;
+import interfaceadapter.sell.SellViewModel;
+import usecase.portfolio.PortfolioInputBoundary;
+import usecase.portfolio.PortfolioInteractor;
+import usecase.portfolio.PortfolioOutputBoundary;
+import usecase.portfolio.PortfolioStockDataAccessInterface;
+import usecase.portfolio.PortfolioTransactionDataAccessInterface;
 
 /**
  * Factory for the Portfolio Use Case.

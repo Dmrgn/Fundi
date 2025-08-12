@@ -1,9 +1,9 @@
 package view;
 
 import entity.LeaderboardEntry;
-import interface_adapter.leaderboard.LeaderboardController;
-import interface_adapter.leaderboard.LeaderboardState;
-import interface_adapter.leaderboard.LeaderboardViewModel;
+import interfaceadapter.leaderboard.LeaderboardController;
+import interfaceadapter.leaderboard.LeaderboardState;
+import interfaceadapter.leaderboard.LeaderboardViewModel;
 
 import entity.CurrencyConverter;
 import javax.swing.*;

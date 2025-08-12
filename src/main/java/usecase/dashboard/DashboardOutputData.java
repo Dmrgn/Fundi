@@ -1,7 +1,8 @@
 package usecase.dashboard;
 
-import entity.PortfolioValuePoint;
 import java.util.List;
+
+import entity.PortfolioValuePoint;
 
 /**
  * Output data for the Dashboard use case.

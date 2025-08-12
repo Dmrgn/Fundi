@@ -1,8 +1,9 @@
 package usecase.dashboard;
 
-import entity.Transaction;
 import java.util.List;
 import java.util.Map;
+
+import entity.Transaction;
 
 /**
  * Data access interface for the Dashboard use case.

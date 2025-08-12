@@ -1,5 +1,7 @@
 package app;
 
+import java.io.IOException;
+
 import dataaccess.FinnhubCompanyDetailsDataAccessObject;
 import interfaceadapter.ViewManagerModel;
 import interfaceadapter.company_details.CompanyDetailsController;
@@ -10,8 +12,6 @@ import usecase.company_details.CompanyDetailsDataAccessInterface;
 import usecase.company_details.CompanyDetailsInputBoundary;
 import usecase.company_details.CompanyDetailsInteractor;
 import usecase.company_details.CompanyDetailsOutputBoundary;
-
-import java.io.IOException;
 
 /**
  * Factory for the Company Details Use Case.

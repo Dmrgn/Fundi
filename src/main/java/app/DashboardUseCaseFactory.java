@@ -1,5 +1,7 @@
 package app;
 
+import java.sql.SQLException;
+
 import dataaccess.DBDashboardDataAccessObject;
 import interfaceadapter.dashboard.DashboardController;
 import interfaceadapter.dashboard.DashboardPresenter;
@@ -7,8 +9,6 @@ import interfaceadapter.dashboard.DashboardViewModel;
 import usecase.dashboard.DashboardInputBoundary;
 import usecase.dashboard.DashboardInteractor;
 import usecase.dashboard.DashboardOutputBoundary;
-
-import java.sql.SQLException;
 
 /**
  * Factory for creating Dashboard use case components.
@@ -35,8 +35,9 @@ public class DashboardUseCaseFactory {
                     dashboardDataAccessObject, dashboardOutputBoundary);
 
             return new DashboardController(dashboardInteractor);
-        } catch (SQLException e) {
-            throw new RuntimeException("Failed to create dashboard controller: " + e.getMessage(), e);
+        }
+        catch (SQLException ex) {
+            throw new RuntimeException("Failed to create dashboard controller: " + ex.getMessage(), ex);
         }
     }
 }

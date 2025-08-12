@@ -12,10 +12,20 @@ public class CurrencyConverter {
         this.baseCurrency = baseCurrency;
     }
 
-    public double convert(double amount, String fromCurrency, String toCurrency) {
-        if (fromCurrency.equals(toCurrency))
-            return amount;
+    /**
+     * Convert an amount from one currency to another using rates relative to the base currency.
+     *
+     * @param amount        amount expressed in {@code fromCurrency}
+     * @param fromCurrency  source currency (e.g., "USD")
+     * @param toCurrency    target currency (e.g., "EUR")
+     * @return the amount expressed in toCurrency
+     * @throws IllegalArgumentException if either currency is unsupported
+     */
 
+    public double convert(double amount, String fromCurrency, String toCurrency) {
+        if (fromCurrency.equals(toCurrency)) {
+            return amount;
+        }
         double baseAmount = amount;
         if (!fromCurrency.equals(baseCurrency)) {
             Double fromRate = rates.get(fromCurrency);

@@ -1,8 +1,9 @@
 package interfaceadapter.dashboard;
 
-import entity.PortfolioValuePoint;
 import java.util.ArrayList;
 import java.util.List;
+
+import entity.PortfolioValuePoint;
 
 /**
  * The state for the Dashboard View Model.

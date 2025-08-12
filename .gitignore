@@ -33,7 +33,7 @@ com/fundi/news_key.txt
 .db
 notes.txt
 data/fundi.sqlite
-*cache*
+*cache.txt
 mystyle.xml
 .idea/*
 

@@ -237,7 +237,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
         }
 
         String query = """
-                    DELETE FROM watchlist WHERE user_id = ? AND stock_name = ?;
+                    DELETE FROM watchlist WHERE user_id = ? AND ticker = ?;
                 """;
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
             stmt.setString(1, userId);

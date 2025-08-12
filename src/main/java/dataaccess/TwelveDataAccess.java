@@ -20,25 +20,28 @@ public class TwelveDataAccess implements TimeSeriesDataAccess {
         int outputsize;
         switch (range) {
             case "1W":
-                interval = "1h"; // 1 week hourly
-                outputsize = 168; // 24*7
+                interval = "5min";
+                outputsize = 500; // ~1 week at 5-min granularity
+                break;
+            case "1M":
+                interval = "1h";
+                outputsize = 720; // 24*30
                 break;
             case "3M":
-                interval = "1day";
-                outputsize = 70; // ~ 3 months trading days
+                interval = "4h";
+                outputsize = 540; // 24*90/4
                 break;
             case "6M":
-                interval = "1day";
-                outputsize = 130; // ~ 6 months trading days
+                interval = "8h";
+                outputsize = 540; // 24*180/8
                 break;
             case "1Y":
                 interval = "1day";
-                outputsize = 260; // ~ 1 year trading days
+                outputsize = 365;
                 break;
-            case "1M":
             default:
                 interval = "1day";
-                outputsize = 25; // ~ 1 month trading days
+                outputsize = 60;
                 break;
         }
 

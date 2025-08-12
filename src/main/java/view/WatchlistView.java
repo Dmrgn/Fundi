@@ -24,7 +24,6 @@ import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import java.awt.BasicStroke;
 
-// New imports for TwelveData clean architecture
 import interfaceadapter.watchlist.TimeSeriesController;
 import interfaceadapter.watchlist.TimeSeriesPresenter;
 import interfaceadapter.watchlist.TimeSeriesViewModel;

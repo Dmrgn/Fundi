@@ -10,6 +10,7 @@ public class PortfolioState {
     private String[] stockNames = new String[0];
     private int[] stockAmounts = new int[0];
     private double[] stockPrices = new double[0];
+    private double balance;
 
     /**
      * Getter.
@@ -122,5 +123,21 @@ public class PortfolioState {
      */
     public void setUsername(String username) {
         this.username = username;
+    }
+
+    /**
+     * Getter.
+     * @return Balance
+     */
+    public double getBalance() {
+        return balance;
+    }
+
+    /**
+     * Setter.
+     * @param balance Value
+     */
+    public void setBalance(double balance) {
+        this.balance = balance;
     }
 }

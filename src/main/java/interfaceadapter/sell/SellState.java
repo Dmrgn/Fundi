@@ -6,10 +6,12 @@ package interfaceadapter.sell;
 public class SellState {
     private String portfolioId = "";
     private String sellError;
+    private double balance;
 
     public SellState(SellState copy) {
         this.portfolioId = copy.getPortfolioId();
         this.sellError = copy.getSellError();
+        this.balance = copy.getBalance();
     }
 
     public SellState() {
@@ -48,4 +50,19 @@ public class SellState {
         this.sellError = sellError;
     }
 
+    /**
+     * Getter.
+     * @return Balance
+     */
+    public double getBalance() {
+        return balance;
+    }
+
+    /**
+     * Setter.
+     * @param balance Value
+     */
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
 }

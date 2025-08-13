@@ -34,6 +34,7 @@ public class PortfolioView extends BaseView {
     private final BackNavigationHelper backNavigationHelper;
     private final JLabel titleLabel = LabelFactory.createTitleLabel("");
     private final JLabel usernameLabel = LabelFactory.createLabel("");
+    private final JLabel balanceLabel = LabelFactory.createLabel("");
     private final JButton[] useCaseButtons = new JButton[USE_CASES.length];
     private final DefaultTableModel tableModel = new DefaultTableModel(COLUMN_NAMES, 0) {
         @Override
@@ -65,6 +66,8 @@ public class PortfolioView extends BaseView {
         headerTop.add(titleLabel);
         headerTop.add(UiConstants.mediumVerticalGap());
         headerTop.add(usernameLabel);
+        headerTop.add(UiConstants.mediumVerticalGap());
+        headerTop.add(balanceLabel);
         header.add(headerTop, BorderLayout.CENTER);
 
         // Content: table + actions
@@ -106,6 +109,7 @@ public class PortfolioView extends BaseView {
             PortfolioState state = this.portfolioViewModel.getState();
             this.usernameLabel.setText("Logged in as: " + state.getUsername());
             this.titleLabel.setText("Portfolio: " + state.getPortfolioName());
+            this.balanceLabel.setText(String.format("Balance: $%.2f", state.getBalance()));
 
             String[] names = state.getStockNames();
             int[] amounts = state.getStockAmounts();

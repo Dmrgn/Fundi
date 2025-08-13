@@ -32,6 +32,15 @@ public class BuyPresenter implements BuyOutputBoundary {
         final PortfolioCommand cmd = new PortfolioUpdateCommand(outputData.getTicker(), outputData.getPrice(),
                 outputData.getQuantity());
         cmd.execute(portfolioViewModel);
+        // Also reflect balance in the buy view
+        BuyState buyState = buyViewModel.getState();
+        buyState.setBuyError(null);
+        buyState.setBalance(outputData.getBalance());
+        buyViewModel.setState(buyState);
+        
+        // Update portfolio state balance for real-time refresh
+        portfolioViewModel.getState().setBalance(outputData.getBalance());
+        
         portfolioViewModel.firePropertyChanged();
         viewManagerModel.setState(portfolioViewModel.getViewName());
         viewManagerModel.firePropertyChanged();

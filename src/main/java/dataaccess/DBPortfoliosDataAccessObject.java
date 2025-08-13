@@ -72,8 +72,8 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface, 
         }
 
         query = """
-                INSERT INTO portfolios(name, user_id)
-                VALUES (?, ?)
+                INSERT INTO portfolios(name, user_id, balance)
+                VALUES (?, ?, 10000)
                 RETURNING id
                 """;
         String portfolioId = "";
@@ -168,6 +168,33 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface, 
             pstmt.executeUpdate();
         } catch (SQLException e) {
             System.out.println(e.getMessage());
+        }
+    }
+
+    // --- Balance helpers for reuse across use cases ---
+    public static double fetchBalance(String portfolioId) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
+             PreparedStatement ps = conn.prepareStatement("SELECT balance FROM portfolios WHERE id = ?")) {
+            ps.setString(1, portfolioId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("balance");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching portfolio balance: " + e.getMessage());
+        }
+        return 0.0;
+    }
+
+    public static void updateBalance(String portfolioId, double newBalance) {
+        try (Connection conn = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
+             PreparedStatement ps = conn.prepareStatement("UPDATE portfolios SET balance = ? WHERE id = ?")) {
+            ps.setDouble(1, newBalance);
+            ps.setString(2, portfolioId);
+            int rowsUpdated = ps.executeUpdate();
+            System.out.println("Updated balance for portfolio " + portfolioId + " to " + newBalance + " (rows affected: " + rowsUpdated + ")");
+        } catch (SQLException e) {
+            System.out.println("Error updating portfolio balance: " + e.getMessage());
         }
     }
 }

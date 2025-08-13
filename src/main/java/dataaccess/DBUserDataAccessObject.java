@@ -42,7 +42,8 @@ public class DBUserDataAccessObject
                 CREATE TABLE IF NOT EXISTS portfolios (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT,
-                    user_id INTEGER REFERENCES users
+                    user_id INTEGER REFERENCES users,
+                    balance REAL NOT NULL DEFAULT 10000
                 );
 
                 CREATE TABLE IF NOT EXISTS stocks (
@@ -125,7 +126,7 @@ public class DBUserDataAccessObject
         String id = "";
         try (PreparedStatement statement = connection.prepareStatement(query)) {
             statement.setString(1, username);
-            statement.setString(2, password);
+            statement.setString(2, entity.PasswordHasher.hash(password));
             ResultSet rs = statement.executeQuery();
             while (rs.next()) {
                 id = rs.getString("id");
@@ -144,7 +145,8 @@ public class DBUserDataAccessObject
     @Override
     public void save(User user) {
         String id = this.save(user.getName(), user.getPassword());
-        accounts.put(id, user);
+        // cache with hashed password
+        accounts.put(id, new User(user.getName(), entity.PasswordHasher.hash(user.getPassword())));
         nameToId.put(user.getName(), id);
     }
 
@@ -166,13 +168,14 @@ public class DBUserDataAccessObject
     public void saveNewPassword(String username, String newPassword) {
         String query = "UPDATE users SET password = ? WHERE username = ?;";
         try (PreparedStatement stmt = connection.prepareStatement(query)) {
-            stmt.setString(1, newPassword);
+            // store hashed password
+            stmt.setString(1, entity.PasswordHasher.hash(newPassword));
             stmt.setString(2, username);
             stmt.executeUpdate();
 
             if (nameToId.containsKey(username)) {
                 String id = nameToId.get(username);
-                User updatedUser = new User(username, newPassword);
+                User updatedUser = new User(username, entity.PasswordHasher.hash(newPassword));
                 accounts.put(id, updatedUser);
             }
 
@@ -305,7 +308,16 @@ public class DBUserDataAccessObject
         } catch (SQLException e) {
             System.out.println("Error retrieving user setting: " + e.getMessage());
         }
-        return null; // Default to null if no setting is found
+        return null;
+    }
+
+    @Override
+    public boolean authenticateWithHash(String username, String hashedPassword) {
+        if (!existsByName(username)) {
+            return false;
+        }
+        User user = get(username);
+        return user != null && hashedPassword.equals(user.getPassword());
     }
 
     @Override

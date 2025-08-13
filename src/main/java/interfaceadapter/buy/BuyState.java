@@ -6,10 +6,12 @@ package interfaceadapter.buy;
 public class BuyState {
     private String portfolioId = "";
     private String buyError;
+    private double balance;
 
     public BuyState(BuyState copy) {
         this.portfolioId = copy.getPortfolioId();
         this.buyError = copy.getBuyError();
+        this.balance = copy.getBalance();
     }
 
     public BuyState() {
@@ -48,4 +50,19 @@ public class BuyState {
         this.buyError = buyError;
     }
 
+    /**
+     * Getter.
+     * @return Balance
+     */
+    public double getBalance() {
+        return balance;
+    }
+
+    /**
+     * Setter.
+     * @param balance Value
+     */
+    public void setBalance(double balance) {
+        this.balance = balance;
+    }
 }

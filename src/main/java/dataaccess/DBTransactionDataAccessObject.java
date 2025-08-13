@@ -305,4 +305,14 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
             ps.executeUpdate();
         }
     }
+
+    @Override
+    public double getPortfolioBalance(String portfolioId) {
+        return DBPortfoliosDataAccessObject.fetchBalance(portfolioId);
+    }
+
+    @Override
+    public void updatePortfolioBalance(String portfolioId, double newBalance) {
+        DBPortfoliosDataAccessObject.updateBalance(portfolioId, newBalance);
+    }
 }

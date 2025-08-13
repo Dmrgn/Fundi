@@ -48,7 +48,10 @@ public class SellInteractor implements SellInputBoundary {
             return;
         }
 
-        // New convention: amount > 0, price < 0 for sells
+        // Compute proceeds
+        final double proceeds = price * amount;
+
+        // Create sell transaction (negative price)
         Transaction tx = new Transaction(
                 portfolioId,
                 ticker,
@@ -56,6 +59,12 @@ public class SellInteractor implements SellInputBoundary {
                 LocalDate.now(),
                 -price);
         transactionDataAccessInterface.save(tx);
-        sellOutputBoundary.prepareSuccessView(new SellOutputData(ticker, price, amount));
+
+        // Update balance (add proceeds)
+        final double currentBalance = transactionDataAccessInterface.getPortfolioBalance(portfolioId);
+        final double newBalance = currentBalance + proceeds;
+        transactionDataAccessInterface.updatePortfolioBalance(portfolioId, newBalance);
+
+        sellOutputBoundary.prepareSuccessView(new SellOutputData(ticker, price, amount, newBalance));
     }
 }

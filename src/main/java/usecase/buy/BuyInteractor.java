@@ -33,34 +33,48 @@ public class BuyInteractor implements BuyInputBoundary {
         final String ticker = buyInputData.getTicker();
         final int amount = buyInputData.getAmount();
 
+        // Validate inputs
         if (!stockDataAccessObject.hasTicker(ticker)) {
             buyPresenter.prepareFailView("Ticker is not available");
+            return;
         }
-        else if (amount <= 0) {
+        if (amount <= 0) {
             buyPresenter.prepareFailView("Amount must be greater than 0");
+            return;
         }
-        else {
-            final double price = stockDataAccessObject.getPrice(ticker);
-            final LocalDate date = LocalDate.now();
 
-            final Transaction transaction = new Transaction(
-                    portfolioId,
-                    ticker,
-                    amount,
-                    date,
-                    price);
+        // Get current stock price
+        final double currentPrice = stockDataAccessObject.getPrice(ticker);
+        final double totalCost = currentPrice * amount;
 
-            transactionDataAccessObject.save(transaction);
+        // Check current balance
+        final double currentBalance = transactionDataAccessObject.getPortfolioBalance(portfolioId);
+        System.out.println("Current balance for portfolio " + portfolioId + ": " + currentBalance);
 
-            final BuyOutputData buyOutputData = new BuyOutputData(ticker, price, amount);
-            buyPresenter.prepareSuccessView(buyOutputData);
+        // Check if user has enough funds
+        if (currentBalance < totalCost) {
+            buyPresenter.prepareFailView("Not enough funds");
+            return;
+        }
 
-            try {
-                NotificationManager.getInstance().checkNewsAfterPurchase(ticker, amount);
-            }
-            catch (Exception ex) {
-                System.err.println("Failed to check news notifications: " + ex.getMessage());
-            }
+        // Proceed with purchase
+        final LocalDate date = LocalDate.now();
+        final Transaction transaction = new Transaction(portfolioId, ticker, amount, date, currentPrice);
+        transactionDataAccessObject.save(transaction);
+
+        // Update balance (deduct cost)
+        final double newBalance = currentBalance - totalCost;
+        System.out.println("Updating balance from " + currentBalance + " to " + newBalance + " (cost: " + totalCost + ")");
+        transactionDataAccessObject.updatePortfolioBalance(portfolioId, newBalance);
+
+        final BuyOutputData buyOutputData = new BuyOutputData(
+                ticker, currentPrice, amount, newBalance, true, "Purchase successful");
+        buyPresenter.prepareSuccessView(buyOutputData);
+
+        try {
+            NotificationManager.getInstance().checkNewsAfterPurchase(ticker, amount);
+        } catch (Exception ex) {
+            System.err.println("Failed to check news notifications: " + ex.getMessage());
         }
     }
 }

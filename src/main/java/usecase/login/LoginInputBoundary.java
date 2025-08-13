@@ -15,4 +15,12 @@ public interface LoginInputBoundary {
      * Switch to the Signup View.
      */
     void switchToSignupView();
+
+    /**
+     * Execute login with an already-hashed password (for remember me).
+     * 
+     * @param username       the username
+     * @param hashedPassword the already-hashed password
+     */
+    void executeWithHashedPassword(String username, String hashedPassword);
 }

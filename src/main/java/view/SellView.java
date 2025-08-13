@@ -53,6 +53,13 @@ public class SellView extends BaseView implements PropertyChangeListener {
         formPanel.add(UiConstants.smallVerticalGap());
         formPanel.add(amountPanel);
 
+        JLabel balanceLabel = new JLabel("Balance: $0.00");
+        balanceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        balanceLabel.setFont(new Font("Arial", Font.BOLD, 18));
+        balanceLabel.setForeground(new Color(230, 230, 255)); // Light color for contrast
+        formPanel.add(UiConstants.smallVerticalGap());
+        formPanel.add(balanceLabel);
+
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         mainPanel.setOpaque(false);
@@ -71,6 +78,11 @@ public class SellView extends BaseView implements PropertyChangeListener {
                 });
         mainPanel.add(ButtonFactory.createButtonPanel(sell), BorderLayout.SOUTH);
         content.add(mainPanel, BorderLayout.CENTER);
+
+        this.sellViewModel.addPropertyChangeListener(evt -> {
+            SellState s = this.sellViewModel.getState();
+            balanceLabel.setText(String.format("Balance: $%.2f", s.getBalance()));
+        });
     }
 
     @Override

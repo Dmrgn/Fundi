@@ -42,6 +42,8 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
         portfolioState.setStockNames(portfolioOutputData.getStockNames());
         portfolioState.setStockAmounts(portfolioOutputData.getStockAmounts());
         portfolioState.setStockPrices(portfolioOutputData.getStockPrices());
+        // Set balance for UI display
+        portfolioState.setBalance(portfolioOutputData.getBalance());
 
         this.portfolioViewModel.setState(portfolioState);
         this.portfolioViewModel.firePropertyChanged();
@@ -60,6 +62,8 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
     public void routeToBuy(String portfolioId) {
         BuyState state = buyViewModel.getState();
         state.setPortfolioId(portfolioId);
+        // Initialize balance when switching to buy view
+        state.setBalance(dataaccess.DBPortfoliosDataAccessObject.fetchBalance(portfolioId));
         buyViewModel.setState(state);
         buyViewModel.firePropertyChanged();
         // Push to navigation stack so can navigate back to Portfolio page
@@ -76,6 +80,8 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
     public void routeToSell(String portfolioId) {
         SellState state = sellViewModel.getState();
         state.setPortfolioId(portfolioId);
+        // Initialize balance when switching to sell view
+        state.setBalance(dataaccess.DBPortfoliosDataAccessObject.fetchBalance(portfolioId));
         sellViewModel.setState(state);
         sellViewModel.firePropertyChanged();
         navigationController.navigateTo(viewManagerModel.getState(), "sell");

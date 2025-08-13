@@ -55,13 +55,16 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
             System.out.println("Error fetching holdings: " + e.getMessage());
         }
 
+        double balance = dataaccess.DBPortfoliosDataAccessObject.fetchBalance(portfolioId);
+
         PortfolioOutputData outputData = new PortfolioOutputData(
                 portfolioInputData.getUsername(),
                 portfolioId,
                 portfolioName,
                 tickers.toArray(new String[0]),
                 amounts.values().stream().mapToInt(Integer::intValue).toArray(),
-                values.values().stream().mapToDouble(Double::doubleValue).toArray());
+                values.values().stream().mapToDouble(Double::doubleValue).toArray(),
+                balance);
         portfolioPresenter.prepareView(outputData);
     }
 

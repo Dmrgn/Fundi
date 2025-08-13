@@ -2,7 +2,6 @@ package usecase.remember_me;
 
 import entity.User;
 import usecase.login.LoginInputBoundary;
-import usecase.login.LoginInputData;
 
 public class RememberMeInteractor {
     private final RememberMeUserDataAccessInterface rememberDao;
@@ -16,7 +15,8 @@ public class RememberMeInteractor {
     public void checkRememberMe() {
         User remembered = rememberDao.getRememberedUser();
         if (remembered != null) {
-            loginInteractor.execute(new LoginInputData(remembered.getName(), remembered.getPassword()));
+            // Create a special login flow that bypasses password hashing
+            loginInteractor.executeWithHashedPassword(remembered.getName(), remembered.getPassword());
         }
     }
 

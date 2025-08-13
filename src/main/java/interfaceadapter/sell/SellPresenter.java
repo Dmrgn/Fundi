@@ -34,6 +34,15 @@ public class SellPresenter implements SellOutputBoundary {
                 -outputData.getPrice(), // negative => sell
                 outputData.getQuantity());
         cmd.execute(portfolioViewModel);
+        // Reflect new balance in the sell view
+        SellState state = sellViewModel.getState();
+        state.setSellError(null);
+        state.setBalance(outputData.getBalance());
+        sellViewModel.setState(state);
+        
+        // Update portfolio state balance for real-time refresh
+        portfolioViewModel.getState().setBalance(outputData.getBalance());
+        
         portfolioViewModel.firePropertyChanged();
         viewManagerModel.setState(portfolioViewModel.getViewName());
         viewManagerModel.firePropertyChanged();

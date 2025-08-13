@@ -11,14 +11,16 @@ public class PortfolioOutputData {
     private final String[] stockNames;
     private final int[] stockAmounts;
     private final double[] stockPrices;
+    private final double balance;
 
-    public PortfolioOutputData(String username, String portfolioId, String portfolioName, String[] stockNames, int[] stockAmounts, double[] stockPrices) {
+    public PortfolioOutputData(String username, String portfolioId, String portfolioName, String[] stockNames, int[] stockAmounts, double[] stockPrices, double balance) {
         this.username = username;
         this.portfolioId = portfolioId;
         this.portfolioName = portfolioName;
         this.stockNames = stockNames;
         this.stockAmounts = stockAmounts;
         this.stockPrices = stockPrices;
+        this.balance = balance;
     }
 
     /**
@@ -67,5 +69,13 @@ public class PortfolioOutputData {
      */
     public String getUsername() {
         return username;
+    }
+
+    /**
+     * Getter.
+     * @return Balance
+     */
+    public double getBalance() {
+        return balance;
     }
 }

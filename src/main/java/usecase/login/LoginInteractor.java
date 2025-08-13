@@ -18,6 +18,7 @@ public class LoginInteractor implements LoginInputBoundary {
 
     /**
      * Execute the Login Use Case.
+     * 
      * @param loginInputData the input data.
      */
     @Override
@@ -27,8 +28,8 @@ public class LoginInteractor implements LoginInputBoundary {
         if (!userDataAccessObject.existsByName(username)) {
             loginPresenter.prepareFailView(username + ": Account does not exist.");
         } else {
-            String pwd = userDataAccessObject.get(username).getPassword();
-            if (!password.equals(pwd)) {
+            String storedHash = userDataAccessObject.get(username).getPassword();
+            if (!entity.PasswordHasher.matches(password, storedHash)) {
                 loginPresenter.prepareFailView("Incorrect password for " + username + ".");
             } else {
                 final User user = userDataAccessObject.get(loginInputData.getUsername());
@@ -43,5 +44,21 @@ public class LoginInteractor implements LoginInputBoundary {
      */
     public void switchToSignupView() {
         loginPresenter.switchToSignupView();
+    }
+
+    /**
+     * Execute login with an already-hashed password (for remember me).
+     */
+    @Override
+    public void executeWithHashedPassword(String username, String hashedPassword) {
+        if (!userDataAccessObject.existsByName(username)) {
+            loginPresenter.prepareFailView(username + ": Account does not exist.");
+        } else if (!userDataAccessObject.authenticateWithHash(username, hashedPassword)) {
+            loginPresenter.prepareFailView("Authentication failed for " + username + ".");
+        } else {
+            final User user = userDataAccessObject.get(username);
+            final LoginOutputData loginOutputData = new LoginOutputData(user.getName(), false);
+            loginPresenter.prepareSuccessView(loginOutputData);
+        }
     }
 }

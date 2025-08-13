@@ -97,6 +97,12 @@ class ChangePwdInteractorTest {
             // Simulate saving a user setting for testing purposes
             System.out.printf("Saved setting: userId=%d, key=%s, value=%s%n", userId, key, value);
         }
+
+        @Override
+        public boolean authenticateWithHash(String username, String hashedPassword) {
+            // Simulate authentication for testing purposes
+            return "test_user".equals(username) && "hashed_password".equals(hashedPassword);
+        }
     }
 
     // Fake Presenter

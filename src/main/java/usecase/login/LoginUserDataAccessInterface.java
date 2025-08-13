@@ -28,4 +28,13 @@ public interface LoginUserDataAccessInterface {
     String getUserSetting(int userId, String key);
 
     void saveUserSetting(int userId, String key, String value);
+
+    /**
+     * Authenticate user with already-hashed password (for remember me).
+     * 
+     * @param username       the username
+     * @param hashedPassword the already-hashed password
+     * @return true if authentication succeeds
+     */
+    boolean authenticateWithHash(String username, String hashedPassword);
 }

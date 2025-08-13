@@ -1,16 +1,6 @@
 package view;
 
-import javax.swing.*;
 import java.awt.*;
-import interfaceadapter.news.NewsViewModel;
-import interfaceadapter.news.NewsController;
-import interfaceadapter.news.NewsState;
-import interfaceadapter.navigation.NavigationController;
-import view.ui.ButtonFactory;
-import view.ui.LabelFactory;
-import view.ui.FieldFactory;
-import view.ui.UiConstants;
-
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.MouseAdapter;
@@ -18,6 +8,17 @@ import java.awt.event.MouseEvent;
 import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
+
+import javax.swing.*;
+
+import interfaceadapter.navigation.NavigationController;
+import interfaceadapter.news.NewsController;
+import interfaceadapter.news.NewsState;
+import interfaceadapter.news.NewsViewModel;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
+import view.ui.LabelFactory;
+import view.ui.UiConstants;
 
 public class NewsView extends AbstractBaseView {
     private static final String SEARCH_PLACEHOLDER = "Enter stock ticker (e.g., AAPL, GOOGL)";
@@ -166,7 +167,7 @@ public class NewsView extends AbstractBaseView {
             descArea.setFont(UiConstants.Fonts.BODY);
             descArea.setAlignmentX(Component.LEFT_ALIGNMENT);
 
-            itemPanel.add(titleLabel);
+            itemPanel.add(titleLabelTest);
             itemPanel.add(Box.createVerticalStrut(8));
             itemPanel.add(descArea);
 

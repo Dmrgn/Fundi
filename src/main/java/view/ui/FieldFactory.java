@@ -10,7 +10,7 @@ public class FieldFactory {
     /**
      * Base text field with centralized styles.
      * 
-     * @return test
+     * @return a styled JTextField with default configuration
      */
     public static JTextField createTextField() {
         JTextField textField = new JTextField("", NUM_COLUMNS);
@@ -26,8 +26,8 @@ public class FieldFactory {
     /**
      * Subtle, muted placeholder style for search bars.
      * 
-     * @param placeholder does stuff
-     * @return test
+     * @param placeholder the placeholder text to display when the field is empty
+     * @return a JTextField styled for search input with muted placeholder text
      */
     public static JTextField createSearchField(String placeholder) {
         JTextField field = createTextField();

@@ -1,12 +1,12 @@
 package view.watchlist;
 
+import java.awt.*;
+
+import javax.swing.*;
+
 import interfaceadapter.watchlist.WatchlistController;
 import interfaceadapter.watchlist.WatchlistState;
 import view.ui.UiConstants;
-
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
 
 public class WatchlistListPanel extends JPanel {
     private final WatchlistController controller;
@@ -42,9 +42,11 @@ public class WatchlistListPanel extends JPanel {
 
         if (state.getUsername() == null || state.getUsername().isEmpty()) {
             showMessage("Please log in to view your watchlist.", UiConstants.Colors.TEXT_MUTED);
-        } else if (state.getTickers().isEmpty()) {
+        }
+        else if (state.getTickers().isEmpty()) {
             showMessage("Your watchlist is empty. Add some tickers above!", UiConstants.Colors.TEXT_MUTED);
-        } else {
+        } 
+        else {
             for (String ticker : state.getTickers()) {
                 TickerPanel tickerPanel = new TickerPanel(ticker, controller, currentUsername);
                 tickersPanel.add(tickerPanel);

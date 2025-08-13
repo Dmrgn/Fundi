@@ -1,21 +1,36 @@
 package view;
 
-import interfaceadapter.signup.SignupViewModel;
-import interfaceadapter.signup.SignupState;
-import interfaceadapter.signup.SignupController;
-import view.ui.ButtonFactory;
-import view.ui.FieldFactory;
-import view.ui.UiConstants;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComponent;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+
+import interfaceadapter.signup.SignupController;
+import interfaceadapter.signup.SignupState;
+import interfaceadapter.signup.SignupViewModel;
+import view.ui.ButtonFactory;
+import view.ui.FieldFactory;
+import view.ui.UiConstants;
+
 /**
- * View for the Signup Use Case
+ * View for the Signup Use Case.
  */
 public class SignupView extends AbstractBaseView implements PropertyChangeListener {
     private final SignupViewModel signupViewModel;
@@ -136,10 +151,12 @@ public class SignupView extends AbstractBaseView implements PropertyChangeListen
         if (state.getUsernameError() != null) {
             errorLabel.setText(state.getUsernameError());
             errorLabel.setVisible(true);
-        } else if (state.getPasswordError() != null) {
+        }
+        else if (state.getPasswordError() != null) {
             errorLabel.setText(state.getPasswordError());
             errorLabel.setVisible(true);
-        } else {
+        }
+        else {
             errorLabel.setVisible(false);
         }
 

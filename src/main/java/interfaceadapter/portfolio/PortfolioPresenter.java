@@ -91,3 +91,4 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
         viewManagerModel.setState("sell");
         viewManagerModel.firePropertyChanged();
     }
+}

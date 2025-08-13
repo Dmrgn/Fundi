@@ -18,6 +18,11 @@ class BuyInteractorTest {
         DBTransactionDataAccessObject dbTransactionDataAccessObject = new DBTransactionDataAccessObject();
         dbTransactionDataAccessObject.save(new Transaction("51", "NVDA", 10,
                 LocalDate.now(), 10.0));
+
+        // Ensure portfolio "51" has sufficient balance for testing
+        // NVDA price might be around $400-500, so 10 shares = $4000-5000
+        // Set balance to $50,000 to ensure sufficient funds
+        dbTransactionDataAccessObject.updatePortfolioBalance("51", 50000.0);
     }
 
     @Test

@@ -155,7 +155,8 @@ public final class PanelFactory {
 
         if (detailPanels.length == 1) {
             panel.add(detailPanels[0]);
-        } else if (detailPanels.length == 2) {
+        } 
+        else if (detailPanels.length == 2) {
             panel.add(createSideBySide(detailPanels[0], detailPanels[1]));
         }
 

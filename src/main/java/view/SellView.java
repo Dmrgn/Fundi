@@ -18,7 +18,7 @@ import view.ui.UiConstants;
 /**
  * The View for the Sell Use Case.
  */
-public class SellView extends BaseView implements PropertyChangeListener {
+public class SellView extends AbstractBaseView implements PropertyChangeListener {
 
     private final SellViewModel sellViewModel;
     private final SellController sellController;
@@ -33,10 +33,10 @@ public class SellView extends BaseView implements PropertyChangeListener {
         this.sellViewModel.addPropertyChangeListener(this);
 
         // Header: back + title
-        header.add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.WEST);
+        getHeader().add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.WEST);
         JPanel titlePanel = PanelFactory.createTitlePanel("Sell Stock");
         titlePanel.setOpaque(false);
-        header.add(titlePanel, BorderLayout.CENTER);
+        getHeader().add(titlePanel, BorderLayout.CENTER);
 
         JTextField tickerField = FieldFactory.createTextField();
         JPanel tickerPanel = PanelFactory.createFormPanel("Ticker", tickerField);
@@ -77,7 +77,7 @@ public class SellView extends BaseView implements PropertyChangeListener {
                     }
                 });
         mainPanel.add(ButtonFactory.createButtonPanel(sell), BorderLayout.SOUTH);
-        content.add(mainPanel, BorderLayout.CENTER);
+        getContent().add(mainPanel, BorderLayout.CENTER);
 
         this.sellViewModel.addPropertyChangeListener(evt -> {
             SellState s = this.sellViewModel.getState();

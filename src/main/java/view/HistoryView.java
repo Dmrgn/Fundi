@@ -16,7 +16,7 @@ import view.ui.TableFactory;
 import static entity.PreferredCurrencyManager.getConverter;
 import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
-public class HistoryView extends BaseView {
+public class HistoryView extends AbstractBaseView {
     private static final String[] COLUMN_NAMES = { "Ticker", "Quantity", "Price", "Date" };
     private final HistoryViewModel historyViewModel;
     private final interfaceadapter.navigation.NavigationController navigationController;
@@ -33,7 +33,7 @@ public class HistoryView extends BaseView {
         this.historyViewModel = historyViewModel;
         this.navigationController = navigationController;
 
-        header.add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.WEST);
+        getHeader().add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
@@ -41,7 +41,7 @@ public class HistoryView extends BaseView {
         contentPanel.add(PanelFactory.createTitlePanel("Portfolio History"));
         contentPanel.add(createCenterPanel());
 
-        content.add(contentPanel, BorderLayout.CENTER);
+        getContent().add(contentPanel, BorderLayout.CENTER);
 
         wireListeners();
     }
@@ -79,7 +79,8 @@ public class HistoryView extends BaseView {
                     }
 
                 }
-                tableModel.addRow(new Object[] {names[i], amounts[i], String.format("%.2f %s", convertedPrice, preferredCurrency), dates[i]});
+                tableModel.addRow(new Object[] { names[i], amounts[i],
+                        String.format("%.2f %s", convertedPrice, preferredCurrency), dates[i] });
             }
         });
     }

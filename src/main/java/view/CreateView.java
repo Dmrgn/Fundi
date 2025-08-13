@@ -26,7 +26,7 @@ import view.ui.UiConstants;
 /**
  * The View For the Create Use Case.
  */
-public class CreateView extends BaseView implements PropertyChangeListener {
+public class CreateView extends AbstractBaseView implements PropertyChangeListener {
     private final CreateViewModel createViewModel;
     private final CreateController createController;
     private final BackNavigationHelper backNavigationHelper;
@@ -40,13 +40,13 @@ public class CreateView extends BaseView implements PropertyChangeListener {
         this.createViewModel.addPropertyChangeListener(this);
 
         // Header
-        header.add(createBackButtonPanel(evt -> backNavigationHelper.goBackToPortfolios()), BorderLayout.WEST);
+        getHeader().add(createBackButtonPanel(evt -> backNavigationHelper.goBackToPortfolios()), BorderLayout.WEST);
         JLabel title = LabelFactory.createTitleLabel("Create Portfolio");
         JPanel titleWrap = new JPanel();
         titleWrap.setOpaque(false);
         titleWrap.setLayout(new BoxLayout(titleWrap, BoxLayout.Y_AXIS));
         titleWrap.add(title);
-        header.add(titleWrap, BorderLayout.CENTER);
+        getHeader().add(titleWrap, BorderLayout.CENTER);
 
         // Content
         JPanel centerPanel = new JPanel();
@@ -69,7 +69,7 @@ public class CreateView extends BaseView implements PropertyChangeListener {
         centerPanel.add(Box.createVerticalStrut(UiConstants.Spacing.MD));
         centerPanel.add(create);
 
-        content.add(centerPanel, BorderLayout.NORTH);
+        getContent().add(centerPanel, BorderLayout.NORTH);
     }
 
     @Override

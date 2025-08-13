@@ -15,7 +15,7 @@ import view.ui.LabelFactory;
 import view.ui.PanelFactory;
 import view.ui.UiConstants;
 
-public class AnalysisView extends BaseView {
+public class AnalysisView extends AbstractBaseView {
     private static final double TOLERANCE = 0.01;
 
     private final AnalysisViewModel analysisViewModel;
@@ -71,7 +71,7 @@ public class AnalysisView extends BaseView {
         int i = 1;
         for (Map.Entry<String, Double> entry : data.entrySet()) {
             JLabel label = LabelFactory.createListItemLabel(i + ". " + entry.getKey() + ": "
-                                                            + format(entry.getValue()));
+                    + format(entry.getValue()));
             panel.add(label);
             i++;
         }
@@ -94,6 +94,7 @@ public class AnalysisView extends BaseView {
 
     /**
      * Format a number as a percent.
+     * 
      * @param value The number
      * @return The percent representation
      */

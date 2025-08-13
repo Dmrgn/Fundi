@@ -13,7 +13,7 @@ import java.awt.*;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-public class WatchlistView extends BaseView implements PropertyChangeListener {
+public class WatchlistView extends AbstractBaseView implements PropertyChangeListener {
     private final MainViewModel mainViewModel;
     private final WatchlistViewModel watchlistViewModel;
     private final WatchlistController watchlistController;
@@ -62,7 +62,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
         headerLeft.setOpaque(false);
         headerLeft.add(titleLabel);
-        header.add(headerLeft, BorderLayout.WEST);
+        getHeader().add(headerLeft, BorderLayout.WEST);
 
         // Main content panel
         JPanel mainPanel = new JPanel(new GridBagLayout());
@@ -114,7 +114,7 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        content.add(scrollPane, BorderLayout.CENTER);
+        getContent().add(scrollPane, BorderLayout.CENTER);
     }
 
     @Override
@@ -140,7 +140,8 @@ public class WatchlistView extends BaseView implements PropertyChangeListener {
             addTickerPanel.setCurrentUsername(username);
             if (username != null && !username.isEmpty()) {
                 watchlistController.refreshWatchlist(username);
-            } else {
+            } 
+            else {
                 // Clear list if logged out
                 WatchlistState empty = new WatchlistState();
                 empty.setUsername("");

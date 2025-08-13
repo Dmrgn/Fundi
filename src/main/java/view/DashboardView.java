@@ -7,6 +7,7 @@ import java.util.List;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
+import entity.SearchResult;
 import interfaceadapter.company_details.CompanyDetailsController;
 import interfaceadapter.dashboard.DashboardController;
 import interfaceadapter.dashboard.DashboardState;
@@ -16,7 +17,6 @@ import interfaceadapter.main.MainViewModel;
 import interfaceadapter.search.SearchController;
 import interfaceadapter.search.SearchState;
 import interfaceadapter.search.SearchViewModel;
-import entity.SearchResult;
 import view.dashboard.PortfolioChartPanel;
 import view.dashboard.SearchResultsPanel;
 import view.dashboard.SearchSectionPanel;
@@ -25,18 +25,17 @@ import view.dashboard.WelcomePanel;
 import view.ui.UiConstants;
 import view.util.PanelFactory;
 
-public class DashboardView extends BaseView {
+public class DashboardView extends AbstractBaseView {
     private final MainViewModel mainViewModel;
     private final SearchController searchController;
     private final SearchViewModel searchViewModel;
     private final DashboardViewModel dashboardViewModel;
     private final DashboardController dashboardController;
-    @SuppressWarnings("unused")
     private final interfaceadapter.navigation.NavigationController navigationController;
     private final CompanyDetailsController companyDetailsController;
     private final PortfolioChartPanel portfolioChartPanel;
     private final SearchResultsPanel searchResultsPanel;
-    private boolean hasSearched = false;
+    private boolean hasSearched;
 
     public DashboardView(MainViewModel mainViewModel, SearchController searchController,
             SearchViewModel searchViewModel, DashboardViewModel dashboardViewModel,
@@ -52,7 +51,7 @@ public class DashboardView extends BaseView {
         this.navigationController = navigationController;
         this.companyDetailsController = companyDetailsController;
 
-        header.add(PanelFactory.createHeader("Dashboard"), BorderLayout.WEST);
+        getHeader().add(PanelFactory.createHeader("Dashboard"), BorderLayout.WEST);
 
         JPanel mainPanel = PanelFactory.createCanvasPanelWithInsets();
         GridBagConstraints gbc = PanelFactory.defaultGbc();
@@ -99,7 +98,7 @@ public class DashboardView extends BaseView {
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        content.add(scrollPane, BorderLayout.CENTER);
+        getContent().add(scrollPane, BorderLayout.CENTER);
 
         setupListeners(resultsListener);
     }

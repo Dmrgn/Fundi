@@ -16,7 +16,7 @@ import java.beans.PropertyChangeListener;
 /**
  * The View for the Login Use Case.
  */
-public class LoginView extends BaseView implements PropertyChangeListener {
+public class LoginView extends AbstractBaseView implements PropertyChangeListener {
 
     private final LoginViewModel loginViewModel;
     private final LoginController loginController;
@@ -41,7 +41,7 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
         headerLeft.setOpaque(false);
         headerLeft.add(title);
-        header.add(headerLeft, BorderLayout.WEST);
+        getHeader().add(headerLeft, BorderLayout.WEST);
 
         // Main panel
         JPanel panel = new JPanel(new GridBagLayout());
@@ -97,7 +97,7 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         scroll.setBorder(null);
         scroll.setBackground(UiConstants.Colors.CANVAS_BG);
         scroll.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
-        content.add(scroll, BorderLayout.CENTER);
+        getContent().add(scroll, BorderLayout.CENTER);
 
         wireListeners();
     }

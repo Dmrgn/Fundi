@@ -27,7 +27,7 @@ import view.ui.UiConstants;
 /**
  * The View for Company Details.
  */
-public class CompanyDetailsView extends BaseView {
+public class CompanyDetailsView extends AbstractBaseView {
 
     private static final int BORDER_THICK = 3;
     private static final int TWENTY = 20;
@@ -62,7 +62,7 @@ public class CompanyDetailsView extends BaseView {
 
     private void initializeView() {
         // Header with back button only (title is dynamic inside content)
-        header.add(createBackButtonPanel(ex -> backNavigationHelper.goBackToPortfolios()), BorderLayout.WEST);
+        getHeader().add(createBackButtonPanel(ex -> backNavigationHelper.goBackToPortfolios()), BorderLayout.WEST);
 
         // Content container
         mainContainer = new JPanel(new BorderLayout());
@@ -78,7 +78,7 @@ public class CompanyDetailsView extends BaseView {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
 
         mainContainer.add(scrollPane, BorderLayout.CENTER);
-        content.add(mainContainer, BorderLayout.CENTER);
+        getContent().add(mainContainer, BorderLayout.CENTER);
     }
 
     private void updateView() {

@@ -19,7 +19,7 @@ import java.io.IOException;
 import java.net.URI;
 import java.net.URISyntaxException;
 
-public class NewsView extends BaseView {
+public class NewsView extends AbstractBaseView {
     private static final String SEARCH_PLACEHOLDER = "Enter stock ticker (e.g., AAPL, GOOGL)";
     private final NewsViewModel newsViewModel;
     private final JPanel newsPanel;
@@ -36,14 +36,14 @@ public class NewsView extends BaseView {
         this.navigationController = navigationController;
 
         // Header
-        header.add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.WEST);
+        getHeader().add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.WEST);
         JPanel titleWrap = new JPanel();
         titleWrap.setOpaque(false);
         titleWrap.setLayout(new BoxLayout(titleWrap, BoxLayout.Y_AXIS));
         titleWrap.add(titleLabel);
         titleWrap.add(Box.createVerticalStrut(UiConstants.Spacing.SM));
         titleWrap.add(usernameLabel);
-        header.add(titleWrap, BorderLayout.CENTER);
+        getHeader().add(titleWrap, BorderLayout.CENTER);
 
         // Create search field with placeholder (centralized)
         this.searchField = FieldFactory.createSearchField(SEARCH_PLACEHOLDER);
@@ -85,7 +85,7 @@ public class NewsView extends BaseView {
         contentPanel.setOpaque(false);
         contentPanel.add(searchPanel, BorderLayout.NORTH);
         contentPanel.add(scrollPane, BorderLayout.CENTER);
-        content.add(contentPanel, BorderLayout.CENTER);
+        getContent().add(contentPanel, BorderLayout.CENTER);
 
         setupSearchListeners();
 
@@ -107,7 +107,7 @@ public class NewsView extends BaseView {
             searchField.setText(""); // Clear field after search
             searchField.getTopLevelAncestor().requestFocus(); // Remove focus
         }
-}
+    }
 
     private void updateNewsPanel(NewsState state) {
         newsPanel.removeAll();
@@ -129,11 +129,13 @@ public class NewsView extends BaseView {
                     @Override
                     public void mouseClicked(MouseEvent e) {
                         try {
-                            if (Desktop.isDesktopSupported() && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
+                            if (Desktop.isDesktopSupported()
+                                    && Desktop.getDesktop().isSupported(Desktop.Action.BROWSE)) {
                                 Desktop.getDesktop().browse(new URI(url));
                             }
                         } catch (IOException | URISyntaxException ex) {
-                            JOptionPane.showMessageDialog(NewsView.this, "Could not open link: " + ex.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+                            JOptionPane.showMessageDialog(NewsView.this, "Could not open link: " + ex.getMessage(),
+                                    "Error", JOptionPane.ERROR_MESSAGE);
                         }
                     }
 
@@ -149,10 +151,10 @@ public class NewsView extends BaseView {
                 });
             }
 
-            JLabel titleLabel = new JLabel(newsItem[0]);
-            titleLabel.setForeground(UiConstants.Colors.TEXT_PRIMARY);
-            titleLabel.setFont(UiConstants.Fonts.HEADING);
-            titleLabel.setAlignmentX(Component.LEFT_ALIGNMENT);
+            JLabel titleLabelTest = new JLabel(newsItem[0]);
+            titleLabelTest.setForeground(UiConstants.Colors.TEXT_PRIMARY);
+            titleLabelTest.setFont(UiConstants.Fonts.HEADING);
+            titleLabelTest.setAlignmentX(Component.LEFT_ALIGNMENT);
 
             JTextArea descArea = new JTextArea(newsItem[1]);
             descArea.setWrapStyleWord(true);

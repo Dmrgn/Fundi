@@ -1,15 +1,20 @@
 package view.main;
 
-import interfaceadapter.main.MainViewModel;
-import interfaceadapter.navigation.NavigationController;
-import interfaceadapter.portfolio_hub.PortfolioHubController;
-import interfaceadapter.news.NewsController;
-import view.ui.UiConstants;
-import view.ui.ButtonFactory;
-import javax.swing.*;
 import java.awt.*;
 
+import javax.swing.*;
+
+import interfaceadapter.main.MainViewModel;
+import interfaceadapter.navigation.NavigationController;
+import interfaceadapter.news.NewsController;
+import interfaceadapter.portfolio_hub.PortfolioHubController;
+import view.ui.ButtonFactory;
+import view.ui.UiConstants;
+
 public class MainCenterPanel extends JPanel {
+    private static final int FIFTY = 50;
+    private static final int HUNDRED_FORTY = 140;
+
     public MainCenterPanel(MainViewModel mainViewModel, NavigationController navigationController,
             PortfolioHubController portfolioHubController, NewsController newsController) {
         super(new GridBagLayout());
@@ -29,15 +34,15 @@ public class MainCenterPanel extends JPanel {
         add(promptLabel, gbc);
         gbc.gridy++;
         add(Box.createVerticalStrut(UiConstants.Spacing.XL), gbc);
-        String[] useCases = { "Portfolios", "News", "Watchlist", "Leaderboard" };
         gbc.gridwidth = 1;
         gbc.fill = GridBagConstraints.NONE;
         gbc.anchor = GridBagConstraints.CENTER;
         int col = 0;
         int row = 2;
+        String[] useCases = {"Portfolios", "News", "Watchlist", "Leaderboard"};
         for (String useCase : useCases) {
             JButton useCaseButton = ButtonFactory.createPrimaryButton(useCase);
-            useCaseButton.setPreferredSize(new Dimension(140, 50));
+            useCaseButton.setPreferredSize(new Dimension(HUNDRED_FORTY, FIFTY));
             useCaseButton.addActionListener(evt -> {
                 var mainState = mainViewModel.getState();
                 mainState.setUseCase(useCase);
@@ -46,7 +51,8 @@ public class MainCenterPanel extends JPanel {
                 switch (useCase) {
                     case "Portfolios" -> portfolioHubController.execute(mainState.getUsername());
                     case "News" -> newsController.execute(mainState.getUsername());
-                    case "Watchlist" -> {
+                    default -> {
+                        // No action needed for other use cases
                     }
                 }
             });

@@ -1,13 +1,23 @@
 package view.tabbedmain;
 
-import usecase.notifications.NotificationManager;
-import view.ui.UiConstants;
-
-import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+import javax.swing.*;
+
+import usecase.notifications.NotificationManager;
+import view.ui.UiConstants;
+
 public class NotificationDialog {
+    private static final int TWO_FIFTY = 250;
+    private static final int HEADER_TOP_BOTTOM_PADDING = 15;
+    private static final int HEADER_LEFT_RIGHT_PADDING = 20;
+    private static final int TWO_HUNDRED = 200;
+    private static final String FONT_FAMILY = "Sans Serif";
+    private static final int TITLE_FONT_SIZE = 18;
+    private static final int COUNT_FONT_SIZE = 14;
+    private static final Color COUNT_LABEL_COLOR = new Color(TWO_HUNDRED, TWO_HUNDRED, TWO_HUNDRED);
+
     private final JFrame parent;
     private final List<String> notifications;
     private final Runnable onNewsTabSwitch;
@@ -19,9 +29,17 @@ public class NotificationDialog {
         this.onNewsTabSwitch = onNewsTabSwitch;
     }
 
+    /**
+     * This shows the dialog, it is useless to have this comment
+     * the code is obviously made for this purpose and needs no
+     * clarification, but Sun Microsystems decided it was important
+     * to label everything...
+     */
     public void showDialog() {
+        final int fiveHundred = 500;
+        final int threeHundred = 300;
         dialog = new JDialog(parent, "Notifications", true);
-        dialog.setSize(500, 300);
+        dialog.setSize(fiveHundred, threeHundred);
         dialog.setLocationRelativeTo(parent);
         dialog.setLayout(new BorderLayout());
 
@@ -35,15 +53,16 @@ public class NotificationDialog {
     private JPanel createHeaderPanel() {
         JPanel headerPanel = new JPanel(new BorderLayout());
         headerPanel.setBackground(UiConstants.Colors.PRIMARY);
-        headerPanel.setBorder(BorderFactory.createEmptyBorder(15, 20, 15, 20));
+        headerPanel.setBorder(BorderFactory.createEmptyBorder(HEADER_TOP_BOTTOM_PADDING,
+                HEADER_LEFT_RIGHT_PADDING, HEADER_TOP_BOTTOM_PADDING, HEADER_LEFT_RIGHT_PADDING));
 
         JLabel titleLabel = new JLabel("📢 Notifications");
-        titleLabel.setFont(new Font("Sans Serif", Font.BOLD, 18));
+        titleLabel.setFont(new Font("Sans Serif", Font.BOLD, TITLE_FONT_SIZE));
         titleLabel.setForeground(UiConstants.Colors.ON_PRIMARY);
 
         JLabel countLabel = new JLabel(notifications.size() + " notification(s)");
-        countLabel.setFont(new Font("Sans Serif", Font.PLAIN, 14));
-        countLabel.setForeground(new Color(200, 200, 200));
+        countLabel.setFont(new Font(FONT_FAMILY, Font.PLAIN, COUNT_FONT_SIZE));
+        countLabel.setForeground(new Color(TWO_HUNDRED, TWO_HUNDRED, TWO_HUNDRED));
 
         headerPanel.add(titleLabel, BorderLayout.WEST);
         headerPanel.add(countLabel, BorderLayout.EAST);
@@ -54,12 +73,13 @@ public class NotificationDialog {
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBackground(Color.WHITE);
-        contentPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+        contentPanel.setBorder(BorderFactory.createEmptyBorder(HEADER_TOP_BOTTOM_PADDING,
+            HEADER_TOP_BOTTOM_PADDING, HEADER_TOP_BOTTOM_PADDING, HEADER_TOP_BOTTOM_PADDING));
 
         for (String notification : notifications) {
             JPanel notifPanel = createNotificationItem(notification);
             contentPanel.add(notifPanel);
-            contentPanel.add(Box.createVerticalStrut(10));
+            contentPanel.add(Box.createVerticalStrut(HEADER_TOP_BOTTOM_PADDING));
         }
 
         JScrollPane scrollPane = new JScrollPane(contentPanel);
@@ -69,17 +89,18 @@ public class NotificationDialog {
 
     private JPanel createNotificationItem(String message) {
         JPanel panel = new JPanel(new BorderLayout());
-        panel.setBackground(new Color(248, 249, 250));
+        panel.setBackground(new Color(TWO_FIFTY, 250, 250));
         panel.setBorder(BorderFactory.createCompoundBorder(
                 BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1),
-                BorderFactory.createEmptyBorder(12, 15, 12, 15)));
+                BorderFactory.createEmptyBorder(HEADER_TOP_BOTTOM_PADDING,
+                    HEADER_TOP_BOTTOM_PADDING, HEADER_TOP_BOTTOM_PADDING, HEADER_TOP_BOTTOM_PADDING)));
 
         JLabel messageLabel = new JLabel("<html><div style='width:400px'>" + message + "</div></html>");
-        messageLabel.setFont(new Font("Sans Serif", Font.PLAIN, 13));
+        messageLabel.setFont(new Font(FONT_FAMILY, Font.PLAIN, 13));
         messageLabel.setForeground(new Color(60, 60, 60));
 
         JLabel timeLabel = new JLabel("Just now");
-        timeLabel.setFont(new Font("Sans Serif", Font.ITALIC, 11));
+        timeLabel.setFont(new Font(FONT_FAMILY, Font.ITALIC, 11));
         timeLabel.setForeground(new Color(150, 150, 150));
 
         panel.add(messageLabel, BorderLayout.CENTER);
@@ -105,7 +126,7 @@ public class NotificationDialog {
                 });
 
         JButton closeButton = new JButton("Close");
-        closeButton.setFont(new Font("Sans Serif", Font.PLAIN, 12));
+        closeButton.setFont(new Font(FONT_FAMILY, Font.PLAIN, 12));
         closeButton.setForeground(new Color(100, 100, 100));
         closeButton.setBackground(Color.WHITE);
         closeButton.setBorder(BorderFactory.createLineBorder(UiConstants.Colors.BORDER_MUTED, 1));
@@ -124,7 +145,7 @@ public class NotificationDialog {
 
     private JButton createStyledButton(String text, Color backgroundColor, java.awt.event.ActionListener action) {
         JButton button = new JButton(text);
-        button.setFont(new Font("Sans Serif", Font.BOLD, 12));
+        button.setFont(new Font(FONT_FAMILY, Font.BOLD, 12));
         button.setForeground(Color.WHITE);
         button.setBackground(backgroundColor);
         button.setBorder(BorderFactory.createEmptyBorder(8, 15, 8, 15));

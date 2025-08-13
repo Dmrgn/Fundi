@@ -1,9 +1,10 @@
 package view.ui;
 
+import java.awt.*;
+
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import javax.swing.table.TableModel;
-import java.awt.*;
 
 public final class TableFactory {
 

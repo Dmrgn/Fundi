@@ -1,14 +1,32 @@
 package view.main;
 
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
+
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+
 import interfaceadapter.main.MainViewModel;
 import interfaceadapter.search.SearchController;
-import view.ui.UiConstants;
-import view.ui.FieldFactory;
 import view.ui.ButtonFactory;
-import javax.swing.*;
-import java.awt.*;
+import view.ui.FieldFactory;
+import view.ui.UiConstants;
 
 public class MainTopPanel extends JPanel {
+
+    private static final int SEARCH_FIELD_MIN_WIDTH = 200;
+    private static final int SEARCH_FIELD_PREF_WIDTH = 250;
+    private static final int SEARCH_FIELD_HEIGHT = 36;
+    private static final int SEARCH_BUTTON_WIDTH = 100;
+
     public MainTopPanel(MainViewModel mainViewModel, SearchController searchController) {
         super(new GridBagLayout());
         setOpaque(false);
@@ -45,23 +63,29 @@ public class MainTopPanel extends JPanel {
         mainViewModel.addPropertyChangeListener(evt -> {
             if (mainViewModel.getState() != null) {
                 String u = mainViewModel.getState().getUsername();
-                usernameLabel.setText(u == null || u.isBlank() ? "" : ("Logged in as: " + u));
+                if (u == null || u.isBlank()) {
+                    usernameLabel.setText("");
+                } 
+                else {
+                    usernameLabel.setText("Logged in as: " + u);
+                }
             }
         });
         gbc.gridy++;
-        add(usernameLabel, gbc);
-
-        gbc.gridy++;
-        add(Box.createVerticalStrut(UiConstants.Spacing.MD), gbc);
-
         JTextField searchField = FieldFactory.createSearchField("Search symbols or companies");
-        searchField.setMinimumSize(new Dimension(200, 36));
-        searchField.setPreferredSize(new Dimension(250, 36));
+        searchField.setMinimumSize(new Dimension(SEARCH_FIELD_MIN_WIDTH, SEARCH_FIELD_HEIGHT));
+        searchField.setPreferredSize(new Dimension(SEARCH_FIELD_PREF_WIDTH, SEARCH_FIELD_HEIGHT));
         JButton searchButton = ButtonFactory.createPrimaryButton("Search");
-        searchButton.setPreferredSize(new Dimension(100, 36));
+        searchButton.setPreferredSize(new Dimension(SEARCH_BUTTON_WIDTH, SEARCH_FIELD_HEIGHT));
+        gbc.gridy++;
         gbc.gridy++;
         gbc.gridx = 0;
         gbc.gridwidth = 1;
+        gbc.weightx = 1.0;
+        add(searchField, gbc);
+        gbc.gridx = 1;
+        gbc.weightx = 0.0;
+        add(searchButton, gbc);
         gbc.weightx = 1.0;
         add(searchField, gbc);
         gbc.gridx = 1;
@@ -71,7 +95,8 @@ public class MainTopPanel extends JPanel {
             String query = searchField.getText();
             if (!query.isEmpty()) {
                 searchController.execute(query);
-            } else {
+            } 
+            else {
                 JOptionPane.showMessageDialog(this, "Please enter a search query.");
             }
         };

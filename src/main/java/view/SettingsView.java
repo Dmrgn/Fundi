@@ -15,7 +15,7 @@ import interfaceadapter.dashboard.DashboardController;
 import interfaceadapter.main.MainViewModel;
 import interfaceadapter.login.LoginController;
 
-public class SettingsView extends BaseView {
+public class SettingsView extends AbstractBaseView {
     private final JComboBox<String> currencyDropdown;
     private final JPasswordField passwordField;
     private final JButton updatePasswordBtn;
@@ -38,7 +38,7 @@ public class SettingsView extends BaseView {
         JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
         headerLeft.setOpaque(false);
         headerLeft.add(title);
-        header.add(headerLeft, BorderLayout.WEST);
+        getHeader().add(headerLeft, BorderLayout.WEST);
 
         // Main canvas panel
         JPanel mainPanel = new JPanel(new GridBagLayout());
@@ -237,7 +237,7 @@ public class SettingsView extends BaseView {
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        content.add(scrollPane, BorderLayout.CENTER);
+        getContent().add(scrollPane, BorderLayout.CENTER);
     }
 
     public void setController(ChangePwdController controller) {

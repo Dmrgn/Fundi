@@ -23,7 +23,7 @@ import view.main.MainTopPanel;
 import view.main.MainCenterPanel;
 import view.main.MainNotificationButton;
 
-public class MainView extends BaseView {
+public class MainView extends AbstractBaseView {
     private final MainNotificationButton notificationButton;
 
     public MainView(MainViewModel mainViewModel, PortfolioHubController portfolioHubController,
@@ -37,12 +37,12 @@ public class MainView extends BaseView {
         JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
         headerLeft.setOpaque(false);
         headerLeft.add(title);
-        header.add(headerLeft, BorderLayout.WEST);
+        getHeader().add(headerLeft, BorderLayout.WEST);
         JPanel headerRight = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         headerRight.setOpaque(false);
         this.notificationButton = new MainNotificationButton();
         headerRight.add(this.notificationButton);
-        header.add(headerRight, BorderLayout.EAST);
+        getHeader().add(headerRight, BorderLayout.EAST);
         // Content
         JPanel mainPanel = new JPanel(new GridBagLayout());
         mainPanel.setOpaque(false);
@@ -67,7 +67,7 @@ public class MainView extends BaseView {
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        content.add(scrollPane, BorderLayout.CENTER);
+        getContent().add(scrollPane, BorderLayout.CENTER);
     }
 
     public void incrementNotification() {

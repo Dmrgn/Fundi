@@ -15,7 +15,7 @@ import view.leaderboard.LeaderboardActionsPanel;
 import static entity.PreferredCurrencyManager.getConverter;
 import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
-public class LeaderboardView extends BaseView {
+public class LeaderboardView extends AbstractBaseView {
     private final LeaderboardViewModel leaderboardViewModel;
     private final LeaderboardTablePanel tablePanel;
     private boolean loadedOnce = false;
@@ -26,7 +26,7 @@ public class LeaderboardView extends BaseView {
         this.leaderboardViewModel = leaderboardViewModel;
         this.tablePanel = new view.leaderboard.LeaderboardTablePanel();
 
-        header.add(new LeaderboardHeaderPanel(), BorderLayout.WEST);
+        getHeader().add(new LeaderboardHeaderPanel(), BorderLayout.WEST);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -46,7 +46,7 @@ public class LeaderboardView extends BaseView {
         scrollPane.setBorder(null);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
-        content.add(scrollPane, BorderLayout.CENTER);
+        getContent().add(scrollPane, BorderLayout.CENTER);
 
         leaderboardViewModel.addPropertyChangeListener(evt -> {
             LeaderboardState state = leaderboardViewModel.getState();

@@ -76,8 +76,7 @@ class WrapLayout extends FlowLayout {
                         addRow(dim, rowWidth, rowHeight);
                         rowWidth = d.width;
                         rowHeight = d.height;
-                    }
-                    else {
+                    } else {
                         rowWidth += hgap + d.width;
                         rowHeight = Math.max(rowHeight, d.height);
                     }
@@ -117,7 +116,7 @@ class WrapLayout extends FlowLayout {
 /**
  * The View for the Portfolio Hub Use Case.
  */
-public class PortfolioHubView extends BaseView {
+public class PortfolioHubView extends AbstractBaseView {
     private final PortfolioHubViewModel portfoliosViewModel;
     private final PortfolioHubController portfolioHubController;
     private final PortfolioController portfolioController;
@@ -141,7 +140,7 @@ public class PortfolioHubView extends BaseView {
         JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
         headerLeft.setOpaque(false);
         headerLeft.add(titleLabel);
-        header.add(headerLeft, BorderLayout.WEST);
+        getHeader().add(headerLeft, BorderLayout.WEST);
 
         // Main canvas panel
         JPanel mainPanel = new JPanel(new GridBagLayout());
@@ -197,7 +196,7 @@ public class PortfolioHubView extends BaseView {
         scrollPane.setBackground(UiConstants.Colors.CANVAS_BG);
         scrollPane.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
         scrollPane.setBorder(null);
-        content.add(scrollPane, BorderLayout.CENTER);
+        getContent().add(scrollPane, BorderLayout.CENTER);
 
         registerViewModelListener();
     }

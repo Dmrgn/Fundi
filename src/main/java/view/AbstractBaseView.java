@@ -15,7 +15,7 @@ import view.ui.Theme;
 /**
  * The generic base class for all the views in our app.
  */
-public abstract class BaseView extends JPanel {
+public abstract class AbstractBaseView extends JPanel {
     private static final int BACKBTN_H_GAP = 15;
     private static final int BACKBTN_V_GAP = 10;
     private static final int BTN_CONTAINER_PADDING = 5;
@@ -24,22 +24,27 @@ public abstract class BaseView extends JPanel {
     private static final int BTN_PAD_HORIZONTAL = 15;
     private static final int PANEL_GAP = 3;
     private static final int RGB = 200;
-    protected String viewName;
-    protected final JButton backButton = new JButton("Back");
-    protected final Theme theme;
+    private String viewName;
+    private final JButton backButton = new JButton("Back");
+    private final Theme theme;
 
     // Standard areas
-    protected final JPanel header = new JPanel(new BorderLayout());
-    protected final JPanel content = new JPanel(new BorderLayout());
+    private final JPanel header = new JPanel(new BorderLayout());
+    private final JPanel content = new JPanel(new BorderLayout());
     private final JPanel footer = new JPanel(new BorderLayout());
 
-    protected BaseView(String viewName) {
+    protected AbstractBaseView(String viewName) {
         this(viewName, new DefaultTheme());
     }
 
-    protected BaseView(String viewName, Theme theme) {
+    protected AbstractBaseView(String viewName, Theme theme) {
         this.viewName = viewName;
-        this.theme = theme == null ? new DefaultTheme() : theme;
+        if (theme == null) {
+            this.theme = new DefaultTheme();
+        } 
+        else {
+            this.theme = theme;
+        }
         setPreferredSize(this.theme.windowDefault());
         setLayout(new BorderLayout(0, 0));
         setOpaque(false);
@@ -63,6 +68,44 @@ public abstract class BaseView extends JPanel {
         page.add(content, BorderLayout.CENTER);
         page.add(footer, BorderLayout.SOUTH);
         add(page, BorderLayout.CENTER);
+    }
+
+    /**
+     * Get Header.
+     * 
+     * @return Header
+     */
+    public JPanel getHeader() {
+        return header;
+    }
+
+    /**
+     * Get Header.
+     * 
+     * @return Header
+     */
+    public JPanel getContent() {
+        return content;
+    }
+
+    /**
+     * Get Header.
+     * 
+     * @return Header
+     */
+    public JPanel getFooter() {
+        return footer;
+    }
+
+    /**
+     * Backward-compatible helper for views that previously created a gradient
+     * content panel.
+     * Prefer composing your own container with GradientPanel if creating new views.
+     * 
+     * @return JPanel
+     */
+    protected JPanel createGradientContentPanel() {
+        return new GradientPanel(theme);
     }
 
     /**
@@ -95,29 +138,32 @@ public abstract class BaseView extends JPanel {
         backButton.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
         // Add hover effect
-        backButton.addMouseListener(new java.awt.event.MouseAdapter() {
-            @Override
-            public void mouseEntered(java.awt.event.MouseEvent evt) {
-                backButton.setBackground(theme.primary().brighter());
-                backButton.setForeground(Color.WHITE);
-            }
 
-            @Override
-            public void mouseExited(java.awt.event.MouseEvent evt) {
-                backButton.setBackground(theme.primary());
-                backButton.setForeground(new Color(RGB, RGB, RGB));
-            }
+        backButton.addMouseListener(
+                new java.awt.event.MouseAdapter() {
 
-            @Override
-            public void mousePressed(java.awt.event.MouseEvent evt) {
-                backButton.setBackground(theme.secondary());
-            }
+                    @Override
+                    public void mouseEntered(java.awt.event.MouseEvent evt) {
+                        backButton.setBackground(theme.primary().brighter());
+                        backButton.setForeground(Color.WHITE);
+                    }
 
-            @Override
-            public void mouseReleased(java.awt.event.MouseEvent evt) {
-                backButton.setBackground(theme.primary().brighter());
-            }
-        });
+                    @Override
+                    public void mouseExited(java.awt.event.MouseEvent evt) {
+                        backButton.setBackground(theme.primary());
+                        backButton.setForeground(new Color(RGB, RGB, RGB));
+                    }
+
+                    @Override
+                    public void mousePressed(java.awt.event.MouseEvent evt) {
+                        backButton.setBackground(theme.secondary());
+                    }
+
+                    @Override
+                    public void mouseReleased(java.awt.event.MouseEvent evt) {
+                        backButton.setBackground(theme.primary().brighter());
+                    }
+                });
 
         // Remove any existing listeners and add the new one
         for (java.awt.event.ActionListener l : backButton.getActionListeners()) {
@@ -165,15 +211,6 @@ public abstract class BaseView extends JPanel {
             g2d.setPaint(new java.awt.GradientPaint(0, 0, c1, width, height, c2));
             g2d.fillRect(0, 0, width, height);
         }
-    }
-
-    /**
-     * Backward-compatible helper for views that previously created a gradient
-     * content panel.
-     * Prefer composing your own container with GradientPanel if creating new views.
-     */
-    protected JPanel createGradientContentPanel() {
-        return new GradientPanel(theme);
     }
 
 }

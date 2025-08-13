@@ -21,7 +21,7 @@ import java.awt.*;
 import static entity.PreferredCurrencyManager.getConverter;
 import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
-public class PortfolioView extends BaseView {
+public class PortfolioView extends AbstractBaseView {
     private static final String[] COLUMN_NAMES = { "Ticker", "Quantity", "Amount" };
     private static final String[] USE_CASES = new String[] { "Analysis", "Recommendations", "History", "Buy", "Sell",
             "Delete" };
@@ -68,7 +68,7 @@ public class PortfolioView extends BaseView {
         headerTop.add(usernameLabel);
         headerTop.add(UiConstants.mediumVerticalGap());
         headerTop.add(balanceLabel);
-        header.add(headerTop, BorderLayout.CENTER);
+        getHeader().add(headerTop, BorderLayout.CENTER);
 
         // Content: table + actions
         JPanel centerPanel = new JPanel(new BorderLayout());
@@ -90,7 +90,7 @@ public class PortfolioView extends BaseView {
         contentPanel.add(centerPanel, BorderLayout.CENTER);
         contentPanel.add(bottomPanel, BorderLayout.SOUTH);
 
-        content.add(contentPanel, BorderLayout.CENTER);
+        getContent().add(contentPanel, BorderLayout.CENTER);
 
         wireListeners();
     }

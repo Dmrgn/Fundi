@@ -24,7 +24,7 @@ import view.ui.UiConstants;
 /**
  * The View for the Buy Use Case.
  */
-public class BuyView extends BaseView implements PropertyChangeListener {
+public class BuyView extends AbstractBaseView implements PropertyChangeListener {
 
     private final BuyViewModel buyViewModel;
     private final BuyController buyController;
@@ -38,10 +38,10 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         this.buyViewModel.addPropertyChangeListener(this);
 
         // Header back button and title
-        header.add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.WEST);
+        getHeader().add(createBackButtonPanel(evt -> this.navigationController.goBack()), BorderLayout.WEST);
         JPanel titlePanel = PanelFactory.createTitlePanel("Buy Stock");
         titlePanel.setOpaque(false);
-        header.add(titlePanel, BorderLayout.CENTER);
+        getHeader().add(titlePanel, BorderLayout.CENTER);
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
@@ -89,7 +89,7 @@ public class BuyView extends BaseView implements PropertyChangeListener {
                     }
                 });
         mainPanel.add(ButtonFactory.createButtonPanel(buy), BorderLayout.SOUTH);
-        content.add(mainPanel, BorderLayout.CENTER);
+        getContent().add(mainPanel, BorderLayout.CENTER);
     }
 
     @Override

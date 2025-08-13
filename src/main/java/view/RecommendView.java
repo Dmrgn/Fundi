@@ -19,7 +19,7 @@ import static entity.PreferredCurrencyManager.getPreferredCurrency;
 /**
  * The View for the Recommend Use Case.
  */
-public class RecommendView extends BaseView {
+public class RecommendView extends AbstractBaseView {
     private static final String LABEL = "Recs: ";
     private final RecommendViewModel recommendViewModel;
     @SuppressWarnings("unused")
@@ -38,7 +38,7 @@ public class RecommendView extends BaseView {
         this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
 
         // Header back
-        header.add(createBackButtonPanel(evt -> backNavigationHelper.goBackToPortfolio()), BorderLayout.WEST);
+        getHeader().add(createBackButtonPanel(evt -> backNavigationHelper.goBackToPortfolio()), BorderLayout.WEST);
 
         JPanel contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
@@ -64,7 +64,7 @@ public class RecommendView extends BaseView {
         scrollPane.getVerticalScrollBar().setUnitIncrement(UiConstants.SCROLL_UNIT_INCREMENT);
         scrollPane.setOpaque(false);
         scrollPane.getViewport().setOpaque(false);
-        content.add(scrollPane, BorderLayout.CENTER);
+        getContent().add(scrollPane, BorderLayout.CENTER);
 
         wireListeners();
     }
@@ -86,7 +86,8 @@ public class RecommendView extends BaseView {
                 }
             }
             JLabel label = LabelFactory
-                    .createListItemLabel(i + ". " + entry.getKey() + ": " + String.format("%.2f %s", convertedPrice, preferredCurrency ));
+                    .createListItemLabel(i + ". " + entry.getKey() + ": "
+                            + String.format("%.2f %s", convertedPrice, preferredCurrency));
             panel.add(label);
             i++;
         }

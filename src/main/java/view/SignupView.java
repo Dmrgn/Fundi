@@ -17,7 +17,7 @@ import java.beans.PropertyChangeListener;
 /**
  * View for the Signup Use Case
  */
-public class SignupView extends BaseView implements PropertyChangeListener {
+public class SignupView extends AbstractBaseView implements PropertyChangeListener {
     private final SignupViewModel signupViewModel;
     private final SignupController signupController;
     private final JTextField usernameField = FieldFactory.createTextField();
@@ -40,7 +40,7 @@ public class SignupView extends BaseView implements PropertyChangeListener {
         JPanel headerLeft = new JPanel(new FlowLayout(FlowLayout.LEFT, UiConstants.Spacing.LG, UiConstants.Spacing.SM));
         headerLeft.setOpaque(false);
         headerLeft.add(title);
-        header.add(headerLeft, BorderLayout.WEST);
+        getHeader().add(headerLeft, BorderLayout.WEST);
 
         // Main panel
         JPanel panel = new JPanel(new GridBagLayout());
@@ -89,7 +89,7 @@ public class SignupView extends BaseView implements PropertyChangeListener {
         scroll.setBorder(null);
         scroll.setBackground(UiConstants.Colors.CANVAS_BG);
         scroll.getViewport().setBackground(UiConstants.Colors.CANVAS_BG);
-        content.add(scroll, BorderLayout.CENTER);
+        getContent().add(scroll, BorderLayout.CENTER);
 
         wireListeners();
     }

@@ -9,6 +9,8 @@ public class FieldFactory {
 
     /**
      * Base text field with centralized styles.
+     * 
+     * @return test
      */
     public static JTextField createTextField() {
         JTextField textField = new JTextField("", NUM_COLUMNS);
@@ -23,6 +25,9 @@ public class FieldFactory {
 
     /**
      * Subtle, muted placeholder style for search bars.
+     * 
+     * @param placeholder does stuff
+     * @return test
      */
     public static JTextField createSearchField(String placeholder) {
         JTextField field = createTextField();
@@ -33,6 +38,8 @@ public class FieldFactory {
 
     /**
      * Password field.
+     * 
+     * @return test
      */
     public static JPasswordField createPasswordField() {
         JPasswordField passwordField = new JPasswordField("", NUM_COLUMNS);

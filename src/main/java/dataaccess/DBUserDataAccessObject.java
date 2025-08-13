@@ -14,11 +14,13 @@ import java.util.ArrayList;
 import entity.User;
 import usecase.login.LoginUserDataAccessInterface;
 import usecase.signup.SignupUserDataAccessInterface;
+import usecase.remember_me.RememberMeUserDataAccessInterface;
 
 /**
  * DAO for user data implemented using a Database to persist the data.
  */
-public class DBUserDataAccessObject implements LoginUserDataAccessInterface, SignupUserDataAccessInterface {
+public class DBUserDataAccessObject
+        implements LoginUserDataAccessInterface, SignupUserDataAccessInterface, RememberMeUserDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, User> accounts = new HashMap<>();
     private final Map<String, String> nameToId = new HashMap<>();
@@ -36,20 +38,20 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                     username TEXT,
                     password TEXT
                 );
-                
+
                 CREATE TABLE IF NOT EXISTS portfolios (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     name TEXT,
                     user_id INTEGER REFERENCES users
                 );
-                
+
                 CREATE TABLE IF NOT EXISTS stocks (
                     name TEXT,
                     price REAL,
                     date DATE,
                     CONSTRAINT key PRIMARY KEY (name, date)
                 );
-                
+
                 CREATE TABLE IF NOT EXISTS transactions (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     portfolio_id INTEGER REFERENCES portfolios,
@@ -58,7 +60,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                     date DATE,
                     price REAL
                 );
-                
+
                 CREATE TABLE IF NOT EXISTS "holdings" (
                     portfolio_id INTEGER NOT NULL
                         REFERENCES portfolios(id),
@@ -67,12 +69,19 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                     PRIMARY KEY (portfolio_id, ticker),
                     CHECK (quantity >= 0)
                 );
-                
+
                 CREATE TABLE IF NOT EXISTS watchlist (
                     id INTEGER PRIMARY KEY AUTOINCREMENT,
                     user_id INTEGER NOT NULL REFERENCES users(id),
                     ticker TEXT NOT NULL,
                     UNIQUE(user_id, ticker)
+                );
+
+                CREATE TABLE IF NOT EXISTS user_settings (
+                    user_id INTEGER NOT NULL REFERENCES users(id),
+                    key TEXT NOT NULL,
+                    value TEXT NOT NULL,
+                    PRIMARY KEY (user_id, key)
                 );
                 """;
 
@@ -85,8 +94,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                     statement.execute(trimmed);
                 }
             }
-        }
-        catch (SQLException exception) {
+        } catch (SQLException exception) {
             System.out.println("Schema initialization error: " + exception.getMessage());
         }
 
@@ -103,8 +111,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
                 accounts.put(id, new User(username, password));
                 nameToId.put(username, id);
             }
-        }
-        catch (SQLException exception) {
+        } catch (SQLException exception) {
             System.out.println(exception.getMessage());
         }
 
@@ -123,8 +130,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
             while (rs.next()) {
                 id = rs.getString("id");
             }
-        }
-        catch (SQLException exception) {
+        } catch (SQLException exception) {
             System.out.println(exception.getMessage());
         }
         return id;
@@ -171,8 +177,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
             }
 
             System.out.println("Password updated successfully for: " + username);
-        }
-        catch (SQLException exception) {
+        } catch (SQLException exception) {
             System.out.println("Error updating password: " + exception.getMessage());
         }
     }
@@ -204,8 +209,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
             pstmt.setString(1, username);
             pstmt.executeUpdate();
 
-        }
-        catch (SQLException exception) {
+        } catch (SQLException exception) {
             System.out.println(exception.getMessage());
         }
     }
@@ -224,8 +228,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
             stmt.setString(1, userId);
             stmt.setString(2, ticker);
             stmt.executeUpdate();
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             System.out.println("Error adding to watchlist: " + ex.getMessage());
         }
     }
@@ -243,8 +246,7 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
             stmt.setString(1, userId);
             stmt.setString(2, ticker);
             stmt.executeUpdate();
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             System.out.println("Error removing from watchlist: " + ex.getMessage());
         }
     }
@@ -265,10 +267,83 @@ public class DBUserDataAccessObject implements LoginUserDataAccessInterface, Sig
             while (rs.next()) {
                 watchlist.add(rs.getString("ticker"));
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             System.out.println("Error fetching watchlist: " + ex.getMessage());
         }
         return watchlist;
+    }
+
+    // Save a user setting
+    public void saveUserSetting(int userId, String key, String value) {
+        String query = """
+                INSERT INTO user_settings (user_id, key, value)
+                VALUES (?, ?, ?)
+                ON CONFLICT(user_id, key) DO UPDATE SET value = excluded.value;
+                """;
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.setString(2, key);
+            stmt.setString(3, value);
+            stmt.executeUpdate();
+        } catch (SQLException e) {
+            System.out.println("Error saving user setting: " + e.getMessage());
+        }
+    }
+
+    // Retrieve a user setting
+    public String getUserSetting(int userId, String key) {
+        String query = """
+                SELECT value FROM user_settings WHERE user_id = ? AND key = ?;
+                """;
+        try (PreparedStatement stmt = connection.prepareStatement(query)) {
+            stmt.setInt(1, userId);
+            stmt.setString(2, key);
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return rs.getString("value");
+            }
+        } catch (SQLException e) {
+            System.out.println("Error retrieving user setting: " + e.getMessage());
+        }
+        return null; // Default to null if no setting is found
+    }
+
+    @Override
+    public void setRememberMe(String username, boolean remember) {
+        String userId = nameToId.get(username);
+        if (userId == null) {
+            System.out.println("setRememberMe: username not found: " + username);
+            return;
+        }
+        if (remember) {
+            // Clear any existing remembered users
+            String clearSql = "UPDATE user_settings SET value = 'false' WHERE key = 'remember_me'";
+            try (Statement stmt = connection.createStatement()) {
+                stmt.executeUpdate(clearSql);
+            } catch (SQLException e) {
+                System.out.println("Error clearing remembered user flags: " + e.getMessage());
+            }
+        }
+        saveUserSetting(Integer.parseInt(userId), "remember_me", remember ? "true" : "false");
+    }
+
+    @Override
+    public User getRememberedUser() {
+        String sql = """
+                SELECT u.username, u.password
+                FROM users u
+                JOIN user_settings s ON u.id = s.user_id
+                WHERE s.key = 'remember_me' AND s.value = 'true'
+                LIMIT 1;
+                """;
+        try (PreparedStatement stmt = connection.prepareStatement(sql)) {
+            ResultSet rs = stmt.executeQuery();
+            if (rs.next()) {
+                return new User(rs.getString("username"), rs.getString("password"));
+            }
+        } catch (SQLException e) {
+            System.out.println("Error fetching remembered user: " + e.getMessage());
+        }
+        return null;
     }
 }

@@ -13,6 +13,7 @@ import java.util.List;
 import view.ui.UiConstants;
 import interfaceadapter.dashboard.DashboardController;
 import interfaceadapter.main.MainViewModel;
+import interfaceadapter.login.LoginController;
 
 public class SettingsView extends BaseView {
     private final JComboBox<String> currencyDropdown;
@@ -22,6 +23,7 @@ public class SettingsView extends BaseView {
     private final ExchangeAPIDataAccessObject exchangeAPI = new ExchangeAPIDataAccessObject();
 
     private ChangePwdController controller;
+    private LoginController loginController;
 
     public SettingsView(ChangePwdViewModel changePwdViewModel, ViewManager viewManager, LoginView loginView,
             DashboardController dashboardController,
@@ -194,6 +196,13 @@ public class SettingsView extends BaseView {
         });
 
         logoutBtn.addActionListener(e -> {
+            // Clear Remember Me for current user
+            if (loginController != null && mainViewModel != null && mainViewModel.getState() != null) {
+                String username = mainViewModel.getState().getUsername();
+                if (username != null && !username.isEmpty()) {
+                    loginController.saveRememberMe(username, false);
+                }
+            }
             loginView.clearFields();
             viewManager.switchTo("log in");
         });
@@ -233,6 +242,10 @@ public class SettingsView extends BaseView {
 
     public void setController(ChangePwdController controller) {
         this.controller = controller;
+    }
+
+    public void setLoginController(LoginController loginController) {
+        this.loginController = loginController;
     }
 
     public String getSelectedCurrency() {

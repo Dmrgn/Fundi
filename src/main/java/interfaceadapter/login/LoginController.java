@@ -2,6 +2,7 @@ package interfaceadapter.login;
 
 import usecase.login.LoginInputBoundary;
 import usecase.login.LoginInputData;
+import usecase.remember_me.RememberMeInteractor;
 
 /**
  * The controller for the Login Use Case.
@@ -9,9 +10,11 @@ import usecase.login.LoginInputData;
 public class LoginController {
 
     private final LoginInputBoundary loginUseCaseInteractor;
+    private final RememberMeInteractor rememberMeInteractor;
 
-    public LoginController(LoginInputBoundary loginUseCaseInteractor) {
+    public LoginController(LoginInputBoundary loginUseCaseInteractor, RememberMeInteractor rememberMeInteractor) {
         this.loginUseCaseInteractor = loginUseCaseInteractor;
+        this.rememberMeInteractor = rememberMeInteractor;
     }
 
     /**
@@ -27,5 +30,9 @@ public class LoginController {
 
     public void switchToSignupView() {
         loginUseCaseInteractor.switchToSignupView();
+    }
+
+    public void saveRememberMe(String username, boolean rememberMe) {
+        rememberMeInteractor.saveRememberMe(username, rememberMe);
     }
 }

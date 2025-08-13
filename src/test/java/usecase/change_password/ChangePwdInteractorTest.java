@@ -31,7 +31,7 @@ class ChangePwdInteractorTest {
 
     @Test
     void testSuccessfulPasswordChange() {
-        ChangePwdInputData input = new ChangePwdInputData("test_user","newpass123");
+        ChangePwdInputData input = new ChangePwdInputData("test_user", "newpass123");
         interactor.changePassword(input);
 
         assertTrue(fakeUserDao.saved);
@@ -43,7 +43,7 @@ class ChangePwdInteractorTest {
 
     @Test
     void testEmptyPasswordFails() {
-        ChangePwdInputData input = new ChangePwdInputData("test_user","");
+        ChangePwdInputData input = new ChangePwdInputData("test_user", "");
         interactor.changePassword(input);
 
         assertFalse(fakeUserDao.saved);
@@ -53,14 +53,13 @@ class ChangePwdInteractorTest {
 
     @Test
     void testNullPasswordFails() {
-        ChangePwdInputData input = new ChangePwdInputData("test_user",null);
+        ChangePwdInputData input = new ChangePwdInputData("test_user", null);
         interactor.changePassword(input);
 
         assertFalse(fakeUserDao.saved);
         assertEquals("Password cannot be empty.", fakePresenter.failMessage);
         assertNull(fakePresenter.successMessage);
     }
-
 
     private static class FakeUserDao implements LoginUserDataAccessInterface {
         boolean saved = false;
@@ -84,7 +83,21 @@ class ChangePwdInteractorTest {
             savedPassword = newPassword;
         }
 
-     }
+        @Override
+        public String getUserSetting(int userId, String key) {
+            // Simulate returning a user setting for testing purposes
+            if (userId == 1 && "remember_me".equals(key)) {
+                return "true";
+            }
+            return null;
+        }
+
+        @Override
+        public void saveUserSetting(int userId, String key, String value) {
+            // Simulate saving a user setting for testing purposes
+            System.out.printf("Saved setting: userId=%d, key=%s, value=%s%n", userId, key, value);
+        }
+    }
 
     // Fake Presenter
     private static class FakePresenter implements ChangePwdOutputBoundary {

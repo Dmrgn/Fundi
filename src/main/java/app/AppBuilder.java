@@ -55,8 +55,14 @@ import usecase.change_password.ChangePwdInteractor;
 import usecase.change_password.ChangePwdOutputBoundary;
 import usecase.change_password.ChangePwdPresenter;
 import usecase.login.LoginUserDataAccessInterface;
+import usecase.login.LoginOutputBoundary;
+import usecase.login.LoginInputBoundary;
+import usecase.login.LoginInteractor;
+import interfaceadapter.login.LoginPresenter;
 import usecase.navigation.NavigationInteractor;
 import usecase.navigation.NavigationOutputBoundary;
+import usecase.remember_me.RememberMeInteractor;
+import usecase.remember_me.RememberMeUserDataAccessInterface;
 import usecase.search.GetMatches;
 import usecase.search.SearchDataAccessInterface;
 import usecase.search.SearchInputBoundary;
@@ -111,12 +117,7 @@ public class AppBuilder {
                         navigationPresenter);
         private final NavigationController navigationController = new NavigationController(navigationInteractor);
 
-        private final LoginController loginController = LoginUseCaseFactory.create(
-                        viewManagerModel,
-                        mainViewModel,
-                        loginViewModel,
-                        signupViewModel,
-                        userDataAccessObject);
+        private LoginController loginController;
         private final SignupController signupController = SignupUseCaseFactory.create(
                         viewManagerModel,
                         signupViewModel,
@@ -208,6 +209,8 @@ public class AppBuilder {
         private RecommendView recommendView;
         private CompanyDetailsView companyDetailsView;
 
+        private RememberMeInteractor rememberMeInteractor;
+
         public AppBuilder() throws SQLException, IOException {
                 cardPanel.setLayout(cardLayout);
                 SearchOutputBoundary searchPresenter = new SearchPresenter(searchViewModel);
@@ -260,6 +263,7 @@ public class AppBuilder {
                 settingsView = new SettingsView(changePwdViewModel, viewManager, loginView, dashboardController,
                                 mainViewModel);
                 settingsView.setController(changePwdController);
+                settingsView.setLoginController(loginController);
                 cardPanel.add(settingsView, settingsView.getViewName());
                 return this;
         }
@@ -477,6 +481,11 @@ public class AppBuilder {
                 viewManagerModel.setState(signupViewModel.getViewName());
                 viewManagerModel.firePropertyChanged();
 
+                // Trigger auto-login after all views are registered
+                if (rememberMeInteractor != null) {
+                        rememberMeInteractor.checkRememberMe();
+                }
+
                 return application;
         }
 
@@ -492,6 +501,25 @@ public class AppBuilder {
                                 leaderboardViewModel,
                                 leaderboardController);
                 cardPanel.add(leaderboardView, leaderboardView.getViewName());
+                return this;
+        }
+
+        /**
+         * Adds the login use case, including Remember Me functionality.
+         *
+         * @return this builder
+         */
+        public AppBuilder addLoginUseCase() {
+                // Build the login presenter and interactor
+                LoginOutputBoundary loginPresenter = new LoginPresenter(viewManagerModel, mainViewModel, loginViewModel,
+                                signupViewModel);
+                LoginInputBoundary loginInteractor = new LoginInteractor(userDataAccessObject, loginPresenter);
+
+                // Remember Me functionality
+                this.rememberMeInteractor = new RememberMeInteractor(
+                                (RememberMeUserDataAccessInterface) userDataAccessObject, loginInteractor);
+                loginController = new LoginController(loginInteractor, rememberMeInteractor);
+
                 return this;
         }
 }

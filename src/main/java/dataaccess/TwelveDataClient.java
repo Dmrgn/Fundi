@@ -25,40 +25,15 @@ public class TwelveDataClient {
     public synchronized String getApiKey() {
         if (apiKey != null)
             return apiKey;
-
-        // 1) Try env vars
-        String env = System.getenv("TWELVEDATA_API_KEY");
-        if (env == null || env.isBlank())
-            env = System.getenv("TD_API_KEY");
-        if (env != null && !env.isBlank()) {
-            apiKey = sanitize(env);
-            System.out.println("DEBUG TD: loaded API key from ENV, length=" + apiKey.length());
+        try {
+            Path keyPath = Path.of("data/TD_key.txt");
+            String raw = Files.readString(keyPath);
+            apiKey = sanitize(raw);
+            return apiKey;
+        } catch (IOException e) {
+            apiKey = "";
             return apiKey;
         }
-
-        // 2) Try common file names
-        String[] candidates = new String[] {
-                "data/TD_key.txt",
-                "data/twelvedata_key.txt",
-                "data/TwelveData_key.txt"
-        };
-        for (String p : candidates) {
-            try {
-                Path keyPath = Path.of(p);
-                if (Files.exists(keyPath)) {
-                    String raw = Files.readString(keyPath);
-                    apiKey = sanitize(raw);
-                    System.out.println("DEBUG TD: loaded API key from file " + keyPath.toAbsolutePath() + ", length="
-                            + apiKey.length());
-                    if (!apiKey.isBlank())
-                        return apiKey;
-                }
-            } catch (IOException ignored) {
-            }
-        }
-
-        apiKey = "";
-        return apiKey;
     }
 
     public String fetchTimeSeriesJson(String symbol, String interval, int outputsize) throws IOException {
@@ -93,8 +68,6 @@ public class TwelveDataClient {
                 .build();
         try (Response resp = http.newCall(req).execute()) {
             String body = resp.body() != null ? resp.body().string() : "";
-            System.out.println("DEBUG TD: GET " + url.replaceAll("(api_key=|apikey=)[^&]+", "$1***") +
-                    " -> code=" + resp.code());
             if (!resp.isSuccessful() && (body == null || body.isBlank())) {
                 throw new IOException("HTTP " + resp.code());
             }

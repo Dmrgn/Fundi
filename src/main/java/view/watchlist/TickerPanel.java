@@ -21,6 +21,7 @@ import org.jfree.chart.renderer.xy.XYSplineRenderer;
 import org.jfree.chart.ui.RectangleInsets;
 import org.jfree.data.time.Day;
 import org.jfree.data.time.Hour;
+import org.jfree.data.time.Minute;
 import org.jfree.data.time.TimeSeries;
 import org.jfree.data.time.TimeSeriesCollection;
 import java.awt.BasicStroke;
@@ -208,72 +209,76 @@ public class TickerPanel extends JPanel {
 
     private ChartPanel buildChartPanelFromPoints(String ticker, List<TimeSeriesPoint> points, String range) {
         TimeSeries series = new TimeSeries(ticker);
-        boolean hourly = "1W".equalsIgnoreCase(range);
+        String preferredCurrency = getPreferredCurrency();
+        CurrencyConverter converter = getConverter();
 
-        CurrencyConverter conv = getConverter();
-        String toCurr = getPreferredCurrency();
-        if (toCurr == null || toCurr.isBlank())
-            toCurr = "USD";
-        String fromCurr = "USD";
-
-        for (TimeSeriesPoint p : points) {
-            java.util.Date d = new java.util.Date(p.getEpochMillis());
-            double amount = p.getClose();
-            double convertedAmt = amount;
-
-            if (conv != null && !fromCurr.equalsIgnoreCase(toCurr)) {
-                try {
-                    convertedAmt = conv.convert(amount, fromCurr, toCurr);
-                } catch (Exception e) {
-                    System.err.println("Currency conversion failed in watchlist: " + e.getMessage());
+        if ("1W".equals(range)) {
+            for (TimeSeriesPoint p : points) {
+                java.util.Date d = new java.util.Date(p.getEpochMillis());
+                double amount = p.getClose();
+                if (converter != null && !preferredCurrency.equals("USD")) {
+                    try {
+                        amount = converter.convert(amount, "USD", preferredCurrency);
+                    } catch (Exception e) {
+                        // fallback to USD
+                    }
                 }
+                // Always use Minute for 1W, matching API interval
+                series.addOrUpdate(new Minute(d), amount);
             }
+        } else {
+            boolean hourly = "1W".equalsIgnoreCase(range);
 
-            if (hourly) {
-                series.addOrUpdate(new Hour(d), convertedAmt);
-            } else {
-                series.addOrUpdate(new Day(d), convertedAmt);
+            for (TimeSeriesPoint p : points) {
+                java.util.Date d = new java.util.Date(p.getEpochMillis());
+                double amount = p.getClose();
+                double convertedAmt = amount;
+                if (converter != null && !preferredCurrency.equals("USD")) {
+                    try {
+                        convertedAmt = converter.convert(amount, "USD", preferredCurrency);
+                    } catch (Exception e) {
+                        System.err.println("Currency conversion failed in watchlist: " + e.getMessage());
+                    }
+                }
+                if (hourly) {
+                    series.addOrUpdate(new Hour(d), convertedAmt);
+                } else {
+                    series.addOrUpdate(new Day(d), convertedAmt);
+                }
             }
         }
 
-        return buildChartPanelFromSeries(series);
-    }
-
-    private ChartPanel buildChartPanelFromSeries(TimeSeries series) {
         TimeSeriesCollection dataset = new TimeSeriesCollection();
-        if (series != null)
-            dataset.addSeries(series);
+        dataset.addSeries(series);
 
-        JFreeChart chart = ChartFactory.createTimeSeriesChart("", "", "", dataset, false, false, false);
+        JFreeChart chart = ChartFactory.createTimeSeriesChart(
+                "", "", "Price (" + preferredCurrency + ")", dataset, false, false, false);
         chart.setBackgroundPaint(Color.WHITE);
         chart.setAntiAlias(true);
 
         XYPlot plot = chart.getXYPlot();
         plot.setBackgroundPaint(UiConstants.Colors.SURFACE_BG);
-        plot.setDomainGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHT);
-        plot.setRangeGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHT);
-        plot.setAxisOffset(new RectangleInsets(2, 2, 2, 2));
+        plot.setDomainGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHTER);
+        plot.setRangeGridlinePaint(UiConstants.Colors.GRIDLINE_LIGHTER);
 
-        XYSplineRenderer renderer = new XYSplineRenderer();
-        renderer.setPrecision(5);
-        renderer.setSeriesStroke(0, new BasicStroke(2.6f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND));
-
-        Color lineColor = new Color(30, 120, 180);
-        if (series != null && series.getItemCount() >= 2) {
-            double first = series.getValue(0).doubleValue();
-            double last = series.getValue(series.getItemCount() - 1).doubleValue();
-            if (Double.isFinite(first) && Double.isFinite(last)) {
-                lineColor = last >= first ? UiConstants.Colors.SUCCESS : UiConstants.Colors.DANGER;
+        // Ensure y-axis includes min/max values
+        if (series != null && series.getItemCount() > 0) {
+            double min = Double.POSITIVE_INFINITY, max = Double.NEGATIVE_INFINITY;
+            for (int i = 0; i < series.getItemCount(); i++) {
+                double v = series.getValue(i).doubleValue();
+                min = Math.min(min, v);
+                max = Math.max(max, v);
+            }
+            if (Double.isFinite(min) && Double.isFinite(max)) {
+                // Add a small margin for aesthetics
+                double margin = (max - min) * 0.05;
+                plot.getRangeAxis().setRange(min - margin, max + margin);
             }
         }
-        renderer.setSeriesPaint(0, lineColor);
-        plot.setRenderer(renderer);
 
         ChartPanel panel = new ChartPanel(chart);
-        panel.setPreferredSize(UiConstants.Sizes.CHART_PANEL);
+        panel.setPreferredSize(new Dimension(480, 160));
         panel.setBackground(UiConstants.Colors.CANVAS_BG);
-        panel.setDomainZoomable(false);
-        panel.setRangeZoomable(false);
         return panel;
     }
 

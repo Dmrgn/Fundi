@@ -104,7 +104,12 @@ public class LoginView extends BaseView implements PropertyChangeListener {
 
     private void wireListeners() {
         loginButton.addActionListener(evt -> {
-            loginController.execute(usernameField.getText(), new String(passwordField.getPassword()));
+            String username = usernameField.getText();
+            String password = new String(passwordField.getPassword());
+            loginController.execute(username, password);
+
+            boolean rememberMe = rememberMeBox.isSelected();
+            loginController.saveRememberMe(username, rememberMe);
         });
 
         signUpButton.addActionListener(evt -> loginController.switchToSignupView());

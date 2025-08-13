@@ -16,7 +16,7 @@ public class PortfolioHubPresenter implements PortfolioHubOutputBoundary {
     private final CreateViewModel createViewModel;
 
     public PortfolioHubPresenter(ViewManagerModel viewManagerModel, PortfolioHubViewModel portfoliosViewModel,
-                                 CreateViewModel createViewModel) {
+            CreateViewModel createViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.portfoliosViewModel = portfoliosViewModel;
         this.createViewModel = createViewModel;
@@ -24,6 +24,7 @@ public class PortfolioHubPresenter implements PortfolioHubOutputBoundary {
 
     /**
      * Prepare the portfolio hub view.
+     * 
      * @param portfoliosOutputData the output data
      */
     @Override
@@ -41,6 +42,7 @@ public class PortfolioHubPresenter implements PortfolioHubOutputBoundary {
 
     /**
      * Switch to the Create View.
+     * 
      * @param username The username to update the state of the Create View Model
      */
     @Override

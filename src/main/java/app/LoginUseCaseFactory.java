@@ -10,6 +10,8 @@ import usecase.login.LoginInputBoundary;
 import usecase.login.LoginInteractor;
 import usecase.login.LoginOutputBoundary;
 import usecase.login.LoginUserDataAccessInterface;
+import usecase.remember_me.RememberMeInteractor;
+import usecase.remember_me.RememberMeUserDataAccessInterface;
 
 /**
  * Factory for the Login Use Case.
@@ -23,10 +25,11 @@ public final class LoginUseCaseFactory {
 
     /**
      * Create the Login Controller.
+     * 
      * @param viewManagerModel The View Manager Model
-     * @param mainViewModel The Main View Model
-     * @param loginViewModel The Login View Model
-     * @param signupViewModel The Signup View Model
+     * @param mainViewModel    The Main View Model
+     * @param loginViewModel   The Login View Model
+     * @param signupViewModel  The Signup View Model
      * @param dataAccessObject The DAO
      * @return The Login Controller
      */
@@ -35,15 +38,15 @@ public final class LoginUseCaseFactory {
             MainViewModel mainViewModel,
             LoginViewModel loginViewModel,
             SignupViewModel signupViewModel,
-            LoginUserDataAccessInterface dataAccessObject
-    ) {
+            LoginUserDataAccessInterface dataAccessObject) {
         LoginOutputBoundary loginPresenter = new LoginPresenter(
                 viewManagerModel,
                 mainViewModel,
                 loginViewModel,
-                signupViewModel
-        );
+                signupViewModel);
         LoginInputBoundary loginInteractor = new LoginInteractor(dataAccessObject, loginPresenter);
-        return new LoginController(loginInteractor);
+        RememberMeInteractor rememberMeInteractor = new RememberMeInteractor(
+                (RememberMeUserDataAccessInterface) dataAccessObject, loginInteractor);
+        return new LoginController(loginInteractor, rememberMeInteractor);
     }
 }

@@ -17,7 +17,7 @@ public class BuyPresenter implements BuyOutputBoundary {
     private final BuyViewModel buyViewModel;
 
     public BuyPresenter(ViewManagerModel viewManagerModel, BuyViewModel buyViewModel,
-                        PortfolioViewModel portfolioViewModel) {
+            PortfolioViewModel portfolioViewModel) {
         this.viewManagerModel = viewManagerModel;
         this.buyViewModel = buyViewModel;
         this.portfolioViewModel = portfolioViewModel;
@@ -25,6 +25,7 @@ public class BuyPresenter implements BuyOutputBoundary {
 
     /**
      * Prepares the success view for the Buy Use Case.
+     * 
      * @param outputData the output data
      */
     @Override
@@ -37,10 +38,10 @@ public class BuyPresenter implements BuyOutputBoundary {
         buyState.setBuyError(null);
         buyState.setBalance(outputData.getBalance());
         buyViewModel.setState(buyState);
-        
+
         // Update portfolio state balance for real-time refresh
         portfolioViewModel.getState().setBalance(outputData.getBalance());
-        
+
         portfolioViewModel.firePropertyChanged();
         viewManagerModel.setState(portfolioViewModel.getViewName());
         viewManagerModel.firePropertyChanged();
@@ -48,6 +49,7 @@ public class BuyPresenter implements BuyOutputBoundary {
 
     /**
      * Prepares the failure view for the Buy Use Case.
+     * 
      * @param errorMessage the explanation of the failure
      */
     @Override

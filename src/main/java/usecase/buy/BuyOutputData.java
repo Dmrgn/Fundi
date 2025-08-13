@@ -22,6 +22,7 @@ public class BuyOutputData {
 
     /**
      * Getter.
+     * 
      * @return Ticker
      */
     public String getTicker() {
@@ -30,6 +31,7 @@ public class BuyOutputData {
 
     /**
      * Getter.
+     * 
      * @return Price
      */
     public double getPrice() {
@@ -38,6 +40,7 @@ public class BuyOutputData {
 
     /**
      * Getter.
+     * 
      * @return Quantity
      */
     public int getQuantity() {
@@ -46,6 +49,7 @@ public class BuyOutputData {
 
     /**
      * Getter.
+     * 
      * @return Balance
      */
     public double getBalance() {
@@ -54,6 +58,7 @@ public class BuyOutputData {
 
     /**
      * Getter.
+     * 
      * @return Success
      */
     public boolean isSuccess() {
@@ -62,6 +67,7 @@ public class BuyOutputData {
 
     /**
      * Getter.
+     * 
      * @return Message
      */
     public String getMessage() {

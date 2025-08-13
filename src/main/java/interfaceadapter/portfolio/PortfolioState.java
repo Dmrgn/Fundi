@@ -14,6 +14,7 @@ public class PortfolioState {
 
     /**
      * Getter.
+     * 
      * @return Portfolio Id
      */
     public String getPortfolioId() {
@@ -22,6 +23,7 @@ public class PortfolioState {
 
     /**
      * Setter.
+     * 
      * @param portfolioId Value
      */
     public void setPortfolioId(String portfolioId) {
@@ -30,6 +32,7 @@ public class PortfolioState {
 
     /**
      * Getter.
+     * 
      * @return Portfolio Name
      */
     public String getPortfolioName() {
@@ -38,15 +41,16 @@ public class PortfolioState {
 
     /**
      * Setter.
+     * 
      * @param portfolioName Value
      */
     public void setPortfolioName(String portfolioName) {
         this.portfolioName = portfolioName;
     }
 
-
     /**
      * Getter.
+     * 
      * @return Stock Names
      */
     public String[] getStockNames() {
@@ -55,6 +59,7 @@ public class PortfolioState {
 
     /**
      * Setter.
+     * 
      * @param stockNames Value
      */
     public void setStockNames(String[] stockNames) {
@@ -69,6 +74,7 @@ public class PortfolioState {
 
     /**
      * Getter.
+     * 
      * @return Stock Amounts
      */
     public int[] getStockAmounts() {
@@ -77,6 +83,7 @@ public class PortfolioState {
 
     /**
      * Setter.
+     * 
      * @param stockAmounts Value
      */
     public void setStockAmounts(int[] stockAmounts) {
@@ -91,6 +98,7 @@ public class PortfolioState {
 
     /**
      * Getter.
+     * 
      * @return Stock Prices
      */
     public double[] getStockPrices() {
@@ -99,6 +107,7 @@ public class PortfolioState {
 
     /**
      * Setter.
+     * 
      * @param stockPrices Value
      */
     public void setStockPrices(double[] stockPrices) {
@@ -111,6 +120,7 @@ public class PortfolioState {
 
     /**
      * Getter.
+     * 
      * @return Username
      */
     public String getUsername() {
@@ -119,6 +129,7 @@ public class PortfolioState {
 
     /**
      * Setter.
+     * 
      * @param username Value
      */
     public void setUsername(String username) {
@@ -127,6 +138,7 @@ public class PortfolioState {
 
     /**
      * Getter.
+     * 
      * @return Balance
      */
     public double getBalance() {
@@ -135,6 +147,7 @@ public class PortfolioState {
 
     /**
      * Setter.
+     * 
      * @param balance Value
      */
     public void setBalance(double balance) {

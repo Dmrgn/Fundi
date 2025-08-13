@@ -20,6 +20,7 @@ public class SellState {
 
     /**
      * Getter.
+     * 
      * @return Portfolio Id
      */
     public String getPortfolioId() {
@@ -28,6 +29,7 @@ public class SellState {
 
     /**
      * Setter.
+     * 
      * @param portfolioId Value
      */
     public void setPortfolioId(String portfolioId) {
@@ -36,6 +38,7 @@ public class SellState {
 
     /**
      * Getter.
+     * 
      * @return Sell Error
      */
     public String getSellError() {
@@ -44,6 +47,7 @@ public class SellState {
 
     /**
      * Setter.
+     * 
      * @param sellError Value
      */
     public void setSellError(String sellError) {
@@ -52,6 +56,7 @@ public class SellState {
 
     /**
      * Getter.
+     * 
      * @return Balance
      */
     public double getBalance() {
@@ -60,6 +65,7 @@ public class SellState {
 
     /**
      * Setter.
+     * 
      * @param balance Value
      */
     public void setBalance(double balance) {

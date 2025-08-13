@@ -174,8 +174,13 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface, 
     // --- Balance helpers for reuse across use cases ---
     public static double fetchBalance(String portfolioId) {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
-             PreparedStatement ps = conn.prepareStatement("SELECT balance FROM portfolios WHERE id = ?")) {
-            ps.setString(1, portfolioId);
+                PreparedStatement ps = conn.prepareStatement("SELECT balance FROM portfolios WHERE id = ?")) {
+            // Try integer binding first, fall back to string
+            try {
+                ps.setInt(1, Integer.parseInt(portfolioId.trim()));
+            } catch (NumberFormatException nfe) {
+                ps.setString(1, portfolioId);
+            }
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 return rs.getDouble("balance");
@@ -188,11 +193,17 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface, 
 
     public static void updateBalance(String portfolioId, double newBalance) {
         try (Connection conn = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
-             PreparedStatement ps = conn.prepareStatement("UPDATE portfolios SET balance = ? WHERE id = ?")) {
+                PreparedStatement ps = conn.prepareStatement("UPDATE portfolios SET balance = ? WHERE id = ?")) {
             ps.setDouble(1, newBalance);
-            ps.setString(2, portfolioId);
+            // Try integer binding first, fall back to string
+            try {
+                ps.setInt(2, Integer.parseInt(portfolioId.trim()));
+            } catch (NumberFormatException nfe) {
+                ps.setString(2, portfolioId);
+            }
             int rowsUpdated = ps.executeUpdate();
-            System.out.println("Updated balance for portfolio " + portfolioId + " to " + newBalance + " (rows affected: " + rowsUpdated + ")");
+            System.out.println("Updated balance for portfolio " + portfolioId + " to " + newBalance
+                    + " (rows affected: " + rowsUpdated + ")");
         } catch (SQLException e) {
             System.out.println("Error updating portfolio balance: " + e.getMessage());
         }

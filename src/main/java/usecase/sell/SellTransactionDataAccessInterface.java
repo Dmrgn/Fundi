@@ -37,6 +37,7 @@ public interface SellTransactionDataAccessInterface {
 
     /**
      * Get the current balance of a portfolio.
+     * 
      * @param portfolioId The portfolio ID
      * @return The current balance
      */
@@ -44,8 +45,9 @@ public interface SellTransactionDataAccessInterface {
 
     /**
      * Update the balance of a portfolio.
+     * 
      * @param portfolioId The portfolio ID
-     * @param newBalance The new balance
+     * @param newBalance  The new balance
      */
     void updatePortfolioBalance(String portfolioId, double newBalance);
 }

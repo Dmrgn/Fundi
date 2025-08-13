@@ -31,6 +31,7 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
 
     /**
      * Prepare the view for the portfolio use case.
+     * 
      * @param portfolioOutputData the output data
      */
     @Override
@@ -56,6 +57,7 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
 
     /**
      * Switch to the Buy View.
+     * 
      * @param portfolioId Set the state information for the Buy View Model
      */
     @Override
@@ -74,6 +76,7 @@ public class PortfolioPresenter implements PortfolioOutputBoundary {
 
     /**
      * Switch to the Sell View.
+     * 
      * @param portfolioId Set the state information for the Sell View Model
      */
     @Override

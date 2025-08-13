@@ -22,16 +22,16 @@ import usecase.search.SearchDataAccessInterface;
 public class FinnhubSearchDataAccessObject implements SearchDataAccessInterface {
 
     private static final String API_BASE_URL = "https://finnhub.io/api/v1/search";
-    private static final int NUMBER_FIVE = 5;
-    private static final int NUMBER_TEN = 10;
+    private static final int CONNECTION_TIMEOUT = 5;
+    private static final int READ_TIMEOUT = 10;
 
     private final OkHttpClient httpClient;
     private final String apiKey;
 
     public FinnhubSearchDataAccessObject() throws IOException {
         this.httpClient = new OkHttpClient.Builder()
-                .connectTimeout(NUMBER_FIVE, java.util.concurrent.TimeUnit.SECONDS)
-                .readTimeout(NUMBER_TEN, java.util.concurrent.TimeUnit.SECONDS)
+                .connectTimeout(CONNECTION_TIMEOUT, java.util.concurrent.TimeUnit.SECONDS)
+                .readTimeout(READ_TIMEOUT, java.util.concurrent.TimeUnit.SECONDS)
                 .build();
         // Read API key from FHkey.txt
         this.apiKey = Files.readString(Path.of("data/FHkey.txt")).trim();
@@ -69,47 +69,37 @@ public class FinnhubSearchDataAccessObject implements SearchDataAccessInterface 
         // Parse the search results from FinnHub
         if (jsonResponse.has("result")) {
             final JSONArray searchResults = jsonResponse.getJSONArray("result");
+            
+            // Return empty list if no results
+            if (searchResults.length() == 0) {
+                return results;
+            }
 
             for (int i = 0; i < searchResults.length(); i++) {
                 final JSONObject result = searchResults.getJSONObject(i);
 
-                final String symbol = result.getString("symbol");
+                final String symbol = result.optString("symbol", "");
                 final String description = result.optString("description", "");
-                final String type = result.optString("type", "");
+                final String type = result.optString("type", "Common Stock");
 
-                // Filter out any result with a period in symbol or description
-                if (symbol.contains(".") || description.contains(".")) {
+                // Only filter out clearly invalid symbols (empty or too long)
+                if (symbol.trim().isEmpty() || symbol.length() > 10) {
                     continue;
                 }
 
-                // FinnHub doesn't provide all the same fields as Alpha Vantage,
-                // so we'll use default values for missing fields
+                // Use more realistic defaults - don't assume everything is US-based
                 final SearchResult searchResult = new SearchResult(
-                        // symbol
                         symbol,
-                        // name (using description)
-                        description,
-                        // type
+                        description.isEmpty() ? symbol : description,
                         type,
-                        // region (default to US)
-                        "US",
-                        // marketOpen (default US market hours)
-                        "09:30",
-                        // marketClose (default US market hours)
-                        "16:00",
-                        // timezone (default US timezone)
-                        "America/New_York",
-                        // currency (default to USD)
-                        "USD",
-                        // matchScore (default to perfect match)
-                        1.0
+                        "Unknown",     // Don't assume region
+                        "N/A",         // Don't assume market hours
+                        "N/A",
+                        "N/A",         // Don't assume timezone
+                        "Unknown",     // Don't assume currency
+                        0.8           // Use reasonable default match score
                 );
                 results.add(searchResult);
-
-                // Stop once we have exactly 10 valid results
-                if (results.size() == NUMBER_TEN) {
-                    break;
-                }
             }
         }
 

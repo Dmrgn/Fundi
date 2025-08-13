@@ -63,17 +63,17 @@ public class BuyView extends BaseView implements PropertyChangeListener {
         formPanel.add(UiConstants.smallVerticalGap());
         formPanel.add(amountPanel);
 
-            JLabel balanceLabel = new JLabel("Balance: $0.00");
-            balanceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
-            balanceLabel.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
-            balanceLabel.setForeground(new java.awt.Color(230, 230, 255)); // Light color for contrast
-            formPanel.add(UiConstants.smallVerticalGap());
-            formPanel.add(balanceLabel);
+        JLabel balanceLabel = new JLabel("Balance: $0.00");
+        balanceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        balanceLabel.setFont(new java.awt.Font("Arial", java.awt.Font.BOLD, 18));
+        balanceLabel.setForeground(new java.awt.Color(230, 230, 255)); // Light color for contrast
+        formPanel.add(UiConstants.smallVerticalGap());
+        formPanel.add(balanceLabel);
 
-            this.buyViewModel.addPropertyChangeListener(evt -> {
-                BuyState s = this.buyViewModel.getState();
-                balanceLabel.setText(String.format("Balance: $%.2f", s.getBalance()));
-            });
+        this.buyViewModel.addPropertyChangeListener(evt -> {
+            BuyState s = this.buyViewModel.getState();
+            balanceLabel.setText(String.format("Balance: $%.2f", s.getBalance()));
+        });
 
         mainPanel.add(formPanel, BorderLayout.CENTER);
 

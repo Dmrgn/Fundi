@@ -15,9 +15,27 @@ import static org.junit.jupiter.api.Assertions.*;
 class SellInteractorTest {
     @BeforeAll
     static void setUp() throws SQLException {
+        // Create test portfolio 51 if it doesn't exist
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite")) {
+            try (java.sql.PreparedStatement ps = conn.prepareStatement(
+                    "INSERT OR IGNORE INTO users (id, username, password) VALUES (1, 'testuser', 'testpass')")) {
+                ps.executeUpdate();
+            }
+            try (java.sql.PreparedStatement ps = conn.prepareStatement(
+                    "INSERT OR IGNORE INTO portfolios (id, name, user_id, balance) VALUES (51, 'Test Portfolio', 1, 10000)")) {
+                ps.executeUpdate();
+            }
+        }
+
         DBTransactionDataAccessObject db = new DBTransactionDataAccessObject();
         // Neutralize any leftover rows from other suites
         db.hardDeleteAllFor("51", "NVDA");
+        // Clean up holdings table
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
+                java.sql.PreparedStatement ps = conn
+                        .prepareStatement("DELETE FROM holdings WHERE portfolio_id = 51 AND ticker = 'NVDA'")) {
+            ps.executeUpdate();
+        }
         // Seed with a clean long position
         db.save(new Transaction("51", "NVDA", 10, LocalDate.now(), 10.0));
     }

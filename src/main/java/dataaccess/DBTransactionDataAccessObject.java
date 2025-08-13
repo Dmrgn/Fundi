@@ -136,43 +136,101 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
                 """;
 
         try (PreparedStatement pstmt = connection.prepareStatement(insertTransaction)) {
-            pstmt.setString(1, transaction.getPortfolioId());
+            // Bind portfolio_id as integer when possible
+            try {
+                pstmt.setInt(1, Integer.parseInt(transaction.getPortfolioId().trim()));
+            } catch (NumberFormatException nfe) {
+                pstmt.setString(1, transaction.getPortfolioId());
+            }
             pstmt.setString(2, transaction.getStockTicker());
             pstmt.setInt(3, transaction.getQuantity());
             pstmt.setDate(4, java.sql.Date.valueOf(transaction.getTimestamp()));
             pstmt.setDouble(5, transaction.getPrice());
             pstmt.executeUpdate();
-        }
-        catch (SQLException exception) {
+        } catch (SQLException exception) {
             System.out.println(exception.getMessage());
         }
 
-        // Update holdings table
+        // Update holdings table (robust against CHECK constraints)
         int delta = transaction.getPrice() > 0 ? transaction.getQuantity() : -transaction.getQuantity();
-        String updateHoldings = """
-                INSERT INTO holdings (portfolio_id, ticker, quantity)
-                VALUES (?, ?, ?)
-                ON CONFLICT(portfolio_id, ticker) DO UPDATE SET quantity = MAX(0, quantity + excluded.quantity)
-                """;
+        final String selectQty = "SELECT quantity FROM holdings WHERE portfolio_id = ? AND UPPER(ticker) = UPPER(?)";
+        final String insertQty = "INSERT INTO holdings (portfolio_id, ticker, quantity) VALUES (?, ?, ?)";
+        final String updateQty = "UPDATE holdings SET quantity = ? WHERE portfolio_id = ? AND UPPER(ticker) = UPPER(?)";
+        final String deleteQty = "DELETE FROM holdings WHERE portfolio_id = ? AND UPPER(ticker) = UPPER(?)";
 
-        try (PreparedStatement pstmt = connection.prepareStatement(updateHoldings)) {
-            pstmt.setString(1, transaction.getPortfolioId());
-            pstmt.setString(2, transaction.getStockTicker());
-            pstmt.setInt(3, delta);
-            pstmt.executeUpdate();
+        try {
+            boolean rowExists = false;
+            int currentQty = 0;
 
-        }
-        catch (SQLException exception) {
+            // Check if row exists and get current quantity
+            try (PreparedStatement sel = connection.prepareStatement(selectQty)) {
+                try {
+                    sel.setInt(1, Integer.parseInt(transaction.getPortfolioId().trim()));
+                } catch (NumberFormatException nfe) {
+                    sel.setString(1, transaction.getPortfolioId());
+                }
+                sel.setString(2, transaction.getStockTicker().trim());
+                try (ResultSet rs = sel.executeQuery()) {
+                    if (rs.next()) {
+                        rowExists = true;
+                        currentQty = rs.getInt(1);
+                    }
+                }
+            }
+
+            int newQty = currentQty + delta;
+
+            if (rowExists) {
+                if (newQty <= 0) {
+                    // Delete the row
+                    try (PreparedStatement del = connection.prepareStatement(deleteQty)) {
+                        try {
+                            del.setInt(1, Integer.parseInt(transaction.getPortfolioId().trim()));
+                        } catch (NumberFormatException nfe) {
+                            del.setString(1, transaction.getPortfolioId());
+                        }
+                        del.setString(2, transaction.getStockTicker().trim());
+                        int delRows = del.executeUpdate();
+                        System.out.println("Deleted holdings row for " + transaction.getPortfolioId() + "/"
+                                + transaction.getStockTicker() + " (rows deleted: " + delRows + ")");
+                    }
+                } else {
+                    // Update the row
+                    try (PreparedStatement upd = connection.prepareStatement(updateQty)) {
+                        upd.setInt(1, newQty);
+                        try {
+                            upd.setInt(2, Integer.parseInt(transaction.getPortfolioId().trim()));
+                        } catch (NumberFormatException nfe) {
+                            upd.setString(2, transaction.getPortfolioId());
+                        }
+                        upd.setString(3, transaction.getStockTicker().trim());
+                        int updRows = upd.executeUpdate();
+                        System.out.println("Updated holdings for " + transaction.getPortfolioId() + "/"
+                                + transaction.getStockTicker() + " to " + newQty + " (rows updated: " + updRows + ")");
+                    }
+                }
+            } else {
+                // No existing row - only insert on positive delta (buys)
+                if (delta > 0) {
+                    try (PreparedStatement ins = connection.prepareStatement(insertQty)) {
+                        try {
+                            ins.setInt(1, Integer.parseInt(transaction.getPortfolioId().trim()));
+                        } catch (NumberFormatException nfe) {
+                            ins.setString(1, transaction.getPortfolioId());
+                        }
+                        ins.setString(2, transaction.getStockTicker().trim());
+                        ins.setInt(3, delta);
+                        int insRows = ins.executeUpdate();
+                        System.out.println("Inserted new holdings for " + transaction.getPortfolioId() + "/"
+                                + transaction.getStockTicker() + " = " + delta + " (rows inserted: " + insRows + ")");
+                    }
+                } else {
+                    System.out.println("Ignoring sell with no existing holdings for " + transaction.getPortfolioId()
+                            + "/" + transaction.getStockTicker());
+                }
+            }
+        } catch (SQLException exception) {
             System.out.println("Holdings update error: " + exception.getMessage());
-        }
-
-        // Delete holdings with quantity <= 0
-        String cleanupHoldings = "DELETE FROM holdings WHERE quantity <= 0";
-        try (Statement stmt = connection.createStatement()) {
-            stmt.executeUpdate(cleanupHoldings);
-        }
-        catch (SQLException exception) {
-            System.out.println("Holdings cleanup error: " + exception.getMessage());
         }
     }
 
@@ -265,8 +323,7 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
             while (rs.next()) {
                 symbols.add(rs.getString("stock_name"));
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             System.out.println("Error fetching user symbols: " + ex.getMessage());
         }
 
@@ -275,21 +332,45 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
 
     @Override
     public int getCurrentHoldings(String portfolioId, String ticker) {
-        final String sql = """
-                    SELECT COALESCE(SUM(
-                        CASE WHEN price < 0 THEN -amount ELSE amount END
-                    ), 0) AS qty
-                    FROM transactions
-                    WHERE portfolio_id = ? AND stock_name = ?
+        final String sqlHoldings = """
+                    SELECT COALESCE(quantity, 0) AS qty
+                    FROM holdings
+                    WHERE portfolio_id = ? AND UPPER(ticker) = UPPER(?)
                 """;
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
-            ps.setString(1, portfolioId);
-            ps.setString(2, ticker);
+        final String sqlTxnFallback = """
+                    SELECT COALESCE(SUM(CASE WHEN price > 0 THEN amount ELSE -amount END), 0) AS qty
+                    FROM transactions
+                    WHERE portfolio_id = ? AND UPPER(stock_name) = UPPER(?)
+                """;
+        try (PreparedStatement ps = connection.prepareStatement(sqlHoldings)) {
+            try {
+                ps.setInt(1, Integer.parseInt(portfolioId.trim()));
+            } catch (NumberFormatException nfe) {
+                ps.setString(1, portfolioId);
+            }
+            ps.setString(2, ticker == null ? null : ticker.trim());
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    int qty = rs.getInt("qty");
+                    if (qty != 0)
+                        return qty;
+                }
+            }
+        } catch (Exception ex) {
+            // ignore and try fallback
+        }
+
+        try (PreparedStatement ps = connection.prepareStatement(sqlTxnFallback)) {
+            try {
+                ps.setInt(1, Integer.parseInt(portfolioId.trim()));
+            } catch (NumberFormatException nfe) {
+                ps.setString(1, portfolioId);
+            }
+            ps.setString(2, ticker == null ? null : ticker.trim());
             try (ResultSet rs = ps.executeQuery()) {
                 return rs.next() ? rs.getInt("qty") : 0;
             }
-        }
-        catch (Exception ex) {
+        } catch (Exception ex) {
             return 0;
         }
     }

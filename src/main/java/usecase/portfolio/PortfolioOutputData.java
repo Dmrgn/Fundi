@@ -13,7 +13,8 @@ public class PortfolioOutputData {
     private final double[] stockPrices;
     private final double balance;
 
-    public PortfolioOutputData(String username, String portfolioId, String portfolioName, String[] stockNames, int[] stockAmounts, double[] stockPrices, double balance) {
+    public PortfolioOutputData(String username, String portfolioId, String portfolioName, String[] stockNames,
+            int[] stockAmounts, double[] stockPrices, double balance) {
         this.username = username;
         this.portfolioId = portfolioId;
         this.portfolioName = portfolioName;
@@ -25,6 +26,7 @@ public class PortfolioOutputData {
 
     /**
      * Getter.
+     * 
      * @return Stock Names
      */
     public String[] getStockNames() {
@@ -33,6 +35,7 @@ public class PortfolioOutputData {
 
     /**
      * Getter.
+     * 
      * @return Stock Amounts
      */
     public int[] getStockAmounts() {
@@ -41,6 +44,7 @@ public class PortfolioOutputData {
 
     /**
      * Getter.
+     * 
      * @return Stock Prices
      */
     public double[] getStockPrices() {
@@ -49,6 +53,7 @@ public class PortfolioOutputData {
 
     /**
      * Getter.
+     * 
      * @return Portfolio Id
      */
     public String getPortfolioId() {
@@ -57,6 +62,7 @@ public class PortfolioOutputData {
 
     /**
      * Getter.
+     * 
      * @return Portfolio Name
      */
     public String getPortfolioName() {
@@ -65,6 +71,7 @@ public class PortfolioOutputData {
 
     /**
      * Getter.
+     * 
      * @return Username
      */
     public String getUsername() {
@@ -73,6 +80,7 @@ public class PortfolioOutputData {
 
     /**
      * Getter.
+     * 
      * @return Balance
      */
     public double getBalance() {

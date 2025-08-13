@@ -18,6 +18,7 @@ public class SellOutputData {
 
     /**
      * Getter.
+     * 
      * @return Ticker
      */
     public String getTicker() {
@@ -26,6 +27,7 @@ public class SellOutputData {
 
     /**
      * Getter.
+     * 
      * @return Price
      */
     public double getPrice() {
@@ -34,6 +36,7 @@ public class SellOutputData {
 
     /**
      * Getter.
+     * 
      * @return Quantity
      */
     public int getQuantity() {
@@ -42,6 +45,7 @@ public class SellOutputData {
 
     /**
      * Getter.
+     * 
      * @return Balance
      */
     public double getBalance() {

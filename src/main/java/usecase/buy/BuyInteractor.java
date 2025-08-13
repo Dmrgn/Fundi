@@ -64,7 +64,8 @@ public class BuyInteractor implements BuyInputBoundary {
 
         // Update balance (deduct cost)
         final double newBalance = currentBalance - totalCost;
-        System.out.println("Updating balance from " + currentBalance + " to " + newBalance + " (cost: " + totalCost + ")");
+        System.out.println(
+                "Updating balance from " + currentBalance + " to " + newBalance + " (cost: " + totalCost + ")");
         transactionDataAccessObject.updatePortfolioBalance(portfolioId, newBalance);
 
         final BuyOutputData buyOutputData = new BuyOutputData(

@@ -4,9 +4,6 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Cursor;
 import java.awt.FlowLayout;
-import java.awt.GradientPaint;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -48,7 +45,7 @@ public abstract class BaseView extends JPanel {
         setOpaque(false);
 
         // Build the page template
-        JPanel page = createGradientContentPanel();
+        JPanel page = new GradientPanel(theme);
         page.setLayout(new BorderLayout());
 
         header.setOpaque(false);
@@ -148,23 +145,35 @@ public abstract class BaseView extends JPanel {
      * 
      * @return the coloured panel
      */
+    protected static class GradientPanel extends JPanel {
+        private final Theme theme;
+
+        GradientPanel(Theme theme) {
+            super(new BorderLayout(PANEL_GAP, PANEL_GAP));
+            this.theme = theme;
+            setOpaque(false);
+        }
+
+        @Override
+        protected void paintComponent(java.awt.Graphics g) {
+            super.paintComponent(g);
+            java.awt.Graphics2D g2d = (java.awt.Graphics2D) g;
+            int width = getWidth();
+            int height = getHeight();
+            Color c1 = theme.secondary();
+            Color c2 = theme.primary();
+            g2d.setPaint(new java.awt.GradientPaint(0, 0, c1, width, height, c2));
+            g2d.fillRect(0, 0, width, height);
+        }
+    }
+
+    /**
+     * Backward-compatible helper for views that previously created a gradient
+     * content panel.
+     * Prefer composing your own container with GradientPanel if creating new views.
+     */
     protected JPanel createGradientContentPanel() {
-        JPanel panel = new JPanel() {
-            @Override
-            protected void paintComponent(Graphics g) {
-                super.paintComponent(g);
-                Graphics2D g2d = (Graphics2D) g;
-                int width = getWidth();
-                int height = getHeight();
-                Color c1 = theme.secondary();
-                Color c2 = theme.primary();
-                g2d.setPaint(new GradientPaint(0, 0, c1, width, height, c2));
-                g2d.fillRect(0, 0, width, height);
-            }
-        };
-        panel.setLayout(new BorderLayout(PANEL_GAP, PANEL_GAP));
-        panel.setOpaque(false);
-        return panel;
+        return new GradientPanel(theme);
     }
 
 }

@@ -163,5 +163,4 @@ public class LoginView extends BaseView implements PropertyChangeListener {
         p.add(field, BorderLayout.CENTER);
         return p;
     }
-
 }

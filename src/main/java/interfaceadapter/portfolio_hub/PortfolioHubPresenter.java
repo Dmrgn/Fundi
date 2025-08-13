@@ -35,7 +35,7 @@ public class PortfolioHubPresenter implements PortfolioHubOutputBoundary {
         this.portfoliosViewModel.setState(portfoliosState);
         this.portfoliosViewModel.firePropertyChanged();
 
-        this.viewManagerModel.setState(portfoliosViewModel.getViewName());
+        this.viewManagerModel.setState("tabbedmain");
         this.viewManagerModel.firePropertyChanged();
     }
 

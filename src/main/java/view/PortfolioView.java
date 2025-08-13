@@ -7,6 +7,7 @@ import interfaceadapter.history.HistoryController;
 import interfaceadapter.portfolio.PortfolioController;
 import interfaceadapter.portfolio.PortfolioState;
 import interfaceadapter.portfolio.PortfolioViewModel;
+import interfaceadapter.portfolio.DeletePortfolioController;
 import interfaceadapter.recommend.RecommendController;
 import view.ui.ButtonFactory;
 import view.ui.LabelFactory;
@@ -21,13 +22,15 @@ import static entity.PreferredCurrencyManager.getConverter;
 import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
 public class PortfolioView extends BaseView {
-    private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Amount"};
-    private static final String[] USE_CASES = new String[]{"Analysis", "Recommendations", "History", "Buy", "Sell"};
+    private static final String[] COLUMN_NAMES = { "Ticker", "Quantity", "Amount" };
+    private static final String[] USE_CASES = new String[] { "Analysis", "Recommendations", "History", "Buy", "Sell",
+            "Delete" };
     private final PortfolioViewModel portfolioViewModel;
     private final PortfolioController portfolioController;
     private final HistoryController historyController;
     private final AnalysisController analysisController;
     private final RecommendController recommendController;
+    private final DeletePortfolioController deletePortfolioController;
     private final BackNavigationHelper backNavigationHelper;
     private final JLabel titleLabel = LabelFactory.createTitleLabel("");
     private final JLabel usernameLabel = LabelFactory.createLabel("");
@@ -41,13 +44,15 @@ public class PortfolioView extends BaseView {
 
     public PortfolioView(PortfolioViewModel portfolioViewModel, PortfolioController portfolioController,
             HistoryController historyController, AnalysisController analysisController,
-            RecommendController recommendController, ViewManagerModel viewManagerModel) {
+            RecommendController recommendController, ViewManagerModel viewManagerModel,
+            DeletePortfolioController deletePortfolioController) {
         super("portfolio");
         this.portfolioViewModel = portfolioViewModel;
         this.portfolioController = portfolioController;
         this.historyController = historyController;
         this.analysisController = analysisController;
         this.recommendController = recommendController;
+        this.deletePortfolioController = deletePortfolioController;
         this.backNavigationHelper = new BackNavigationHelper(viewManagerModel);
 
         generateButtons();
@@ -117,15 +122,14 @@ public class PortfolioView extends BaseView {
                 if (converter != null && !preferredCurrency.equals("USD")) {
                     try {
                         convertedPrice = converter.convert(originalPrice, "USD", preferredCurrency);
-                    }
-                    catch (Exception e) {
+                    } catch (Exception e) {
                         System.err.println("Currency conversion failed: " + e.getMessage());
                     }
 
                 }
 
                 tableModel.addRow(new Object[] {
-                        names[i], amounts[i], String.format("%.2f %s", convertedPrice, preferredCurrency)});
+                        names[i], amounts[i], String.format("%.2f %s", convertedPrice, preferredCurrency) });
             }
         });
 
@@ -143,6 +147,18 @@ public class PortfolioView extends BaseView {
                     this.analysisController.execute(state.getPortfolioId());
                 } else if (useCaseButton.getText().equals("Recommendations")) {
                     this.recommendController.execute(state.getPortfolioId());
+                } else if (useCaseButton.getText().equals("Delete")) {
+                    int res = JOptionPane.showConfirmDialog(this,
+                            "Are you sure you want to delete this portfolio? This cannot be undone.",
+                            "Delete Portfolio",
+                            JOptionPane.YES_NO_OPTION,
+                            JOptionPane.WARNING_MESSAGE);
+                    if (res == JOptionPane.YES_OPTION) {
+                        System.out.println("PortfolioView: Delete confirmed, calling controller with username="
+                                + state.getUsername() + ", portfolioName=" + state.getPortfolioName());
+                        deletePortfolioController.execute(state.getUsername(), state.getPortfolioName());
+                        System.out.println("PortfolioView: Delete controller execute() completed");
+                    }
                 }
             });
         }

@@ -10,11 +10,12 @@ import java.util.HashMap;
 import java.util.Map;
 
 import usecase.create.CreateDataAccessInterface;
+import usecase.delete_portfolio.DeletePortfolioDataAccessInterface;
 
 /**
  * DAO for portfolios data implemented using a Database to persist the data.
  */
-public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
+public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface, DeletePortfolioDataAccessInterface {
     private final Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
     private final Map<String, Map<String, String>> portfolios = new HashMap<>();
     private final Map<String, String> userToId = new HashMap<>();
@@ -25,34 +26,18 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
      * @throws SQLException If database connection fails
      */
     public DBPortfoliosDataAccessObject() throws SQLException {
-        String query = """
-                SELECT p.id, p.name, u.id, u.username FROM portfolios p
-                JOIN users u ON p.user_id = u.id
-                """;
         try (Statement stmt = connection.createStatement()) {
-            ResultSet rs = stmt.executeQuery(query);
+            ResultSet rs = stmt.executeQuery(
+                    "SELECT p.id, p.name, u.id, u.username FROM portfolios p JOIN users u ON p.user_id = u.id");
             while (rs.next()) {
-                String id = rs.getString(1);
-                String name = rs.getString(2);
-                String userId = rs.getString(3);
-                String username = rs.getString(4);
+                String id = rs.getString(1), name = rs.getString(2), userId = rs.getString(3),
+                        username = rs.getString(4);
                 userToId.put(username, userId);
-
-                if (!portfolios.containsKey(userId)) {
-                    portfolios.put(userId, new HashMap<>());
-                    portfolios.get(userId).put(name, id);
-                }
-
-                else {
-                    portfolios.get(userId).put(name, id);
-                }
+                portfolios.computeIfAbsent(userId, k -> new HashMap<>()).put(name, id);
             }
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
-
-        catch (SQLException exception) {
-            System.out.println(exception.getMessage());
-        }
-
     }
 
     /**
@@ -63,10 +48,8 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
      */
     @Override
     public Map<String, String> getPortfolios(String username) {
-        if (!portfolios.containsKey(userToId.get(username))) {
-            portfolios.put(userToId.get(username), new HashMap<>());
-        }
-        return portfolios.get(userToId.get(username));
+        String userId = userToId.get(username);
+        return portfolios.computeIfAbsent(userId, k -> new HashMap<>());
     }
 
     private String saveDB(String portfolioName, String username) {
@@ -84,10 +67,8 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
                     userToId.put(username, userId);
                 }
             }
-        }
-
-        catch (SQLException exception) {
-            System.out.println(exception.getMessage());
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
 
         query = """
@@ -100,17 +81,10 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
             pstmt.setString(1, portfolioName);
             pstmt.setString(2, userId);
             ResultSet rs = pstmt.executeQuery();
-            while (rs.next()) {
-                portfolioId = rs.getString(1);
-                if (!portfolios.containsKey(userId)) {
-                    portfolios.put(userId, new HashMap<>());
-                }
-            }
-
-        }
-
-        catch (SQLException exception) {
-            System.out.println(exception.getMessage());
+            if (rs.next())
+                portfolios.computeIfAbsent(userId, k -> new HashMap<>()).put(portfolioName, rs.getString(1));
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
         return portfolioId;
     }
@@ -122,12 +96,26 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
      */
     @Override
     public void save(String portfolioName, String username) {
-        String id = saveDB(portfolioName, username);
-        String userId = userToId.get(username);
-        if (!portfolios.containsKey(userId)) {
-            portfolios.put(userId, new HashMap<>());
+        String userId = userToId.computeIfAbsent(username, u -> {
+            try (PreparedStatement pstmt = connection.prepareStatement("SELECT id FROM users WHERE username = ?")) {
+                pstmt.setString(1, u);
+                ResultSet rs = pstmt.executeQuery();
+                return rs.next() ? rs.getString(1) : "";
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
+                return "";
+            }
+        });
+        try (PreparedStatement pstmt = connection
+                .prepareStatement("INSERT INTO portfolios(name, user_id) VALUES (?, ?) RETURNING id")) {
+            pstmt.setString(1, portfolioName);
+            pstmt.setString(2, userId);
+            ResultSet rs = pstmt.executeQuery();
+            if (rs.next())
+                portfolios.computeIfAbsent(userId, k -> new HashMap<>()).put(portfolioName, rs.getString(1));
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
-        portfolios.get(userId).put(portfolioName, id);
     }
 
     /**
@@ -140,12 +128,7 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
     @Override
     public boolean existsByName(String portfolioName, String username) {
         String userId = userToId.get(username);
-        if (!portfolios.containsKey(userId)) {
-            return false;
-        }
-
-        Map<String, String> userPortfolios = portfolios.get(userId);
-        return userPortfolios.containsKey(portfolioName);
+        return portfolios.containsKey(userId) && portfolios.get(userId).containsKey(portfolioName);
     }
 
     /**
@@ -155,53 +138,36 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface {
      * @param portfolioName The portfolio name to delete
      * @param username      The username to delete the portfolio at
      */
+    @Override
     public void remove(String portfolioName, String username) {
-        portfolios.get(userToId.get(username)).remove(portfolioName);
         String userId = userToId.get(username);
-        userToId.remove(username);
-
-        // Get portfolio ID before deleting
+        portfolios.getOrDefault(userId, new HashMap<>()).remove(portfolioName);
         String portfolioId = null;
-        String getPortfolioIdQuery = """
-                SELECT id FROM portfolios WHERE user_id = ? AND name = ?
-                """;
-        try (PreparedStatement pstmt = connection.prepareStatement(getPortfolioIdQuery)) {
+        try (PreparedStatement pstmt = connection
+                .prepareStatement("SELECT id FROM portfolios WHERE user_id = ? AND name = ?")) {
             pstmt.setString(1, userId);
             pstmt.setString(2, portfolioName);
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next()) {
+            if (rs.next())
                 portfolioId = rs.getString("id");
-            }
-        } catch (SQLException exception) {
-            System.out.println(exception.getMessage());
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
-
-        // Delete holdings first
         if (portfolioId != null) {
-            String deleteHoldingsQuery = """
-                    DELETE FROM holdings WHERE portfolio_id = ?
-                    """;
-            try (PreparedStatement pstmt = connection.prepareStatement(deleteHoldingsQuery)) {
+            try (PreparedStatement pstmt = connection.prepareStatement("DELETE FROM holdings WHERE portfolio_id = ?")) {
                 pstmt.setString(1, portfolioId);
                 pstmt.executeUpdate();
-            } catch (SQLException exception) {
-                System.out.println(exception.getMessage());
+            } catch (SQLException e) {
+                System.out.println(e.getMessage());
             }
         }
-
-        // Then delete portfolio
-        String query = """
-                DELETE FROM portfolios WHERE user_id = ? and name = ?;
-                """;
-        try (PreparedStatement pstmt = connection.prepareStatement(query)) {
+        try (PreparedStatement pstmt = connection
+                .prepareStatement("DELETE FROM portfolios WHERE user_id = ? and name = ?")) {
             pstmt.setString(1, userId);
             pstmt.setString(2, portfolioName);
             pstmt.executeUpdate();
-
-        }
-
-        catch (SQLException exception) {
-            System.out.println(exception.getMessage());
+        } catch (SQLException e) {
+            System.out.println(e.getMessage());
         }
     }
 }

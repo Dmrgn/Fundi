@@ -1,19 +1,32 @@
 package view;
 
-import dataaccess.ExchangeAPIDataAccessObject;
-import interfaceadapter.change_password.ChangePwdController;
-import interfaceadapter.change_password.ChangePwdViewModel;
-import entity.CurrencyConverter;
-import entity.PreferredCurrencyManager;
-
-import javax.swing.*;
-import java.awt.*;
+import java.awt.BorderLayout;
+import java.awt.Cursor;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
+import java.awt.Insets;
 import java.util.List;
 
-import view.ui.UiConstants;
+import javax.swing.BorderFactory;
+import javax.swing.Box;
+import javax.swing.JButton;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JPasswordField;
+import javax.swing.JScrollPane;
+
+import dataaccess.ExchangeAPIDataAccessObject;
+import entity.CurrencyConverter;
+import entity.PreferredCurrencyManager;
+import interfaceadapter.change_password.ChangePwdController;
+import interfaceadapter.change_password.ChangePwdViewModel;
 import interfaceadapter.dashboard.DashboardController;
-import interfaceadapter.main.MainViewModel;
 import interfaceadapter.login.LoginController;
+import interfaceadapter.main.MainViewModel;
+import view.ui.UiConstants;
 
 public class SettingsView extends AbstractBaseView {
     private final JComboBox<String> currencyDropdown;
@@ -83,7 +96,8 @@ public class SettingsView extends AbstractBaseView {
                 if (converter != null) {
                     PreferredCurrencyManager.setPreferredCurrency(selectedCurrency, converter);
                     System.out.println("Currency changed to " + selectedCurrency);
-                } else {
+                }
+                else {
                     System.out.println("Failed to fetch currency data");
                 }
             }

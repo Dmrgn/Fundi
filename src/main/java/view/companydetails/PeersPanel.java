@@ -2,7 +2,6 @@ package view.companydetails;
 
 import java.awt.Component;
 import java.awt.Cursor;
-
 import java.util.List;
 
 import javax.swing.Box;

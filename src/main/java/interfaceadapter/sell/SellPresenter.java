@@ -31,7 +31,8 @@ public class SellPresenter implements SellOutputBoundary {
     public void prepareSuccessView(SellOutputData outputData) {
         final PortfolioCommand cmd = new PortfolioUpdateCommand(
                 outputData.getTicker(),
-                -outputData.getPrice(), // negative => sell
+                // negative => sell
+                -outputData.getPrice(),
                 outputData.getQuantity());
         cmd.execute(portfolioViewModel);
         // Reflect new balance in the sell view

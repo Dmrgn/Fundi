@@ -81,8 +81,9 @@ public class RecommendView extends AbstractBaseView {
             if (converter != null && !preferredCurrency.equals("USD")) {
                 try {
                     convertedPrice = converter.convert(originalValue, "USD", preferredCurrency);
-                } catch (Exception e) {
-                    System.err.println("Currency conversion failed: " + e.getMessage());
+                }
+                catch (Exception ex) {
+                    System.err.println("Currency conversion failed: " + ex.getMessage());
                 }
             }
             JLabel label = LabelFactory

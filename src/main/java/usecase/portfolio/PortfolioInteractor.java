@@ -20,7 +20,7 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
     }
 
     /**
-     * Execute the Portofolio Use Case
+     * Execute the Portofolio Use Case.
      * 
      * @param portfolioInputData the input data.
      */
@@ -51,8 +51,9 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
                 double price = stockDataAccessObject.getPrice(ticker);
                 values.put(ticker, price * quantity);
             }
-        } catch (java.sql.SQLException e) {
-            System.out.println("Error fetching holdings: " + e.getMessage());
+        }
+        catch (java.sql.SQLException ex) {
+            System.out.println("Error fetching holdings: " + ex.getMessage());
         }
 
         double balance = dataaccess.DBPortfoliosDataAccessObject.fetchBalance(portfolioId);
@@ -69,7 +70,7 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
     }
 
     /**
-     * Switch to the Buy View
+     * Switch to the Buy View.
      * 
      * @param portfolioId The portfolio id to update the state of the Buy View Model
      */
@@ -79,7 +80,7 @@ public class PortfolioInteractor implements PortfolioInputBoundary {
     }
 
     /**
-     * Switch to the Sell View
+     * Switch to the Sell View.
      * 
      * @param portfolioId The portfolio id to update the state of the Sell View
      *                    Model

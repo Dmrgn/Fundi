@@ -1,6 +1,5 @@
 package usecase.portfolio_hub;
 
-
 /**
  * Input boundary for Portfolio Hub Use Case.
  */

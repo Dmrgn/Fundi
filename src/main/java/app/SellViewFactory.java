@@ -20,7 +20,8 @@ public final class SellViewFactory {
      * @param navigationController The Navigation Controller
      * @return The Sell View
      */
-    public static SellView create(SellViewModel viewModel, SellController controller, NavigationController navigationController) {
+    public static SellView create(SellViewModel viewModel, SellController controller,
+                                  NavigationController navigationController) {
         return new SellView(viewModel, controller, navigationController);
     }
 }

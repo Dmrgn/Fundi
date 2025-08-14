@@ -12,6 +12,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import entity.CurrencyConverter;
 import interfaceadapter.buy.BuyController;
 import interfaceadapter.buy.BuyState;
 import interfaceadapter.buy.BuyViewModel;
@@ -20,6 +21,9 @@ import view.ui.ButtonFactory;
 import view.ui.FieldFactory;
 import view.ui.PanelFactory;
 import view.ui.UiConstants;
+
+import static entity.PreferredCurrencyManager.getConverter;
+import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
 /**
  * The View for the Buy Use Case.
@@ -72,7 +76,22 @@ public class BuyView extends AbstractBaseView implements PropertyChangeListener 
 
         this.buyViewModel.addPropertyChangeListener(evt -> {
             BuyState s = this.buyViewModel.getState();
-            balanceLabel.setText(String.format("Balance: $%.2f", s.getBalance()));
+
+            String preferred = getPreferredCurrency();
+            String currency = (preferred == null || preferred.isBlank()) ? "USD" : preferred;
+
+            double displayBalance = s.getBalance();
+            CurrencyConverter converter = getConverter();
+            if (converter != null && !"USD".equals(currency)) {
+                try {
+                    displayBalance = converter.convert(displayBalance, "USD", currency);
+                }
+                catch (Exception ex) {
+                    System.err.println("Currency conversion for balance (BuyView) failed: " + ex.getMessage());
+                }
+            }
+
+            balanceLabel.setText(String.format("Balance: %.2f  %s", displayBalance, currency));
         });
 
         mainPanel.add(formPanel, BorderLayout.CENTER);

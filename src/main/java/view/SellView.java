@@ -14,6 +14,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import entity.CurrencyConverter;
 import interfaceadapter.navigation.NavigationController;
 import interfaceadapter.sell.SellController;
 import interfaceadapter.sell.SellState;
@@ -22,6 +23,9 @@ import view.ui.ButtonFactory;
 import view.ui.FieldFactory;
 import view.ui.PanelFactory;
 import view.ui.UiConstants;
+
+import static entity.PreferredCurrencyManager.getConverter;
+import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
 /**
  * The View for the Sell Use Case.
@@ -64,7 +68,8 @@ public class SellView extends AbstractBaseView implements PropertyChangeListener
         JLabel balanceLabel = new JLabel("Balance: $0.00");
         balanceLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         balanceLabel.setFont(new Font("Arial", Font.BOLD, 18));
-        balanceLabel.setForeground(new Color(230, 230, 255)); // Light color for contrast
+        // Light color for contrast
+        balanceLabel.setForeground(new Color(230, 230, 255));
         formPanel.add(UiConstants.smallVerticalGap());
         formPanel.add(balanceLabel);
 
@@ -89,7 +94,21 @@ public class SellView extends AbstractBaseView implements PropertyChangeListener
 
         this.sellViewModel.addPropertyChangeListener(evt -> {
             SellState s = this.sellViewModel.getState();
-            balanceLabel.setText(String.format("Balance: $%.2f", s.getBalance()));
+            String preferredCurrency = getPreferredCurrency();
+            String currency = (preferredCurrency == null || preferredCurrency.isBlank()) ? "USD" : preferredCurrency;
+
+            double displayBalance = s.getBalance();
+            CurrencyConverter converter = getConverter();
+            if (converter != null && !"USD".equals(currency)) {
+                try {
+                    displayBalance = converter.convert(displayBalance, "USD", currency);
+                }
+                catch (Exception ex) {
+                    System.err.println("Currency conversion for balance (SellView) failed: " + ex.getMessage());
+                }
+            }
+
+            balanceLabel.setText(String.format("Balance: %.2f  %s", displayBalance, currency));
         });
     }
 

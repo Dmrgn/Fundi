@@ -22,9 +22,9 @@ import static entity.PreferredCurrencyManager.getConverter;
 import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
 public class PortfolioView extends AbstractBaseView {
-    private static final String[] COLUMN_NAMES = { "Ticker", "Quantity", "Amount" };
-    private static final String[] USE_CASES = new String[] { "Analysis", "Recommendations", "History", "Buy", "Sell",
-            "Delete" };
+    private static final String[] COLUMN_NAMES = {"Ticker", "Quantity", "Amount" };
+    private static final String[] USE_CASES = new String[] {"Analysis", "Recommendations", "History", "Buy", "Sell",
+            "Delete"};
     private final PortfolioViewModel portfolioViewModel;
     private final PortfolioController portfolioController;
     private final HistoryController historyController;
@@ -109,16 +109,24 @@ public class PortfolioView extends AbstractBaseView {
             PortfolioState state = this.portfolioViewModel.getState();
             this.usernameLabel.setText("Logged in as: " + state.getUsername());
             this.titleLabel.setText("Portfolio: " + state.getPortfolioName());
-            this.balanceLabel.setText(String.format("Balance: $%.2f", state.getBalance()));
+            CurrencyConverter converter = getConverter();
+            String preferredCurrency = getPreferredCurrency();
+            double displayBalance = state.getBalance();
+
+            if (converter != null && preferredCurrency != null && !"USD".equals(preferredCurrency)) {
+                try {
+                    displayBalance = converter.convert(displayBalance, "USD", preferredCurrency);
+                }
+                catch (Exception ex) {
+                    System.err.println("Currency conversion for balance failed: " + ex.getMessage());
+                }
+            }
+            this.balanceLabel.setText(String.format("Balance: %.2f %s",displayBalance, preferredCurrency));
 
             String[] names = state.getStockNames();
             int[] amounts = state.getStockAmounts();
             double[] prices = state.getStockPrices();
             tableModel.setRowCount(0);
-
-            CurrencyConverter converter = getConverter();
-            String preferredCurrency = getPreferredCurrency();
-
             for (int i = 0; i < names.length; i++) {
                 double originalPrice = prices[i];
                 double convertedPrice = originalPrice;
@@ -126,8 +134,9 @@ public class PortfolioView extends AbstractBaseView {
                 if (converter != null && !preferredCurrency.equals("USD")) {
                     try {
                         convertedPrice = converter.convert(originalPrice, "USD", preferredCurrency);
-                    } catch (Exception e) {
-                        System.err.println("Currency conversion failed: " + e.getMessage());
+                    }
+                    catch (Exception ex) {
+                        System.err.println("Currency conversion failed: " + ex.getMessage());
                     }
 
                 }

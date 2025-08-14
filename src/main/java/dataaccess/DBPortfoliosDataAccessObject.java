@@ -149,17 +149,20 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface, 
             pstmt.setString(1, userId);
             pstmt.setString(2, portfolioName);
             ResultSet rs = pstmt.executeQuery();
-            if (rs.next())
+            if (rs.next()) {
                 portfolioId = rs.getString("id");
-        } catch (SQLException e) {
-            System.out.println(e.getMessage());
+            }
+        }
+        catch (SQLException ex) {
+            System.out.println(ex.getMessage());
         }
         if (portfolioId != null) {
             try (PreparedStatement pstmt = connection.prepareStatement("DELETE FROM holdings WHERE portfolio_id = ?")) {
                 pstmt.setString(1, portfolioId);
                 pstmt.executeUpdate();
-            } catch (SQLException e) {
-                System.out.println(e.getMessage());
+            }
+            catch (SQLException ex) {
+                System.out.println(ex.getMessage());
             }
         }
         try (PreparedStatement pstmt = connection

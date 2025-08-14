@@ -388,7 +388,7 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
             ps.setString(2, stockName);
             ps.executeUpdate();
         }
-        
+
         // Delete from holdings table
         final String sqlHoldings = "DELETE FROM holdings WHERE portfolio_id = ? AND UPPER(ticker) = UPPER(?)";
         try (PreparedStatement ps = connection.prepareStatement(sqlHoldings)) {
@@ -400,7 +400,7 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
             ps.setString(2, stockName);
             ps.executeUpdate();
         }
-        
+
     }
 
     @Override

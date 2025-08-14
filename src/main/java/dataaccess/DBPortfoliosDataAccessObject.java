@@ -37,8 +37,7 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface, 
                 userToId.put(username, userId);
                 portfolios.computeIfAbsent(userId, k -> new HashMap<>()).put(name, id);
             }
-        }
-        catch (SQLException e) {
+        } catch (SQLException e) {
             System.out.println(e.getMessage());
         }
     }
@@ -154,16 +153,14 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface, 
             if (rs.next()) {
                 portfolioId = rs.getString("id");
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             System.out.println(ex.getMessage());
         }
         if (portfolioId != null) {
             try (PreparedStatement pstmt = connection.prepareStatement("DELETE FROM holdings WHERE portfolio_id = ?")) {
                 pstmt.setString(1, portfolioId);
                 pstmt.executeUpdate();
-            }
-            catch (SQLException ex) {
+            } catch (SQLException ex) {
                 System.out.println(ex.getMessage());
             }
         }
@@ -191,8 +188,7 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface, 
             if (rs.next()) {
                 return rs.getDouble("balance");
             }
-        }
-        catch (SQLException ex) {
+        } catch (SQLException ex) {
             System.out.println("Error fetching portfolio balance: " + ex.getMessage());
         }
         return 0.0;

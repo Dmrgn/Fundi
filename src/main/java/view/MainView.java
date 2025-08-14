@@ -1,19 +1,15 @@
 package view;
 
-import interfaceadapter.main.MainState;
 import interfaceadapter.main.MainViewModel;
 import interfaceadapter.news.NewsController;
 import interfaceadapter.portfolio_hub.PortfolioHubController;
-import view.ui.ButtonFactory;
 import view.ui.UiConstants;
 import interfaceadapter.navigation.NavigationController;
 import interfaceadapter.search.SearchController;
 import interfaceadapter.search.SearchViewModel;
-import view.ui.icons.BellIcon;
 
 import javax.swing.*;
 import java.awt.*;
-import view.ui.FieldFactory;
 
 /**
  * The Main View

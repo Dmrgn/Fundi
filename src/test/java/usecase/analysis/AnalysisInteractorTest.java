@@ -17,7 +17,7 @@ class AnalysisInteractorTest {
     static void setUp() throws SQLException {
         // Ensure database schema is initialized before any DAO operations
         dataaccess.DatabaseInitializer.ensureInitialized();
-        
+
         DBTransactionDataAccessObject dbTransactionDataAccessObject = new DBTransactionDataAccessObject();
         dbTransactionDataAccessObject.save(new Transaction("51", "NVDA", 10,
                 LocalDate.now(), 10.0));
@@ -27,7 +27,7 @@ class AnalysisInteractorTest {
     void analyze() throws SQLException {
         DBTransactionDataAccessObject dbTransactionDataAccessObject = new DBTransactionDataAccessObject();
         DBStockDataAccessObject dbStockDataAccessObject = new DBStockDataAccessObject(true); // Skip API calls
-        
+
         AnalysisInputData analysisInputData = new AnalysisInputData("51");
         AnalysisOutputBoundary analysisOutputBoundary = new AnalysisOutputBoundary() {
             @Override
@@ -45,7 +45,8 @@ class AnalysisInteractorTest {
                 // Not testing
             }
         };
-        AnalysisInteractor interactor = new AnalysisInteractor(dbStockDataAccessObject, dbTransactionDataAccessObject, analysisOutputBoundary);
+        AnalysisInteractor interactor = new AnalysisInteractor(dbStockDataAccessObject, dbTransactionDataAccessObject,
+                analysisOutputBoundary);
         interactor.execute(analysisInputData);
     }
 

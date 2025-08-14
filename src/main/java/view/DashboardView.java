@@ -27,12 +27,9 @@ import view.util.PanelFactory;
 
 public class DashboardView extends AbstractBaseView {
     private final MainViewModel mainViewModel;
-    private final SearchController searchController;
     private final SearchViewModel searchViewModel;
     private final DashboardViewModel dashboardViewModel;
     private final DashboardController dashboardController;
-    private final interfaceadapter.navigation.NavigationController navigationController;
-    private final CompanyDetailsController companyDetailsController;
     private final PortfolioChartPanel portfolioChartPanel;
     private final SearchResultsPanel searchResultsPanel;
     private boolean hasSearched;
@@ -44,12 +41,9 @@ public class DashboardView extends AbstractBaseView {
             CompanyDetailsController companyDetailsController) {
         super("dashboard");
         this.mainViewModel = mainViewModel;
-        this.searchController = searchController;
         this.searchViewModel = searchViewModel;
         this.dashboardViewModel = dashboardViewModel;
         this.dashboardController = dashboardController;
-        this.navigationController = navigationController;
-        this.companyDetailsController = companyDetailsController;
 
         getHeader().add(PanelFactory.createHeader("Dashboard"), BorderLayout.WEST);
 

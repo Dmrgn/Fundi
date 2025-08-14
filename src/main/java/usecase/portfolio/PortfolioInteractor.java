@@ -7,14 +7,12 @@ import java.util.LinkedHashSet;
  * Interactor for the Portfolio Use Case.
  */
 public class PortfolioInteractor implements PortfolioInputBoundary {
-    private final PortfolioTransactionDataAccessInterface transactionDataAccessObject;
     private final PortfolioStockDataAccessInterface stockDataAccessObject;
     private final PortfolioOutputBoundary portfolioPresenter;
 
     public PortfolioInteractor(PortfolioTransactionDataAccessInterface transactionDataAccessInterface,
             PortfolioStockDataAccessInterface stockDataAccessInterface,
             PortfolioOutputBoundary portfolioPresenter) {
-        this.transactionDataAccessObject = transactionDataAccessInterface;
         this.stockDataAccessObject = stockDataAccessInterface;
         this.portfolioPresenter = portfolioPresenter;
     }

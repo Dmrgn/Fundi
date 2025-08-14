@@ -71,7 +71,7 @@ public final class FinancialCalculator {
     /**
      * Compute the volatility of a price time series for a single ticker.
      * 
-     * @param prices The price time series
+     * @param prices  The price time series
      * @param percent whether to make it a percent
      * @return The volatility
      */

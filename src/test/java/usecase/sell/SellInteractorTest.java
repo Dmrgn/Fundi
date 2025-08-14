@@ -17,7 +17,7 @@ class SellInteractorTest {
     static void setUp() throws SQLException {
         // Ensure database schema is initialized before any DAO operations
         dataaccess.DatabaseInitializer.ensureInitialized();
-        
+
         // Create test portfolio 51 if it doesn't exist
         try (java.sql.Connection conn = java.sql.DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite")) {
             try (java.sql.PreparedStatement ps = conn.prepareStatement(

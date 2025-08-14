@@ -12,14 +12,17 @@ import java.sql.Statement;
 public final class DatabaseInitializer {
     private static volatile boolean initialized = false;
 
-    private DatabaseInitializer() {}
+    private DatabaseInitializer() {
+    }
 
     public static void ensureInitialized() {
-        if (initialized) return;
+        if (initialized)
+            return;
         synchronized (DatabaseInitializer.class) {
-            if (initialized) return;
+            if (initialized)
+                return;
             try (Connection connection = DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite");
-                 Statement statement = connection.createStatement()) {
+                    Statement statement = connection.createStatement()) {
                 // Enforce foreign keys
                 statement.execute("PRAGMA foreign_keys = ON");
 

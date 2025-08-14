@@ -14,7 +14,7 @@ class RecommendInteractorTest {
     static void setUp() {
         // Ensure database schema is initialized before any DAO operations
         dataaccess.DatabaseInitializer.ensureInitialized();
-        
+
         // Assuming buy and sell tests were already run
     }
 
@@ -41,7 +41,8 @@ class RecommendInteractorTest {
                 // Not testing this
             }
         };
-        RecommendInteractor interactor = new RecommendInteractor(dbStockDataAccessObject, dbTransactionDataAccessObject, presenter);
+        RecommendInteractor interactor = new RecommendInteractor(dbStockDataAccessObject, dbTransactionDataAccessObject,
+                presenter);
         interactor.execute(recommendInputData);
     }
 }

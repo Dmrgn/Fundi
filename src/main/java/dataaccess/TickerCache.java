@@ -105,6 +105,7 @@ public class TickerCache {
         if (validTickers.isEmpty()) {
             refreshFromFinnhubIfEmpty();
         }
-        System.out.println("Ticker cache loaded with " + (validTickers != null ? validTickers.size() : 0) + " tickers.");
+        System.out
+                .println("Ticker cache loaded with " + (validTickers != null ? validTickers.size() : 0) + " tickers.");
     }
 }

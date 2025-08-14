@@ -12,13 +12,16 @@ import static org.junit.jupiter.api.Assertions.*;
 class RecommendInteractorTest {
     @BeforeAll
     static void setUp() {
+        // Ensure database schema is initialized before any DAO operations
+        dataaccess.DatabaseInitializer.ensureInitialized();
+
         // Assuming buy and sell tests were already run
     }
 
     @Test
     void recommendTest() throws SQLException {
         DBTransactionDataAccessObject dbTransactionDataAccessObject = new DBTransactionDataAccessObject();
-        DBStockDataAccessObject dbStockDataAccessObject = new DBStockDataAccessObject();
+        DBStockDataAccessObject dbStockDataAccessObject = new DBStockDataAccessObject(true); // Skip API calls
 
         RecommendInputData recommendInputData = new RecommendInputData("51");
         RecommendOutputBoundary presenter = new RecommendOutputBoundary() {
@@ -38,7 +41,8 @@ class RecommendInteractorTest {
                 // Not testing this
             }
         };
-        RecommendInteractor interactor = new RecommendInteractor(dbStockDataAccessObject, dbTransactionDataAccessObject, presenter);
+        RecommendInteractor interactor = new RecommendInteractor(dbStockDataAccessObject, dbTransactionDataAccessObject,
+                presenter);
         interactor.execute(recommendInputData);
     }
 }

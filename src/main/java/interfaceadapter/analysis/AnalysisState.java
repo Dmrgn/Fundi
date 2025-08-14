@@ -159,4 +159,3 @@ public class AnalysisState {
         this.worstReturns = new LinkedHashMap<>(worstReturns);
     }
 }
-

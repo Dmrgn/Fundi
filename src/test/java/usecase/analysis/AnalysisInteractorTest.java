@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class AnalysisInteractorTest {
     @BeforeAll
     static void setUp() throws SQLException {
+        // Ensure database schema is initialized before any DAO operations
+        dataaccess.DatabaseInitializer.ensureInitialized();
+
         DBTransactionDataAccessObject dbTransactionDataAccessObject = new DBTransactionDataAccessObject();
         dbTransactionDataAccessObject.save(new Transaction("51", "NVDA", 10,
                 LocalDate.now(), 10.0));
@@ -23,7 +26,8 @@ class AnalysisInteractorTest {
     @Test
     void analyze() throws SQLException {
         DBTransactionDataAccessObject dbTransactionDataAccessObject = new DBTransactionDataAccessObject();
-        DBStockDataAccessObject dbStockDataAccessObject = new DBStockDataAccessObject();
+        DBStockDataAccessObject dbStockDataAccessObject = new DBStockDataAccessObject(true); // Skip API calls
+
         AnalysisInputData analysisInputData = new AnalysisInputData("51");
         AnalysisOutputBoundary analysisOutputBoundary = new AnalysisOutputBoundary() {
             @Override
@@ -34,7 +38,6 @@ class AnalysisInteractorTest {
                 assertNotNull(analysisOutputData.getWorstReturns());
                 assertEquals(1, analysisOutputData.getMajorityTickers().size());
                 assertEquals(10, analysisOutputData.getNumTickers());
-
             }
 
             @Override
@@ -42,7 +45,8 @@ class AnalysisInteractorTest {
                 // Not testing
             }
         };
-        AnalysisInteractor interactor = new AnalysisInteractor(dbStockDataAccessObject, dbTransactionDataAccessObject, analysisOutputBoundary);
+        AnalysisInteractor interactor = new AnalysisInteractor(dbStockDataAccessObject, dbTransactionDataAccessObject,
+                analysisOutputBoundary);
         interactor.execute(analysisInputData);
     }
 

@@ -16,14 +16,12 @@ import static entity.PreferredCurrencyManager.getConverter;
 import static entity.PreferredCurrencyManager.getPreferredCurrency;
 
 public class LeaderboardView extends AbstractBaseView {
-    private final LeaderboardViewModel leaderboardViewModel;
     private final LeaderboardTablePanel tablePanel;
     private boolean loadedOnce = false;
 
     public LeaderboardView(LeaderboardViewModel leaderboardViewModel,
             LeaderboardController leaderboardController) {
         super("leaderboard");
-        this.leaderboardViewModel = leaderboardViewModel;
         this.tablePanel = new view.leaderboard.LeaderboardTablePanel();
 
         getHeader().add(new LeaderboardHeaderPanel(), BorderLayout.WEST);

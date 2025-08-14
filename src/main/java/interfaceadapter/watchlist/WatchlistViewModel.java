@@ -1,7 +1,6 @@
 package interfaceadapter.watchlist;
 
 import interfaceadapter.ViewModel;
-import java.util.List;
 
 public class WatchlistViewModel extends ViewModel<WatchlistState> {
     public static final String WATCHLIST_UPDATED_PROPERTY = "watchlistUpdated";

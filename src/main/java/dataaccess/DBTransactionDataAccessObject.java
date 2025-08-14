@@ -40,6 +40,8 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
      * @throws SQLException If SQL connection fails
      */
     public DBTransactionDataAccessObject() throws SQLException {
+        // Ensure DB schema exists
+        DatabaseInitializer.ensureInitialized();
         String query = """
                 SELECT t.portfolio_id as portfolio_id,
                        t.stock_name as stock_name,
@@ -379,12 +381,26 @@ public class DBTransactionDataAccessObject implements AnalysisTransactionDataAcc
      * Test-only cleanup: remove all rows for a portfolio/ticker.
      */
     public void hardDeleteAllFor(String portfolioId, String stockName) throws SQLException {
-        final String sql = "DELETE FROM transactions WHERE portfolio_id = ? AND stock_name = ?";
-        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+        // Delete from transactions table
+        final String sqlTransactions = "DELETE FROM transactions WHERE portfolio_id = ? AND stock_name = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sqlTransactions)) {
             ps.setString(1, portfolioId);
             ps.setString(2, stockName);
             ps.executeUpdate();
         }
+
+        // Delete from holdings table
+        final String sqlHoldings = "DELETE FROM holdings WHERE portfolio_id = ? AND UPPER(ticker) = UPPER(?)";
+        try (PreparedStatement ps = connection.prepareStatement(sqlHoldings)) {
+            try {
+                ps.setInt(1, Integer.parseInt(portfolioId.trim()));
+            } catch (NumberFormatException nfe) {
+                ps.setString(1, portfolioId);
+            }
+            ps.setString(2, stockName);
+            ps.executeUpdate();
+        }
+
     }
 
     @Override

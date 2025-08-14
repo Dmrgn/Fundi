@@ -16,7 +16,6 @@ public class NotificationDialog {
     private static final String FONT_FAMILY = "Sans Serif";
     private static final int TITLE_FONT_SIZE = 18;
     private static final int COUNT_FONT_SIZE = 14;
-    private static final Color COUNT_LABEL_COLOR = new Color(TWO_HUNDRED, TWO_HUNDRED, TWO_HUNDRED);
 
     private final JFrame parent;
     private final List<String> notifications;

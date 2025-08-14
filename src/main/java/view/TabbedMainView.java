@@ -16,7 +16,6 @@ import view.tabbedmain.NotificationPanel;
 import view.tabbedmain.TabbedPaneManager;
 
 public class TabbedMainView extends AbstractBaseView {
-    private final MainViewModel mainViewModel;
     private final NotificationPanel notificationPanel;
     private final TabbedPaneManager tabbedPaneManager;
 
@@ -35,7 +34,6 @@ public class TabbedMainView extends AbstractBaseView {
             LeaderboardView leaderboardView,
             SettingsView settingsView) {
         super("tabbedmain");
-        this.mainViewModel = mainViewModel;
 
         // Initialize components
         this.notificationPanel = new NotificationPanel();

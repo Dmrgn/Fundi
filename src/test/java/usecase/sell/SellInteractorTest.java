@@ -15,6 +15,9 @@ import static org.junit.jupiter.api.Assertions.*;
 class SellInteractorTest {
     @BeforeAll
     static void setUp() throws SQLException {
+        // Ensure database schema is initialized before any DAO operations
+        dataaccess.DatabaseInitializer.ensureInitialized();
+
         // Create test portfolio 51 if it doesn't exist
         try (java.sql.Connection conn = java.sql.DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite")) {
             try (java.sql.PreparedStatement ps = conn.prepareStatement(
@@ -43,7 +46,7 @@ class SellInteractorTest {
     @Test
     void sellSuccess() throws SQLException {
         DBTransactionDataAccessObject transactionDataAccessInterface = new DBTransactionDataAccessObject();
-        SellStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject();
+        SellStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject(true); // Skip API calls
 
         String ticker = "NVDA";
         int amount = 1;
@@ -69,7 +72,7 @@ class SellInteractorTest {
     @Test
     void sellAmountFail() throws SQLException {
         DBTransactionDataAccessObject transactionDataAccessInterface = new DBTransactionDataAccessObject();
-        SellStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject();
+        SellStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject(true); // Skip API calls
 
         String ticker = "NVDA";
         int amount = -1;
@@ -95,7 +98,7 @@ class SellInteractorTest {
     @Test
     void sellTooMuchAmountFail() throws SQLException {
         DBTransactionDataAccessObject transactionDataAccessInterface = new DBTransactionDataAccessObject();
-        SellStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject();
+        SellStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject(true); // Skip API calls
 
         String ticker = "NVDA";
         int amount = 11;
@@ -121,7 +124,7 @@ class SellInteractorTest {
     @Test
     void sellTickerFail() throws SQLException {
         DBTransactionDataAccessObject transactionDataAccessInterface = new DBTransactionDataAccessObject();
-        SellStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject();
+        SellStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject(true); // Skip API calls
 
         String ticker = "wrong";
         int amount = 5;

@@ -76,7 +76,13 @@ public final class FinancialCalculator {
      * @return The volatility
      */
     public static double computeVolatility(List<Double> prices, boolean percent) {
+        if (prices == null || prices.isEmpty()) {
+            return 0.0;
+        }
         List<Double> returns = computeReturns(prices);
+        if (returns.isEmpty()) {
+            return 0.0;
+        }
         double mean = computeMean(returns);
         double vol = 0;
         for (double retr : returns) {
@@ -115,6 +121,9 @@ public final class FinancialCalculator {
      * @return The mean
      */
     public static double computeMean(List<Double> values) {
+        if (values == null || values.isEmpty()) {
+            return 0.0;
+        }
         double sum = 0;
         for (Double value : values) {
             sum += value;
@@ -129,6 +138,9 @@ public final class FinancialCalculator {
      * @return The total return
      */
     public static double computeReturn(List<StockData> stockData) {
+        if (stockData == null || stockData.isEmpty()) {
+            return 0.0;
+        }
         // Enforce sorting
         List<StockData> sortedStockData = stockData.stream()
                 .sorted(Comparator.comparing(StockData::getTimestamp)).toList();

@@ -15,24 +15,39 @@ import static org.junit.jupiter.api.Assertions.*;
 class BuyInteractorTest {
     @BeforeAll
     static void setUp() throws SQLException {
+        // Ensure database schema is initialized before any DAO operations
+        dataaccess.DatabaseInitializer.ensureInitialized();
+
+        // Create baseline user and portfolio rows if they don't exist
+        try (java.sql.Connection conn = java.sql.DriverManager.getConnection("jdbc:sqlite:data/fundi.sqlite")) {
+            try (java.sql.PreparedStatement ps = conn.prepareStatement(
+                    "INSERT OR IGNORE INTO users (id, username, password) VALUES (1, 'testuser', 'testpass')")) {
+                ps.executeUpdate();
+            }
+            try (java.sql.PreparedStatement ps = conn.prepareStatement(
+                    "INSERT OR IGNORE INTO portfolios (id, name, user_id, balance) VALUES (51, 'Test Portfolio', 1, 10000)")) {
+                ps.executeUpdate();
+            }
+        }
+
         DBTransactionDataAccessObject dbTransactionDataAccessObject = new DBTransactionDataAccessObject();
+        // Seed a known existing transaction and ensure clean state
+        dbTransactionDataAccessObject.hardDeleteAllFor("51", "NVDA");
         dbTransactionDataAccessObject.save(new Transaction("51", "NVDA", 10,
                 LocalDate.now(), 10.0));
 
         // Ensure portfolio "51" has sufficient balance for testing
-        // NVDA price might be around $400-500, so 10 shares = $4000-5000
-        // Set balance to $50,000 to ensure sufficient funds
         dbTransactionDataAccessObject.updatePortfolioBalance("51", 50000.0);
     }
 
     @Test
     void buySuccess() throws SQLException {
         DBTransactionDataAccessObject transactionDataAccessInterface = new DBTransactionDataAccessObject();
-        BuyStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject();
+        BuyStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject(true); // Skip API calls
 
         String ticker = "NVDA";
         int amount = 10;
-        String portfolioId = "51"; // Using test portfolio from create
+        String portfolioId = "51";
 
         BuyInputData buyInputData = new BuyInputData(portfolioId, ticker, amount);
         BuyOutputBoundary buyPresenter = new BuyOutputBoundary() {
@@ -54,7 +69,7 @@ class BuyInteractorTest {
     @Test
     void buyAmountFail() throws SQLException {
         DBTransactionDataAccessObject transactionDataAccessInterface = new DBTransactionDataAccessObject();
-        BuyStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject();
+        BuyStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject(true); // Skip API calls
 
         String ticker = "NVDA";
         int amount = -1;
@@ -80,7 +95,7 @@ class BuyInteractorTest {
     @Test
     void buyTickerFail() throws SQLException {
         DBTransactionDataAccessObject transactionDataAccessInterface = new DBTransactionDataAccessObject();
-        BuyStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject();
+        BuyStockDataAccessInterface stockDataAccessInterface = new DBStockDataAccessObject(true); // Skip API calls
 
         String ticker = "WRONG";
         int amount = 1;

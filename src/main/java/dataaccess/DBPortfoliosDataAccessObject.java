@@ -26,6 +26,8 @@ public class DBPortfoliosDataAccessObject implements CreateDataAccessInterface, 
      * @throws SQLException If database connection fails
      */
     public DBPortfoliosDataAccessObject() throws SQLException {
+        // Ensure schema exists
+        DatabaseInitializer.ensureInitialized();
         try (Statement stmt = connection.createStatement()) {
             ResultSet rs = stmt.executeQuery(
                     "SELECT p.id, p.name, u.id, u.username FROM portfolios p JOIN users u ON p.user_id = u.id");
